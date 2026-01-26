@@ -523,85 +523,96 @@ namespace FinolDigital.Cgs.Json.Unity
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
             IsLoading = true;
-            // We should have already read the cgs.json, but we need to be sure
-            if (!HasReadProperties)
+            try
             {
-                ReadProperties();
+                // We should have already read the cgs.json, but we need to be sure
                 if (!HasReadProperties)
                 {
-                    // ReadProperties() should have already populated the Error
-                    HasLoaded = false;
+                    ReadProperties();
+                    if (!HasReadProperties)
+                    {
+                        // ReadProperties() should have already populated the Error
+                        HasLoaded = false;
+                        IsLoading = false;
+                        yield break;
+                    }
+                }
+
+                // Don't waste time loading if we need to update first
+                var daysSinceUpdate = 0;
+                try
+                {
+                    var gameFilePath = GameFilePath;
+                    if (!File.Exists(gameFilePath))
+                        gameFilePath = GameBackupFilePath;
+                    daysSinceUpdate = (int)DateTime.Today.Subtract(File.GetLastWriteTime(gameFilePath).Date).TotalDays;
+                }
+                catch
+                {
+                    Debug.Log($"Unable to determine last update date for {Name}. Assuming today.");
+                }
+
+                var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && updateCoroutine != null;
+                if (shouldUpdate)
+                {
+                    if (CoroutineRunner != null)
+                        CoroutineRunner.StartCoroutine(updateCoroutine(this));
+                    else
+                        Debug.LogWarning($"Should update {Name}, but CoroutineRunner is null!");
                     IsLoading = false;
                     yield break;
                 }
-            }
 
-            // Don't waste time loading if we need to update first
-            var daysSinceUpdate = 0;
-            try
-            {
-                var gameFilePath = GameFilePath;
-                if (!File.Exists(gameFilePath))
-                    gameFilePath = GameBackupFilePath;
-                daysSinceUpdate = (int)DateTime.Today.Subtract(File.GetLastWriteTime(gameFilePath).Date).TotalDays;
-            }
-            catch
-            {
-                Debug.Log($"Unable to determine last update date for {Name}. Assuming today.");
-            }
+                // These enum lookups need to be initialized before we load cards and sets
+                foreach (var enumDef in Enums)
+                    enumDef.InitializeLookups();
 
-            var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && updateCoroutine != null;
-            if (shouldUpdate)
-            {
-                if (CoroutineRunner != null)
-                    CoroutineRunner.StartCoroutine(updateCoroutine(this));
-                else
-                    Debug.LogWarning($"Should update {Name}, but CoroutineRunner is null!");
-                IsLoading = false;
-                yield break;
-            }
+                // The main load action is to load cards and sets
+                CardNames.Clear();
+                yield return loadCardsCoroutine(this);
+                LoadSets();
+                if (LoadedSets.Values.Any(set => !string.IsNullOrEmpty(set.CardsUrl)))
+                    yield return loadSetCardsCoroutine(this);
 
-            // These enum lookups need to be initialized before we load cards and sets
-            foreach (var enumDef in Enums)
-                enumDef.InitializeLookups();
+                // We also re-load the banner and cardBack images now in case they've changed since we ReadProperties
+                if (File.Exists(BannerImageFilePath))
+                    BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
+                yield return null;
+                if (File.Exists(CardBackImageFilePath))
+                    CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
+                yield return null;
 
-            // The main load action is to load cards and sets
-            CardNames.Clear();
-            if (CoroutineRunner != null)
-                CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
-            else
-                Debug.LogWarning($"Should load cards for {Name}, but CoroutineRunner is null!");
-            yield return null; // Ensure we yield at least once to allow card loading to start
-            LoadSets();
-            if (CoroutineRunner != null && LoadedSets.Values.Any(set => !string.IsNullOrEmpty(set.CardsUrl)))
-                CoroutineRunner.StartCoroutine(loadSetCardsCoroutine(this));
-            yield return null; // Ensure we yield at least once to allow set card loading to start
-
-            // Load card back images
-            if (Directory.Exists(BacksDirectoryPath))
-            {
-                foreach (var backFilePath in Directory.EnumerateFiles(BacksDirectoryPath))
+                // Load card back images
+                if (Directory.Exists(BacksDirectoryPath))
                 {
-                    var id = Path.GetFileNameWithoutExtension(backFilePath);
-                    if (CardBackFaceImageSprites.TryGetValue(id, out var sprite))
+                    foreach (var backFilePath in Directory.EnumerateFiles(BacksDirectoryPath))
                     {
-                        Object.Destroy(sprite.texture);
-                        Object.Destroy(sprite);
-                    }
+                        var id = Path.GetFileNameWithoutExtension(backFilePath);
+                        if (CardBackFaceImageSprites.TryGetValue(id, out var sprite))
+                        {
+                            Object.Destroy(sprite.texture);
+                            Object.Destroy(sprite);
+                        }
 
-                    CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
-                    yield return null;
+                        CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
+                        yield return null;
+                    }
                 }
+
+                // The play mat can be loaded last
+                if (File.Exists(PlayMatImageFilePath))
+                    PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
+
+                // Only considered as loaded if none of the steps failed
+                if (string.IsNullOrEmpty(Error))
+                    HasLoaded = true;
+            }
+            finally
+            {
+                IsLoading = false;
             }
 
-            // The play mat can be loaded last
-            if (File.Exists(PlayMatImageFilePath))
-                PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
-
-            // Only considered as loaded if none of the steps failed
             IsLoading = false;
-            if (string.IsNullOrEmpty(Error))
-                HasLoaded = true;
         }
 
         public void LoadCards(int page)

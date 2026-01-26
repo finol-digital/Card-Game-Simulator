@@ -196,6 +196,8 @@ namespace Cgs
         private InputAction _reprintsAction;
         private InputAction _developerAction;
 
+        private int _selectionVersion;
+
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -679,20 +681,24 @@ namespace Cgs
             // Immediately set current so UI can update without waiting for heavy load work
             Current = game;
             // Start an async reset so heavy load work doesn't block the main thread/UI animation
-            StartCoroutine(ResetGameSceneAsync());
+            StartCoroutine(ResetGameSceneAsync(game, ++_selectionVersion));
         }
 
-        private IEnumerator ResetGameSceneAsync()
+        private IEnumerator ResetGameSceneAsync(UnityCardGame targetGame, int selectionVersion)
         {
-            if (!Current.HasLoaded)
+            if (targetGame != Current || selectionVersion != _selectionVersion)
+                yield break;
+
+            if (!targetGame.HasLoaded && !targetGame.IsLoading)
             {
-                Current.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
+                targetGame.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
                 yield return null;
-                while (Current.IsLoading)
+                while (targetGame.IsLoading && targetGame == Current && selectionVersion == _selectionVersion)
                     yield return null;
             }
 
-            ResetGameScene();
+            if (targetGame == Current && selectionVersion == _selectionVersion)
+                ResetGameScene();
         }
 
         internal void ResetGameScene()
