@@ -676,7 +676,22 @@ namespace Cgs
                 return;
             }
 
+            // Immediately set current so UI can update without waiting for heavy load work
             Current = game;
+            // Start an async reset so heavy load work doesn't block the main thread/UI animation
+            StartCoroutine(ResetGameSceneAsync());
+        }
+
+        private IEnumerator ResetGameSceneAsync()
+        {
+            if (!Current.HasLoaded)
+            {
+                Current.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
+                yield return null;
+                while (Current.IsLoading)
+                    yield return null;
+            }
+
             ResetGameScene();
         }
 

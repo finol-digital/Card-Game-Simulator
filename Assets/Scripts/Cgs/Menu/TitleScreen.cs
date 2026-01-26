@@ -122,7 +122,7 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            _anyButtonPressListener.Dispose();
+            _anyButtonPressListener?.Dispose();
         }
     }
 }

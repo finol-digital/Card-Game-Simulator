@@ -93,6 +93,7 @@ namespace FinolDigital.Cgs.Json.Unity
         private string _downloadStatus = "N / A";
 
         public bool HasDownloaded { get; private set; }
+        public bool IsLoading { get; private set; }
         public bool HasLoaded { get; private set; }
         public string Error { get; private set; }
 
@@ -504,6 +505,105 @@ namespace FinolDigital.Cgs.Json.Unity
                 HasLoaded = true;
         }
 
+        public void LoadAsync(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
+            CardGameCoroutineDelegate loadSetCardsCoroutine)
+        {
+            if (CoroutineRunner != null)
+                CoroutineRunner.StartCoroutine(
+                    LoadAsyncImpl(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine));
+            else
+            {
+                Debug.LogWarning($"LoadAsync called for {Name} but CoroutineRunner is null! Falling back to Load.");
+                Load(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine);
+            }
+        }
+
+        private IEnumerator LoadAsyncImpl(CardGameCoroutineDelegate updateCoroutine,
+            CardGameCoroutineDelegate loadCardsCoroutine,
+            CardGameCoroutineDelegate loadSetCardsCoroutine)
+        {
+            IsLoading = true;
+            // We should have already read the cgs.json, but we need to be sure
+            if (!HasReadProperties)
+            {
+                ReadProperties();
+                if (!HasReadProperties)
+                {
+                    // ReadProperties() should have already populated the Error
+                    HasLoaded = false;
+                    IsLoading = false;
+                    yield break;
+                }
+            }
+
+            // Don't waste time loading if we need to update first
+            var daysSinceUpdate = 0;
+            try
+            {
+                var gameFilePath = GameFilePath;
+                if (!File.Exists(gameFilePath))
+                    gameFilePath = GameBackupFilePath;
+                daysSinceUpdate = (int)DateTime.Today.Subtract(File.GetLastWriteTime(gameFilePath).Date).TotalDays;
+            }
+            catch
+            {
+                Debug.Log($"Unable to determine last update date for {Name}. Assuming today.");
+            }
+
+            var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && updateCoroutine != null;
+            if (shouldUpdate)
+            {
+                if (CoroutineRunner != null)
+                    CoroutineRunner.StartCoroutine(updateCoroutine(this));
+                else
+                    Debug.LogWarning($"Should update {Name}, but CoroutineRunner is null!");
+                IsLoading = false;
+                yield break;
+            }
+
+            // These enum lookups need to be initialized before we load cards and sets
+            foreach (var enumDef in Enums)
+                enumDef.InitializeLookups();
+
+            // The main load action is to load cards and sets
+            CardNames.Clear();
+            if (CoroutineRunner != null)
+                CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
+            else
+                Debug.LogWarning($"Should load cards for {Name}, but CoroutineRunner is null!");
+            yield return null; // Ensure we yield at least once to allow card loading to start
+            LoadSets();
+            if (CoroutineRunner != null && LoadedSets.Values.Any(set => !string.IsNullOrEmpty(set.CardsUrl)))
+                CoroutineRunner.StartCoroutine(loadSetCardsCoroutine(this));
+            yield return null; // Ensure we yield at least once to allow set card loading to start
+
+            // Load card back images
+            if (Directory.Exists(BacksDirectoryPath))
+            {
+                foreach (var backFilePath in Directory.EnumerateFiles(BacksDirectoryPath))
+                {
+                    var id = Path.GetFileNameWithoutExtension(backFilePath);
+                    if (CardBackFaceImageSprites.TryGetValue(id, out var sprite))
+                    {
+                        Object.Destroy(sprite.texture);
+                        Object.Destroy(sprite);
+                    }
+
+                    CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
+                    yield return null;
+                }
+            }
+
+            // The play mat can be loaded last
+            if (File.Exists(PlayMatImageFilePath))
+                PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
+
+            // Only considered as loaded if none of the steps failed
+            IsLoading = false;
+            if (string.IsNullOrEmpty(Error))
+                HasLoaded = true;
+        }
+
         public void LoadCards(int page)
         {
             var cardsFilePath =
@@ -648,7 +748,8 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 var nameBackDef = new PropertyDef(CardNameBackIdentifier, PropertyType.String);
                 PopulateCardProperty(metaProperties, cardJToken, nameBackDef, nameBackDef.Name);
-                if (metaProperties.TryGetValue(CardNameBackIdentifier.Replace("[].", "[]0."), out var cardNameBackEntry))
+                if (metaProperties.TryGetValue(CardNameBackIdentifier.Replace("[].", "[]0."),
+                        out var cardNameBackEntry))
                     cardBackName = cardNameBackEntry.Value;
             }
 
@@ -985,11 +1086,14 @@ namespace FinolDigital.Cgs.Json.Unity
                                     && childProcessorJToken?[currentSegment[..^2]] is JArray { Count: > 0 } arrayToken)
                                     childProcessorJToken = arrayToken[0];
                                 else
-                                    (childProcessorJToken as JObject)?.TryGetValue(currentSegment, out childProcessorJToken);
+                                    (childProcessorJToken as JObject)?.TryGetValue(currentSegment,
+                                        out childProcessorJToken);
                             }
+
                             cardJToken = childProcessorJToken;
                             identifier = segments[^1];
                         }
+
                         newProperty.Value = cardJToken?.Value<string>(identifier) ?? string.Empty;
                         cardProperties[key] = newProperty;
                         break;

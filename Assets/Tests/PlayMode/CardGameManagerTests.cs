@@ -56,7 +56,8 @@ namespace Tests.PlayMode
             PlayerPrefs.SetInt("DeveloperMode", 1);
 
             Directory.CreateDirectory(newCardGame.GameDirectoryPath);
-            var defaultContractResolver = new DefaultContractResolver {NamingStrategy = new CamelCaseNamingStrategy()};
+            var defaultContractResolver = new DefaultContractResolver
+                { NamingStrategy = new CamelCaseNamingStrategy() };
             var jsonSerializerSettings = new JsonSerializerSettings
             {
                 ContractResolver = defaultContractResolver,
@@ -141,7 +142,8 @@ namespace Tests.PlayMode
             CardGameManager.Instance.LookupCardGames();
             CardGameManager.Instance.ResetCurrentToDefault();
             CardGameManager.Instance.ResetGameScene();
-            yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
+            yield return new WaitUntil(() =>
+                !CardGameManager.Current.IsLoading && !CardGameManager.Current.IsDownloading);
 
             Assert.IsTrue(CardGameManager.Current.HasLoaded);
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
@@ -150,7 +152,8 @@ namespace Tests.PlayMode
 #if !UNITY_WEBGL
             // Mahjong
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
-            yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
+            yield return new WaitUntil(() =>
+                !CardGameManager.Current.IsLoading && !CardGameManager.Current.IsDownloading);
 
             Assert.IsTrue(CardGameManager.Current.HasLoaded);
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
@@ -158,7 +161,8 @@ namespace Tests.PlayMode
 
             // Dominoes
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
-            yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
+            yield return new WaitUntil(() =>
+                !CardGameManager.Current.IsLoading && !CardGameManager.Current.IsDownloading);
 
             Assert.IsTrue(CardGameManager.Current.HasLoaded);
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
