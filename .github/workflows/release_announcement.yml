@@ -11,7 +11,7 @@ jobs:
           fetch-depth: 0
       - name: Get Version
         id: versioning
-        uses: paulhatch/semantic-version@v6.0.0
+        uses: paulhatch/semantic-version@v6.0.1
         with:
           version_format: "${major}.${minor}.${patch}"
           minor_pattern: "(MINOR)"
