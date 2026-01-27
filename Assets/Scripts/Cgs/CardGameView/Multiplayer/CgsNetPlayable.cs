@@ -399,6 +399,9 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
 
             var material = GetModifiedMaterial(graphic.material);
+            if (material == null)
+                return;
+
             material.SetFloat(SelectableHighlight.IsSelectedPropertyId, isSelected ? 1 : 0);
             graphic.SetMaterialDirty();
         }
