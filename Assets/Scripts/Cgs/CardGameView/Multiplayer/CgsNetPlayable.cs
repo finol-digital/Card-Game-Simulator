@@ -7,6 +7,7 @@ using System.Linq;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
+using Cgs.UI;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
@@ -34,7 +35,8 @@ namespace Cgs.CardGameView.Multiplayer
     }
 
     public class CgsNetPlayable : NetworkBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
-        IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+        IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler,
+        IMaterialModifier
     {
         public virtual string DeletePrompt => "Delete?";
 
@@ -42,6 +44,7 @@ namespace Cgs.CardGameView.Multiplayer
         private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
         private const float DisownTime = 5.0f;
+        private const string SelectableShaderName = "Shader Graphs/SelectableShader";
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
@@ -187,6 +190,9 @@ namespace Cgs.CardGameView.Multiplayer
         private Outline Highlight => _highlight ??= gameObject.GetOrAddComponent<Outline>();
         private Outline _highlight;
 
+        private Graphic SelectableGraphic => _selectableGraphic ??= GetComponent<Graphic>();
+        private Graphic _selectableGraphic;
+
         private void Awake()
         {
             _containerNetworkVariable = new NetworkVariable<NetworkObjectReference>();
@@ -268,6 +274,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Start()
         {
+            EnsureSelectableShader();
             OnStartPlayable();
         }
 
@@ -371,6 +378,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (PlayableViewer.Instance != null)
                 PlayableViewer.Instance.SelectedPlayable = this;
+            UpdateSelectableHighlight(true);
         }
 
         public void OnDeselect(BaseEventData eventData)
@@ -382,6 +390,51 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (PlayableViewer.Instance != null)
                 PlayableViewer.Instance.IsVisible = false;
+            UpdateSelectableHighlight(false);
+        }
+
+        protected void UpdateSelectableHighlight(bool isSelected)
+        {
+            EnsureSelectableShader();
+            var graphic = SelectableGraphic;
+            if (graphic == null || graphic.material == null)
+                return;
+
+            graphic.material.SetFloat(SelectableHighlight.IsSelectedPropertyId, isSelected ? 1 : 0);
+            graphic.SetMaterialDirty();
+        }
+
+        private void EnsureSelectableShader()
+        {
+            var graphic = SelectableGraphic;
+            if (graphic == null)
+                return;
+
+            var shader = Shader.Find(SelectableShaderName);
+            if (shader == null)
+                return;
+
+            if (graphic.material == null)
+                graphic.material = new Material(shader);
+            else if (graphic.material.shader != shader)
+            {
+                var material = new Material(graphic.material)
+                {
+                    shader = shader
+                };
+                graphic.material = material;
+            }
+        }
+
+        public Material GetModifiedMaterial(Material baseMaterial)
+        {
+            if (baseMaterial == null)
+                return null;
+
+            var material = new Material(baseMaterial);
+            material.SetFloat(SelectableHighlight.IsSelectedPropertyId,
+                EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject ? 1 : 0);
+            return material;
         }
 
         protected virtual bool PreBeginDrag(PointerEventData eventData)

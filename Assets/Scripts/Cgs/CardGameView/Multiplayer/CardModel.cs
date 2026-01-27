@@ -8,7 +8,6 @@ using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
-using Cgs.UI;
 using Cgs.UI.ScrollRects;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
@@ -22,7 +21,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler, IMaterialModifier
+    public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
         public override string DeletePrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
@@ -168,15 +167,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         private Image View => _view ??= GetComponent<Image>();
         private Image _view;
-        private Material _material;
-
-        public Material GetModifiedMaterial(Material baseMaterial)
-        {
-            var material = new Material(baseMaterial);
-            material.SetFloat(SelectableHighlight.IsSelectedPropertyId,
-                EventSystem.current.currentSelectedGameObject == gameObject ? 1 : 0);
-            return material;
-        }
 
         protected override void OnAwakePlayable()
         {
@@ -336,16 +326,14 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (CardViewer.Instance != null)
                 CardViewer.Instance.SelectedCardModel = this;
-            View.material.SetFloat(SelectableHighlight.IsSelectedPropertyId, 1);
-            View.SetMaterialDirty();
+            UpdateSelectableHighlight(false);
         }
 
         protected override void OnDeselectPlayable(BaseEventData eventData)
         {
             if (CardViewer.Instance != null && !CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
-            View.material.SetFloat(SelectableHighlight.IsSelectedPropertyId, 0);
-            View.SetMaterialDirty();
+            UpdateSelectableHighlight(false);
         }
 
         public void OnDrop(CardModel cardModel)
