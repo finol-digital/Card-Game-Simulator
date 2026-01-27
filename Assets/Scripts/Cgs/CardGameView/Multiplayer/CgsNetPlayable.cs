@@ -274,7 +274,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Start()
         {
-            EnsureSelectableShader();
             OnStartPlayable();
         }
 
@@ -395,41 +394,35 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected void UpdateSelectableHighlight(bool isSelected)
         {
-            EnsureSelectableShader();
-            var graphic = SelectableGraphic;
-            if (graphic == null || graphic.material == null)
-                return;
-
-            graphic.material.SetFloat(SelectableHighlight.IsSelectedPropertyId, isSelected ? 1 : 0);
-            graphic.SetMaterialDirty();
-        }
-
-        private void EnsureSelectableShader()
-        {
             var graphic = SelectableGraphic;
             if (graphic == null)
                 return;
 
-            var shader = Shader.Find(SelectableShaderName);
-            if (shader == null)
-                return;
-
-            if (graphic.material == null)
-                graphic.material = new Material(shader);
-            else if (graphic.material.shader != shader)
-            {
-                var material = new Material(graphic.material)
-                {
-                    shader = shader
-                };
-                graphic.material = material;
-            }
+            var material = GetModifiedMaterial(graphic.material);
+            material.SetFloat(SelectableHighlight.IsSelectedPropertyId, isSelected ? 1 : 0);
+            graphic.SetMaterialDirty();
         }
 
         public Material GetModifiedMaterial(Material baseMaterial)
         {
             if (baseMaterial == null)
-                return null;
+            {
+                var graphic = SelectableGraphic;
+                if (graphic == null)
+                    return null;
+
+                var shader = Shader.Find(SelectableShaderName);
+                if (shader == null)
+                    return null;
+
+                if (graphic.material == null)
+                    graphic.material = new Material(shader);
+                else if (graphic.material.shader != shader)
+                    graphic.material = new Material(graphic.material) { shader = shader };
+                graphic.material.SetFloat(SelectableHighlight.IsSelectedPropertyId,
+                    EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject ? 1 : 0);
+                return graphic.material;
+            }
 
             var material = new Material(baseMaterial);
             material.SetFloat(SelectableHighlight.IsSelectedPropertyId,

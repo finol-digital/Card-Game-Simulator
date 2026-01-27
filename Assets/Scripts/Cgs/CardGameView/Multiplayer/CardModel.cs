@@ -326,7 +326,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (CardViewer.Instance != null)
                 CardViewer.Instance.SelectedCardModel = this;
-            UpdateSelectableHighlight(false);
+            UpdateSelectableHighlight(true);
         }
 
         protected override void OnDeselectPlayable(BaseEventData eventData)
