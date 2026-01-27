@@ -577,10 +577,8 @@ namespace FinolDigital.Cgs.Json.Unity
                 // We also re-load the banner and cardBack images now in case they've changed since we ReadProperties
                 if (File.Exists(BannerImageFilePath))
                     BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
-                yield return null;
                 if (File.Exists(CardBackImageFilePath))
                     CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
-                yield return null;
 
                 // Load card back images
                 if (Directory.Exists(BacksDirectoryPath))
@@ -595,7 +593,6 @@ namespace FinolDigital.Cgs.Json.Unity
                         }
 
                         CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
-                        yield return null;
                     }
                 }
 
