@@ -367,7 +367,7 @@ namespace Cgs.Play.Multiplayer
                 if (!string.IsNullOrEmpty(_password) && _password.Length is < 8 or > 64)
                 {
                     Debug.LogWarning(InvalidPasswordWarningMessage);
-                    CardGameManager.Instance.Messenger.Show(InvalidPasswordWarningMessage);
+                    CardGameManager.Instance.Messenger.Show(InvalidPasswordWarningMessage, true);
                     _password = string.Empty;
                 }
 
