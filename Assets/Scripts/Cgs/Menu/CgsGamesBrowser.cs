@@ -174,6 +174,7 @@ namespace Cgs.Menu
         public void Refresh()
         {
             StopAllCoroutines();
+            Filter = string.Empty;
             StartCoroutine(RunRefreshCoroutine());
         }
 
