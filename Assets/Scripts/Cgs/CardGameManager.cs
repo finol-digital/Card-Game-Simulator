@@ -704,12 +704,11 @@ namespace Cgs
 
         internal void ResetGameScene()
         {
-            if (!Current.HasLoaded)
-            {
+            if (!Current.HasLoaded && !Current.IsLoading)
                 Current.Load(UpdateCardGame, LoadCards, LoadSetCards);
-                if (Current.IsDownloading)
-                    return;
-            }
+
+            if (Current.IsDownloading)
+                return;
 
             if (!string.IsNullOrEmpty(Current.Error))
             {
