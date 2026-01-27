@@ -98,6 +98,8 @@ namespace Cgs.CardGameView.Viewer
                                              || EventSystem.current.currentSelectedGameObject ==
                                              counterValueInputField.gameObject || counterValueInputField.isFocused;
 
+        private InputAction _pageAction;
+
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(Reset);
@@ -114,6 +116,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void Start()
         {
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
             Reset();
         }
 
@@ -142,6 +145,12 @@ namespace Cgs.CardGameView.Viewer
                         RedisplayCounter();
                         break;
                 }
+
+            var pageVector = _pageAction?.ReadValue<Vector2>() ?? Vector2.zero;
+            if (pageVector == Vector2.zero)
+                return;
+            var delta = PlayController.PlayableMoveSpeed * Time.deltaTime;
+            _selectedPlayable.Position += pageVector * delta;
         }
 
         public void OnPointerDown(PointerEventData eventData)

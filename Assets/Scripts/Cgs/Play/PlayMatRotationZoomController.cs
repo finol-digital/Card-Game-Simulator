@@ -33,6 +33,7 @@ namespace Cgs.Play
         private InputAction _pageAction;
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
+                                  PlayableViewer.Instance.IsVisible ||
                                   CardGameManager.Instance.ModalCanvas != null ||
                                   _playController.menu.panels.activeSelf ||
                                   _playController.scoreboard.nameInputField.isFocused;

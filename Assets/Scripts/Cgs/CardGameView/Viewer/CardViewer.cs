@@ -28,6 +28,7 @@ namespace Cgs.CardGameView.Viewer
         private const string SetLabel = "Set";
         private const string IdLabel = "Id";
         private const string Delimiter = ": ";
+        private const float PageAxisPressDeadZone = 0.5f;
 
         public static CardViewer Instance
         {
@@ -288,12 +289,66 @@ namespace Cgs.CardGameView.Viewer
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
-            if (_pageAction != null && _pageAction.WasPressedThisFrame() && Mathf.Abs(pageVertical) > 0)
-            {
-                maximalScrollRect.verticalNormalizedPosition = pageVertical < 0
+            var pageVector = _pageAction?.ReadValue<Vector2>() ?? Vector2.zero;
+            if (Mode == CardViewerMode.Maximal)
+                maximalScrollRect.verticalNormalizedPosition = pageVector.y < 0
                     ? Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f)
                     : Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
+            else if (SelectedCardModel != null && !SelectedCardModel.IsStatic && PlayController.Instance != null)
+            {
+                var parentCardZone = SelectedCardModel.ParentCardZone;
+                if (parentCardZone == null)
+                    return;
+
+                var pagePressed = _pageAction?.WasPressedThisFrame() ?? false;
+                switch (parentCardZone.Type)
+                {
+                    case CardZoneType.Vertical:
+                        if (pagePressed && Mathf.Abs(pageVector.y) > PageAxisPressDeadZone)
+                        {
+                            switch (pageVector.y)
+                            {
+                                case > 0:
+                                    SelectedCardModel.transform.SetSiblingIndex(Mathf.Min(
+                                        SelectedCardModel.transform.GetSiblingIndex() + 1,
+                                        SelectedCardModel.transform.parent.childCount - 1));
+                                    break;
+                                case < 0:
+                                    SelectedCardModel.transform.SetSiblingIndex(
+                                        Mathf.Max(SelectedCardModel.transform.GetSiblingIndex() - 1, 0));
+                                    break;
+                            }
+                        }
+
+                        break;
+                    case CardZoneType.Horizontal:
+                        if (pagePressed && Mathf.Abs(pageVector.x) > PageAxisPressDeadZone)
+                        {
+                            switch (pageVector.x)
+                            {
+                                case > 0:
+                                    SelectedCardModel.transform.SetSiblingIndex(Mathf.Min(
+                                        SelectedCardModel.transform.GetSiblingIndex() + 1,
+                                        SelectedCardModel.transform.parent.childCount - 1));
+                                    break;
+                                case < 0:
+                                    SelectedCardModel.transform.SetSiblingIndex(
+                                        Mathf.Max(SelectedCardModel.transform.GetSiblingIndex() - 1, 0));
+                                    break;
+                            }
+                        }
+
+                        break;
+                    default:
+                    case CardZoneType.Area:
+                        if (pageVector != Vector2.zero)
+                        {
+                            var delta = PlayController.PlayableMoveSpeed * Time.deltaTime;
+                            SelectedCardModel.Position += pageVector * delta;
+                        }
+
+                        break;
+                }
             }
         }
 

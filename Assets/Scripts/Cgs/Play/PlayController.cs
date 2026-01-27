@@ -37,6 +37,7 @@ namespace Cgs.Play
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
 
+        public const float PlayableMoveSpeed = 600f;
         private const float PlayAreaBuffer = 8;
         private const float DeckPositionBuffer = 50;
 
