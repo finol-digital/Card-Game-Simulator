@@ -1,2 +1,2 @@
 ## What's Changed
-- Added Lock for Play Mat Rotation and Zoom
+- Streamlined UI buttons/controls
