@@ -291,9 +291,14 @@ namespace Cgs.CardGameView.Viewer
 
             var pageVector = _pageAction?.ReadValue<Vector2>() ?? Vector2.zero;
             if (Mode == CardViewerMode.Maximal)
-                maximalScrollRect.verticalNormalizedPosition = pageVector.y < 0
-                    ? Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f)
-                    : Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
+            {
+                if (Mathf.Abs(pageVector.y) > PageAxisPressDeadZone)
+                {
+                    maximalScrollRect.verticalNormalizedPosition = pageVector.y < 0
+                        ? Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f)
+                        : Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
+                }
+            }
             else if (SelectedCardModel != null && !SelectedCardModel.IsStatic && PlayController.Instance != null)
             {
                 var parentCardZone = SelectedCardModel.ParentCardZone;
