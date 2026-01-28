@@ -1454,7 +1454,7 @@
                 {
                     "name": "",
                     "id": "b5932ef2-0d24-437a-8261-b650cf242bad",
-                    "path": "<Gamepad>/rightStickPress",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1487,7 +1487,7 @@
                 {
                     "name": "",
                     "id": "1a5b18a9-7266-4d24-9888-616a70ec9dc9",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1586,7 +1586,7 @@
                 {
                     "name": "",
                     "id": "9de0afee-168d-4664-8979-2f075564203b",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",

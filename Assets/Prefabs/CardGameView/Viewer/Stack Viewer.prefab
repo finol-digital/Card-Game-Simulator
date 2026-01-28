@@ -455,7 +455,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/SelectPrevious
+      value: Decks/New
       objectReference: {fileID: 0}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}

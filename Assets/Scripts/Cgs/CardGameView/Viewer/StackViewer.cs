@@ -42,7 +42,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputShuffle;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputShuffle;
         }
 
         private void Start()
@@ -207,7 +207,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputShuffle;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputShuffle;
         }
     }
 }

@@ -105,10 +105,12 @@ namespace Cgs.CardGameView.Viewer
             CardGameManager.Instance.OnSceneActions.Add(Reset);
 
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
-            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputSelectPrevious;
-            InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed += InputSub;
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
+            InputSystem.actions.FindAction(Tags.ViewerLess).performed += InputLess;
+            InputSystem.actions.FindAction(Tags.ViewerMore).performed += InputMore;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputShuffle;
+            InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSave;
             InputSystem.actions.FindAction(Tags.CardFlip).performed += InputFlip;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -290,38 +292,6 @@ namespace Cgs.CardGameView.Viewer
             }
         }
 
-        private void InputSelectPrevious(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            switch (SelectedPlayable)
-            {
-                case Die:
-                    DecrementDieMax();
-                    break;
-                case CardStack:
-                    ShuffleStack();
-                    break;
-            }
-        }
-
-        private void InputSelectNext(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            switch (SelectedPlayable)
-            {
-                case Die:
-                    IncrementDieMax();
-                    break;
-                case CardStack:
-                    SaveStack();
-                    break;
-            }
-        }
-
         private void InputSub(InputAction.CallbackContext context)
         {
             if (IsBlocked)
@@ -360,6 +330,15 @@ namespace Cgs.CardGameView.Viewer
             }
 
             SelectedCounter.Value -= 1;
+        }
+
+        private void InputLess(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is Die)
+                DecrementDieMax();
         }
 
         [UsedImplicitly]
@@ -412,6 +391,15 @@ namespace Cgs.CardGameView.Viewer
             }
 
             SelectedCounter.Value += 1;
+        }
+
+        private void InputMore(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is Die)
+                IncrementDieMax();
         }
 
         [UsedImplicitly]
@@ -509,6 +497,15 @@ namespace Cgs.CardGameView.Viewer
             Stack.View();
         }
 
+        private void InputShuffle(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is CardStack)
+                ShuffleStack();
+        }
+
         [UsedImplicitly]
         public void ShuffleStack()
         {
@@ -519,6 +516,15 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Stack.PromptShuffle();
+        }
+
+        private void InputSave(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is CardStack)
+                SaveStack();
         }
 
         [UsedImplicitly]
@@ -605,10 +611,12 @@ namespace Cgs.CardGameView.Viewer
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
-            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputSelectPrevious;
-            InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputSelectNext;
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputSub;
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;
+            InputSystem.actions.FindAction(Tags.ViewerLess).performed -= InputLess;
+            InputSystem.actions.FindAction(Tags.ViewerMore).performed -= InputMore;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputShuffle;
+            InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSave;
             InputSystem.actions.FindAction(Tags.CardFlip).performed -= InputFlip;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
