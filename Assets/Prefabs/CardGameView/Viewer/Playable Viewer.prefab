@@ -1381,7 +1381,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/SelectPrevious
+      value: Decks/New
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -1844,7 +1844,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/SelectNext
+      value: Decks/Save
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -3023,7 +3023,7 @@ PrefabInstance:
     - target: {fileID: 4485005921340226510, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/SelectPrevious
+      value: Viewer/Less
       objectReference: {fileID: 0}
     - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
@@ -3148,7 +3148,7 @@ PrefabInstance:
     - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/SelectNext
+      value: Viewer/More
       objectReference: {fileID: 0}
     - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
