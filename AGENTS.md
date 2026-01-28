@@ -7,7 +7,7 @@ This file contains guidelines and commands for agentic coding agents working on 
 Card Game Simulator is a Unity-based digital platform for playing card games on a virtual tabletop. The project uses C# with Unity Engine and follows specific coding conventions.
 
 **Tech Stack:**
-- Unity 6000.3.2f1
+- Unity 6
 - C# (.NET Standard)
 - Unity Netcode for GameObjects (multiplayer)
 - Unity UI System

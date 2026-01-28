@@ -125,7 +125,10 @@ namespace Cgs.CardGameView.Viewer
             WasVisible = IsVisible;
 
             if (_selectedPlayable == null)
+            {
                 IsVisible = false;
+                return;
+            }
 
             if (IsBlocked)
                 return;
