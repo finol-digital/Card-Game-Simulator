@@ -1089,6 +1089,13 @@ jobs:
         with:
           name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
           path: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+      - name: Update metadata
+        shell: pwsh
+        run: | 
+          $metadata = Get-Content -Raw "C:\Card-Game-Simulator.git\storebroker\metadata.json" 
+          msstore submission updateMetadata 9N96N5S4W3J0 $metadata
+      - name: Publish App package 
+        run: msstore publish '${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}' -id 9N96N5S4W3J0
       - name: Publish to the Microsoft Store
         if: false
         uses: isaacrlevin/windows-store-action@1.0

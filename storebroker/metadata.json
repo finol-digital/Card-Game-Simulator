@@ -1,0 +1,186 @@
+{
+  "Id": "1152921505700469770",
+  "ApplicationCategory": "Games_CardAndBoard",
+  "Pricing": {
+    "TrialPeriod": "NoFreeTrial",
+    "MarketSpecificPricings": {
+      "LB": "NotAvailable"
+    },
+    "PriceId": "Free",
+    "IsAdvancedPricingModel": true
+  },
+  "Visibility": "Public",
+  "TargetPublishMode": "Immediate",
+  "TargetPublishDate": "1601-01-01T00:00:00Z",
+  "Listings": {
+    "en-us": {
+      "BaseListing": {
+        "Keywords": [
+          "card game simulator",
+          "create card games",
+          "import custom cards",
+          "multiplayer card games",
+          "single-player card games",
+          "custom game creation"
+        ],
+        "Description": "Create, share, and play card games with Card Game 
+Simulator! \r\nCreate your own original card games, import custom cards, 
+organize your decks and cards, and play card games with your friends. \r\nAll on
+an intuitive virtual tabletop! \r\n\r\n# Create and Share Games: \r\nYou can 
+download additional games by selecting the center card game in the Main Menu. 
+Press the download button that appears and enter the CGS AutoUpdate URL for the 
+game you would like to download. \r\nIf you enable Developer Mode, you can 
+easily create your own games by importing images onto custom boards and tables, 
+and create custom cards and decks. \r\nYou can also define your own custom 
+game(s) by following the Custom Games Documentation on the CGS website! 
+\r\n\r\n# Cards Explorer: \r\nSee all the cards laid out neatly and easily 
+search-able, with the option to filter for any search criteria. \r\nIf you 
+enable Developer Mode, you can also add custom cards here. \r\n\r\n# Deck 
+Editor: \r\nSome card games will come with pre-built decks, but you can always 
+create new decks by writing in card names or with the visual Deck Editor. 
+\r\nYou can load up and edit existing decks, or you can start with completely 
+new decks to add and save for later. \r\n\r\n# Multi-player: \r\nCreate online 
+rooms with optional passwords to ensure only your friends Join your game. 
+\r\nYou can play over LAN or over the internet. \r\n\r\n# Single-player: \r\nYou
+can immediately Start a game, either to play by yourself or to play with friends
+hot-seat style. \r\n\r\n# Key Features: \r\n- Online sandbox with unlimited 
+games to play how you want. \r\n- Create and play your own original games. \r\n-
+Play just like you do in real life; pick up, rotate, and flip any card. \r\n- Up
+to 10 people can play online together on the same table. \r\n- Save, load, and 
+share decks. \r\n- Multiple \u0022drawer\u0022s allow you to play locally on the
+same computer with your friends. \r\n- Default games: Standard French-Suited 
+52-cards, Dominoes, and Mahjong",
+        "Features": [],
+        "ReleaseNotes": "## What\u0027s Changed\n- Fixed bugs",
+        "Images": [
+          {
+            "FileName": "Assets\\en-us\\windows1.png",
+            "FileStatus": "Uploaded",
+            "Id": "400053939",
+            "ImageType": "Screenshot"
+          },
+          {
+            "FileName": "Assets\\en-us\\windows2.png",
+            "FileStatus": "Uploaded",
+            "Id": "400053969",
+            "ImageType": "Screenshot"
+          },
+          {
+            "FileName": "Assets\\en-us\\windows3.png",
+            "FileStatus": "Uploaded",
+            "Id": "400053999",
+            "ImageType": "Screenshot"
+          },
+          {
+            "FileName": "Assets\\en-us\\windows4.png",
+            "FileStatus": "Uploaded",
+            "Id": "400054029",
+            "ImageType": "Screenshot"
+          },
+          {
+            "FileName": "Assets\\en-us\\LogoColor300.png",
+            "FileStatus": "Uploaded",
+            "Id": "400054059",
+            "ImageType": "Icon"
+          },
+          {
+            "FileName": "Assets\\en-us\\LogoColor1080.png",
+            "FileStatus": "Uploaded",
+            "Id": "400053910",
+            "ImageType": "StoreLogoSquare"
+          }
+        ],
+        "RecommendedHardware": [],
+        "MinimumHardware": [],
+        "Title": "Card Game Simulator",
+        "LicenseTerms": "",
+        "CopyrightAndTrademarkInfo": "2018 Finol Digital LLC",
+        "ShortDescription": "Create, share, and play card games with Card Game 
+Simulator",
+        "ShortTitle": "CGS",
+        "VoiceTitle": "",
+        "DevStudio": ""
+      },
+      "PlatformOverrides": {}
+    }
+  },
+  "HardwarePreferences": [],
+  "AutomaticBackupEnabled": true,
+  "CanInstallOnRemovableMedia": true,
+  "IsGameDvrEnabled": false,
+  "GamingOptions": [
+    {
+      "Genres": [
+        "Games_CardAndBoard",
+        "Games_Classics",
+        "Games_Simulation"
+      ],
+      "IsLocalMultiplayer": true,
+      "IsLocalCooperative": false,
+      "IsOnlineMultiplayer": true,
+      "IsOnlineCooperative": false,
+      "IsBroadcastingPrivilegeGranted": true,
+      "IsCrossPlayEnabled": true,
+      "KinectDataForExternal": "Disabled"
+    }
+  ],
+  "HasExternalInAppProducts": false,
+  "MeetAccessibilityGuidelines": false,
+  "NotesForCertification": "This is a purely visual app: there is no audio. 
+Documentation about how to use the app can be found at 
+https://www.cardgamesimulator.com/",
+  "Status": "Published",
+  "StatusDetails": {
+    "Errors": [],
+    "Warnings": [
+      {
+        "Code": "SalesUnsupportedWarning",
+        "Details": "The sales resource is no longer supported. To view or edit 
+the sales data for this submission, use the Dev Center dashboard."
+      }
+    ],
+    "CertificationReports": []
+  },
+  "FileUploadUrl": null,
+  "ApplicationPackages": [
+    {
+      "FileName": "Card Game Simulator_1.150.0.0_x64_bundle_Master.msixupload",
+      "FileStatus": "Uploaded",
+      "Id": "2000000000092735670",
+      "Version": "1.150.0.0",
+      "Architecture": "neutral",
+      "Languages": [
+        "en-US"
+      ],
+      "Capabilities": [
+        "internetClient",
+        "internetClientServer",
+        "picturesLibrary"
+      ],
+      "MinimumDirectXVersion": "None",
+      "MinimumSystemRam": "None"
+    }
+  ],
+  "PackageDeliveryOptions": {
+    "PackageRollout": {
+      "IsPackageRollout": false,
+      "PackageRolloutPercentage": 0,
+      "PackageRolloutStatus": "PackageRolloutNotStarted",
+      "FallbackSubmissionId": "0"
+    },
+    "IsMandatoryUpdate": false,
+    "MandatoryUpdateEffectiveDate": "1601-01-01T00:00:00Z"
+  },
+  "EnterpriseLicensing": "Online",
+  "AllowMicrosoftDecideAppAvailabilityToFutureDeviceFamilies": true,
+  "AllowTargetFutureDeviceFamilies": {
+    "Desktop": true,
+    "Mobile": false,
+    "Holographic": false,
+    "Team": false,
+    "Xbox": false,
+    "7": true
+  },
+  "FriendlyName": "Submission 127",
+  "Trailers": []
+}
