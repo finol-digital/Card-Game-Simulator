@@ -959,7 +959,7 @@ jobs:
       - name: Apply Release Notes
         uses: davidmfinol/replace-action@master
         with:
-          files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
+          files: "C:/Card-Game-Simulator.git/storebroker/metadata.json"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
       - name: Prepare project by fixing UnityWSAPlayerDir and removing to_remove.txt
         working-directory: C:/Card-Game-Simulator.git
@@ -1094,7 +1094,10 @@ jobs:
         run: | 
           $metadata = Get-Content -Raw "C:\Card-Game-Simulator.git\storebroker\metadata.json" 
           msstore submission updateMetadata 9N96N5S4W3J0 $metadata
-      - name: Publish App package 
+      - name: Publish to Store
+        run: msstore submission publish 9N96N5S4W3J0
+      - name: Publish App package
+        if: false
         run: msstore publish '${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}' -id 9N96N5S4W3J0
       - name: Publish to the Microsoft Store
         if: false
