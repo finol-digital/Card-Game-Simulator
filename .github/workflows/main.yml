@@ -959,7 +959,7 @@ jobs:
       - name: Apply Release Notes
         uses: davidmfinol/replace-action@master
         with:
-          files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
+          files: "C:/Card-Game-Simulator.git/msstore/metadata.json"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
       - name: Prepare project by fixing UnityWSAPlayerDir and removing to_remove.txt
         working-directory: C:/Card-Game-Simulator.git
@@ -974,7 +974,7 @@ jobs:
           $manifest.save(".\$env:WsaPlayerDirectory\UnityCommon.props")
           echo ".\$env:WsaPlayerDirectory\UnityCommon.props"
           cat ".\$env:WsaPlayerDirectory\UnityCommon.props"
-          $content_to_remove = Get-Content -Path C:\Card-Game-Simulator.git\storebroker\to_remove.txt -Raw
+          $content_to_remove = Get-Content -Path C:\Card-Game-Simulator.git\msstore\to_remove.txt -Raw
           echo "$content_to_remove"
           $targetContent = Get-Content -Path ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj" -Raw
           $updatedContent = $targetContent -replace [regex]::Escape($content_to_remove), ''
@@ -1007,8 +1007,8 @@ jobs:
         env:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
         run: |
-          Copy-Item "C:\Card-Game-Simulator.git\storebroker\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
-          Copy-Item "C:\Card-Game-Simulator.git\storebroker\CardGameSimulator.vcxproj.user" -Destination ".\$env:UwpProjectDirectory\"
+          Copy-Item "C:\Card-Game-Simulator.git\msstore\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
+          Copy-Item "C:\Card-Game-Simulator.git\msstore\CardGameSimulator.vcxproj.user" -Destination ".\$env:UwpProjectDirectory\"
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
           $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
           $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
@@ -1037,10 +1037,17 @@ jobs:
         with:
           project-path: C:/Card-Game-Simulator.git
           unity-modules: universal-windows-platform
+      - name: Build the .msixupload with MSBuild
+        working-directory: C:/Card-Game-Simulator.git
+        shell: pwsh
+        env:
+          SolutionPath: build\WSAPlayer\WSAPlayer\Card Game Simulator.sln
+          SigningCertificate:  C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Card Game Simulator_StoreKey.pfx
+        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x64" /p:AppxPackageSigningEnabled=false
+#        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x64" /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="" /p:PackageCertificateKeyFile=$env:SigningCertificate
       - name: Setup Microsoft Store Developer CLI
         uses: microsoft/setup-msstore-cli@v1
       - name: Configure Microsoft Store Developer CLI
-        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -1062,14 +1069,6 @@ jobs:
           msstore package "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Package.appxmanifest"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator"
-      - name: Build the .msixupload with MSBuild
-        working-directory: C:/Card-Game-Simulator.git
-        shell: pwsh
-        env:
-          SolutionPath: build\WSAPlayer\WSAPlayer\Card Game Simulator.sln
-          SigningCertificate:  C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Card Game Simulator_StoreKey.pfx
-        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x64" /p:AppxPackageSigningEnabled=false
-#        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x64" /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="" /p:PackageCertificateKeyFile=$env:SigningCertificate
       - name: Remove the .pfx
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -1089,38 +1088,16 @@ jobs:
         with:
           name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
           path: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
-      - name: Publish to the Microsoft Store
-        if: false
-        uses: isaacrlevin/windows-store-action@1.0
-        with:
-          tenant-id: ${{ secrets.MICROSOFT_TENANT_ID }}
-          client-id: ${{ secrets.MICROSOFT_CLIENT_ID }}
-          client-secret: ${{ secrets.MICROSOFT_KEY }}
-          app-id: 9N96N5S4W3J0
-          package-path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
-      - name: Upload to the Microsoft Store via StoreBroker
-        if: false
-        working-directory: C:/Card-Game-Simulator.git
+      - name: Update metadata
         shell: pwsh
-        env:
-          MICROSOFT_TENANT_ID: ${{ secrets.MICROSOFT_TENANT_ID }}
-          MICROSOFT_CLIENT_ID: ${{ secrets.MICROSOFT_CLIENT_ID }}
-          MICROSOFT_KEY: ${{ secrets.MICROSOFT_KEY }}
-          MICROSOFT_APP_ID: 9N96N5S4W3J0
-          STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', 'C:\Card-Game-Simulator.git') }}
-          PDP_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
-          IMAGES_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
-          OUT_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\', 'C:\Card-Game-Simulator.git') }}
-          SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.json', 'C:\Card-Game-Simulator.git') }}
-          PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.zip', 'C:\Card-Game-Simulator.git') }}
         run: |
-          Install-Module -Name StoreBroker -AcceptLicense -Force
-          $pass = ConvertTo-SecureString $env:MICROSOFT_KEY -AsPlainText -Force
-          $cred = New-Object System.Management.Automation.PSCredential ($env:MICROSOFT_CLIENT_ID, $pass)
-          Set-StoreBrokerAuthentication -TenantId $env:MICROSOFT_TENANT_ID -Credential $cred
-          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath "$env:APPX_PATH" -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
-          Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
+          $metadata = Get-Content -Raw "C:\Card-Game-Simulator.git\msstore\metadata.json" 
+          msstore submission updateMetadata 9N96N5S4W3J0 $metadata
+      - name: Publish to Store
+        run: msstore submission publish 9N96N5S4W3J0
+      - name: Publish App package
+        if: false
+        run: msstore publish '${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}' -id 9N96N5S4W3J0
 
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
