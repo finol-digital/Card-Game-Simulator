@@ -1,0 +1,26 @@
+name: GetBaseMetadata 
+ 
+on: 
+  workflow_dispatch: 
+ 
+jobs: 
+  build: 
+    runs-on: windows-latest 
+ 
+    steps: 
+    - uses: actions/checkout@v3 
+ 
+    - uses: microsoft/microsoft-store-apppublisher@v1.1 
+ 
+    - name: Configure MSStore CLI 
+      run: | 
+        msstore reconfigure ` 
+          --tenantId ${{ secrets.MICROSOFT_TENANT_ID }} ` 
+          --sellerId ${{ secrets.MICROSOFT_SELLER_ID }} ` 
+          --clientId ${{ secrets.MICROSOFT_CLIENT_ID }} ` 
+          --clientSecret ${{ secrets.MICROSOFT_KEY }} 
+ 
+    - name: Get base metadata  
+      shell: pwsh 
+      run: | 
+        msstore submission get 9N96N5S4W3J0
