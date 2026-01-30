@@ -65,5 +65,6 @@ layout: home
     <a href="/reddit" title="Reddit"><img src="/assets/img/reddit.png" alt="Reddit" class="social-icon" /></a>
     <a href="/github" title="GitHub"><img src="/assets/img/GitHub.png" alt="GitHub" class="social-icon" /></a>
     <a href="/bluesky" title="Bluesky"><img src="/assets/img/Bluesky.png" alt="Bluesky" class="social-icon" /></a>
+    <a href="https://www.patreon.com/davidmfinol" title="Support CGS on Patreon"><img src="/assets/img/patreon-symbol.png" alt="Support CGS on Patreon" class="social-icon" /></a>
   </p>
 </section>
