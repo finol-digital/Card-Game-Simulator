@@ -109,9 +109,10 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
             InputSystem.actions.FindAction(Tags.ViewerLess).performed += InputLess;
             InputSystem.actions.FindAction(Tags.ViewerMore).performed += InputMore;
-            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputShuffle;
             InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSave;
+            InputSystem.actions.FindAction(Tags.CardRotate).performed += InputRotate;
             InputSystem.actions.FindAction(Tags.CardFlip).performed += InputFlip;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputShuffle;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -497,27 +498,6 @@ namespace Cgs.CardGameView.Viewer
             Stack.View();
         }
 
-        private void InputShuffle(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            if (SelectedPlayable is CardStack)
-                ShuffleStack();
-        }
-
-        [UsedImplicitly]
-        public void ShuffleStack()
-        {
-            if (Stack == null)
-            {
-                Debug.LogWarning("Ignoring shuffle request since there is no stack selected.");
-                return;
-            }
-
-            Stack.PromptShuffle();
-        }
-
         private void InputSave(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
@@ -539,6 +519,27 @@ namespace Cgs.CardGameView.Viewer
             Stack.PromptSave();
         }
 
+        private void InputRotate(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is CardStack)
+                RotateStack();
+        }
+
+        [UsedImplicitly]
+        public void RotateStack()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring rotate stack request since there is no stack selected.");
+                return;
+            }
+
+            Stack.Rotation *= Quaternion.Euler(0, 0, -CardGameManager.Current.GameCardRotationDegrees);
+        }
+
         private void InputFlip(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
@@ -558,6 +559,27 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Stack.FlipTopFace();
+        }
+
+        private void InputShuffle(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is CardStack)
+                ShuffleStack();
+        }
+
+        [UsedImplicitly]
+        public void ShuffleStack()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring shuffle request since there is no stack selected.");
+                return;
+            }
+
+            Stack.PromptShuffle();
         }
 
         [UsedImplicitly]
@@ -615,9 +637,10 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;
             InputSystem.actions.FindAction(Tags.ViewerLess).performed -= InputLess;
             InputSystem.actions.FindAction(Tags.ViewerMore).performed -= InputMore;
-            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputShuffle;
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSave;
+            InputSystem.actions.FindAction(Tags.CardRotate).performed -= InputRotate;
             InputSystem.actions.FindAction(Tags.CardFlip).performed -= InputFlip;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputShuffle;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
