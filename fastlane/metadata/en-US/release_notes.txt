@@ -1,2 +1,4 @@
 ## What's Changed
-- Streamlined UI buttons/controls
+- Stack Action Menu can Rotate
+- UI Tweaks/Fixes
+
