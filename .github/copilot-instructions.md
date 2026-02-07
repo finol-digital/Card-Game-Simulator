@@ -6,7 +6,7 @@
 - **Tech Stack:** Unity Game Engine
 - **Structure:** 
   - Core game logic in C#
-  - User interface using Unity's UI system
+  - User interface using Unity UI (uGUI) and UI Toolkit
   - Assets stored in the `Assets/` folder
   - Documentation in the `docs/` folder
 
