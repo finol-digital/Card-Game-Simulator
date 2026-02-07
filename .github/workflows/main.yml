@@ -951,11 +951,10 @@ jobs:
         id: changelog
         shell: bash
         run: |
-          export RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
-          echo "$RELEASE_NOTES"
-          echo 'RELEASE_NOTES<<EOF' >> $GITHUB_OUTPUT
-          echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+          RELEASE_NOTES_ESCAPED=$(python -c "import json;print(json.dumps(open('fastlane/metadata/en-US/release_notes.txt','r',encoding='utf-8').read())[1:-1])")
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "$RELEASE_NOTES_ESCAPED" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Apply Release Notes
         uses: davidmfinol/replace-action@master
         with:
