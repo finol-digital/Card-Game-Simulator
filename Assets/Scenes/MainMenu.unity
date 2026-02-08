@@ -533,7 +533,6 @@ MonoBehaviour:
   - {fileID: 1603417254}
   - {fileID: 446466192385613729}
   - {fileID: 179463890}
-  joinButton: {fileID: 223206894}
   fullscreenButton: {fileID: 2097217150}
   quitButton: {fileID: 1328835476}
 --- !u!1001 &223206891

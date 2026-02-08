@@ -132,6 +132,8 @@ namespace Cgs.Play
 
         public IEnumerable<CardZone> AllCardZones => playAreaCardZone.GetComponentsInChildren<CardZone>();
 
+        public CardStack CurrentDeckStack { get; set; }
+
         public LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;
@@ -154,14 +156,6 @@ namespace Cgs.Play
         private HandDealer Dealer => _dealer ??= Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
 
         private HandDealer _dealer;
-
-        public CardStack CurrentSoloDeck
-        {
-            get => _soloDeckStack;
-            set => _soloDeckStack = value;
-        }
-
-        private CardStack _soloDeckStack;
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
                                   CardViewer.Instance.Zoom || scoreboard.nameInputField.isFocused ||
@@ -402,8 +396,8 @@ namespace Cgs.Play
             else
             {
                 List<CardStack> cardStacks = new();
-                _soloDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, false);
-                cardStacks.Add(_soloDeckStack);
+                CurrentDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, false);
+                cardStacks.Add(CurrentDeckStack);
                 var i = 1;
                 foreach (var (groupName, cards) in extraGroups)
                 {
@@ -609,11 +603,11 @@ namespace Cgs.Play
         private IEnumerable<UnityCard> PopSoloDeckCards(int count)
         {
             var cards = new List<UnityCard>(count);
-            if (_soloDeckStack == null)
+            if (CurrentDeckStack == null)
                 return cards;
 
-            for (var i = 0; i < count && _soloDeckStack.Cards.Count > 0; i++)
-                cards.Add(CardGameManager.Current.Cards[_soloDeckStack.OwnerPopCard()]);
+            for (var i = 0; i < count && CurrentDeckStack.Cards.Count > 0; i++)
+                cards.Add(CardGameManager.Current.Cards[CurrentDeckStack.OwnerPopCard()]);
             return cards;
         }
 

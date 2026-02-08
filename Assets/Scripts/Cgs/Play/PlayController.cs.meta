@@ -26,7 +26,9 @@ MonoImporter:
       type: 3}
   - diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e,
       type: 3}
-  - tokenPrefab: {fileID: 5127053305123712531, guid: c6a1cf8ae8ec3d647b7d1abc3b0a4b7b,
+  - counterPrefab: {fileID: 5127053305123712531, guid: c6a1cf8ae8ec3d647b7d1abc3b0a4b7b,
+      type: 3}
+  - diceZonePrefab: {fileID: 4882463832953300616, guid: 27490be58ff37514fb042881206a91d2,
       type: 3}
   - horizontalCardZonePrefab: {fileID: 3075554628274637118, guid: 21036df1d45067b4387821a32693828f,
       type: 3}

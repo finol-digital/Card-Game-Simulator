@@ -220,26 +220,24 @@ namespace Cgs.Play.Drawer
                 {
                     for (var i = 0; i < allCardStacks.Count; i++)
                     {
-                        if (allCardStacks[i].GetComponent<NetworkObject>() == currentDeck)
-                        {
-                            selectedIndex = i;
-                            break;
-                        }
+                        if (allCardStacks[i].GetComponent<NetworkObject>() != currentDeck)
+                            continue;
+                        selectedIndex = i;
+                        break;
                     }
                 }
             }
             else
             {
-                var soloDeck = PlayController.Instance.CurrentSoloDeck;
-                if (soloDeck != null)
+                var currentDeck = PlayController.Instance.CurrentDeckStack;
+                if (currentDeck != null)
                 {
                     for (var i = 0; i < allCardStacks.Count; i++)
                     {
-                        if (allCardStacks[i] == soloDeck)
-                        {
-                            selectedIndex = i;
-                            break;
-                        }
+                        if (allCardStacks[i] != currentDeck)
+                            continue;
+                        selectedIndex = i;
+                        break;
                     }
                 }
             }
@@ -278,7 +276,7 @@ namespace Cgs.Play.Drawer
             }
             else
             {
-                PlayController.Instance.CurrentSoloDeck = selectedStack;
+                PlayController.Instance.CurrentDeckStack = selectedStack;
             }
         }
 
