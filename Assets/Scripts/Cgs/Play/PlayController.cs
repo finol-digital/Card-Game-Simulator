@@ -37,10 +37,6 @@ namespace Cgs.Play
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
 
-        public const float PlayableMoveSpeed = 600f;
-        private const float PlayAreaBuffer = 8;
-        private const float DeckPositionBuffer = 50;
-
         public static string LoadStartDecksAsk
         {
             get
@@ -54,6 +50,10 @@ namespace Cgs.Play
                 return text.ToString();
             }
         }
+
+        public const float PlayableMoveSpeed = 600f;
+        private const float PlayAreaBuffer = 8;
+        private const float DeckPositionBuffer = 50;
 
         public static PlayController Instance { get; private set; }
 
@@ -128,9 +128,11 @@ namespace Cgs.Play
             }
         }
 
-        private IEnumerable<CardStack> AllCardStacks => playAreaCardZone.GetComponentsInChildren<CardStack>();
+        public IEnumerable<CardStack> AllCardStacks => playAreaCardZone.GetComponentsInChildren<CardStack>();
 
         public IEnumerable<CardZone> AllCardZones => playAreaCardZone.GetComponentsInChildren<CardZone>();
+
+        public CardStack CurrentDeckStack { get; set; }
 
         public LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
@@ -154,8 +156,6 @@ namespace Cgs.Play
         private HandDealer Dealer => _dealer ??= Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
 
         private HandDealer _dealer;
-
-        private CardStack _soloDeckStack;
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
                                   CardViewer.Instance.Zoom || scoreboard.nameInputField.isFocused ||
@@ -214,20 +214,31 @@ namespace Cgs.Play
             else if (CgsNetManager.Instance.IsHost)
             {
                 foreach (var cardStack in playAreaCardZone.GetComponentsInChildren<CardStack>())
-                    cardStack.MyNetworkObject.Despawn();
+                    if (cardStack != null && cardStack.MyNetworkObject != null && cardStack.MyNetworkObject.IsSpawned)
+                        cardStack.MyNetworkObject.Despawn();
                 foreach (var cardModel in playAreaCardZone.GetComponentsInChildren<CardModel>())
-                    cardModel.MyNetworkObject.Despawn();
+                    if (cardModel != null && cardModel.MyNetworkObject != null && cardModel.MyNetworkObject.IsSpawned)
+                        cardModel.MyNetworkObject.Despawn();
                 foreach (var die in playAreaCardZone.GetComponentsInChildren<Die>())
-                    die.MyNetworkObject.Despawn();
+                    if (die != null && die.MyNetworkObject != null && die.MyNetworkObject.IsSpawned)
+                        die.MyNetworkObject.Despawn();
+                foreach (var counter in playAreaCardZone.GetComponentsInChildren<Counter>())
+                    if (counter != null && counter.MyNetworkObject != null && counter.MyNetworkObject.IsSpawned)
+                        counter.MyNetworkObject.Despawn();
                 foreach (var zone in playAreaCardZone.GetComponentsInChildren<CardZone>())
-                    zone.MyNetworkObject.Despawn();
+                    if (zone != null && zone.MyNetworkObject != null && zone.MyNetworkObject.IsSpawned
+                        && zone != playAreaCardZone)
+                        zone.MyNetworkObject.Despawn();
+                foreach (var zone in playAreaCardZone.GetComponentsInChildren<DiceZone>())
+                    if (zone != null && zone.MyNetworkObject != null && zone.MyNetworkObject.IsSpawned)
+                        zone.MyNetworkObject.Despawn();
                 rectTransform.DestroyAllChildren();
             }
 
             rectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X + PlayAreaBuffer,
                 CardGameManager.Current.PlayMatSize.Y + PlayAreaBuffer) * CardGameManager.PixelsPerInch;
 
-            if (!NetworkManager.Singleton.IsConnectedClient)
+            if (!NetworkManager.Singleton.IsConnectedClient || CgsNetManager.Instance.IsHost)
             {
                 playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform)
                     .GetOrAddComponent<Image>();
@@ -385,8 +396,8 @@ namespace Cgs.Play
             else
             {
                 List<CardStack> cardStacks = new();
-                _soloDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, false);
-                cardStacks.Add(_soloDeckStack);
+                CurrentDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, false);
+                cardStacks.Add(CurrentDeckStack);
                 var i = 1;
                 foreach (var (groupName, cards) in extraGroups)
                 {
@@ -592,11 +603,11 @@ namespace Cgs.Play
         private IEnumerable<UnityCard> PopSoloDeckCards(int count)
         {
             var cards = new List<UnityCard>(count);
-            if (_soloDeckStack == null)
+            if (CurrentDeckStack == null)
                 return cards;
 
-            for (var i = 0; i < count && _soloDeckStack.Cards.Count > 0; i++)
-                cards.Add(CardGameManager.Current.Cards[_soloDeckStack.OwnerPopCard()]);
+            for (var i = 0; i < count && CurrentDeckStack.Cards.Count > 0; i++)
+                cards.Add(CardGameManager.Current.Cards[CurrentDeckStack.OwnerPopCard()]);
             return cards;
         }
 

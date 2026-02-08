@@ -10,6 +10,7 @@ using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -39,6 +40,7 @@ namespace Cgs.Play.Drawer
                                          CardGameManager.Instance.ModalCanvas != null;
 
         public StackViewer viewer;
+        public Dropdown cardStackDropdown;
         public Button downButton;
         public Button upButton;
         public RectTransform panelRectTransform;
@@ -59,6 +61,9 @@ namespace Cgs.Play.Drawer
         private readonly List<Text> _countTexts = new();
 
         private int _previousOverlapSpacing;
+        private int _previousCardStackCount;
+        private string _previousCardStackNames = string.Empty;
+        private bool _isRefreshingDropdown;
 
         private void OnEnable()
         {
@@ -92,6 +97,15 @@ namespace Cgs.Play.Drawer
             if (PlaySettings.StackViewerOverlap != _previousOverlapSpacing)
                 viewer.ApplyOverlapSpacing();
             _previousOverlapSpacing = PlaySettings.StackViewerOverlap;
+
+            if (PlayController.Instance != null)
+            {
+                var allCardStacks = PlayController.Instance.AllCardStacks.ToList();
+                var currentCount = allCardStacks.Count;
+                var currentNames = string.Join(",", allCardStacks.Select(s => s.Name));
+                if (currentCount != _previousCardStackCount || currentNames != _previousCardStackNames)
+                    RefreshCardStackDropdown();
+            }
         }
 
         private void Resize()
@@ -181,6 +195,89 @@ namespace Cgs.Play.Drawer
             panelRectTransform.anchoredPosition = MidPosition;
             downButton.interactable = true;
             upButton.interactable = true;
+        }
+
+        public void RefreshCardStackDropdown()
+        {
+            if (PlayController.Instance == null)
+                return;
+
+            _isRefreshingDropdown = true;
+
+            var allCardStacks = PlayController.Instance.AllCardStacks.ToList();
+            _previousCardStackCount = allCardStacks.Count;
+            _previousCardStackNames = string.Join(",", allCardStacks.Select(s => s.Name));
+
+            cardStackDropdown.ClearOptions();
+            cardStackDropdown.AddOptions(allCardStacks.Select(s => s.Name).ToList());
+
+            var selectedIndex = -1;
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline &&
+                CgsNetManager.Instance.LocalPlayer != null)
+            {
+                var currentDeck = CgsNetManager.Instance.LocalPlayer.CurrentDeck;
+                if (currentDeck != null)
+                {
+                    for (var i = 0; i < allCardStacks.Count; i++)
+                    {
+                        if (allCardStacks[i].GetComponent<NetworkObject>() != currentDeck)
+                            continue;
+                        selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                var currentDeck = PlayController.Instance.CurrentDeckStack;
+                if (currentDeck != null)
+                {
+                    for (var i = 0; i < allCardStacks.Count; i++)
+                    {
+                        if (allCardStacks[i] != currentDeck)
+                            continue;
+                        selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if (selectedIndex >= 0 && selectedIndex < allCardStacks.Count)
+                cardStackDropdown.value = selectedIndex;
+            else if (allCardStacks.Count > 0)
+                cardStackDropdown.value = 0;
+
+            cardStackDropdown.RefreshShownValue();
+
+            _isRefreshingDropdown = false;
+        }
+
+        [UsedImplicitly]
+        public void SetCardStack(int cardStackIndex)
+        {
+            if (_isRefreshingDropdown)
+                return;
+
+            if (PlayController.Instance == null)
+                return;
+
+            var allCardStacks = PlayController.Instance.AllCardStacks.ToList();
+            if (cardStackIndex < 0 || cardStackIndex >= allCardStacks.Count)
+                return;
+
+            var selectedStack = allCardStacks[cardStackIndex];
+
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline &&
+                CgsNetManager.Instance.LocalPlayer != null)
+            {
+                var networkObject = selectedStack.GetComponent<NetworkObject>();
+                if (networkObject != null)
+                    CgsNetManager.Instance.LocalPlayer.RequestSetCurrentDeck(networkObject);
+            }
+            else
+            {
+                PlayController.Instance.CurrentDeckStack = selectedStack;
+            }
         }
 
         public void AddCard(UnityCard card)

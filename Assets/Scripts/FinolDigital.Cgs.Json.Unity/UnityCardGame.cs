@@ -144,17 +144,19 @@ namespace FinolDigital.Cgs.Json.Unity
             get => _playMatImageSprite ??= Resources.Load<Sprite>("PlayMat");
             private set
             {
-                if (_playMatImageSprite != null)
+                if (_playMatImageSprite != null && _hasPlayMatImage)
                 {
                     Object.Destroy(_playMatImageSprite.texture);
                     Object.Destroy(_playMatImageSprite);
                 }
 
+                _hasPlayMatImage = true;
                 _playMatImageSprite = value;
             }
         }
 
         private Sprite _playMatImageSprite;
+        private bool _hasPlayMatImage;
 
         public UnityCardGame(MonoBehaviour coroutineRunner, string id = DefaultName, string autoUpdateUrl = "")
             : base(id, autoUpdateUrl)

@@ -10,7 +10,7 @@ Card Game Simulator is a Unity-based digital platform for playing card games on 
 - Unity 6.3
 - C# (.NET Standard)
 - Unity Netcode for GameObjects (multiplayer)
-- Unity UI System (uGUI)
+- Unity UI System (uGUI) and UI Toolkit
 - Newtonsoft.Json for JSON handling
 - NUnit for testing
 
