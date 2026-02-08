@@ -39,6 +39,7 @@ namespace Cgs.Play.Drawer
                                          CardGameManager.Instance.ModalCanvas != null;
 
         public StackViewer viewer;
+        public Dropdown cardStackDropdown;
         public Button downButton;
         public Button upButton;
         public RectTransform panelRectTransform;
@@ -181,6 +182,12 @@ namespace Cgs.Play.Drawer
             panelRectTransform.anchoredPosition = MidPosition;
             downButton.interactable = true;
             upButton.interactable = true;
+        }
+
+        [UsedImplicitly]
+        public void SetCardStack(int cardStackIndex)
+        {
+            // TODO
         }
 
         public void AddCard(UnityCard card)
