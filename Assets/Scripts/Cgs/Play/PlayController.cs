@@ -220,20 +220,31 @@ namespace Cgs.Play
             else if (CgsNetManager.Instance.IsHost)
             {
                 foreach (var cardStack in playAreaCardZone.GetComponentsInChildren<CardStack>())
-                    cardStack.MyNetworkObject.Despawn();
+                    if (cardStack != null && cardStack.MyNetworkObject != null && cardStack.MyNetworkObject.IsSpawned)
+                        cardStack.MyNetworkObject.Despawn();
                 foreach (var cardModel in playAreaCardZone.GetComponentsInChildren<CardModel>())
-                    cardModel.MyNetworkObject.Despawn();
+                    if (cardModel != null && cardModel.MyNetworkObject != null && cardModel.MyNetworkObject.IsSpawned)
+                        cardModel.MyNetworkObject.Despawn();
                 foreach (var die in playAreaCardZone.GetComponentsInChildren<Die>())
-                    die.MyNetworkObject.Despawn();
+                    if (die != null && die.MyNetworkObject != null && die.MyNetworkObject.IsSpawned)
+                        die.MyNetworkObject.Despawn();
+                foreach (var counter in playAreaCardZone.GetComponentsInChildren<Counter>())
+                    if (counter != null && counter.MyNetworkObject != null && counter.MyNetworkObject.IsSpawned)
+                        counter.MyNetworkObject.Despawn();
                 foreach (var zone in playAreaCardZone.GetComponentsInChildren<CardZone>())
-                    zone.MyNetworkObject.Despawn();
+                    if (zone != null && zone.MyNetworkObject != null && zone.MyNetworkObject.IsSpawned
+                        && zone != playAreaCardZone)
+                        zone.MyNetworkObject.Despawn();
+                foreach (var zone in playAreaCardZone.GetComponentsInChildren<DiceZone>())
+                    if (zone != null && zone.MyNetworkObject != null && zone.MyNetworkObject.IsSpawned)
+                        zone.MyNetworkObject.Despawn();
                 rectTransform.DestroyAllChildren();
             }
 
             rectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X + PlayAreaBuffer,
                 CardGameManager.Current.PlayMatSize.Y + PlayAreaBuffer) * CardGameManager.PixelsPerInch;
 
-            if (!NetworkManager.Singleton.IsConnectedClient)
+            if (!NetworkManager.Singleton.IsConnectedClient || CgsNetManager.Instance.IsHost)
             {
                 playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform)
                     .GetOrAddComponent<Image>();
