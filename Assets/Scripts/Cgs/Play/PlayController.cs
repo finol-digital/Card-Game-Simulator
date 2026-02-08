@@ -37,10 +37,6 @@ namespace Cgs.Play
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
 
-        public const float PlayableMoveSpeed = 600f;
-        private const float PlayAreaBuffer = 8;
-        private const float DeckPositionBuffer = 50;
-
         public static string LoadStartDecksAsk
         {
             get
@@ -54,6 +50,10 @@ namespace Cgs.Play
                 return text.ToString();
             }
         }
+
+        public const float PlayableMoveSpeed = 600f;
+        private const float PlayAreaBuffer = 8;
+        private const float DeckPositionBuffer = 50;
 
         public static PlayController Instance { get; private set; }
 
@@ -128,7 +128,7 @@ namespace Cgs.Play
             }
         }
 
-        private IEnumerable<CardStack> AllCardStacks => playAreaCardZone.GetComponentsInChildren<CardStack>();
+        public IEnumerable<CardStack> AllCardStacks => playAreaCardZone.GetComponentsInChildren<CardStack>();
 
         public IEnumerable<CardZone> AllCardZones => playAreaCardZone.GetComponentsInChildren<CardZone>();
 
@@ -154,6 +154,12 @@ namespace Cgs.Play
         private HandDealer Dealer => _dealer ??= Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
 
         private HandDealer _dealer;
+
+        public CardStack CurrentSoloDeck
+        {
+            get => _soloDeckStack;
+            set => _soloDeckStack = value;
+        }
 
         private CardStack _soloDeckStack;
 

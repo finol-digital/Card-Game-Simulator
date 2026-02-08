@@ -142,6 +142,8 @@ namespace Cgs.Play.Multiplayer
 
             Debug.Log("[CgsNet Player] Starting local player...");
             CgsNetManager.Instance.LocalPlayer = this;
+            _currentDeck.OnValueChanged += OnCurrentDeckChanged;
+
             if (IsServer)
             {
                 RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs,
@@ -318,6 +320,26 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
                 PlayController.Instance.NewPlayablePosition, DefaultRotation, isFaceup);
+        }
+
+        public void RequestSetCurrentDeck(NetworkObject deck)
+        {
+            Debug.Log("[CgsNet Player] Requesting set current deck...");
+            SetCurrentDeckServerRpc(deck);
+        }
+
+        [ServerRpc]
+        private void SetCurrentDeckServerRpc(NetworkObjectReference deck)
+        {
+            Debug.Log("[CgsNet Player] Setting current deck!");
+            CurrentDeck = deck;
+        }
+
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void OnCurrentDeckChanged(NetworkObjectReference previousValue, NetworkObjectReference newValue)
+        {
+            if (PlayController.Instance != null && PlayController.Instance.drawer != null)
+                PlayController.Instance.drawer.RefreshCardStackDropdown();
         }
 
         public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position,
