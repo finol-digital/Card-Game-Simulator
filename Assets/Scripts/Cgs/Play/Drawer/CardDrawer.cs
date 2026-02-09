@@ -117,12 +117,22 @@ namespace Cgs.Play.Drawer
                 cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
         }
 
+        private void Show()
+        {
+            panelRectTransform.anchoredPosition = ShownPosition;
+            downButton.interactable = true;
+            upButton.interactable = false;
+        }
+
         private void InputLess(InputAction.CallbackContext context)
         {
+            Debug.Log("InputLess: " + IsBlocked);
             if (IsBlocked)
                 return;
 
+            Debug.Log("InputLess to ViewLess");
             ViewLess();
+            Debug.Log("InputLess Done");
         }
 
         [UsedImplicitly]
@@ -181,13 +191,6 @@ namespace Cgs.Play.Drawer
                 // Shown -> stay Shown
                 Show();
             }
-        }
-
-        private void Show()
-        {
-            panelRectTransform.anchoredPosition = ShownPosition;
-            downButton.interactable = true;
-            upButton.interactable = false;
         }
 
         public void SemiShow()
@@ -483,10 +486,16 @@ namespace Cgs.Play.Drawer
 
         private void OnDisable()
         {
+            Debug.Log("CardDrawer OnDisable");
             InputSystem.actions.FindAction(Tags.ViewerLess).performed -= InputLess;
             InputSystem.actions.FindAction(Tags.ViewerMore).performed -= InputMore;
             InputSystem.actions.FindAction(Tags.PlayGameAction0).performed -= InputAction0;
             InputSystem.actions.FindAction(Tags.PlayGameAction1).performed -= InputAction1;
+        }
+
+        private void OnDestroy()
+        {
+            Debug.Log("CardDrawer OnDestroy");
         }
     }
 }
