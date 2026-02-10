@@ -1,4 +1,2 @@
 ## What's Changed
-- Stack Action Menu can Rotate
-- UI Tweaks/Fixes
-
+- Hand Drawer Dropdown to select from which deck to deal/draw
