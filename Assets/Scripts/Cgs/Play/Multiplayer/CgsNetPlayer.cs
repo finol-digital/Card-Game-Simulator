@@ -755,5 +755,10 @@ namespace Cgs.Play.Multiplayer
         }
 
         #endregion
+
+        public override void OnNetworkDespawn()
+        {
+            _currentDeck.OnValueChanged -= OnCurrentDeckChanged;
+        }
     }
 }
