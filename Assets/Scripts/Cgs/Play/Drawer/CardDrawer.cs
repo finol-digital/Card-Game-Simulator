@@ -31,7 +31,7 @@ namespace Cgs.Play.Drawer
         private static Vector2 MidPosition =>
             new(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) / 2 - 10);
 
-        public static Vector2 HiddenPosition =>
+        public static Vector2 DockedPosition =>
             new(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) - 10);
 
         private static bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
@@ -126,37 +126,34 @@ namespace Cgs.Play.Drawer
 
         private void InputLess(InputAction.CallbackContext context)
         {
-            Debug.Log("InputLess: " + IsBlocked);
             if (IsBlocked)
                 return;
 
-            Debug.Log("InputLess to ViewLess");
             ViewLess();
-            Debug.Log("InputLess Done");
         }
 
         [UsedImplicitly]
         public void ViewLess()
         {
             var pos = panelRectTransform.anchoredPosition;
-            var dHidden = Vector2.Distance(pos, HiddenPosition);
+            var dDocked = Vector2.Distance(pos, DockedPosition);
             var dMid = Vector2.Distance(pos, MidPosition);
             var dShown = Vector2.Distance(pos, ShownPosition);
 
-            if (dShown <= dMid && dShown <= dHidden)
+            if (dShown <= dMid && dShown <= dDocked)
             {
                 // Shown -> SemiShow
                 SemiShow();
             }
-            else if (dMid <= dShown && dMid <= dHidden)
+            else if (dMid <= dShown && dMid <= dDocked)
             {
-                // SemiShow -> Hidden
-                Hide();
+                // SemiShow -> Docked
+                Dock();
             }
             else
             {
-                // Hidden -> stay Hidden
-                Hide();
+                // Hidden -> stay Docked
+                Dock();
             }
         }
 
@@ -172,16 +169,16 @@ namespace Cgs.Play.Drawer
         public void ViewMore()
         {
             var pos = panelRectTransform.anchoredPosition;
-            var dHidden = Vector2.Distance(pos, HiddenPosition);
+            var dDocked = Vector2.Distance(pos, DockedPosition);
             var dMid = Vector2.Distance(pos, MidPosition);
             var dShown = Vector2.Distance(pos, ShownPosition);
 
-            if (dHidden <= dMid && dHidden <= dShown)
+            if (dDocked <= dMid && dDocked <= dShown)
             {
-                // Hidden -> SemiShow
+                // Docked -> SemiShow
                 SemiShow();
             }
-            else if (dMid <= dHidden && dMid <= dShown)
+            else if (dMid <= dDocked && dMid <= dShown)
             {
                 // SemiShow -> Shown
                 Show();
@@ -477,25 +474,19 @@ namespace Cgs.Play.Drawer
                 cardZone.Clear();
         }
 
-        private void Hide()
+        private void Dock()
         {
-            panelRectTransform.anchoredPosition = HiddenPosition;
+            panelRectTransform.anchoredPosition = DockedPosition;
             downButton.interactable = false;
             upButton.interactable = true;
         }
 
         private void OnDisable()
         {
-            Debug.Log("CardDrawer OnDisable");
             InputSystem.actions.FindAction(Tags.ViewerLess).performed -= InputLess;
             InputSystem.actions.FindAction(Tags.ViewerMore).performed -= InputMore;
             InputSystem.actions.FindAction(Tags.PlayGameAction0).performed -= InputAction0;
             InputSystem.actions.FindAction(Tags.PlayGameAction1).performed -= InputAction1;
-        }
-
-        private void OnDestroy()
-        {
-            Debug.Log("CardDrawer OnDestroy");
         }
     }
 }

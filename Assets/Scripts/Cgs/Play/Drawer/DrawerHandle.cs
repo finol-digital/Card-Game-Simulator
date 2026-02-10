@@ -27,7 +27,7 @@ namespace Cgs.Play.Drawer
         public void OnDrag(PointerEventData eventData)
         {
             var targetY = eventData.position.y - _dragOffsetHeight;
-            var minY = CardDrawer.HiddenPosition.y * CardGameManager.Instance.CardCanvas.transform.localScale.y;
+            var minY = CardDrawer.DockedPosition.y * CardGameManager.Instance.CardCanvas.transform.localScale.y;
             var y = Mathf.Clamp(targetY, minY, CardDrawer.ShownPosition.y);
             cardDrawer.panelRectTransform.position = new Vector3(cardDrawer.panelRectTransform.position.x, y);
             cardDrawer.downButton.interactable = Math.Abs(y - minY) > 0.1f;

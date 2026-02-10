@@ -195,8 +195,10 @@ namespace Cgs.CardGameView.Viewer
         [UsedImplicitly]
         public void PromptShuffle()
         {
-            if (_cardStack != null)
-                _cardStack.PromptShuffle();
+            if (_cardStack == null)
+                return;
+
+            _cardStack.PromptShuffle();
             Close();
         }
 
