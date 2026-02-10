@@ -500,7 +500,10 @@ namespace Cgs.CardGameView.Viewer
 
         private void InputLess(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            // Gamepad does not have enough buttons for all card actions, so prefer rotation over less/more
+            var block = Gamepad.current != null && SelectedCardModel != null &&
+                        SelectedCardModel.ParentCardZone != null && SelectedCardModel.ParentCardZone.allowsRotation;
+            if (IsBlocked || block)
                 return;
 
             Mode = Mode switch
@@ -513,7 +516,10 @@ namespace Cgs.CardGameView.Viewer
 
         private void InputMore(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            // Gamepad does not have enough buttons for all card actions, so prefer rotation over less/more
+            var block = Gamepad.current != null && SelectedCardModel != null &&
+                        SelectedCardModel.ParentCardZone != null && SelectedCardModel.ParentCardZone.allowsRotation;
+            if (IsBlocked || block)
                 return;
 
             Mode = Mode switch
