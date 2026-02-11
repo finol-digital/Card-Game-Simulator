@@ -501,7 +501,7 @@ namespace Cgs.CardGameView.Viewer
         private void InputLess(InputAction.CallbackContext callbackContext)
         {
             // Gamepad does not have enough buttons for all card actions, so prefer rotation over less/more
-            var block = Gamepad.current != null && SelectedCardModel != null &&
+            var block = callbackContext.control.device is Gamepad && SelectedCardModel != null &&
                         SelectedCardModel.ParentCardZone != null && SelectedCardModel.ParentCardZone.allowsRotation;
             if (IsBlocked || block)
                 return;
@@ -517,7 +517,7 @@ namespace Cgs.CardGameView.Viewer
         private void InputMore(InputAction.CallbackContext callbackContext)
         {
             // Gamepad does not have enough buttons for all card actions, so prefer rotation over less/more
-            var block = Gamepad.current != null && SelectedCardModel != null &&
+            var block = callbackContext.control.device is Gamepad && SelectedCardModel != null &&
                         SelectedCardModel.ParentCardZone != null && SelectedCardModel.ParentCardZone.allowsRotation;
             if (IsBlocked || block)
                 return;
