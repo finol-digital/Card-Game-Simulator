@@ -1066,12 +1066,13 @@ jobs:
         with:
           name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
           path: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
-      - name: Update Metadata and Publish App Package
+      - name: Update Microsoft Store Submission and Publish App Package
         if: github.event.action == 'published'
         shell: pwsh
         run: |
-          $submission = msstore submission get 9N96N5S4W3J0 | ConvertFrom-Json -AsHashtable
-          $submission | ConvertTo-Json -Depth 100 | msstore submission updateMetadata 9N96N5S4W3J0
+          $json = msstore submission get 9N96N5S4W3J0 | ConvertFrom-Json -AsHashtable
+          $json.Listings.'en-us'.BaseListing.ReleaseNotes = '${{ github.event.release.body }}'
+          $json | ConvertTo-Json -Depth 100 | msstore submission updateMetadata 9N96N5S4W3J0
           msstore publish '${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}' -id 9N96N5S4W3J0
 
   announceReleaseToSocialMedia:
