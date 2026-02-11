@@ -152,7 +152,7 @@ namespace Cgs.Play.Drawer
             }
             else
             {
-                // Hidden -> stay Docked
+                // Docked -> stay Docked
                 Dock();
             }
         }
