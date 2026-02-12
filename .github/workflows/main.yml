@@ -1069,11 +1069,14 @@ jobs:
       - name: Update Microsoft Store Submission and Publish App Package
         if: github.event.action == 'published'
         shell: pwsh
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+          MSIX_PATH: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
         run: |
           $json = msstore submission get 9N96N5S4W3J0 | ConvertFrom-Json -AsHashtable
-          $json.Listings.'en-us'.BaseListing.ReleaseNotes = '${{ github.event.release.body }}'
+          $json.Listings.'en-us'.BaseListing.ReleaseNotes = $env:RELEASE_NOTES
           $json | ConvertTo-Json -Depth 100 | msstore submission updateMetadata 9N96N5S4W3J0
-          msstore publish '${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}' -id 9N96N5S4W3J0
+          msstore publish $env:MSIX_PATH -id 9N96N5S4W3J0
 
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
@@ -1083,22 +1086,30 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v6.0.1
+        with:
+          version_format: "${minor}"
+          minor_pattern: "(MINOR)"
+          bump_each_commit: true
+          debug: true
       - name: Prepare Announcement
         id: prepare
         shell: bash
         env:
-          VERSION: v${{ needs.buildWithWindows.outputs.buildVersion }}
-          RELEASE_NOTES: ${{ github.event.release.body }}
+          VERSION: v1.${{ steps.versioning.outputs.version }}
         run: |
           RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
-          ANNOUNCEMENT="Released CGS $VERSION! 
-          $RELEASE_NOTES"
-          printf "$ANNOUNCEMENT"
+          ANNOUNCEMENT="$(printf 'Released CGS %s!\n\n%s' "$VERSION" "$RELEASE_NOTES")"
+          printf '%s\n' "$ANNOUNCEMENT"
           export ANNOUNCEMENT
           echo 'ANNOUNCEMENT<<EOF' >> $GITHUB_OUTPUT
           echo "$ANNOUNCEMENT" >> $GITHUB_OUTPUT

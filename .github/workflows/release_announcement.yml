@@ -13,7 +13,7 @@ jobs:
         id: versioning
         uses: paulhatch/semantic-version@v6.0.1
         with:
-          version_format: "${major}.${minor}.${patch}"
+          version_format: "${minor}"
           minor_pattern: "(MINOR)"
           bump_each_commit: true
           debug: true
@@ -21,12 +21,11 @@ jobs:
         id: prepare
         shell: bash
         env:
-          VERSION: v${{ steps.versioning.outputs.version }}
+          VERSION: v1.${{ steps.versioning.outputs.version }}
         run: |
           RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
-          ANNOUNCEMENT="Released CGS $VERSION! 
-          $RELEASE_NOTES"
-          printf "$ANNOUNCEMENT"
+          ANNOUNCEMENT="$(printf 'Released CGS %s!\n\n%s' "$VERSION" "$RELEASE_NOTES")"
+          printf '%s\n' "$ANNOUNCEMENT"
           export ANNOUNCEMENT
           echo 'ANNOUNCEMENT<<EOF' >> $GITHUB_OUTPUT
           echo "$ANNOUNCEMENT" >> $GITHUB_OUTPUT
