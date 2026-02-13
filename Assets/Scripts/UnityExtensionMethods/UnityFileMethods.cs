@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -408,6 +409,49 @@ namespace UnityExtensionMethods
 
             var texture = textureFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
             return CreateSprite(texture);
+        }
+
+        public static IEnumerator CreateSpriteFromFileAsync(string textureFilePath, Action<Sprite> output)
+        {
+            if (output == null)
+            {
+                Debug.LogWarning("CreateSpriteFromFileAsync::OutputNull");
+                yield break;
+            }
+
+            if (!File.Exists(textureFilePath))
+            {
+                Debug.LogWarning("CreateSpriteFromFileAsync::TextureFileMissing");
+                output(null);
+                yield break;
+            }
+
+            byte[] bytes;
+#if UNITY_WEBGL
+            bytes = File.ReadAllBytes(textureFilePath);
+#else
+            var loadTask = Task.Run(() => File.ReadAllBytes(textureFilePath));
+            while (!loadTask.IsCompleted)
+                yield return null;
+            if (loadTask.IsFaulted)
+            {
+                Debug.LogWarning("CreateSpriteFromFileAsync::ReadFailed:" + loadTask.Exception);
+                output(null);
+                yield break;
+            }
+
+            bytes = loadTask.Result;
+#endif
+
+            if (bytes is not { Length: > 0 })
+            {
+                Debug.LogWarning("CreateSpriteFromFileAsync::TextureFileEmpty:" + textureFilePath);
+                output(null);
+                yield break;
+            }
+
+            var texture = textureFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
+            output(CreateSprite(texture));
         }
 
         // Can return null
