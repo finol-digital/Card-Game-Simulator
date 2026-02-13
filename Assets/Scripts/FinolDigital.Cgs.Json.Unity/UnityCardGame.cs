@@ -578,9 +578,22 @@ namespace FinolDigital.Cgs.Json.Unity
 
                 // We also re-load the banner and cardBack images now in case they've changed since we ReadProperties
                 if (File.Exists(BannerImageFilePath))
-                    BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
+                {
+                    Sprite bannerSprite = null;
+                    yield return UnityFileMethods.CreateSpriteFromFileAsync(BannerImageFilePath,
+                        output => bannerSprite = output);
+                    BannerImageSprite = bannerSprite;
+                    yield return null;
+                }
+
                 if (File.Exists(CardBackImageFilePath))
-                    CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
+                {
+                    Sprite cardBackSprite = null;
+                    yield return UnityFileMethods.CreateSpriteFromFileAsync(CardBackImageFilePath,
+                        output => cardBackSprite = output);
+                    CardBackImageSprite = cardBackSprite;
+                    yield return null;
+                }
 
                 // Load card back images
                 if (Directory.Exists(BacksDirectoryPath))
@@ -594,13 +607,23 @@ namespace FinolDigital.Cgs.Json.Unity
                             Object.Destroy(sprite);
                         }
 
-                        CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
+                        Sprite backSprite = null;
+                        yield return UnityFileMethods.CreateSpriteFromFileAsync(backFilePath,
+                            output => backSprite = output);
+                        CardBackFaceImageSprites[id] = backSprite;
+                        yield return null;
                     }
                 }
 
                 // The play mat can be loaded last
                 if (File.Exists(PlayMatImageFilePath))
-                    PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
+                {
+                    Sprite playMatSprite = null;
+                    yield return UnityFileMethods.CreateSpriteFromFileAsync(PlayMatImageFilePath,
+                        output => playMatSprite = output);
+                    PlayMatImageSprite = playMatSprite;
+                    yield return null;
+                }
 
                 // Only considered as loaded if none of the steps failed
                 if (string.IsNullOrEmpty(Error))
