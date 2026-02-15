@@ -59,11 +59,11 @@ layout: home
 
 <section class="community">
   <h2>Join the community</h2>
-  <p>Find us on Discord, Reddit, GitHub, and more. Help shape the <a href="https://github.com/orgs/finol-digital/projects/1">roadmap</a> or ask for help.</p>
+  <p>Find us on GitHub, Discord, Reddit, and more. Help shape the <a href="https://github.com/orgs/finol-digital/projects/1">roadmap</a> or ask for help.</p>
   <p class="social-links">
+    <a href="/github" title="GitHub"><img src="/assets/img/GitHub.png" alt="GitHub" class="social-icon" /></a>
     <a href="/discord" title="Discord"><img src="/assets/img/Discord.png" alt="Discord" class="social-icon" /></a>
     <a href="/reddit" title="Reddit"><img src="/assets/img/reddit.png" alt="Reddit" class="social-icon" /></a>
-    <a href="/github" title="GitHub"><img src="/assets/img/GitHub.png" alt="GitHub" class="social-icon" /></a>
     <a href="/bluesky" title="Bluesky"><img src="/assets/img/Bluesky.png" alt="Bluesky" class="social-icon" /></a>
     <a href="https://www.patreon.com/davidmfinol" title="Support CGS on Patreon"><img src="/assets/img/patreon-symbol.png" alt="Support CGS on Patreon" class="social-icon" /></a>
   </p>
