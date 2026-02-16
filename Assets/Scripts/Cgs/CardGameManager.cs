@@ -693,9 +693,11 @@ namespace Cgs
             {
                 targetGame.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
                 yield return null;
-                ResetGameScene();
                 while (targetGame.IsLoading)
+                {
+                    ResetGameScene();
                     yield return null;
+                }
             }
 
             ResetGameScene();
