@@ -218,8 +218,8 @@ namespace Cgs.Menu
         private void ResetGameSelectionCarousel()
         {
             currentGameNameText.text = CardGameManager.Current.Name;
-            currentCardImage.sprite = CardGameManager.Current.CardBackImageSprite;
             currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
+            currentCardImage.sprite = CardGameManager.Current.CardBackImageSprite;
             previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
             nextCardImage.sprite = CardGameManager.Instance.Next.CardBackImageSprite;
         }
