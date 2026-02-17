@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -102,7 +103,7 @@ namespace Cgs.CardGameView.Viewer
 
         public static void Move(CardModel cardModel)
         {
-            CardGameManager.Instance.Messenger.Show("Move Feature is Coming Soon!");
+            PlayController.Instance.ShowMoveMenu(cardModel);
         }
 
         private void InputRotate(InputAction.CallbackContext callbackContext)

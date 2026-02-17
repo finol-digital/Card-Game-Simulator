@@ -8,6 +8,7 @@ using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
+using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -18,7 +19,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.Play.Drawer
 {
-    public class CardDrawer : MonoBehaviour
+    public class CardDrawer : MonoBehaviour, ICardContainer
     {
         public const string DefaultHandName = "Hand";
         public const string DefaultDrawerName = "Drawer";
@@ -278,6 +279,11 @@ namespace Cgs.Play.Drawer
             {
                 PlayController.Instance.CurrentDeckStack = selectedStack;
             }
+        }
+
+        public void AddCard(Card card)
+        {
+            AddCard(card as UnityCard);
         }
 
         public void AddCard(UnityCard card)
