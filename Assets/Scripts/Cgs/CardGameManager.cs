@@ -693,13 +693,14 @@ namespace Cgs
             {
                 targetGame.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
                 yield return null;
-                ResetGameScene();
-                while (targetGame.IsLoading && targetGame == Current && selectionVersion == _selectionVersion)
+                while (targetGame.IsLoading)
+                {
+                    ResetGameScene();
                     yield return null;
+                }
             }
 
-            if (targetGame == Current && selectionVersion == _selectionVersion)
-                ResetGameScene();
+            ResetGameScene();
         }
 
         internal void ResetGameScene()

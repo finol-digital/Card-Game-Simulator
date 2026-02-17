@@ -31,7 +31,7 @@ using CardAction = FinolDigital.Cgs.Json.CardAction;
 namespace Cgs.Play
 {
     [RequireComponent(typeof(Canvas))]
-    public class PlayController : MonoBehaviour, ICardDropHandler
+    public class PlayController : MonoBehaviour, ICardDropHandler, ICardContainer
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
         public const string RestartPrompt = "Restart?";
@@ -64,6 +64,7 @@ namespace Cgs.Play
         public GameObject deckLoadMenuPrefab;
         public GameObject searchMenuPrefab;
         public GameObject handDealerPrefab;
+        public GameObject moveMenuPrefab;
 
         public GameObject boardPrefab;
         public GameObject cardStackPrefab;
@@ -156,6 +157,10 @@ namespace Cgs.Play
         private HandDealer Dealer => _dealer ??= Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
 
         private HandDealer _dealer;
+
+        private MoveMenu Mover => _moveMenu ??= Instantiate(moveMenuPrefab).GetOrAddComponent<MoveMenu>();
+
+        private MoveMenu _moveMenu;
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
                                   CardViewer.Instance.Zoom || scoreboard.nameInputField.isFocused ||
@@ -339,14 +344,14 @@ namespace Cgs.Play
             Settings.Show();
         }
 
-        public void ShowDeckMenu()
-        {
-            DeckLoader.Show(LoadDeck);
-        }
-
         public void ShowCardsMenu()
         {
             CardSearcher.Show(DisplayResults);
+        }
+
+        public void ShowDeckMenu()
+        {
+            DeckLoader.Show(LoadDeck);
         }
 
         private void LoadDeck(UnityDeck deck)
@@ -609,6 +614,18 @@ namespace Cgs.Play
             for (var i = 0; i < count && CurrentDeckStack.Cards.Count > 0; i++)
                 cards.Add(CardGameManager.Current.Cards[CurrentDeckStack.OwnerPopCard()]);
             return cards;
+        }
+
+        public void ShowMoveMenu(CardModel cardModel)
+        {
+            Mover.Show(cardModel);
+        }
+
+        public void AddCard(Card card)
+        {
+            var cardModel = CreateCardModel(playAreaCardZone.gameObject, card.Id, Vector2.zero, Quaternion.identity,
+                false);
+            AddCardToPlayArea(playAreaCardZone, cardModel);
         }
 
         private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)

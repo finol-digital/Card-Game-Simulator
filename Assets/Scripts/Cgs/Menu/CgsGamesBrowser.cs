@@ -35,7 +35,6 @@ namespace Cgs.Menu
         protected override bool AllowSwitchOff => false;
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
-
         private Modal _menu;
 
         private readonly Dictionary<int, CgsGame> _gameOptions = new();
