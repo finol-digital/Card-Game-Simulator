@@ -1,2 +1,3 @@
 ## What's Changed
-- Hand Drawer Dropdown to select from which deck to deal/draw
+- Added Move Card Menu
+- Bug-Fix for .webp image files
