@@ -1095,17 +1095,18 @@ jobs:
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Get Version
         id: versioning
-        uses: paulhatch/semantic-version@v6.0.1
-        with:
-          version_format: "${minor}"
-          minor_pattern: "(MINOR)"
-          bump_each_commit: true
-          debug: true
+        shell: bash
+        run: |
+          version="${{ needs.buildWithWindows.outputs.buildVersion }}"
+          version="${version#v}"
+          minor="${version#*.}"
+          minor="${minor%%.*}"
+          echo "minor=$minor" >> "$GITHUB_OUTPUT"
       - name: Prepare Announcement
         id: prepare
         shell: bash
         env:
-          VERSION: v1.${{ steps.versioning.outputs.version }}
+          VERSION: v1.${{ steps.versioning.outputs.minor }}
         run: |
           RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
           ANNOUNCEMENT="$(printf 'Released CGS %s!\n\n%s' "$VERSION" "$RELEASE_NOTES")"
