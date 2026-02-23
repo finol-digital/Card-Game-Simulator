@@ -167,16 +167,7 @@
 		}
 	],
 	"deckSharePreference": "individual",
-	"deckUrls": [
-		{
-			"name": "Ciel Starter Deck",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive_spoilers/decks/Ciel%20Starter%20Deck.txt"
-		},
-		{
-			"name": "Diana Starter Deck",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive_spoilers/decks/Diana%20Starter%20Deck.txt"
-		}
-	],
+	"deckUrls": [],
 	"enums": [
 		{
 			"property": "types",
@@ -184,6 +175,7 @@
 				"ACTION": "Action",
 				"ALLY": "Ally",
 				"ATTACK": "Attack",
+				"BOON": "Boon",
 				"CHAMPION": "Champion",
 				"DOMAIN": "Domain",
 				"ITEM": "Item",
