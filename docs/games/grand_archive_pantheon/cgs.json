@@ -1,10 +1,10 @@
 {
-	"name": "Grand Archive Spoilers",
+	"name": "Grand Archive Pantheon",
 	"allCardsUrl": "https://api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
-	"allSetsUrl": "https://www.cardgamesimulator.com/games/grand_archive_spoilers/AllSets.json",
-	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive_spoilers/cgs.json",
-	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive_spoilers/Banner.png",
+	"allSetsUrl": "https://www.cardgamesimulator.com/games/grand_archive_pantheon/AllSets.json",
+	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive_pantheon/cgs.json",
+	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive_pantheon/Banner.png",
 	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
 	"cardDataIdentifier": "data",
 	"cardIdIdentifier": "uuid",
@@ -144,7 +144,7 @@
 	"cardSetIsObject": true,
 	"cardSetsInList": true,
 	"cardSetIdentifier": "editions",
-	"cgsGamesLink": "https://cgs.games/gatcg/grand_archive_spoilers",
+	"cgsGamesLink": "https://cgs.games/gatcg/grand_archive_pantheon",
 	"copyright": "Weebs of the Shore LLC",
 	"deckPlayCards": [
 		{
@@ -315,7 +315,7 @@
 				"y": 3.5
 			},
 			"type": "horizontal"
-		}
+		},
 		{
 			"defaultCardAction": "flip",
 			"face": "down",
