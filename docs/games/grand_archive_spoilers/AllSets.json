@@ -2,6 +2,6 @@
   {
     "set.name": "Radiant Origins",
     "set.prefix": "RDO",
-    "cardsUrl": "https://cgs.games/api/gatcg_spoilers"
+    "cardsUrl": "https://cgs.games/api/gatcg_spoilers?set=34,35,36,37,38"
   }
 ]
