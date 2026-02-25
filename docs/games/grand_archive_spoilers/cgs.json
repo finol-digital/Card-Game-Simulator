@@ -226,6 +226,11 @@
 			"group": "Material Deck",
 			"property": "types",
 			"value": "Regalia"
+		},
+		{
+			"group": "Material Deck",
+			"property": "types",
+			"value": "Boon"
 		}
 	],
 	"gameDefaultCardAction": "tap",
