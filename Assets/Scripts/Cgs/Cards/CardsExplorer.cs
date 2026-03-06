@@ -36,12 +36,10 @@ namespace Cgs.Cards
         public List<GameObject> editButtons;
         public SearchResults searchResults;
 
-#if !UNITY_WEBGL
         private GamesManagementMenu GamesManagement =>
             _gamesManagement ??= Instantiate(gamesManagementMenuPrefab).GetOrAddComponent<GamesManagementMenu>();
 
         private GamesManagementMenu _gamesManagement;
-#endif
 
         private DecisionModal NewCardSetModal =>
             _newCardSetModal ??= Instantiate(cardSetImportModalPrefab).GetOrAddComponent<DecisionModal>();
@@ -96,9 +94,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void ShowGamesManagementMenu()
         {
-#if !UNITY_WEBGL
             GamesManagement.Show();
-#endif
         }
 
         private void InputFocus(InputAction.CallbackContext context)
