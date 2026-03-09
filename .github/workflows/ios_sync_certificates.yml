@@ -1,8 +1,8 @@
-name: iOS Generate Certs
+name: iOS Sync Certificates
 
 on:
   workflow_run:
-    workflows: ['iOS Certificate Setup']
+    workflows: ['iOS Match Certificates Setup']
     types:
       - completed
   workflow_dispatch:
