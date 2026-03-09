@@ -15,11 +15,8 @@ jobs:
       - name: Setup fastlane for iOS
         shell: bash
         run: |
-          bundle exec fastlane match nuke distribution
           bundle exec fastlane ios init_ci
         env:
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
           APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
