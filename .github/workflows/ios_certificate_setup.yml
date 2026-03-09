@@ -15,13 +15,18 @@ jobs:
       - name: Setup fastlane for iOS
         shell: bash
         run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           bundle exec fastlane match nuke distribution --skip_confirmation
           bundle exec fastlane ios init_ci
         env:
-          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
           APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
-          MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.CGS_PAT }}
+
+          IOS_BUNDLE_ID: com.finoldigital.CardGameSim
           GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
           MATCH_REPOSITORY: ${{ secrets.MATCH_REPOSITORY }}
+          MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.CGS_PAT }}
