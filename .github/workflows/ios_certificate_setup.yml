@@ -29,4 +29,5 @@ jobs:
           MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
