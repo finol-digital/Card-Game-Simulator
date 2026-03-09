@@ -1,4 +1,4 @@
-name: iOS Setup
+name: iOS Certificate Setup
 
 on: workflow_dispatch
 

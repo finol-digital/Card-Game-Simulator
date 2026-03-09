@@ -1,8 +1,8 @@
-name: iOS Regenerate Certs
+name: iOS Generate Certs
 
 on:
   workflow_run:
-    workflows: ['iOS Setup']
+    workflows: ['iOS Certificate Setup']
     types:
       - completed
   workflow_dispatch:
