@@ -1,10 +1,10 @@
-name: iOS Certificate Setup
+name: iOS Match Nuke
 
 on: workflow_dispatch
 
 jobs:
   setup:
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
