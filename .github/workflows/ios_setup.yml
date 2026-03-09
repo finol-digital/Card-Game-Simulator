@@ -1,4 +1,4 @@
-name: iOS One-Time Setup
+name: iOS Setup
 
 on: workflow_dispatch
 
@@ -15,6 +15,7 @@ jobs:
       - name: Build iOS
         shell: bash
         run: |
+          bundle exec fastlane match nuke distribution
           bundle exec fastlane ios init_ci
         env:
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
