@@ -1,0 +1,5 @@
+git_url("https://github.com/finol-digital/certificates")
+
+app_identifier("com.finoldigital.CardGameSim")
+username("finoldigitalfastlane@gmail.com")
+skip_confirmation
