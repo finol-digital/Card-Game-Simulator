@@ -1,4 +1,4 @@
-git_url("https://github.com/finol-digital/certificates")
+git_url("git@github.com:finol-digital/certificates.git")
 
 app_identifier("com.finoldigital.CardGameSim")
 username("finoldigitalfastlane@gmail.com")
