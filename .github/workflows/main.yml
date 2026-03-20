@@ -235,7 +235,7 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: vimtor/action-zip@v1.2
+        uses: vimtor/action-zip@v1.3
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
           files: build/${{ matrix.targetPlatform }}/
@@ -315,7 +315,7 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-Web-buildProfile
       - name: Zip Build
-        uses: vimtor/action-zip@v1.2
+        uses: vimtor/action-zip@v1.3
         if: github.event.action == 'published'
         with:
           files: build/${{ matrix.targetPlatform }}/
@@ -816,7 +816,7 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: vimtor/action-zip@v1.2
+        uses: vimtor/action-zip@v1.3
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
           files: build/${{ matrix.targetPlatform }}/
