@@ -416,7 +416,10 @@ namespace Cgs.CardGameView.Multiplayer
                 CardViewer.Instance.HidePreview();
 
             if (LacksOwnership)
-                RequestChangeOwnership();
+            {
+                if (CanRequestOwnership)
+                    RequestChangeOwnership();
+            }
             else
                 ActOnDrag();
         }
@@ -778,8 +781,15 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void SetIsFacedownServerRpc(bool isFacedown)
+        private void SetIsFacedownServerRpc(bool isFacedown, RpcParams rpcParams = default)
         {
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"CardModel: Rejecting face-down change for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
             _isFacedownNetworkVariable.Value = isFacedown;
         }
 
