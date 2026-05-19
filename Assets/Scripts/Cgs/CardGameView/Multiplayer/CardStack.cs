@@ -132,6 +132,20 @@ namespace Cgs.CardGameView.Multiplayer
         private NetworkVariable<CgsNetString> _actionText;
         private NetworkVariable<float> _actionTime;
 
+        public bool IsDeckShared
+        {
+            get => IsSpawned ? _isDeckSharedNetworkVariable.Value : _isDeckShared;
+            set
+            {
+                _isDeckShared = value;
+                if (IsSpawned && IsServer)
+                    _isDeckSharedNetworkVariable.Value = value;
+            }
+        }
+
+        private bool _isDeckShared;
+        private NetworkVariable<bool> _isDeckSharedNetworkVariable;
+
         private UnityCard TopCard
         {
             get
@@ -184,6 +198,8 @@ namespace Cgs.CardGameView.Multiplayer
             _actionText = new NetworkVariable<CgsNetString>();
             _actionTime = new NetworkVariable<float>();
 
+            _isDeckSharedNetworkVariable = new NetworkVariable<bool>();
+
             _isTopFaceupNetworkVariable = new NetworkVariable<bool>();
             _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
         }
@@ -194,6 +210,7 @@ namespace Cgs.CardGameView.Multiplayer
             _cards = new List<UnityCard>();
             foreach (var cardId in _cardIds)
                 _cards.Add(CardGameManager.Current.Cards[cardId]);
+            _isDeckShared = _isDeckSharedNetworkVariable.Value;
             _isTopFaceup = _isTopFaceupNetworkVariable.Value;
         }
 
@@ -268,7 +285,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsDraggingCard)
                 DragCard(eventData);
             else if (LacksOwnership)
-                RequestChangeOwnership();
+            {
+                if (CanRequestOwnership)
+                    RequestChangeOwnership();
+            }
             else
                 ActOnDrag();
         }
@@ -279,7 +299,10 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
 
             if (LacksOwnership)
-                RequestChangeOwnership();
+            {
+                if (CanRequestOwnership)
+                    RequestChangeOwnership();
+            }
             else
                 ActOnDrag();
         }
@@ -436,9 +459,16 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void SetIsTopFaceupServerRpc(bool isFacedown)
+        private void SetIsTopFaceupServerRpc(bool isTopFaceup, RpcParams rpcParams = default)
         {
-            _isTopFaceupNetworkVariable.Value = isFacedown;
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"CardStack: Rejecting face-up change for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
+            _isTopFaceupNetworkVariable.Value = isTopFaceup;
         }
 
         [PublicAPI]

@@ -353,11 +353,12 @@ namespace Cgs.Play.Multiplayer
         [ServerRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
-            Quaternion rotation, bool isFaceup)
+            Quaternion rotation, bool isFaceup, ServerRpcParams rpcParams = default)
         {
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
-                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup);
+                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup,
+                rpcParams.Receive.SenderClientId);
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
             _cardStacks.Add(cardStack.gameObject);
@@ -376,6 +377,9 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Player] Sending shared deck...");
             CurrentDeck = CgsNetManager.Instance.LocalPlayer.CurrentDeck;
             IsDeckShared = true;
+            var sharedStack = CurrentDeck?.GetComponent<CardStack>();
+            if (sharedStack != null)
+                sharedStack.IsDeckShared = true;
             _cardStacks.Add(CurrentDeck);
             ShareDeckOwnerClientRpc(NetworkManager.Singleton.ConnectedClients.Count, OwnerClientRpcParams);
         }
@@ -614,16 +618,19 @@ namespace Cgs.Play.Multiplayer
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void SpawnCardInZoneServerRpc(NetworkObjectReference container, string cardId, Vector3 position,
-            Quaternion rotation, bool isFacedown, string defaultAction)
+            Quaternion rotation, bool isFacedown, string defaultAction, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateCardModel(container, cardId, position, rotation, isFacedown, defaultAction);
+            PlayController.Instance.CreateCardModel(container, cardId, position, rotation, isFacedown, defaultAction,
+                rpcParams.Receive.SenderClientId);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void SpawnCardInPlayAreaServerRpc(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
+        private void SpawnCardInPlayAreaServerRpc(string cardId, Vector3 position, Quaternion rotation,
+            bool isFacedown, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateCardModel(null, cardId, position, rotation, isFacedown);
+            PlayController.Instance.CreateCardModel(null, cardId, position, rotation, isFacedown, "",
+                rpcParams.Receive.SenderClientId);
         }
 
         [ServerRpc]
@@ -646,9 +653,11 @@ namespace Cgs.Play.Multiplayer
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateDieServerRpc(Vector2 position, Quaternion rotation, int max, int value, Vector3 color)
+        private void CreateDieServerRpc(Vector2 position, Quaternion rotation, int max, int value, Vector3 color,
+            ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateDie(position, rotation, max, value, new Color(color.x, color.y, color.z));
+            PlayController.Instance.CreateDie(position, rotation, max, value, new Color(color.x, color.y, color.z),
+                rpcParams.Receive.SenderClientId);
         }
 
         #endregion
@@ -662,9 +671,11 @@ namespace Cgs.Play.Multiplayer
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateCounterServerRpc(Vector2 position, Quaternion rotation, int value, Vector3 color)
+        private void CreateCounterServerRpc(Vector2 position, Quaternion rotation, int value, Vector3 color,
+            ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateCounter(position, rotation, value, new Color(color.x, color.y, color.z));
+            PlayController.Instance.CreateCounter(position, rotation, value, new Color(color.x, color.y, color.z),
+                rpcParams.Receive.SenderClientId);
         }
 
         #endregion
@@ -680,9 +691,10 @@ namespace Cgs.Play.Multiplayer
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void CreateZoneServerRpc(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
-            string action)
+            string action, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateZone(type, position, rotation, size, face, action);
+            PlayController.Instance.CreateZone(type, position, rotation, size, face, action,
+                rpcParams.Receive.SenderClientId);
         }
 
         #endregion
