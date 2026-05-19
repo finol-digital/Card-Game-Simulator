@@ -65,9 +65,7 @@ namespace Cgs.CardGameView.Multiplayer
                 if (MyNetworkObject.OwnerClientId == NetworkManager.ServerClientId)
                     return true;
                 // Shared stacks can be claimed
-                if (this is CardStack cardStack && cardStack.IsDeckShared)
-                    return true;
-                return false;
+                return this is CardStack { IsDeckShared: true };
             }
         }
 
@@ -512,9 +510,6 @@ namespace Cgs.CardGameView.Multiplayer
             RemovePointer(eventData);
 
             PostDragPlayable(eventData);
-
-            if (IsSpawned && IsOwner && !ToDelete)
-                RemoveOwnershipServerRpc();
         }
 
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
@@ -626,11 +621,9 @@ namespace Cgs.CardGameView.Multiplayer
         /// </summary>
         protected bool IsClientAuthorized(ulong clientId)
         {
-            if (MyNetworkObject.OwnerClientId == clientId)
-                return true;
-            if (this is CardStack cardStack && cardStack.IsDeckShared)
-                return true;
-            return false;
+            var isOwner = MyNetworkObject.OwnerClientId == clientId;
+            var isSharedCardStack = this is CardStack { IsDeckShared: true };
+            return isOwner || isSharedCardStack;
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -722,12 +715,6 @@ namespace Cgs.CardGameView.Multiplayer
             var boxCollider2D = GetComponent<BoxCollider2D>();
             if (boxCollider2D != null)
                 boxCollider2D.size = _size;
-        }
-
-        [Rpc(SendTo.Server)]
-        private void RemoveOwnershipServerRpc()
-        {
-            MyNetworkObject.RemoveOwnership();
         }
 
         [ClientRpc]

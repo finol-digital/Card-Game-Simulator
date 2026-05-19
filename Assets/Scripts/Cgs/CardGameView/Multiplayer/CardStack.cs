@@ -459,7 +459,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void SetIsTopFaceupServerRpc(bool isFacedown, RpcParams rpcParams = default)
+        private void SetIsTopFaceupServerRpc(bool isTopFaceup, RpcParams rpcParams = default)
         {
             if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
             {
@@ -468,7 +468,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            _isTopFaceupNetworkVariable.Value = isFacedown;
+            _isTopFaceupNetworkVariable.Value = isTopFaceup;
         }
 
         [PublicAPI]
