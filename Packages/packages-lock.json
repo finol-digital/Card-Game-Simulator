@@ -1,14 +1,5 @@
 {
   "dependencies": {
-    "com.coplaydev.unity-mcp": {
-      "version": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.0.2"
-      },
-      "hash": "17c6a36c8dcdda49017001abcce158e75b3d7d05"
-    },
     "com.davidmfinol.sfb": {
       "version": "https://github.com/davidmfinol/UnityStandaloneFileBrowser.git",
       "depth": 0,
