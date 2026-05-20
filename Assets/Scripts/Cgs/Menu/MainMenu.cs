@@ -59,7 +59,7 @@ namespace Cgs.Menu
         public List<GameObject> selectableButtons;
 
         public Button fullscreenButton;
-        public GameObject quitButton;
+        [SerializeField] GameObject quitButton;
 
 #if !CGS_SINGLEGAME
         private GamesManagementMenu GamesManagement =>
