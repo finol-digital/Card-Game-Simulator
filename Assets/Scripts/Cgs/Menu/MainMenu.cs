@@ -44,7 +44,7 @@ namespace Cgs.Menu
         public GameObject gamesManagementMenuPrefab;
 
         [SerializeField] Text versionText;
-        public Text copyrightText;
+        [SerializeField] Text copyrightText;
         public Text currentGameNameText;
         public Image currentCardImage;
         public Image currentBannerImage;
