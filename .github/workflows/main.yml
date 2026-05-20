@@ -155,7 +155,7 @@ jobs:
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io \
             /d:sonar.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**" \
-            /d:sonar.coverage.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**"
+            /d:sonar.coverage.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**" \
             /d:sonar.cpd.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**"
           dotnet build Card-Game-Simulator.sln
           ./dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"

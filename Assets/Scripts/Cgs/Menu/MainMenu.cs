@@ -45,7 +45,7 @@ namespace Cgs.Menu
 
         [SerializeField] Text versionText;
         [SerializeField] Text copyrightText;
-        public Text currentGameNameText;
+        [SerializeField] Text currentGameNameText;
         public Image currentCardImage;
         public Image currentBannerImage;
         public Image previousCardImage;
