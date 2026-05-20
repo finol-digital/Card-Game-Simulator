@@ -827,6 +827,12 @@ namespace FinolDigital.Cgs.Json.Unity
             if (cardJToken["backs"] is JArray jArray)
                 backs = jArray.ToObject<List<string>>();
 
+            var hasUsableBacks = backs.Any(backId => !string.IsNullOrEmpty(backId));
+            var hasSingleNonEmptyBack = backs.Count == 1 && !string.IsNullOrEmpty(backs[0]);
+            var effectiveBackFaceId = hasSingleNonEmptyBack ? backs[0] : string.Empty;
+            if (string.IsNullOrEmpty(effectiveBackFaceId) && !hasUsableBacks)
+                effectiveBackFaceId = cardJToken.Value<string>("backFaceId") ?? string.Empty;
+
             var cardImageWebUrl = string.Empty;
             var backCardImageWebUrl = string.Empty;
             if (!string.IsNullOrEmpty(CardImageProperty))
@@ -910,8 +916,8 @@ namespace FinolDigital.Cgs.Json.Unity
                     var cardDuplicateId = cardSets.Count > 1 && isReprint
                         ? cardId + PropertyDef.ObjectDelimiter + set.Key
                         : cardId;
-                    var unityCard =
-                        new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint)
+                    var unityCard = new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties,
+                            isReprint, false, effectiveBackFaceId)
                         {
                             ImageFileType = cardImageFileType,
                             ImageWebUrl = cardImageWebUrl
@@ -942,8 +948,16 @@ namespace FinolDigital.Cgs.Json.Unity
                         isReprint = true;
                     }
 
+                    if (hasSingleNonEmptyBack)
+                    {
+                        LoadedCards[unityCard.Id] = unityCard;
+                        isReprint = true;
+                    }
+
                     foreach (var backId in backs)
                     {
+                        if (hasSingleNonEmptyBack)
+                            break;
                         if (string.Empty.Equals(backId))
                             continue;
                         var backCardId = cardDuplicateId + PropertyDef.ObjectDelimiter + backId;
@@ -1310,12 +1324,30 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public void WriteAllCardsJson()
         {
-            var allCardsJson = JsonConvert.SerializeObject(Cards.Values.ToList(), new JsonSerializerSettings
+            var settings = new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-            });
-            File.WriteAllText(CardsFilePath, allCardsJson);
+            };
+            var cards = JArray.FromObject(Cards.Values.ToList(), JsonSerializer.Create(settings));
+            foreach (var cardToken in cards.OfType<JObject>())
+            {
+                if (cardToken.Value<bool?>("isBackFaceCard") ?? false)
+                    continue;
+
+                var backs = cardToken["backs"] as JArray;
+                var hasUsableBacks = backs?.Any(token => !string.IsNullOrEmpty(token.Value<string>())) ?? false;
+                var backFaceId = cardToken.Value<string>("backFaceId") ?? string.Empty;
+
+                if (!hasUsableBacks && !string.IsNullOrEmpty(backFaceId))
+                    cardToken["backs"] = new JArray(backFaceId);
+                else if (string.IsNullOrEmpty(backFaceId) && !hasUsableBacks)
+                    cardToken.Remove("backs");
+
+                cardToken.Remove("backFaceId");
+            }
+
+            File.WriteAllText(CardsFilePath, cards.ToString(Formatting.None));
         }
 
         public void Remove(Card card, bool writeAllCardsJson = true)

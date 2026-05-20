@@ -390,7 +390,8 @@ jobs:
           MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
           PROJECT_NAME: Card Game Simulator
         run: |
-          bundle install --deployment
+          bundle config set deployment true
+          bundle install
           bundle exec fastlane mac fixversion
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           chmod +x fastlane/sign-mac-build.sh
@@ -465,7 +466,8 @@ jobs:
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool*" -exec chmod +x {} \;
-          bundle install --deployment
+          bundle config set deployment true
+          bundle install
           bundle exec fastlane ios beta
 
   deployToAppStore:
@@ -514,7 +516,8 @@ jobs:
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool*" -exec chmod +x {} \;
-          bundle install --deployment
+          bundle config set deployment true
+          bundle install
           bundle exec fastlane ios release
 
   deployToGooglePlayTest:
@@ -759,7 +762,8 @@ jobs:
           MAC_BUNDLE_ID: com.finoldigital.CardGameSimulator
           PROJECT_NAME: Card Game Simulator
         run: |
-          bundle install --deployment
+          bundle config set deployment true
+          bundle install
           bundle exec fastlane mac macupload
 
   buildWithWindows:
