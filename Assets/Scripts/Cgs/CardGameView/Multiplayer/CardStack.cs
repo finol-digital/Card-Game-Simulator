@@ -68,7 +68,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override bool CanClientRequestOwnedObject => IsDeckShared;
 
-        protected override bool IsAdditionalClientAuthorized(ulong _) => IsDeckShared;
+        protected override bool IsAdditionalClientAuthorized(ulong clientId) => IsDeckShared;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
