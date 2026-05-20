@@ -52,8 +52,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         /// <summary>
         /// Whether the local client can request ownership of this playable.
-        /// Server-owned objects can always be claimed. Client-owned objects can only be claimed
-        /// if this is a shared CardStack.
+        /// Server-owned objects can always be claimed.
+        /// Derived types may authorize additional ownership requests.
         /// </summary>
         protected bool CanRequestOwnership
         {
@@ -64,10 +64,12 @@ namespace Cgs.CardGameView.Multiplayer
                 // Server-owned objects (disowned after timeout) can be claimed by anyone
                 if (MyNetworkObject.OwnerClientId == NetworkManager.ServerClientId)
                     return true;
-                // Shared stacks can be claimed
-                return this is CardStack { IsDeckShared: true };
+
+                return CanClientRequestOwnedObject;
             }
         }
+
+        protected virtual bool CanClientRequestOwnedObject => false;
 
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
 
@@ -617,13 +619,18 @@ namespace Cgs.CardGameView.Multiplayer
 
         /// <summary>
         /// Checks if the given client is authorized to act on this playable.
-        /// A client is authorized if it is the current owner, or if this is a shared CardStack.
+        /// A client is authorized if it is the current owner.
+        /// Derived types may authorize additional clients.
         /// </summary>
         protected bool IsClientAuthorized(ulong clientId)
         {
             var isOwner = MyNetworkObject.OwnerClientId == clientId;
-            var isSharedCardStack = this is CardStack { IsDeckShared: true };
-            return isOwner || isSharedCardStack;
+            return isOwner || IsAdditionalClientAuthorized(clientId);
+        }
+
+        protected virtual bool IsAdditionalClientAuthorized(ulong clientId)
+        {
+            return false;
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]

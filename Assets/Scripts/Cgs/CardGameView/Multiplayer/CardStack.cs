@@ -66,6 +66,10 @@ namespace Cgs.CardGameView.Multiplayer
         protected override bool IsProcessingSecondaryDragAction =>
             !IsDraggingStack && base.IsProcessingSecondaryDragAction;
 
+        protected override bool CanClientRequestOwnedObject => IsDeckShared;
+
+        protected override bool IsAdditionalClientAuthorized(ulong _) => IsDeckShared;
+
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
 
