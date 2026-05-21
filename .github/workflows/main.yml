@@ -72,15 +72,6 @@ jobs:
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
           large-packages: false
-      - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@main
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
-        with:
-          testMode: playmode
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Run EditMode Tests
         uses: game-ci/unity-test-runner@main
         env:
@@ -89,6 +80,14 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           testMode: editmode
+      - name: Run PlayMode Tests
+        uses: game-ci/unity-test-runner@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        with:
+          testMode: playmode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Release Notes
         if: github.event.action == 'published'
