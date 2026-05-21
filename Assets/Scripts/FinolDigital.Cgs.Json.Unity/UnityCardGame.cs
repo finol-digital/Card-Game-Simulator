@@ -215,7 +215,7 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             if (IsDownloading)
             {
-                Debug.LogWarning("Duplicate Download Request Ignored");
+                Debug.LogWarning($"Duplicate Download Request Ignored for {Name}");
                 yield break;
             }
 
