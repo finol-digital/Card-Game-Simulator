@@ -942,7 +942,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         LoadedCards[backUnityCard.Id] = backUnityCard;
                     }
 
-                    if (backs.Count < 1 || backs.Contains(string.Empty))
+                    if (!hasUsableBacks)
                     {
                         LoadedCards[unityCard.Id] = unityCard;
                         isReprint = true;
@@ -958,7 +958,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     {
                         if (hasSingleNonEmptyBack)
                             break;
-                        if (string.Empty.Equals(backId))
+                        if (string.IsNullOrEmpty(backId))
                             continue;
                         var backCardId = cardDuplicateId + PropertyDef.ObjectDelimiter + backId;
                         var backUnityCard =
