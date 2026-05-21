@@ -214,6 +214,8 @@ namespace Cgs.CardGameView.Multiplayer
             _cards = new List<UnityCard>();
             foreach (var cardId in _cardIds)
                 _cards.Add(CardGameManager.Current.Cards[cardId]);
+            if (IsServer)
+                _isDeckSharedNetworkVariable.Value = _isDeckShared;
             _isDeckShared = _isDeckSharedNetworkVariable.Value;
             _isTopFaceup = _isTopFaceupNetworkVariable.Value;
         }
