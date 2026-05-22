@@ -48,10 +48,10 @@ namespace Cgs.Menu
         [SerializeField] Text currentGameNameText;
         [SerializeField] Image currentCardImage;
         [SerializeField] Image currentBannerImage;
-        public Image previousCardImage;
-        public Image nextCardImage;
-        public Image offLeftImage;
-        public Image offRightImage;
+        [SerializeField] Image previousCardImage;
+        [SerializeField] Image nextCardImage;
+        [SerializeField] Image offLeftImage;
+        [SerializeField] Image offRightImage;
         public List<GameObject> selectableButtons;
 
         [SerializeField] Button fullscreenButton;
