@@ -50,6 +50,27 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected bool LacksOwnership => IsSpawned && !IsOwner;
 
+        /// <summary>
+        /// Whether the local client can request ownership of this playable.
+        /// Server-owned objects can always be claimed.
+        /// Derived types may authorize additional ownership requests.
+        /// </summary>
+        protected bool CanRequestOwnership
+        {
+            get
+            {
+                if (!IsSpawned || IsOwner)
+                    return false;
+                // Server-owned objects (disowned after timeout) can be claimed by anyone
+                if (MyNetworkObject.OwnerClientId == NetworkManager.ServerClientId)
+                    return true;
+
+                return CanClientRequestOwnedObject;
+            }
+        }
+
+        protected virtual bool CanClientRequestOwnedObject => false;
+
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
 
         private NetworkObject _networkObject;
@@ -453,7 +474,10 @@ namespace Cgs.CardGameView.Multiplayer
         protected virtual void OnBeginDragPlayable(PointerEventData eventData)
         {
             if (LacksOwnership)
-                RequestChangeOwnership();
+            {
+                if (CanRequestOwnership)
+                    RequestChangeOwnership();
+            }
             else
                 ActOnDrag();
         }
@@ -470,7 +494,10 @@ namespace Cgs.CardGameView.Multiplayer
         protected virtual void OnDragPlayable(PointerEventData eventData)
         {
             if (LacksOwnership)
-                RequestChangeOwnership();
+            {
+                if (CanRequestOwnership)
+                    RequestChangeOwnership();
+            }
             else
                 ActOnDrag();
         }
@@ -485,9 +512,6 @@ namespace Cgs.CardGameView.Multiplayer
             RemovePointer(eventData);
 
             PostDragPlayable(eventData);
-
-            if (IsSpawned && IsOwner && !ToDelete)
-                RemoveOwnershipServerRpc();
         }
 
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
@@ -584,13 +608,29 @@ namespace Cgs.CardGameView.Multiplayer
             var currentDirection = CurrentPointerEventData.position - referencePoint;
             transform.Rotate(0, 0, Vector2.SignedAngle(previousDirection, currentDirection));
 
-            if (IsSpawned)
+            if (IsSpawned && IsOwner)
                 RequestUpdateRotation(transform.localRotation);
         }
 
         protected void RequestChangeOwnership()
         {
             ChangeOwnershipServerRpc();
+        }
+
+        /// <summary>
+        /// Checks if the given client is authorized to act on this playable.
+        /// A client is authorized if it is the current owner.
+        /// Derived types may authorize additional clients.
+        /// </summary>
+        protected bool IsClientAuthorized(ulong clientId)
+        {
+            var isOwner = MyNetworkObject.OwnerClientId == clientId;
+            return isOwner || IsAdditionalClientAuthorized(clientId);
+        }
+
+        protected virtual bool IsAdditionalClientAuthorized(ulong clientId)
+        {
+            return false;
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -601,6 +641,13 @@ namespace Cgs.CardGameView.Multiplayer
             if (!NetworkManager.ConnectedClients.ContainsKey(clientId))
             {
                 Debug.LogWarning($"CgsNetPlayable: Ignoring request to transfer authority for {gameObject.name}");
+                return;
+            }
+
+            if (!IsClientAuthorized(clientId) && MyNetworkObject.OwnerClientId != NetworkManager.ServerClientId)
+            {
+                Debug.LogWarning(
+                    $"CgsNetPlayable: Rejecting ownership request for {gameObject.name} from client {clientId} - already owned by {MyNetworkObject.OwnerClientId}");
                 return;
             }
 
@@ -631,8 +678,15 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void UpdateRotationServerRpc(Quaternion rotation)
+        private void UpdateRotationServerRpc(Quaternion rotation, RpcParams rpcParams = default)
         {
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"CgsNetPlayable: Rejecting rotation update for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
             Rotation = rotation;
         }
 
@@ -648,8 +702,15 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void UpdateSizeServerRpc(Vector2 size)
+        private void UpdateSizeServerRpc(Vector2 size, RpcParams rpcParams = default)
         {
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"CgsNetPlayable: Rejecting size update for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
             Size = size;
         }
 
@@ -661,12 +722,6 @@ namespace Cgs.CardGameView.Multiplayer
             var boxCollider2D = GetComponent<BoxCollider2D>();
             if (boxCollider2D != null)
                 boxCollider2D.size = _size;
-        }
-
-        [Rpc(SendTo.Server)]
-        private void RemoveOwnershipServerRpc()
-        {
-            MyNetworkObject.RemoveOwnership();
         }
 
         [ClientRpc]
@@ -691,8 +746,15 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        protected void DeleteServerRpc()
+        protected void DeleteServerRpc(RpcParams rpcParams = default)
         {
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"CgsNetPlayable: Rejecting delete for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
             Debug.Log($"DeleteServerRpc {gameObject.name}");
             MyNetworkObject.Despawn();
             Destroy(gameObject);

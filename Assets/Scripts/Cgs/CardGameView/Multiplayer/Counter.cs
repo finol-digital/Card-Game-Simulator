@@ -79,8 +79,15 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void UpdateValueServerRpc(int value)
+        private void UpdateValueServerRpc(int value, RpcParams rpcParams = default)
         {
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"Counter: Rejecting value update for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
             _valueNetworkVariable.Value = value;
         }
 
@@ -102,8 +109,15 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        private void UpdateColorServerRpc(Vector3 value)
+        private void UpdateColorServerRpc(Vector3 value, RpcParams rpcParams = default)
         {
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"Counter: Rejecting color update for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
             _colorNetworkVariable.Value = value;
         }
 

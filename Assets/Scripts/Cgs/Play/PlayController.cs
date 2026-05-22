@@ -455,11 +455,16 @@ namespace Cgs.Play
         }
 
         public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position,
-            Quaternion rotation, bool isFaceup)
+            Quaternion rotation, bool isFaceup, ulong? ownerClientId = null)
         {
             var cardStack = Instantiate(cardStackPrefab, playAreaCardZone.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
-                cardStack.MyNetworkObject.Spawn();
+            {
+                if (ownerClientId.HasValue)
+                    cardStack.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                else
+                    cardStack.MyNetworkObject.Spawn();
+            }
 
             if (!string.IsNullOrEmpty(stackName))
                 cardStack.Name = stackName;
@@ -657,14 +662,19 @@ namespace Cgs.Play
         }
 
         public CardModel CreateCardModel(GameObject container, string cardId, Vector3 position, Quaternion rotation,
-            bool isFacedown, string defaultAction = "")
+            bool isFacedown, string defaultAction = "", ulong? ownerClientId = null)
         {
             if (container == null)
                 container = playAreaCardZone.gameObject;
             var cardModel = Instantiate(cardModelPrefab, position, rotation, container.transform)
                 .GetComponent<CardModel>();
             if (CgsNetManager.Instance.IsOnline)
-                cardModel.MyNetworkObject.Spawn();
+            {
+                if (ownerClientId.HasValue)
+                    cardModel.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                else
+                    cardModel.MyNetworkObject.Spawn();
+            }
 
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.Container = container;
@@ -689,11 +699,17 @@ namespace Cgs.Play
                 CreateDie(Vector2.zero, Quaternion.identity, PlaySettings.DieFaceCount, Die.DefaultValue, Color.white);
         }
 
-        public Die CreateDie(Vector2 position, Quaternion rotation, int max, int value, Color color)
+        public Die CreateDie(Vector2 position, Quaternion rotation, int max, int value, Color color,
+            ulong? ownerClientId = null)
         {
             var die = Instantiate(diePrefab, playAreaCardZone.transform).GetOrAddComponent<Die>();
             if (CgsNetManager.Instance.IsOnline)
-                die.MyNetworkObject.Spawn();
+            {
+                if (ownerClientId.HasValue)
+                    die.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                else
+                    die.MyNetworkObject.Spawn();
+            }
 
             die.Position = position;
             die.Rotation = rotation;
@@ -713,11 +729,17 @@ namespace Cgs.Play
                 CreateCounter(Vector2.zero, Quaternion.identity, Counter.DefaultValue, Color.white);
         }
 
-        public Counter CreateCounter(Vector2 position, Quaternion rotation, int value, Color color)
+        public Counter CreateCounter(Vector2 position, Quaternion rotation, int value, Color color,
+            ulong? ownerClientId = null)
         {
             var counter = Instantiate(counterPrefab, playAreaCardZone.transform).GetOrAddComponent<Counter>();
             if (CgsNetManager.Instance.IsOnline)
-                counter.MyNetworkObject.Spawn();
+            {
+                if (ownerClientId.HasValue)
+                    counter.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                else
+                    counter.MyNetworkObject.Spawn();
+            }
 
             counter.Position = position;
             counter.Rotation = rotation;
@@ -752,16 +774,16 @@ namespace Cgs.Play
         }
 
         public CgsNetPlayable CreateZone(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
-            string action)
+            string action, ulong? ownerClientId = null)
         {
             if (Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType))
             {
                 CgsNetPlayable zone = gamePlayZoneType switch
                 {
                     GamePlayZoneType.Area => CreateAreaZone(position, rotation),
-                    GamePlayZoneType.Dice => CreateDiceZone(position, rotation),
-                    GamePlayZoneType.Horizontal => CreateHorizontalZone(position, rotation),
-                    GamePlayZoneType.Vertical => CreateVerticalZone(position, rotation),
+                    GamePlayZoneType.Dice => CreateDiceZone(position, rotation, ownerClientId),
+                    GamePlayZoneType.Horizontal => CreateHorizontalZone(position, rotation, ownerClientId),
+                    GamePlayZoneType.Vertical => CreateVerticalZone(position, rotation, ownerClientId),
                     _ => CreateAreaZone(position, rotation)
                 };
 
@@ -791,31 +813,46 @@ namespace Cgs.Play
             return null;
         }
 
-        private DiceZone CreateDiceZone(Vector2 position, Quaternion rotation)
+        private DiceZone CreateDiceZone(Vector2 position, Quaternion rotation, ulong? ownerClientId = null)
         {
             var diceZone = Instantiate(diceZonePrefab, position, rotation, playAreaCardZone.transform)
                 .GetOrAddComponent<DiceZone>();
             if (CgsNetManager.Instance.IsOnline)
-                diceZone.MyNetworkObject.Spawn();
+            {
+                if (ownerClientId.HasValue)
+                    diceZone.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                else
+                    diceZone.MyNetworkObject.Spawn();
+            }
             return diceZone;
         }
 
-        private CardZone CreateHorizontalZone(Vector2 position, Quaternion rotation)
+        private CardZone CreateHorizontalZone(Vector2 position, Quaternion rotation, ulong? ownerClientId = null)
         {
             var cardZone = Instantiate(horizontalCardZonePrefab, position, rotation, playAreaCardZone.transform)
                 .GetOrAddComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
-                cardZone.MyNetworkObject.Spawn();
+            {
+                if (ownerClientId.HasValue)
+                    cardZone.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                else
+                    cardZone.MyNetworkObject.Spawn();
+            }
             cardZone.Type = CardZoneType.Horizontal;
             return cardZone;
         }
 
-        private CardZone CreateVerticalZone(Vector2 position, Quaternion rotation)
+        private CardZone CreateVerticalZone(Vector2 position, Quaternion rotation, ulong? ownerClientId = null)
         {
             var cardZone = Instantiate(verticalCardZonePrefab, position, rotation, playAreaCardZone.transform)
                 .GetComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
-                cardZone.MyNetworkObject.Spawn();
+            {
+                if (ownerClientId.HasValue)
+                    cardZone.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                else
+                    cardZone.MyNetworkObject.Spawn();
+            }
             cardZone.Type = CardZoneType.Vertical;
             return cardZone;
         }

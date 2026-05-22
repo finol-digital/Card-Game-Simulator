@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using UnityExtensionMethods;
 
-namespace Tests.PlayMode
+namespace Tests.EditMode
 {
     public class SchemaTests
     {

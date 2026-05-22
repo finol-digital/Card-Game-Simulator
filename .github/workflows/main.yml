@@ -1,7 +1,7 @@
 name: Test, Build, and Deploy with GameCI
 concurrency: unity
 env:
-  UNITY_VERSION: 6000.3.5f2
+  UNITY_VERSION: 6000.3.15f1
 on:
   push:
     branches:
@@ -72,7 +72,15 @@ jobs:
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
           large-packages: false
-      - name: Run Unit Tests
+      - name: Run EditMode Tests
+        uses: game-ci/unity-test-runner@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        with:
+          testMode: editmode
+      - name: Run PlayMode Tests
         uses: game-ci/unity-test-runner@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -104,7 +112,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-6000.3.5f2-linux-il2cpp-3
+    container: unityci/editor:ubuntu-6000.3.15f1-linux-il2cpp-3
     timeout-minutes: 30
     steps:
       - name: Checkout Repository
@@ -138,7 +146,7 @@ jobs:
           FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
+          sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' ./*.csproj
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
@@ -154,7 +162,9 @@ jobs:
             /k:"finol-digital_Card-Game-Simulator" \
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io \
-            /d:sonar.exclusions=**/docs/**,**/Plugins/**,**/Library/**
+            /d:sonar.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**" \
+            /d:sonar.coverage.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**" \
+            /d:sonar.cpd.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**"
           dotnet build Card-Game-Simulator.sln
           ./dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
           cd Card-Game-Simulator
@@ -388,6 +398,7 @@ jobs:
           MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
           PROJECT_NAME: Card Game Simulator
         run: |
+          bundle config set deployment true
           bundle install
           bundle exec fastlane mac fixversion
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
@@ -438,7 +449,7 @@ jobs:
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.4'
+          xcode-version: latest-stable
       - name: Fix File Permissions and Run Fastlane
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
@@ -463,6 +474,7 @@ jobs:
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool*" -exec chmod +x {} \;
+          bundle config set deployment true
           bundle install
           bundle exec fastlane ios beta
 
@@ -487,7 +499,7 @@ jobs:
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.4'
+          xcode-version: latest-stable
       - name: Fix File Permissions and Run Fastlane
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
@@ -512,6 +524,7 @@ jobs:
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool*" -exec chmod +x {} \;
+          bundle config set deployment true
           bundle install
           bundle exec fastlane ios release
 
@@ -757,6 +770,7 @@ jobs:
           MAC_BUNDLE_ID: com.finoldigital.CardGameSimulator
           PROJECT_NAME: Card Game Simulator
         run: |
+          bundle config set deployment true
           bundle install
           bundle exec fastlane mac macupload
 
