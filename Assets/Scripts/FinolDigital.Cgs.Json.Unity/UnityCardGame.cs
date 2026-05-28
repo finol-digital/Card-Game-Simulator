@@ -824,13 +824,14 @@ namespace FinolDigital.Cgs.Json.Unity
             PopulateCardSets(cardSets, cardJToken, defaultSetCode);
 
             var backs = new List<string>();
+            var hasBacksDefinition = cardJToken["backs"] != null;
             if (cardJToken["backs"] is JArray jArray)
                 backs = jArray.ToObject<List<string>>();
 
             var hasUsableBacks = backs.Any(backId => !string.IsNullOrEmpty(backId));
             var hasSingleNonEmptyBack = backs.Count == 1 && !string.IsNullOrEmpty(backs[0]);
             var effectiveBackFaceId = hasSingleNonEmptyBack ? backs[0] : string.Empty;
-            if (string.IsNullOrEmpty(effectiveBackFaceId) && !hasUsableBacks)
+            if (string.IsNullOrEmpty(effectiveBackFaceId) && !hasBacksDefinition)
                 effectiveBackFaceId = cardJToken.Value<string>("backFaceId") ?? string.Empty;
 
             var cardImageWebUrl = string.Empty;
@@ -942,13 +943,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         LoadedCards[backUnityCard.Id] = backUnityCard;
                     }
 
-                    if (!hasUsableBacks)
-                    {
-                        LoadedCards[unityCard.Id] = unityCard;
-                        isReprint = true;
-                    }
-
-                    if (hasSingleNonEmptyBack)
+                    if (!hasUsableBacks || hasSingleNonEmptyBack)
                     {
                         LoadedCards[unityCard.Id] = unityCard;
                         isReprint = true;
@@ -1335,13 +1330,14 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (cardToken.Value<bool?>("isBackFaceCard") ?? false)
                     continue;
 
+                var hasBacksDefinition = cardToken["backs"] != null;
                 var backs = cardToken["backs"] as JArray;
                 var hasUsableBacks = backs?.Any(token => !string.IsNullOrEmpty(token.Value<string>())) ?? false;
                 var backFaceId = cardToken.Value<string>("backFaceId") ?? string.Empty;
 
-                if (!hasUsableBacks && !string.IsNullOrEmpty(backFaceId))
+                if (!hasUsableBacks && !string.IsNullOrEmpty(backFaceId) && !hasBacksDefinition)
                     cardToken["backs"] = new JArray(backFaceId);
-                else if (string.IsNullOrEmpty(backFaceId) && !hasUsableBacks)
+                else if (!hasUsableBacks)
                     cardToken.Remove("backs");
 
                 cardToken.Remove("backFaceId");

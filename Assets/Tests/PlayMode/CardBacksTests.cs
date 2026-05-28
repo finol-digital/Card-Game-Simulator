@@ -114,7 +114,7 @@ namespace Tests.PlayMode
         }
 
         [Test]
-        public void LoadCards_UsesLegacyBackFaceIdWhenBacksAreUnusable()
+        public void LoadCards_UsesDefaultBackWhenBacksAreUnusable()
         {
             var game = new UnityCardGame(null, "load_unusable_backs_test_" + Guid.NewGuid())
             {
@@ -149,10 +149,10 @@ namespace Tests.PlayMode
             game.LoadCards(game.CardsFilePath, Set.DefaultCode);
 
             Assert.IsTrue(game.Cards.TryGetValue("null_only_back", out var nullOnlyCard));
-            Assert.AreEqual("LEGACY_NULL_BACK", nullOnlyCard.BackFaceId);
+            Assert.IsTrue(string.IsNullOrEmpty(nullOnlyCard.BackFaceId));
 
             Assert.IsTrue(game.Cards.TryGetValue("mixed_empty_back", out var mixedEmptyCard));
-            Assert.AreEqual("LEGACY_MIXED_BACK", mixedEmptyCard.BackFaceId);
+            Assert.IsTrue(string.IsNullOrEmpty(mixedEmptyCard.BackFaceId));
 
             Directory.Delete(game.GameDirectoryPath, true);
         }
