@@ -826,11 +826,14 @@ namespace FinolDigital.Cgs.Json.Unity
             var backs = new List<string>();
             var hasBacksDefinition = cardJToken["backs"] != null;
             if (cardJToken["backs"] is JArray jArray)
-                backs = jArray.ToObject<List<string>>();
+                backs = jArray.Select(token => token?.Type == JTokenType.String ? token.Value<string>() : null).ToList();
 
-            var hasUsableBacks = backs.Any(backId => !string.IsNullOrEmpty(backId));
-            var hasSingleNonEmptyBack = backs.Count == 1 && !string.IsNullOrEmpty(backs[0]);
-            var effectiveBackFaceId = hasSingleNonEmptyBack ? backs[0] : string.Empty;
+            var usableBacks = backs.Where(backId => !string.IsNullOrWhiteSpace(backId))
+                .Select(backId => backId.Trim())
+                .ToList();
+            var hasUsableBacks = usableBacks.Count > 0;
+            var hasSingleNonEmptyBack = usableBacks.Count == 1 && backs.Count == 1;
+            var effectiveBackFaceId = hasSingleNonEmptyBack ? usableBacks[0] : string.Empty;
             if (string.IsNullOrEmpty(effectiveBackFaceId) && !hasBacksDefinition)
                 effectiveBackFaceId = cardJToken.Value<string>("backFaceId") ?? string.Empty;
 

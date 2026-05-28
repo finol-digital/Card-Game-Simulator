@@ -142,6 +142,13 @@ namespace Tests.PlayMode
                     ["set"] = Set.DefaultCode,
                     ["backs"] = new JArray(string.Empty, JValue.CreateNull()),
                     ["backFaceId"] = "LEGACY_MIXED_BACK"
+                },
+                new JObject
+                {
+                    ["id"] = "half_empty_back",
+                    ["name"] = "Half Empty",
+                    ["set"] = Set.DefaultCode,
+                    ["backs"] = new JArray(string.Empty, "BACK_2")
                 }
             };
 
@@ -153,6 +160,9 @@ namespace Tests.PlayMode
 
             Assert.IsTrue(game.Cards.TryGetValue("mixed_empty_back", out var mixedEmptyCard));
             Assert.IsTrue(string.IsNullOrEmpty(mixedEmptyCard.BackFaceId));
+
+            Assert.IsTrue(game.Cards.TryGetValue("half_empty_back", out var halfEmptyCard));
+            Assert.IsTrue(string.IsNullOrEmpty(halfEmptyCard.BackFaceId));
 
             Directory.Delete(game.GameDirectoryPath, true);
         }
