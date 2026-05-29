@@ -827,10 +827,6 @@ namespace FinolDigital.Cgs.Json.Unity
             if (cardJToken["backs"] is JArray jArray)
                 backs = jArray.Select(token => token?.Type == JTokenType.String ? token.Value<string>() : null).ToList();
 
-            var effectiveBackFaceId = backs.Count > 0 ? backs[0] : string.Empty;
-            if (string.IsNullOrEmpty(effectiveBackFaceId) && cardJToken["backFaceId"] != null)
-                effectiveBackFaceId = cardJToken.Value<string>("backFaceId") ?? string.Empty;
-
             var cardImageWebUrl = string.Empty;
             var backCardImageWebUrl = string.Empty;
             if (!string.IsNullOrEmpty(CardImageProperty))
@@ -915,7 +911,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         ? cardId + PropertyDef.ObjectDelimiter + set.Key
                         : cardId;
                     var unityCard = new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties,
-                            isReprint, false, effectiveBackFaceId)
+                            isReprint)
                         {
                             ImageFileType = cardImageFileType,
                             ImageWebUrl = cardImageWebUrl

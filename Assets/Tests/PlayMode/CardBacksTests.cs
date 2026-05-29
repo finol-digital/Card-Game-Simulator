@@ -52,7 +52,7 @@ namespace Tests.PlayMode
         }
 
         [Test]
-        public void LoadCards_UsesBacksThenBackFaceIdFallback()
+        public void LoadCards_UsesBacks()
         {
             var game = new UnityCardGame(null, "load_backs_test_" + Guid.NewGuid())
             {
@@ -65,13 +65,6 @@ namespace Tests.PlayMode
 
             var allCards = new JArray
             {
-                new JObject
-                {
-                    ["id"] = "legacy_back",
-                    ["name"] = "Legacy",
-                    ["set"] = Set.DefaultCode,
-                    ["backFaceId"] = "LEGACY_BACK"
-                },
                 new JObject
                 {
                     ["id"] = "canonical_back",
@@ -97,9 +90,6 @@ namespace Tests.PlayMode
 
             File.WriteAllText(game.CardsFilePath, allCards.ToString(Formatting.None));
             game.LoadCards(game.CardsFilePath, Set.DefaultCode);
-
-            Assert.IsTrue(game.Cards.TryGetValue("legacy_back", out var legacyCard));
-            Assert.AreEqual("LEGACY_BACK", legacyCard.BackFaceId);
 
             Assert.IsTrue(game.Cards.TryGetValue("canonical_back", out var canonicalCard));
             Assert.AreEqual("CANON_BACK", canonicalCard.BackFaceId);
