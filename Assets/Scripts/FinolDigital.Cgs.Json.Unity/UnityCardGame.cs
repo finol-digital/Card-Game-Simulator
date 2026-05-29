@@ -824,17 +824,11 @@ namespace FinolDigital.Cgs.Json.Unity
             PopulateCardSets(cardSets, cardJToken, defaultSetCode);
 
             var backs = new List<string>();
-            var hasBacksDefinition = cardJToken["backs"] != null;
             if (cardJToken["backs"] is JArray jArray)
                 backs = jArray.Select(token => token?.Type == JTokenType.String ? token.Value<string>() : null).ToList();
 
-            var usableBacks = backs.Where(backId => !string.IsNullOrWhiteSpace(backId))
-                .Select(backId => backId.Trim())
-                .ToList();
-            var hasUsableBacks = usableBacks.Count > 0;
-            var hasSingleNonEmptyBack = usableBacks.Count == 1 && backs.Count == 1;
-            var effectiveBackFaceId = hasSingleNonEmptyBack ? usableBacks[0] : string.Empty;
-            if (string.IsNullOrEmpty(effectiveBackFaceId) && !hasBacksDefinition)
+            var effectiveBackFaceId = backs.Count > 0 ? backs[0] : string.Empty;
+            if (string.IsNullOrEmpty(effectiveBackFaceId) && cardJToken["backFaceId"] != null)
                 effectiveBackFaceId = cardJToken.Value<string>("backFaceId") ?? string.Empty;
 
             var cardImageWebUrl = string.Empty;
@@ -946,7 +940,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         LoadedCards[backUnityCard.Id] = backUnityCard;
                     }
 
-                    if (!hasUsableBacks || hasSingleNonEmptyBack)
+                    if (backs.Contains(null) || backs.Contains(string.Empty) || backs.Count < 1)
                     {
                         LoadedCards[unityCard.Id] = unityCard;
                         isReprint = true;
@@ -954,8 +948,6 @@ namespace FinolDigital.Cgs.Json.Unity
 
                     foreach (var backId in backs)
                     {
-                        if (hasSingleNonEmptyBack)
-                            break;
                         if (string.IsNullOrEmpty(backId))
                             continue;
                         var backCardId = cardDuplicateId + PropertyDef.ObjectDelimiter + backId;
