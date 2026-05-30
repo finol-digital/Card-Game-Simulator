@@ -827,7 +827,7 @@ namespace FinolDigital.Cgs.Json.Unity
             var hasBacksDefinition = cardJToken["backs"] != null;
             if (cardJToken["backs"] is JArray jArray)
                 backs = jArray.Select(token => token?.Type == JTokenType.String ? token.Value<string>() : null).ToList();
-            else
+            else if (!hasBacksDefinition)
             {
                 // Legacy field fallback: only use backFaceId when there is no 'backs' array defined
                 var backFaceId = cardJToken.Value<string>("backFaceId");

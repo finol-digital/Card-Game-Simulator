@@ -150,7 +150,7 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
-          wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+          curl --proto "=https" -sSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh
           chmod +x ./dotnet-install.sh
           ./dotnet-install.sh --version latest
           apt-get update
