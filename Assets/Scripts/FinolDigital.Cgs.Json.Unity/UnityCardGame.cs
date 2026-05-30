@@ -824,8 +824,16 @@ namespace FinolDigital.Cgs.Json.Unity
             PopulateCardSets(cardSets, cardJToken, defaultSetCode);
 
             var backs = new List<string>();
+            var hasBacksDefinition = cardJToken["backs"] != null;
             if (cardJToken["backs"] is JArray jArray)
                 backs = jArray.Select(token => token?.Type == JTokenType.String ? token.Value<string>() : null).ToList();
+            else
+            {
+                // Legacy field fallback: only use backFaceId when there is no 'backs' array defined
+                var backFaceId = cardJToken.Value<string>("backFaceId");
+                if (!string.IsNullOrEmpty(backFaceId))
+                    backs.Add(backFaceId);
+            }
 
             var cardImageWebUrl = string.Empty;
             var backCardImageWebUrl = string.Empty;
@@ -910,12 +918,54 @@ namespace FinolDigital.Cgs.Json.Unity
                     var cardDuplicateId = cardSets.Count > 1 && isReprint
                         ? cardId + PropertyDef.ObjectDelimiter + set.Key
                         : cardId;
-                    var unityCard = new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties,
-                            isReprint)
+                    // Determine primary/back cards behavior:
+                    // - If 'backs' was present in the source JSON, the primary card's BackFaceId should be the
+                    //   first element (empty/null -> empty string). Any subsequent non-empty backs become separate
+                    //   back-face cards with id "<cardId>.<backId>".
+                    // - If 'backs' was not present but a legacy 'backFaceId' exists, treat that as the primary card's
+                    //   BackFaceId (do not create a separate back card).
+                    UnityCard unityCard;
+                    if (hasBacksDefinition)
+                    {
+                        var primaryBack = backs.Count > 0 ? (backs[0] ?? string.Empty) : string.Empty;
+                        unityCard = new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint,
+                            false, primaryBack)
                         {
                             ImageFileType = cardImageFileType,
                             ImageWebUrl = cardImageWebUrl
                         };
+                        // Always add the primary/front card when 'backs' defined
+                        LoadedCards[unityCard.Id] = unityCard;
+                        isReprint = true; // subsequent back cards are considered reprints
+
+                        // Create separate back cards for subsequent usable backs
+                        for (var bi = 1; bi < backs.Count; bi++)
+                        {
+                            var backId = backs[bi];
+                            if (string.IsNullOrEmpty(backId))
+                                continue;
+                            var backCardId = cardDuplicateId + PropertyDef.ObjectDelimiter + backId;
+                            var backUnityCard = new UnityCard(this, backCardId, cardName, set.Key, cardProperties,
+                                isReprint, false, backId)
+                            {
+                                ImageFileType = cardImageFileType,
+                                ImageWebUrl = cardImageWebUrl
+                            };
+                            LoadedCards[backUnityCard.Id] = backUnityCard;
+                        }
+                    }
+                    else
+                    {
+                        var primaryBack = backs.Count > 0 ? backs[0] ?? string.Empty : string.Empty;
+                        unityCard = new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint,
+                            false, primaryBack)
+                        {
+                            ImageFileType = cardImageFileType,
+                            ImageWebUrl = cardImageWebUrl
+                        };
+                        LoadedCards[unityCard.Id] = unityCard;
+                        isReprint = true;
+                    }
                     if (!string.IsNullOrEmpty(cardBackName))
                     {
                         var backCardId = cardDuplicateId + "_b";
@@ -934,27 +984,10 @@ namespace FinolDigital.Cgs.Json.Unity
                                 ImageWebUrl = backCardImageWebUrl
                             };
                         LoadedCards[backUnityCard.Id] = backUnityCard;
-                    }
-
-                    if (backs.Contains(null) || backs.Contains(string.Empty) || backs.Count < 1)
-                    {
+                        // Ensure the front/main card mapping is updated to the back-face pair
                         LoadedCards[unityCard.Id] = unityCard;
-                        isReprint = true;
                     }
-
-                    foreach (var backId in backs)
-                    {
-                        if (string.IsNullOrEmpty(backId))
-                            continue;
-                        var backCardId = cardDuplicateId + PropertyDef.ObjectDelimiter + backId;
-                        var backUnityCard =
-                            new UnityCard(this, backCardId, cardName, set.Key, cardProperties, isReprint, false, backId)
-                            {
-                                ImageFileType = cardImageFileType,
-                                ImageWebUrl = cardImageWebUrl
-                            };
-                        LoadedCards[backUnityCard.Id] = backUnityCard;
-                    }
+                    // Note: back cards from 'backs' have already been added when appropriate
                 }
             }
             else
