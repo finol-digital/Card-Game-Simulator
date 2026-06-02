@@ -964,7 +964,6 @@ namespace FinolDigital.Cgs.Json.Unity
                             ImageWebUrl = cardImageWebUrl
                         };
                         LoadedCards[unityCard.Id] = unityCard;
-                        isReprint = true;
                     }
                     if (!string.IsNullOrEmpty(cardBackName))
                     {
