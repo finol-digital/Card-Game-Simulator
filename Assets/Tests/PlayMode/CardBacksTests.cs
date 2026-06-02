@@ -52,7 +52,7 @@ namespace Tests.PlayMode
         }
 
         [Test]
-        public void LoadCards_UsesBacksAndFallbacksToBackFaceId()
+        public void LoadCards_UsesBacksAndFallsBackToBackFaceId()
         {
             var game = new UnityCardGame(null, "load_backs_test_" + Guid.NewGuid())
             {
