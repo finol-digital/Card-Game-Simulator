@@ -936,9 +936,9 @@ namespace FinolDigital.Cgs.Json.Unity
                         };
                         // Always add the primary/front card when 'backs' defined
                         LoadedCards[unityCard.Id] = unityCard;
-                        isReprint = true; // subsequent back cards are considered reprints
 
                         // Create separate back cards for subsequent usable backs
+                        const bool variantIsReprint = true;
                         for (var bi = 1; bi < backs.Count; bi++)
                         {
                             var backId = backs[bi];
@@ -946,7 +946,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                 continue;
                             var backCardId = cardDuplicateId + PropertyDef.ObjectDelimiter + backId;
                             var backUnityCard = new UnityCard(this, backCardId, cardName, set.Key, cardProperties,
-                                isReprint, false, backId)
+                                variantIsReprint, false, backId)
                             {
                                 ImageFileType = cardImageFileType,
                                 ImageWebUrl = cardImageWebUrl
