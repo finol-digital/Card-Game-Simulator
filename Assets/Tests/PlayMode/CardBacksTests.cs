@@ -52,7 +52,7 @@ namespace Tests.PlayMode
         }
 
         [Test]
-        public void LoadCards_UsesBacksThenBackFaceIdFallback()
+        public void LoadCards_UsesBacksAndFallsBackToBackFaceId()
         {
             var game = new UnityCardGame(null, "load_backs_test_" + Guid.NewGuid())
             {
@@ -67,13 +67,6 @@ namespace Tests.PlayMode
             {
                 new JObject
                 {
-                    ["id"] = "legacy_back",
-                    ["name"] = "Legacy",
-                    ["set"] = Set.DefaultCode,
-                    ["backFaceId"] = "LEGACY_BACK"
-                },
-                new JObject
-                {
                     ["id"] = "canonical_back",
                     ["name"] = "Canonical",
                     ["set"] = Set.DefaultCode,
@@ -84,37 +77,38 @@ namespace Tests.PlayMode
                     ["id"] = "both_back",
                     ["name"] = "Both",
                     ["set"] = Set.DefaultCode,
-                    ["backs"] = new JArray("PREFERRED_BACK"),
+                    ["backs"] = new JArray("BACK_1", "BACK_2"),
                     ["backFaceId"] = "LEGACY_SHOULD_NOT_WIN"
                 },
                 new JObject
                 {
-                    ["id"] = "default_back",
-                    ["name"] = "Default",
-                    ["set"] = Set.DefaultCode
+                    ["id"] = "legacy_back",
+                    ["name"] = "Legacy",
+                    ["set"] = Set.DefaultCode,
+                    ["backFaceId"] = "LEGACY_BACK"
                 }
             };
 
             File.WriteAllText(game.CardsFilePath, allCards.ToString(Formatting.None));
             game.LoadCards(game.CardsFilePath, Set.DefaultCode);
 
-            Assert.IsTrue(game.Cards.TryGetValue("legacy_back", out var legacyCard));
-            Assert.AreEqual("LEGACY_BACK", legacyCard.BackFaceId);
-
             Assert.IsTrue(game.Cards.TryGetValue("canonical_back", out var canonicalCard));
             Assert.AreEqual("CANON_BACK", canonicalCard.BackFaceId);
 
             Assert.IsTrue(game.Cards.TryGetValue("both_back", out var bothCard));
-            Assert.AreEqual("PREFERRED_BACK", bothCard.BackFaceId);
+            Assert.AreEqual("BACK_1", bothCard.BackFaceId);
 
-            Assert.IsTrue(game.Cards.TryGetValue("default_back", out var defaultCard));
-            Assert.IsTrue(string.IsNullOrEmpty(defaultCard.BackFaceId));
+            Assert.IsTrue(game.Cards.TryGetValue("both_back.BACK_2", out var bothCard2));
+            Assert.AreEqual("BACK_2", bothCard2.BackFaceId);
+
+            Assert.IsTrue(game.Cards.TryGetValue("legacy_back", out var legacyBack));
+            Assert.AreEqual("LEGACY_BACK", legacyBack.BackFaceId);
 
             Directory.Delete(game.GameDirectoryPath, true);
         }
 
         [Test]
-        public void LoadCards_UsesLegacyBackFaceIdWhenBacksAreUnusable()
+        public void LoadCards_UsesDefaultBackWhenBacksAreUnusable()
         {
             var game = new UnityCardGame(null, "load_unusable_backs_test_" + Guid.NewGuid())
             {
@@ -129,6 +123,12 @@ namespace Tests.PlayMode
             {
                 new JObject
                 {
+                    ["id"] = "default_back",
+                    ["name"] = "Default",
+                    ["set"] = Set.DefaultCode
+                },
+                new JObject
+                {
                     ["id"] = "null_only_back",
                     ["name"] = "Null Only",
                     ["set"] = Set.DefaultCode,
@@ -137,22 +137,39 @@ namespace Tests.PlayMode
                 },
                 new JObject
                 {
-                    ["id"] = "mixed_empty_back",
-                    ["name"] = "Mixed Empty",
+                    ["id"] = "string_empty_back",
+                    ["name"] = "String Empty",
                     ["set"] = Set.DefaultCode,
-                    ["backs"] = new JArray(string.Empty, JValue.CreateNull()),
-                    ["backFaceId"] = "LEGACY_MIXED_BACK"
+                    ["backs"] = new JArray(string.Empty),
+                    ["backFaceId"] = "LEGACY_STRING_EMPTY_BACK"
+                },
+                new JObject
+                {
+                    ["id"] = "double_back",
+                    ["name"] = "Double Empty",
+                    ["set"] = Set.DefaultCode,
+                    ["backs"] = new JArray(string.Empty, "BACK_2"),
+                    ["backFaceId"] = "LEGACY_DOUBLE_BACK"
                 }
             };
 
             File.WriteAllText(game.CardsFilePath, allCards.ToString(Formatting.None));
             game.LoadCards(game.CardsFilePath, Set.DefaultCode);
 
-            Assert.IsTrue(game.Cards.TryGetValue("null_only_back", out var nullOnlyCard));
-            Assert.AreEqual("LEGACY_NULL_BACK", nullOnlyCard.BackFaceId);
+            Assert.IsTrue(game.Cards.TryGetValue("default_back", out var defaultCard));
+            Assert.AreEqual("", defaultCard.BackFaceId);
 
-            Assert.IsTrue(game.Cards.TryGetValue("mixed_empty_back", out var mixedEmptyCard));
-            Assert.AreEqual("LEGACY_MIXED_BACK", mixedEmptyCard.BackFaceId);
+            Assert.IsTrue(game.Cards.TryGetValue("null_only_back", out var nullOnlyCard));
+            Assert.AreEqual("", nullOnlyCard.BackFaceId);
+
+            Assert.IsTrue(game.Cards.TryGetValue("string_empty_back", out var stringEmptyCard));
+            Assert.AreEqual("", stringEmptyCard.BackFaceId);
+
+            Assert.IsTrue(game.Cards.TryGetValue("double_back", out var doubleBackCard));
+            Assert.AreEqual("", doubleBackCard.BackFaceId);
+
+            Assert.IsTrue(game.Cards.TryGetValue("double_back.BACK_2", out var doubleBackCard2));
+            Assert.AreEqual("BACK_2", doubleBackCard2.BackFaceId);
 
             Directory.Delete(game.GameDirectoryPath, true);
         }
