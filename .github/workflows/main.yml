@@ -560,7 +560,7 @@ jobs:
           GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
           ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-        uses: maierj/fastlane-action@v3.1.0
+        uses: maierj/fastlane-action@v3.2.0
         with:
           lane: 'android playtest'
 
@@ -597,7 +597,7 @@ jobs:
           GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
           ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-        uses: maierj/fastlane-action@v3.1.0
+        uses: maierj/fastlane-action@v3.2.0
         with:
           lane: 'android playprod'
 
@@ -685,7 +685,7 @@ jobs:
           AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.apk', github.workspace) }}
           ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-        uses: maierj/fastlane-action@v3.1.0
+        uses: maierj/fastlane-action@v3.2.0
         with:
           lane: 'android amazon'
 
