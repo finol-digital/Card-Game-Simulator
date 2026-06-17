@@ -26,6 +26,8 @@ namespace Cgs.CardGameView.Multiplayer
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
         public override string DeletePrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
 
+        protected override bool IsAdditionalClientAuthorized(ulong clientId) => IsCardShared;
+
         private const float ZoomHoldTime = 0.5f;
         private const float MovementSpeed = 600f;
 
@@ -91,6 +93,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         private bool _isFacedown;
         private NetworkVariable<bool> _isFacedownNetworkVariable;
+
+        public bool IsCardShared
+        {
+            get => IsSpawned ? _isCardSharedNetworkVariable.Value : _isCardShared;
+            set
+            {
+                _isCardShared = value;
+                if (IsSpawned && IsServer)
+                    _isCardSharedNetworkVariable.Value = value;
+            }
+        }
+
+        private bool _isCardShared;
+        private NetworkVariable<bool> _isCardSharedNetworkVariable;
 
         private Sprite CardBackImageSprite
         {
@@ -174,6 +190,7 @@ namespace Cgs.CardGameView.Multiplayer
             _idNetworkVariable.OnValueChanged += OnChangeId;
             _isFacedownNetworkVariable = new NetworkVariable<bool>();
             _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
+            _isCardSharedNetworkVariable = new NetworkVariable<bool>();
         }
 
         private void OnEnable()

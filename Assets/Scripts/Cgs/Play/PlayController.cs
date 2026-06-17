@@ -566,7 +566,7 @@ namespace Cgs.Play
                                        CardGameManager.PixelsPerInch;
                         var rotation = Quaternion.Euler(0, 0, deckPlayCard.Key.Rotation);
                         var cardModel = CreateCardModel(playAreaCardZone.gameObject, cards[cardToPlay].Id, position,
-                            rotation, false);
+                            rotation, false, cardStackToPlay.Key.IsDeckShared);
                         cardStackToPlay.Key.RequestRemoveAt(cardToPlay);
                         AddCardToPlayArea(playAreaCardZone, cardModel);
                     }
@@ -629,7 +629,7 @@ namespace Cgs.Play
         public void AddCard(Card card)
         {
             var cardModel = CreateCardModel(playAreaCardZone.gameObject, card.Id, Vector2.zero, Quaternion.identity,
-                false);
+                false, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
             AddCardToPlayArea(playAreaCardZone, cardModel);
         }
 
@@ -662,7 +662,7 @@ namespace Cgs.Play
         }
 
         public CardModel CreateCardModel(GameObject container, string cardId, Vector3 position, Quaternion rotation,
-            bool isFacedown, string defaultAction = "", ulong? ownerClientId = null)
+            bool isFacedown, bool isCardShared, string defaultAction = "", ulong? ownerClientId = null)
         {
             if (container == null)
                 container = playAreaCardZone.gameObject;
@@ -681,6 +681,7 @@ namespace Cgs.Play
             cardModel.Position = position;
             cardModel.Rotation = rotation;
             cardModel.IsFacedown = isFacedown;
+            cardModel.IsCardShared = isCardShared;
             if (Enum.TryParse<CardAction>(defaultAction, out var cardAction))
                 cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardAction];
 
