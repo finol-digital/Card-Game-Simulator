@@ -394,7 +394,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         public static CardModel CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,
-            UnityCard value, bool isFacedown, CardZone placeHolderCardZone = null)
+            UnityCard value, bool isFacedown, bool isCardShared, CardZone placeHolderCardZone = null)
         {
             var position = transform.position;
             var newGameObject = Instantiate(gameObject, position, transform.rotation,
@@ -406,6 +406,7 @@ namespace Cgs.CardGameView.Multiplayer
             cardModel.HighlightMode = HighlightMode.Off;
             cardModel.Value = value;
             cardModel.IsFacedown = isFacedown;
+            cardModel.IsCardShared = isCardShared;
             cardModel.PlaceHolderCardZone = placeHolderCardZone;
             cardModel.DoesCloneOnDrag = false;
             cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2)position - eventData.position;
@@ -420,7 +421,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 if (!(Container != null && Container.transform == transform.parent) && IsSpawned)
                     MyNetworkObject.Despawn(false);
-                CreateDrag(eventData, gameObject, transform, Value, IsFacedown);
+                CreateDrag(eventData, gameObject, transform, Value, IsFacedown, IsCardShared);
                 return true;
             }
 
@@ -770,7 +771,7 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.position = targetPosition;
             rectTransform.localScale = Vector3.one;
 
-            CreateDrag(CurrentPointerEventData, gameObject, transform, Value, IsFacedown, PlaceHolderCardZone);
+            CreateDrag(CurrentPointerEventData, gameObject, transform, Value, IsFacedown, IsCardShared, PlaceHolderCardZone);
 
             if (IsSpawned)
                 DeleteServerRpc();
