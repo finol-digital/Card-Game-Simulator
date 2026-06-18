@@ -77,6 +77,18 @@ namespace Cgs.Play
         public GameObject verticalCardZonePrefab;
         public GameObject playMatPrefab;
 
+        public readonly struct CardModelCreationOptions
+        {
+            public CardModelCreationOptions(string defaultAction = "", ulong? ownerClientId = null)
+            {
+                DefaultAction = defaultAction;
+                OwnerClientId = ownerClientId;
+            }
+
+            public string DefaultAction { get; }
+            public ulong? OwnerClientId { get; }
+        }
+
         public Transform stackViewers;
 
         public RotateZoomableScrollRect playArea;
@@ -662,7 +674,7 @@ namespace Cgs.Play
         }
 
         public CardModel CreateCardModel(GameObject container, string cardId, Vector3 position, Quaternion rotation,
-            bool isFacedown, bool isCardShared, string defaultAction = "", ulong? ownerClientId = null)
+            bool isFacedown, bool isCardShared, CardModelCreationOptions options = default)
         {
             if (container == null)
                 container = playAreaCardZone.gameObject;
@@ -670,8 +682,8 @@ namespace Cgs.Play
                 .GetComponent<CardModel>();
             if (CgsNetManager.Instance.IsOnline)
             {
-                if (ownerClientId.HasValue)
-                    cardModel.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                if (options.OwnerClientId.HasValue)
+                    cardModel.MyNetworkObject.SpawnWithOwnership(options.OwnerClientId.Value);
                 else
                     cardModel.MyNetworkObject.Spawn();
             }
@@ -682,7 +694,8 @@ namespace Cgs.Play
             cardModel.Rotation = rotation;
             cardModel.IsFacedown = isFacedown;
             cardModel.IsCardShared = isCardShared;
-            if (Enum.TryParse<CardAction>(defaultAction, out var cardAction))
+            if (!string.IsNullOrEmpty(options.DefaultAction) &&
+                Enum.TryParse<CardAction>(options.DefaultAction, out var cardAction))
                 cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardAction];
 
             cardModel.HideHighlightClientRpc();

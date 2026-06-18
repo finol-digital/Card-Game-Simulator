@@ -201,6 +201,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnNetworkSpawnPlayable()
         {
             _isFacedown = _isFacedownNetworkVariable.Value;
+            _isCardShared = _isCardSharedNetworkVariable.Value;
 
             if (string.IsNullOrEmpty(_idNetworkVariable.Value))
                 return;
