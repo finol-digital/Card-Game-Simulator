@@ -1,3 +1,4 @@
 ## What's Changed
-- Added Move Card Menu
-- Bug-Fix for .webp image files
+- Introduced permissions system for which players can interact with objects 
+- Fixed issues with saving card backs
+
