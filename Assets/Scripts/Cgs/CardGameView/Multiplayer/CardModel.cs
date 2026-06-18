@@ -26,6 +26,8 @@ namespace Cgs.CardGameView.Multiplayer
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
         public override string DeletePrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
 
+        protected override bool IsAdditionalClientAuthorized(ulong clientId) => IsCardShared;
+
         private const float ZoomHoldTime = 0.5f;
         private const float MovementSpeed = 600f;
 
@@ -91,6 +93,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         private bool _isFacedown;
         private NetworkVariable<bool> _isFacedownNetworkVariable;
+
+        public bool IsCardShared
+        {
+            get => IsSpawned ? _isCardSharedNetworkVariable.Value : _isCardShared;
+            set
+            {
+                _isCardShared = value;
+                if (IsSpawned && IsServer)
+                    _isCardSharedNetworkVariable.Value = value;
+            }
+        }
+
+        private bool _isCardShared;
+        private NetworkVariable<bool> _isCardSharedNetworkVariable;
 
         private Sprite CardBackImageSprite
         {
@@ -174,6 +190,7 @@ namespace Cgs.CardGameView.Multiplayer
             _idNetworkVariable.OnValueChanged += OnChangeId;
             _isFacedownNetworkVariable = new NetworkVariable<bool>();
             _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
+            _isCardSharedNetworkVariable = new NetworkVariable<bool>();
         }
 
         private void OnEnable()
@@ -184,6 +201,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnNetworkSpawnPlayable()
         {
             _isFacedown = _isFacedownNetworkVariable.Value;
+            _isCardShared = _isCardSharedNetworkVariable.Value;
 
             if (string.IsNullOrEmpty(_idNetworkVariable.Value))
                 return;
@@ -376,7 +394,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         public static CardModel CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,
-            UnityCard value, bool isFacedown, CardZone placeHolderCardZone = null)
+            UnityCard value, bool isFacedown, bool isCardShared, CardZone placeHolderCardZone = null)
         {
             var position = transform.position;
             var newGameObject = Instantiate(gameObject, position, transform.rotation,
@@ -388,6 +406,7 @@ namespace Cgs.CardGameView.Multiplayer
             cardModel.HighlightMode = HighlightMode.Off;
             cardModel.Value = value;
             cardModel.IsFacedown = isFacedown;
+            cardModel.IsCardShared = isCardShared;
             cardModel.PlaceHolderCardZone = placeHolderCardZone;
             cardModel.DoesCloneOnDrag = false;
             cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2)position - eventData.position;
@@ -402,7 +421,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 if (!(Container != null && Container.transform == transform.parent) && IsSpawned)
                     MyNetworkObject.Despawn(false);
-                CreateDrag(eventData, gameObject, transform, Value, IsFacedown);
+                CreateDrag(eventData, gameObject, transform, Value, IsFacedown, IsCardShared);
                 return true;
             }
 
@@ -752,7 +771,7 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.position = targetPosition;
             rectTransform.localScale = Vector3.one;
 
-            CreateDrag(CurrentPointerEventData, gameObject, transform, Value, IsFacedown, PlaceHolderCardZone);
+            CreateDrag(CurrentPointerEventData, gameObject, transform, Value, IsFacedown, IsCardShared, PlaceHolderCardZone);
 
             if (IsSpawned)
                 DeleteServerRpc();

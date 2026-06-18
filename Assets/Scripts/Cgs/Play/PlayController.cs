@@ -77,6 +77,18 @@ namespace Cgs.Play
         public GameObject verticalCardZonePrefab;
         public GameObject playMatPrefab;
 
+        public readonly struct CardModelCreationOptions
+        {
+            public CardModelCreationOptions(string defaultAction = "", ulong? ownerClientId = null)
+            {
+                DefaultAction = defaultAction;
+                OwnerClientId = ownerClientId;
+            }
+
+            public string DefaultAction { get; }
+            public ulong? OwnerClientId { get; }
+        }
+
         public Transform stackViewers;
 
         public RotateZoomableScrollRect playArea;
@@ -566,7 +578,7 @@ namespace Cgs.Play
                                        CardGameManager.PixelsPerInch;
                         var rotation = Quaternion.Euler(0, 0, deckPlayCard.Key.Rotation);
                         var cardModel = CreateCardModel(playAreaCardZone.gameObject, cards[cardToPlay].Id, position,
-                            rotation, false);
+                            rotation, false, cardStackToPlay.Key.IsDeckShared);
                         cardStackToPlay.Key.RequestRemoveAt(cardToPlay);
                         AddCardToPlayArea(playAreaCardZone, cardModel);
                     }
@@ -629,7 +641,7 @@ namespace Cgs.Play
         public void AddCard(Card card)
         {
             var cardModel = CreateCardModel(playAreaCardZone.gameObject, card.Id, Vector2.zero, Quaternion.identity,
-                false);
+                false, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
             AddCardToPlayArea(playAreaCardZone, cardModel);
         }
 
@@ -662,7 +674,7 @@ namespace Cgs.Play
         }
 
         public CardModel CreateCardModel(GameObject container, string cardId, Vector3 position, Quaternion rotation,
-            bool isFacedown, string defaultAction = "", ulong? ownerClientId = null)
+            bool isFacedown, bool isCardShared, CardModelCreationOptions options = default)
         {
             if (container == null)
                 container = playAreaCardZone.gameObject;
@@ -670,8 +682,8 @@ namespace Cgs.Play
                 .GetComponent<CardModel>();
             if (CgsNetManager.Instance.IsOnline)
             {
-                if (ownerClientId.HasValue)
-                    cardModel.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                if (options.OwnerClientId.HasValue)
+                    cardModel.MyNetworkObject.SpawnWithOwnership(options.OwnerClientId.Value);
                 else
                     cardModel.MyNetworkObject.Spawn();
             }
@@ -681,7 +693,9 @@ namespace Cgs.Play
             cardModel.Position = position;
             cardModel.Rotation = rotation;
             cardModel.IsFacedown = isFacedown;
-            if (Enum.TryParse<CardAction>(defaultAction, out var cardAction))
+            cardModel.IsCardShared = isCardShared;
+            if (!string.IsNullOrEmpty(options.DefaultAction) &&
+                Enum.TryParse<CardAction>(options.DefaultAction, out var cardAction))
                 cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardAction];
 
             cardModel.HideHighlightClientRpc();

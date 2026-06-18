@@ -336,7 +336,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             var unityCard = cards[^1];
             CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, !IsTopFaceup,
-                PlayController.Instance.playAreaCardZone);
+                IsDeckShared, PlayController.Instance.playAreaCardZone);
             RemovePointer(eventData);
 
             if (CgsNetManager.Instance.IsOnline && cards.Count > 1)

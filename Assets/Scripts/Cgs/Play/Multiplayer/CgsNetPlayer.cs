@@ -602,12 +602,13 @@ namespace Cgs.Play.Multiplayer
             var position = ((RectTransform) cardModelTransform).localPosition;
             var rotation = cardModelTransform.localRotation;
             var isFacedown = cardModel.IsFacedown && !cardModel.Value.IsBackFaceCard;
+            var isCardShared = cardModel.IsCardShared;
 
             if (cardZone.IsSpawned)
                 SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, isFacedown,
-                    cardZone.DefaultAction.ToString());
+                    isCardShared);
             else
-                SpawnCardInPlayAreaServerRpc(cardModel.Id, position, rotation, isFacedown);
+                SpawnCardInPlayAreaServerRpc(cardModel.Id, position, rotation, isFacedown, isCardShared);
 
             if (cardModel.IsSpawned)
                 DespawnCardServerRpc(cardModel.gameObject);
@@ -618,19 +619,30 @@ namespace Cgs.Play.Multiplayer
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void SpawnCardInZoneServerRpc(NetworkObjectReference container, string cardId, Vector3 position,
-            Quaternion rotation, bool isFacedown, string defaultAction, ServerRpcParams rpcParams = default)
+            Quaternion rotation, bool isFacedown, bool isCardShared, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateCardModel(container, cardId, position, rotation, isFacedown, defaultAction,
-                rpcParams.Receive.SenderClientId);
+            if (!container.TryGet(out var containerObject))
+            {
+                Debug.LogError($"[CgsNet Player] Failed to spawn {cardId}: Card zone container could not be resolved.");
+                return;
+            }
+
+            var defaultAction = string.Empty;
+            if (containerObject.TryGetComponent<CardZone>(out var cardZone))
+                defaultAction = cardZone.DefaultAction.ToString();
+
+            PlayController.Instance.CreateCardModel(containerObject.gameObject, cardId, position, rotation, isFacedown,
+                isCardShared, new PlayController.CardModelCreationOptions(defaultAction,
+                    rpcParams.Receive.SenderClientId));
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void SpawnCardInPlayAreaServerRpc(string cardId, Vector3 position, Quaternion rotation,
-            bool isFacedown, ServerRpcParams rpcParams = default)
+            bool isFacedown, bool isCardShared, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateCardModel(null, cardId, position, rotation, isFacedown, "",
-                rpcParams.Receive.SenderClientId);
+            PlayController.Instance.CreateCardModel(null, cardId, position, rotation, isFacedown, isCardShared,
+                new PlayController.CardModelCreationOptions(ownerClientId: rpcParams.Receive.SenderClientId));
         }
 
         [ServerRpc]
