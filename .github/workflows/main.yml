@@ -824,6 +824,17 @@ jobs:
           restore-keys: |
             Library-buildWindows-${{ matrix.targetPlatform }}-
             Library-buildWindows-
+      - name: Prepare Unity Windows directories
+        shell: pwsh
+        run: |
+          $localAppData = "$env:USERPROFILE\AppData\Local"
+          $appData = "$env:USERPROFILE\AppData\Roaming"
+          $localLow = "$env:USERPROFILE\AppData\LocalLow"
+          New-Item -ItemType Directory -Force -Path "$localAppData\Unity\Caches" | Out-Null
+          New-Item -ItemType Directory -Force -Path "$appData\Unity" | Out-Null
+          New-Item -ItemType Directory -Force -Path "$localLow\Unity" | Out-Null
+          "LOCALAPPDATA=$localAppData" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "APPDATA=$appData" | Out-File -FilePath $env:GITHUB_ENV -Append
       - name: Build Unity Project
         id: buildStep
         timeout-minutes: 45
