@@ -700,6 +700,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
       - name: Download WebGL Artifact
         uses: actions/download-artifact@v8
         with:
@@ -726,6 +730,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
       - name: Download WebGL Artifact
         uses: actions/download-artifact@v8
         with:
