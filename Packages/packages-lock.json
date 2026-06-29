@@ -8,7 +8,7 @@
       "hash": "65aa6b13a629ff91b45e20bfb1543f8839aad75b"
     },
     "com.kyrylokuzyk.primetween": {
-      "version": "1.4.6",
+      "version": "1.4.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -125,7 +125,7 @@
       }
     },
     "com.unity.multiplayer.tools": {
-      "version": "2.2.8",
+      "version": "2.2.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -140,7 +140,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.netcode.gameobjects": {
-      "version": "2.12.0",
+      "version": "2.13.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -279,7 +279,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.multiplayer": {
-      "version": "2.2.3",
+      "version": "2.2.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
