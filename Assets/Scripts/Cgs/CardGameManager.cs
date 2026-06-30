@@ -890,7 +890,7 @@ namespace Cgs
         {
             UnregisterStaticEventHandlers();
             if (_instance == this)
-                _instance = null;
+                Instance = null;
         }
 
         private void UnregisterStaticEventHandlers()
