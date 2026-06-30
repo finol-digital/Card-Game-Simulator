@@ -926,7 +926,7 @@ PlayerSettings:
     Windows Store Apps: 1
   il2cppCompilerConfiguration:
     Android: 2
-    Standalone: 2
+    Standalone: 1
     WebGL: 2
   il2cppCodeGeneration: {}
   il2cppStacktraceInformation: {}
@@ -1023,7 +1023,7 @@ PlayerSettings:
   syncCapabilities: 0
   platformCapabilities:
     WindowsStoreApps:
-      EnterpriseAuthentication: False
+      CodeGeneration: False
       OfflineMapsManagement: False
       HumanInterfaceDevice: False
       Location: False
@@ -1059,8 +1059,8 @@ PlayerSettings:
       Contacts: False
       Proximity: False
       InternetClient: True
-      CodeGeneration: False
       BackgroundMediaPlayback: False
+      EnterpriseAuthentication: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False
