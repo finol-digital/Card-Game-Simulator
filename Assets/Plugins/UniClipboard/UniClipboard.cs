@@ -7,6 +7,12 @@ public class UniClipboard
 {
     static IBoard _board;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStaticState()
+    {
+        _board = null;
+    }
+
     static IBoard Board
     {
         get

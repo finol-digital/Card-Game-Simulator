@@ -198,6 +198,15 @@ namespace Cgs
 
         private int _selectionVersion;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            _instance = null;
+            Current = UnityCardGame.UnityInvalid;
+            IsCurrentReady = false;
+            IsQuitting = false;
+        }
+
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -215,8 +224,13 @@ namespace Cgs
             LookupCardGames();
 
             if (Debug.isDebugBuild)
+            {
+                Application.logMessageReceived -= ShowLogToUser;
                 Application.logMessageReceived += ShowLogToUser;
+            }
+            SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
             ResetCurrentToDefault();
@@ -387,6 +401,7 @@ namespace Cgs
 
         private void CheckDeepLinks()
         {
+            Application.deepLinkActivated -= OnDeepLinkActivated;
             Application.deepLinkActivated += OnDeepLinkActivated;
 
             Debug.Log("Checking Deep Links...");
@@ -868,7 +883,22 @@ namespace Cgs
 
         private void OnDisable()
         {
+            UnregisterStaticEventHandlers();
+        }
+
+        private void OnDestroy()
+        {
+            UnregisterStaticEventHandlers();
+            if (_instance == this)
+                _instance = null;
+        }
+
+        private void UnregisterStaticEventHandlers()
+        {
+            Application.logMessageReceived -= ShowLogToUser;
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
+            Application.deepLinkActivated -= OnDeepLinkActivated;
         }
 
         private void OnApplicationQuit()

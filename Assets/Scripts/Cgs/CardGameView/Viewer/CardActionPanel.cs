@@ -30,6 +30,12 @@ namespace Cgs.CardGameView.Viewer
 
         private static Dictionary<FinolDigital.Cgs.Json.CardAction, CardAction> _cardActionDictionary;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            _cardActionDictionary = null;
+        }
+
         public Button moveButton;
         public Button rotateButton;
         public Button tapButton;
