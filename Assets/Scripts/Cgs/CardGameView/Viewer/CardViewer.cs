@@ -46,6 +46,12 @@ namespace Cgs.CardGameView.Viewer
 
         private static CardViewer _instance;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            _instance = null;
+        }
+
         public CardViewerMode Mode
         {
             get => _mode;

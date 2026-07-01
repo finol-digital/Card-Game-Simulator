@@ -14,6 +14,12 @@ namespace Cgs.UI
         public static int IsSelectedPropertyId => _isSelectedPropertyId ??= Shader.PropertyToID("_IsSelected");
         private static int? _isSelectedPropertyId;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            _isSelectedPropertyId = null;
+        }
+
         private Image _image;
         private Outline _outline;
 

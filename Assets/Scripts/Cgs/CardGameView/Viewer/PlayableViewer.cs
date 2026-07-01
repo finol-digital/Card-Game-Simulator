@@ -33,6 +33,12 @@ namespace Cgs.CardGameView.Viewer
 
         private static PlayableViewer _instance;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            _instance = null;
+        }
+
         public CgsNetPlayable SelectedPlayable
         {
             get => _selectedPlayable;

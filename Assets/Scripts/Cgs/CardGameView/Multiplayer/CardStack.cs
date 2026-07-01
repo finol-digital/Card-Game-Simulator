@@ -26,6 +26,12 @@ namespace Cgs.CardGameView.Multiplayer
     {
         [ThreadStatic] private static Random _local;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            _local = null;
+        }
+
         private static Random ThisThreadsRandom => _local ??= new Random(
             unchecked(Environment.TickCount * 31 + Thread
                 .CurrentThread.ManagedThreadId));
