@@ -74,7 +74,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override bool CanClientRequestOwnedObject => IsDeckShared;
 
-        protected override bool IsAdditionalClientAuthorized(ulong clientId) => IsDeckShared;
+        protected override bool IsAdditionalClientAuthorized(ulong clientId) => true;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -360,10 +360,17 @@ namespace Cgs.CardGameView.Multiplayer
             deckLabel.text = newName;
         }
 
-        [ServerRpc]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private void UpdateCardsServerRpc(CgsNetString[] cardIds)
+        private void UpdateCardsServerRpc(CgsNetString[] cardIds, RpcParams rpcParams = default)
         {
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"CardStack: Rejecting cards change for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
             _cards = new List<UnityCard>();
             _cardIds.Clear();
             foreach (var cardId in cardIds)

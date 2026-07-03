@@ -692,8 +692,8 @@ namespace Cgs.Play
             cardModel.Container = container;
             cardModel.Position = position;
             cardModel.Rotation = rotation;
-            cardModel.IsFacedown = isFacedown;
             cardModel.IsCardShared = isCardShared;
+            cardModel.IsFacedown = isFacedown;
             if (!string.IsNullOrEmpty(options.DefaultAction) &&
                 Enum.TryParse<CardAction>(options.DefaultAction, out var cardAction))
                 cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardAction];
