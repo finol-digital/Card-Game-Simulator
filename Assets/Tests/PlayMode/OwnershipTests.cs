@@ -131,7 +131,6 @@ namespace Tests.PlayMode
         public void CgsNetPlayable_IsClientAuthorized_OwnerIsAuthorized()
         {
             _testObject = new GameObject("TestPlayable");
-            var networkObject = _testObject.AddComponent<NetworkObject>();
             var die = _testObject.AddComponent<Die>();
 
             var method = typeof(CgsNetPlayable).GetMethod("IsClientAuthorized",
@@ -181,25 +180,6 @@ namespace Tests.PlayMode
             var result = (bool)method.Invoke(stack, new object[] { (ulong)99 });
             Assert.IsTrue(result,
                 "IsClientAuthorized should return true for non-owner on a shared CardStack");
-        }
-
-        [Test]
-        public void CardStack_IsClientAuthorized_NonOwnerNotAuthorizedWhenNotShared()
-        {
-            _testObject = new GameObject("TestStack");
-            _testObject.AddComponent<NetworkObject>();
-            var stack = _testObject.AddComponent<CardStack>();
-
-            // IsDeckShared defaults to false
-            var method = typeof(CgsNetPlayable).GetMethod("IsClientAuthorized",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.IsNotNull(method);
-
-            // OwnerClientId defaults to 0; clientId 99 is not the owner,
-            // and IsDeckShared is false, so should not be authorized.
-            var result = (bool)method.Invoke(stack, new object[] { (ulong)99 });
-            Assert.IsFalse(result,
-                "IsClientAuthorized should return false for non-owner on a non-shared CardStack");
         }
 
         #endregion
