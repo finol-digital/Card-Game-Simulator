@@ -360,7 +360,7 @@ namespace Cgs.CardGameView.Multiplayer
             deckLabel.text = newName;
         }
 
-        [ServerRpc]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void UpdateCardsServerRpc(CgsNetString[] cardIds)
         {

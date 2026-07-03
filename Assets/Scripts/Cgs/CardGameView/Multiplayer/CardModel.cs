@@ -405,8 +405,8 @@ namespace Cgs.CardGameView.Multiplayer
             cardModel.Visibility.blocksRaycasts = false;
             cardModel.HighlightMode = HighlightMode.Off;
             cardModel.Value = value;
-            cardModel.IsFacedown = isFacedown;
             cardModel.IsCardShared = isCardShared;
+            cardModel.IsFacedown = isFacedown;
             cardModel.PlaceHolderCardZone = placeHolderCardZone;
             cardModel.DoesCloneOnDrag = false;
             cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2)position - eventData.position;
