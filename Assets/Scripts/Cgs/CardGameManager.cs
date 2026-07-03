@@ -223,20 +223,34 @@ namespace Cgs
                 CreateDefaultCardGames();
             LookupCardGames();
 
-            if (Debug.isDebugBuild)
-            {
-                Application.logMessageReceived -= ShowLogToUser;
-                Application.logMessageReceived += ShowLogToUser;
-            }
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.sceneUnloaded -= OnSceneUnloaded;
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
+            RegisterStaticEventHandlers();
 
             ResetCurrentToDefault();
 
             Debug.Log("CardGameManager::Awake:CheckDeepLinks");
             CheckDeepLinks();
+        }
+
+        private void RegisterStaticEventHandlers()
+        {
+            if (Debug.isDebugBuild)
+            {
+                Application.logMessageReceived -= ShowLogToUser;
+                Application.logMessageReceived += ShowLogToUser;
+            }
+
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+            Application.deepLinkActivated -= OnDeepLinkActivated;
+            Application.deepLinkActivated += OnDeepLinkActivated;
+        }
+
+        private void OnEnable()
+        {
+            if (_instance == this)
+                RegisterStaticEventHandlers();
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
@@ -886,41 +900,19 @@ namespace Cgs
             UnregisterStaticEventHandlers();
         }
 
-        private void OnDestroy()
-        {
-            UnregisterStaticEventHandlers();
-            if (_instance == this)
-                Instance = null;
-        }
-
-        private void OnEnable()
-        {
-            if (_instance == this)
-                RegisterStaticEventHandlers();
-        }
-
-        private void RegisterStaticEventHandlers()
-        {
-            if (Debug.isDebugBuild)
-            {
-                Application.logMessageReceived -= ShowLogToUser;
-                Application.logMessageReceived += ShowLogToUser;
-            }
-
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.sceneUnloaded -= OnSceneUnloaded;
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
-            Application.deepLinkActivated -= OnDeepLinkActivated;
-            Application.deepLinkActivated += OnDeepLinkActivated;
-        }
-
         private void UnregisterStaticEventHandlers()
         {
             Application.logMessageReceived -= ShowLogToUser;
             SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
             Application.deepLinkActivated -= OnDeepLinkActivated;
+        }
+
+        private void OnDestroy()
+        {
+            UnregisterStaticEventHandlers();
+            if (_instance == this)
+                Instance = null;
         }
 
         private void OnApplicationQuit()
