@@ -26,7 +26,7 @@ namespace Cgs.CardGameView.Multiplayer
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
         public override string DeletePrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
 
-        protected override bool IsAdditionalClientAuthorized(ulong clientId) => IsCardShared;
+        protected override bool IsAdditionalClientAuthorized(ulong clientId) => true;
 
         private const float ZoomHoldTime = 0.5f;
         private const float MovementSpeed = 600f;
