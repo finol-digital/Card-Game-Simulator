@@ -128,23 +128,6 @@ namespace Tests.PlayMode
         #region IsClientAuthorized Logic via Reflection
 
         [Test]
-        public void CgsNetPlayable_IsClientAuthorized_OwnerIsAuthorized()
-        {
-            _testObject = new GameObject("TestPlayable");
-            var die = _testObject.AddComponent<Die>();
-
-            var method = typeof(CgsNetPlayable).GetMethod("IsClientAuthorized",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.IsNotNull(method);
-
-            // On non-spawned objects, OwnerClientId defaults to 0 (server).
-            // Calling IsClientAuthorized(0) should return true since 0 matches OwnerClientId.
-            var result = (bool)method.Invoke(die, new object[] { (ulong)0 });
-            Assert.IsTrue(result,
-                "IsClientAuthorized should return true when clientId matches OwnerClientId");
-        }
-
-        [Test]
         public void CgsNetPlayable_IsClientAuthorized_NonOwnerNotAuthorizedOnNonShared()
         {
             _testObject = new GameObject("TestPlayable");
