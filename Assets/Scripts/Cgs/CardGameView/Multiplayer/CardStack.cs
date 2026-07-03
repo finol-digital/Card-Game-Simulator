@@ -67,7 +67,7 @@ namespace Cgs.CardGameView.Multiplayer
                                        || PointerPositions.Count > 1;
 
         private bool IsDraggingStack => HoldTime >= DragHoldTime || CurrentPointerEventData is
-            {button: PointerEventData.InputButton.Middle};
+        { button: PointerEventData.InputButton.Middle };
 
         protected override bool IsProcessingSecondaryDragAction =>
             !IsDraggingStack && base.IsProcessingSecondaryDragAction;
@@ -122,17 +122,8 @@ namespace Cgs.CardGameView.Multiplayer
                 foreach (var unityCard in value)
                     _cards.Add(unityCard);
 
-                if (!CgsNetManager.Instance.IsOnline)
-                    return;
-
-                if (!CgsNetManager.Instance.IsConnectedClient || IsOwner)
-                {
-                    _cardIds.Clear();
-                    foreach (var card in value.Select(card => card.Id).ToArray())
-                        _cardIds.Add(card);
-                }
-                else
-                    UpdateCardsServerRpc(value.Select(card => (CgsNetString) card.Id).ToArray());
+                if (CgsNetManager.Instance.IsOnline)
+                    UpdateCardsServerRpc(_cards.Select(card => (CgsNetString)card.Id).ToArray());
             }
         }
 
@@ -231,7 +222,7 @@ namespace Cgs.CardGameView.Multiplayer
             gameObject.GetOrAddComponent<CardDropArea>().DropHandler = this;
             gameObject.GetOrAddComponent<StackDropArea>().DropHandler = this;
 
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             rectTransform.sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             rectTransform.localScale = Vector3.one;
