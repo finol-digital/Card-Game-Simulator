@@ -1,4 +1,2 @@
 ## What's Changed
-- Introduced permissions system for which players can interact with objects 
-- Fixed issues with saving card backs
-
+- Fix for stacking cards on client
