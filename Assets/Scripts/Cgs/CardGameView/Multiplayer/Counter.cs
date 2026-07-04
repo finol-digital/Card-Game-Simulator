@@ -15,6 +15,8 @@ namespace Cgs.CardGameView.Multiplayer
     {
         public override string DeletePrompt => "Delete counter?";
 
+        protected override bool IsAdditionalClientAuthorized(ulong clientId) => true;
+
         public const int DefaultValue = 1;
 
         public Image counterImage;

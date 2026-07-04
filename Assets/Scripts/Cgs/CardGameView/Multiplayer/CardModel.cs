@@ -669,10 +669,7 @@ namespace Cgs.CardGameView.Multiplayer
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
                 || (cardZone.Type == CardZoneType.Vertical && isOutXBounds)
                 || (cardZone.Type == CardZoneType.Horizontal && isOutYBounds)
-                || (cardZone.Type == CardZoneType.Area && PlaceHolder != null &&
-                    PlaceHolder.parent.parent !=
-                    PlayController.Instance.playAreaCardZone.transform)
-               ) // Assumes we are in play area and card zones are siblings
+                || (cardZone.Type == CardZoneType.Area))
                 ParentToCanvas(targetPosition);
         }
 

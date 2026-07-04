@@ -15,6 +15,8 @@ namespace Cgs.CardGameView.Multiplayer
     {
         public override string DeletePrompt => "Delete die?";
 
+        protected override bool IsAdditionalClientAuthorized(ulong clientId) => true;
+
         public const int DefaultMax = 6;
         public const int DefaultValue = 6;
 
