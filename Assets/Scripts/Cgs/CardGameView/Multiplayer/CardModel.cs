@@ -669,7 +669,7 @@ namespace Cgs.CardGameView.Multiplayer
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
                 || (cardZone.Type == CardZoneType.Vertical && isOutXBounds)
                 || (cardZone.Type == CardZoneType.Horizontal && isOutYBounds)
-                || (cardZone.Type == CardZoneType.Area))
+                || cardZone.Type == CardZoneType.Area)
                 ParentToCanvas(targetPosition);
         }
 

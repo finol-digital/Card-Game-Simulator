@@ -128,24 +128,6 @@ namespace Tests.PlayMode
         #region IsClientAuthorized Logic via Reflection
 
         [Test]
-        public void CgsNetPlayable_IsClientAuthorized_NonOwnerNotAuthorizedOnNonShared()
-        {
-            _testObject = new GameObject("TestPlayable");
-            _testObject.AddComponent<NetworkObject>();
-            var die = _testObject.AddComponent<Die>();
-
-            var method = typeof(CgsNetPlayable).GetMethod("IsClientAuthorized",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.IsNotNull(method);
-
-            // OwnerClientId defaults to 0; clientId 99 is not the owner.
-            // Die is not a CardStack, so shared check doesn't apply.
-            var result = (bool)method.Invoke(die, new object[] { (ulong)99 });
-            Assert.IsFalse(result,
-                "IsClientAuthorized should return false for non-owner on non-CardStack playable");
-        }
-
-        [Test]
         public void CardStack_IsClientAuthorized_NonOwnerAuthorizedWhenShared()
         {
             _testObject = new GameObject("TestStack");

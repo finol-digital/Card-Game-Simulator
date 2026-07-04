@@ -198,9 +198,8 @@ namespace Cgs.CardGameView.Multiplayer
                         break;
                     default:
                     case HighlightMode.Off:
-                        var isOthers = IsSpawned && !IsOwner;
-                        Highlight.effectColor = isOthers ? Color.yellow : Color.black;
-                        Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
+                        Highlight.effectColor = Color.black;
+                        Highlight.effectDistance = Vector2.zero;
                         break;
                 }
             }
