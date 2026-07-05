@@ -35,7 +35,7 @@ namespace Cgs.Play.Drawer
         public static Vector2 DockedPosition =>
             new(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) - 10);
 
-        private static bool IsBlocked => PlayController.Instance.IsBlocked;
+        private static bool IsBlocked => PlayController.Instance != null && PlayController.Instance.IsBlocked;
 
         public StackViewer viewer;
         public Dropdown cardStackDropdown;
