@@ -640,9 +640,15 @@ namespace Cgs.Play
 
         public void AddCard(Card card)
         {
-            var cardModel = CreateCardModel(playAreaCardZone.gameObject, card.Id, Vector2.zero, Quaternion.identity,
-                false, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
-            AddCardToPlayArea(playAreaCardZone, cardModel);
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestNewCard(card.Id, Vector2.zero, Quaternion.identity, false,
+                    SharePreference.Share == CardGameManager.Current.DeckSharePreference);
+            else
+            {
+                var cardModel = CreateCardModel(playAreaCardZone.gameObject, card.Id, Vector2.zero, Quaternion.identity,
+                    false, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
+                AddCardToPlayArea(playAreaCardZone, cardModel);
+            }
         }
 
         private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)
