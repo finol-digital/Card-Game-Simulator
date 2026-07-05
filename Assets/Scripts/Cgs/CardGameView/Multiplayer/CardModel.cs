@@ -672,7 +672,12 @@ namespace Cgs.CardGameView.Multiplayer
                 || (cardZone.Type == CardZoneType.Vertical && isOutXBounds)
                 || (cardZone.Type == CardZoneType.Horizontal && isOutYBounds)
                 || cardZone.Type == CardZoneType.Area)
+            {
+                if (cardZone.Type == CardZoneType.Area && PlaceHolderCardZone == null)
+                    PlaceHolderCardZone = cardZone;
+
                 ParentToCanvas(targetPosition);
+            }
         }
 
         public void UpdateParentCardZoneScrollRect()
