@@ -26,6 +26,8 @@ namespace Cgs.CardGameView.Multiplayer
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
         public override string DeletePrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
 
+        protected override bool CanClientRequestOwnedObject => true;
+
         protected override bool IsAdditionalClientAuthorized(ulong clientId) => true;
 
         private const float ZoomHoldTime = 0.5f;
@@ -669,11 +671,13 @@ namespace Cgs.CardGameView.Multiplayer
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
                 || (cardZone.Type == CardZoneType.Vertical && isOutXBounds)
                 || (cardZone.Type == CardZoneType.Horizontal && isOutYBounds)
-                || (cardZone.Type == CardZoneType.Area && PlaceHolder != null &&
-                    PlaceHolder.parent.parent !=
-                    PlayController.Instance.playAreaCardZone.transform)
-               ) // Assumes we are in play area and card zones are siblings
+                || cardZone.Type == CardZoneType.Area)
+            {
+                if (cardZone.Type == CardZoneType.Area && PlaceHolderCardZone == null)
+                    PlaceHolderCardZone = cardZone;
+
                 ParentToCanvas(targetPosition);
+            }
         }
 
         public void UpdateParentCardZoneScrollRect()

@@ -594,6 +594,21 @@ namespace Cgs.Play.Multiplayer
 
         #region Cards
 
+        public void RequestNewCard(string cardId, Vector2 position, Quaternion rotation, bool isFacedown, bool isCardShared)
+        {
+            SpawnCardInPlayAreaServerRpc(cardId, position, rotation, isFacedown, isCardShared);
+        }
+
+        [ServerRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void SpawnCardInPlayAreaServerRpc(string cardId, Vector3 position, Quaternion rotation,
+            bool isFacedown, bool isCardShared, ServerRpcParams rpcParams = default)
+        {
+            PlayController.Instance.CreateCardModel(PlayController.Instance.playAreaCardZone.gameObject, cardId,
+                position, rotation, isFacedown, isCardShared,
+                new PlayController.CardModelCreationOptions(ownerClientId: rpcParams.Receive.SenderClientId));
+        }
+
         public void MoveCardToServer(CardZone cardZone, CardModel cardModel)
         {
             var cardModelTransform = cardModel.transform;
@@ -634,15 +649,6 @@ namespace Cgs.Play.Multiplayer
             PlayController.Instance.CreateCardModel(containerObject.gameObject, cardId, position, rotation, isFacedown,
                 isCardShared, new PlayController.CardModelCreationOptions(defaultAction,
                     rpcParams.Receive.SenderClientId));
-        }
-
-        [ServerRpc]
-        // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void SpawnCardInPlayAreaServerRpc(string cardId, Vector3 position, Quaternion rotation,
-            bool isFacedown, bool isCardShared, ServerRpcParams rpcParams = default)
-        {
-            PlayController.Instance.CreateCardModel(null, cardId, position, rotation, isFacedown, isCardShared,
-                new PlayController.CardModelCreationOptions(ownerClientId: rpcParams.Receive.SenderClientId));
         }
 
         [ServerRpc]
@@ -719,7 +725,7 @@ namespace Cgs.Play.Multiplayer
             RestartServerRpc();
         }
 
-        [Rpc(SendTo.Server)]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void RestartServerRpc()
         {

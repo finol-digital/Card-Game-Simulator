@@ -42,6 +42,9 @@ namespace Cgs.CardGameView.Viewer
         public Button flipButton;
         public Button discardButton;
 
+        private bool IsBlocked => (PlayController.Instance != null && PlayController.Instance.IsBlocked)
+                                   || !_canvasGroup.interactable;
+
         private CanvasGroup _canvasGroup;
 
         private void Awake()
@@ -94,7 +97,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void InputMove(InputAction.CallbackContext callbackContext)
         {
-            if (!_canvasGroup.interactable)
+            if (IsBlocked)
                 return;
 
             if (moveButton.interactable && CardViewer.Instance.SelectedCardModel != null)
@@ -114,7 +117,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void InputRotate(InputAction.CallbackContext callbackContext)
         {
-            if (!_canvasGroup.interactable)
+            if (IsBlocked)
                 return;
 
             if (rotateButton.interactable && CardViewer.Instance.SelectedCardModel != null)
@@ -140,7 +143,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void InputTap(InputAction.CallbackContext callbackContext)
         {
-            if (!_canvasGroup.interactable)
+            if (IsBlocked)
                 return;
 
             if (tapButton.interactable && CardViewer.Instance.SelectedCardModel != null)
@@ -172,7 +175,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void InputFlip(InputAction.CallbackContext callbackContext)
         {
-            if (!_canvasGroup.interactable)
+            if (IsBlocked)
                 return;
 
             if (flipButton.interactable && CardViewer.Instance.SelectedCardModel != null)
@@ -211,7 +214,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void InputDiscard(InputAction.CallbackContext callbackContext)
         {
-            if (!_canvasGroup.interactable)
+            if (IsBlocked)
                 return;
 
             if (discardButton.interactable && CardViewer.Instance.SelectedCardModel != null)

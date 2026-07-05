@@ -99,6 +99,11 @@ namespace Cgs.Play
         public PlayMenu menu;
         public Scoreboard scoreboard;
 
+        public bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
+                                 CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible ||
+                                 PlayableViewer.Instance.WasVisible || scoreboard.nameInputField.isFocused ||
+                                 scoreboard.pointsInputField.isFocused || CardGameManager.Instance.ModalCanvas != null;
+
         public Vector2 NewPlayablePosition
         {
             get
@@ -173,11 +178,6 @@ namespace Cgs.Play
         private MoveMenu Mover => _moveMenu ??= Instantiate(moveMenuPrefab).GetOrAddComponent<MoveMenu>();
 
         private MoveMenu _moveMenu;
-
-        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
-                                  CardViewer.Instance.Zoom || scoreboard.nameInputField.isFocused ||
-                                  PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
-                                  CardGameManager.Instance.ModalCanvas != null;
 
         private void Awake()
         {
@@ -640,9 +640,15 @@ namespace Cgs.Play
 
         public void AddCard(Card card)
         {
-            var cardModel = CreateCardModel(playAreaCardZone.gameObject, card.Id, Vector2.zero, Quaternion.identity,
-                false, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
-            AddCardToPlayArea(playAreaCardZone, cardModel);
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestNewCard(card.Id, Vector2.zero, Quaternion.identity, false,
+                    SharePreference.Share == CardGameManager.Current.DeckSharePreference);
+            else
+            {
+                var cardModel = CreateCardModel(playAreaCardZone.gameObject, card.Id, Vector2.zero, Quaternion.identity,
+                    false, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
+                AddCardToPlayArea(playAreaCardZone, cardModel);
+            }
         }
 
         private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)
