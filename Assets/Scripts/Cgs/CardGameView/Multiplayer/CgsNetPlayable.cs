@@ -658,9 +658,16 @@ namespace Cgs.CardGameView.Multiplayer
             UpdatePositionServerRpc(position);
         }
 
-        [Rpc(SendTo.Server)]
-        private void UpdatePositionServerRpc(Vector2 position)
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        private void UpdatePositionServerRpc(Vector2 position, RpcParams rpcParams = default)
         {
+            if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
+            {
+                Debug.LogWarning(
+                    $"CgsNetPlayable: Rejecting position update for {gameObject.name} from non-owner client {rpcParams.Receive.SenderClientId}");
+                return;
+            }
+
             Position = position;
         }
 

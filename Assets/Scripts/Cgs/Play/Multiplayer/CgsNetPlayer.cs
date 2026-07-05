@@ -724,7 +724,7 @@ namespace Cgs.Play.Multiplayer
             RestartServerRpc();
         }
 
-        [Rpc(SendTo.Server)]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void RestartServerRpc()
         {

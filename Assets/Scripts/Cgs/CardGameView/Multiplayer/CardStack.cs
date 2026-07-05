@@ -72,7 +72,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override bool IsProcessingSecondaryDragAction =>
             !IsDraggingStack && base.IsProcessingSecondaryDragAction;
 
-        protected override bool CanClientRequestOwnedObject => IsDeckShared;
+        protected override bool CanClientRequestOwnedObject => true;
 
         protected override bool IsAdditionalClientAuthorized(ulong clientId) => true;
 
