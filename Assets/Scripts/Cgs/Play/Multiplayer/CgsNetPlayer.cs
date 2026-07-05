@@ -604,7 +604,8 @@ namespace Cgs.Play.Multiplayer
         private void SpawnCardInPlayAreaServerRpc(string cardId, Vector3 position, Quaternion rotation,
             bool isFacedown, bool isCardShared, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateCardModel(null, cardId, position, rotation, isFacedown, isCardShared,
+            PlayController.Instance.CreateCardModel(PlayController.Instance.playAreaCardZone.gameObject, cardId,
+                position, rotation, isFacedown, isCardShared,
                 new PlayController.CardModelCreationOptions(ownerClientId: rpcParams.Receive.SenderClientId));
         }
 
