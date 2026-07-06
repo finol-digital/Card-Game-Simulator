@@ -1,2 +1,2 @@
 ## What's Changed
-- Fix for stacking cards on client
+- Fix moving cards on client
