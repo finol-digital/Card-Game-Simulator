@@ -43,7 +43,6 @@ namespace Cgs.CardGameView.Multiplayer
         private static readonly Vector2 OutlineHighlightDistance = new(15, 15);
         private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
-        private const float DisownTime = 5.0f;
         private const string SelectableShaderName = "Shader Graphs/SelectableShader";
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
@@ -308,19 +307,6 @@ namespace Cgs.CardGameView.Multiplayer
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
-
-            if (IsServer && LacksOwnership)
-            {
-                if (_previousPosition == Position)
-                    _disownedTime += Time.deltaTime;
-                else
-                    _disownedTime = 0;
-
-                _previousPosition = Position;
-
-                if (_disownedTime > DisownTime)
-                    MyNetworkObject.RemoveOwnership();
-            }
 
             OnUpdatePlayable();
         }
