@@ -68,7 +68,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        protected virtual bool CanClientRequestOwnedObject => false;
+        protected virtual bool CanClientRequestOwnedObject => true;
 
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
 
