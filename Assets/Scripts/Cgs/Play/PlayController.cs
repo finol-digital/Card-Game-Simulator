@@ -152,14 +152,11 @@ namespace Cgs.Play
             get
             {
                 var extraGroupNames = new List<string>();
-                foreach (var extraDef in CardGameManager.Current.Extras)
-                {
-                    var groupName = !string.IsNullOrEmpty(extraDef.Group)
-                        ? extraDef.Group
-                        : ExtraDef.DefaultExtraGroup;
-                    if (!extraGroupNames.Contains(groupName))
-                        extraGroupNames.Add(groupName);
-                }
+                foreach (var groupName in CardGameManager.Current.Extras.Select(extraDef =>
+                             !string.IsNullOrEmpty(extraDef.Group)
+                                 ? extraDef.Group
+                                 : ExtraDef.DefaultExtraGroup).Where(groupName => !extraGroupNames.Contains(groupName)))
+                    extraGroupNames.Add(groupName);
 
                 return extraGroupNames;
             }
