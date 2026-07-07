@@ -1,7 +1,7 @@
 # seat-based-deck-placement Specification
 
 ## Purpose
-TBD - created by archiving change fix-multiplayer-deck-load-order. Update Purpose after archive.
+Defines deterministic, seat-based deck (and extra-group stack) placement and rotation so multiplayer placement is independent of deck-load order, and solo multi-deck loading preserves reserved slots for missing extra groups.
 ## Requirements
 ### Requirement: Server assigns each player a stable seat index
 In a networked play session, the server SHALL assign each player a seat index when that player's network object spawns, in join order (first player = seat 0, second player = seat 1, and so on). The seat index SHALL be replicated to all clients and SHALL NOT change for the duration of the player's connection.
