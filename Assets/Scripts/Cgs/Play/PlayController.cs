@@ -840,6 +840,31 @@ namespace Cgs.Play
                 CreateZone(gamePlayZone);
         }
 
+        // Zones created before the network session starts (ResetPlayArea runs at scene load, before hosting begins)
+        // are local-only, so the host must spawn them when it starts hosting
+        public void SpawnUnspawnedZones()
+        {
+            foreach (var cardZone in AllCardZones)
+                if (cardZone != playAreaCardZone && !cardZone.IsSpawned && cardZone.MyNetworkObject != null)
+                    cardZone.MyNetworkObject.Spawn();
+
+            foreach (var diceZone in playAreaCardZone.GetComponentsInChildren<DiceZone>())
+                if (!diceZone.IsSpawned && diceZone.MyNetworkObject != null)
+                    diceZone.MyNetworkObject.Spawn();
+        }
+
+        // A joining client's locally-created zones are superseded by the host's spawned zones
+        public void DestroyUnspawnedZones()
+        {
+            foreach (var cardZone in AllCardZones)
+                if (cardZone != playAreaCardZone && !cardZone.IsSpawned)
+                    Destroy(cardZone.gameObject);
+
+            foreach (var diceZone in playAreaCardZone.GetComponentsInChildren<DiceZone>())
+                if (!diceZone.IsSpawned)
+                    Destroy(diceZone.gameObject);
+        }
+
         private void CreateZone(GamePlayZone gamePlayZone)
         {
             var zoneType = gamePlayZone.Type.ToString();

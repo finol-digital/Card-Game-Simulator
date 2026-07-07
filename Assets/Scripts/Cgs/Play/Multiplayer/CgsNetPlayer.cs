@@ -162,13 +162,17 @@ namespace Cgs.Play.Multiplayer
 
             if (IsServer)
             {
+                PlayController.Instance.SpawnUnspawnedZones();
                 RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs,
                     Scoreboard.DefaultPlayerName));
                 RequestNewHand(CardDrawer.DefaultHandName);
                 ApplyPlayerTranslationServerRpc();
             }
             else
+            {
+                PlayController.Instance.DestroyUnspawnedZones();
                 RequestCardGameSelection();
+            }
 
             Debug.Log("[CgsNet Player] Started local player!");
         }
@@ -638,7 +642,18 @@ namespace Cgs.Play.Multiplayer
                 SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, isFacedown,
                     isCardShared);
             else
+            {
+                // An unspawned zone cannot be referenced on the server,
+                // so spawn in the play area at the equivalent position
+                var playAreaTransform = PlayController.Instance.playAreaCardZone.transform;
+                if (cardZone.transform != playAreaTransform)
+                {
+                    position = playAreaTransform.InverseTransformPoint(cardModelTransform.position);
+                    rotation = Quaternion.Inverse(playAreaTransform.rotation) * cardModelTransform.rotation;
+                }
+
                 SpawnCardInPlayAreaServerRpc(cardModel.Id, position, rotation, isFacedown, isCardShared);
+            }
 
             if (cardModel.IsSpawned)
                 DespawnCardServerRpc(cardModel.gameObject);
