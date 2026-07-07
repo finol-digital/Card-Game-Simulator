@@ -1101,7 +1101,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                     listValueBuilder.Append(jToken.Value<string>() ?? string.Empty);
                                 }
 
-                                if (listValueBuilder.Length == 0)
+                                if (listValueBuilder.Length == 0 && listTokens is JValue)
                                 {
                                     var listTokensValueString = listTokens.Value<string>();
                                     if (!string.IsNullOrEmpty(listTokensValueString))
