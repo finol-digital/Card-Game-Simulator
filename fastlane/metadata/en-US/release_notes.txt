@@ -1,2 +1,2 @@
 ## What's Changed
-- Fix moving cards on client
+- Fixed cards moving to zones
