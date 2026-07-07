@@ -92,8 +92,25 @@ namespace Cgs.Play.Multiplayer
 
         private NetworkVariable<int> _seatIndex;
 
-        // Server-only: next seat to assign; host player spawns first and resets it for the session
-        private static int _nextSeatIndex;
+        // Server-only: lowest seat index not occupied by another spawned player
+        private int NextAvailableSeatIndex
+        {
+            get
+            {
+                var occupiedSeats = NetworkManager.ConnectedClientsList
+                    .Where(client => client.ClientId != OwnerClientId)
+                    .Select(client => client.PlayerObject)
+                    .Where(playerObject => playerObject != null && playerObject.IsSpawned)
+                    .Select(playerObject => playerObject.GetComponent<CgsNetPlayer>())
+                    .Where(player => player != null)
+                    .Select(player => player.SeatIndex)
+                    .ToHashSet();
+                var seatIndex = 0;
+                while (occupiedSeats.Contains(seatIndex))
+                    seatIndex++;
+                return seatIndex;
+            }
+        }
 
         public int DefaultZRotation { get; private set; }
 
@@ -147,9 +164,7 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsServer)
             {
-                if (IsOwner)
-                    _nextSeatIndex = 0;
-                _seatIndex.Value = _nextSeatIndex++;
+                _seatIndex.Value = NextAvailableSeatIndex;
                 Debug.Log($"[CgsNet Player] Assigned seat {_seatIndex.Value} to client {OwnerClientId}");
             }
 
@@ -162,13 +177,17 @@ namespace Cgs.Play.Multiplayer
 
             if (IsServer)
             {
+                PlayController.Instance.SpawnUnspawnedZones();
                 RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs,
                     Scoreboard.DefaultPlayerName));
                 RequestNewHand(CardDrawer.DefaultHandName);
                 ApplyPlayerTranslationServerRpc();
             }
             else
+            {
+                PlayController.Instance.DestroyUnspawnedZones();
                 RequestCardGameSelection();
+            }
 
             Debug.Log("[CgsNet Player] Started local player!");
         }
@@ -638,7 +657,18 @@ namespace Cgs.Play.Multiplayer
                 SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, isFacedown,
                     isCardShared);
             else
+            {
+                // An unspawned zone cannot be referenced on the server,
+                // so spawn in the play area at the equivalent position
+                var playAreaTransform = PlayController.Instance.playAreaCardZone.transform;
+                if (cardZone.transform != playAreaTransform)
+                {
+                    position = playAreaTransform.InverseTransformPoint(cardModelTransform.position);
+                    rotation = Quaternion.Inverse(playAreaTransform.rotation) * cardModelTransform.rotation;
+                }
+
                 SpawnCardInPlayAreaServerRpc(cardModel.Id, position, rotation, isFacedown, isCardShared);
+            }
 
             if (cardModel.IsSpawned)
                 DespawnCardServerRpc(cardModel.gameObject);
