@@ -146,11 +146,56 @@ namespace Cgs.Play
             }
         }
 
+        // Distinct extra group names in order of first appearance; defines each group's fixed slot offset
+        private static List<string> ExtraGroupNames
+        {
+            get
+            {
+                var extraGroupNames = new List<string>();
+                foreach (var extraDef in CardGameManager.Current.Extras)
+                {
+                    var groupName = !string.IsNullOrEmpty(extraDef.Group)
+                        ? extraDef.Group
+                        : ExtraDef.DefaultExtraGroup;
+                    if (!extraGroupNames.Contains(groupName))
+                        extraGroupNames.Add(groupName);
+                }
+
+                return extraGroupNames;
+            }
+        }
+
+        // GamePlayDeckPositions is interpreted as consecutive per-seat blocks of (deck + extra group) slots,
+        // but only when it is authored in whole block multiples; otherwise callers fall back to load-order filling
+        private static bool TryGetSeatSlotPosition(int blockIndex, int slotOffset, out Vector2 position)
+        {
+            position = Vector2.zero;
+            if (blockIndex < 0 || slotOffset < 0)
+                return false;
+
+            var deckPositions = CardGameManager.Current.GamePlayDeckPositions;
+            var slotsPerPlayer = 1 + ExtraGroupNames.Count;
+            if (deckPositions.Count == 0 || deckPositions.Count % slotsPerPlayer != 0 ||
+                slotOffset >= slotsPerPlayer)
+                return false;
+
+            var slotIndex = blockIndex * slotsPerPlayer + slotOffset;
+            if (slotIndex >= deckPositions.Count)
+                return false;
+
+            var slotPosition = deckPositions[slotIndex];
+            position = CardGameManager.PixelsPerInch * new Vector2(slotPosition.X, slotPosition.Y);
+            return true;
+        }
+
         public IEnumerable<CardStack> AllCardStacks => playAreaCardZone.GetComponentsInChildren<CardStack>();
 
         public IEnumerable<CardZone> AllCardZones => playAreaCardZone.GetComponentsInChildren<CardZone>();
 
         public CardStack CurrentDeckStack { get; set; }
+
+        // Solo play: which seat block the next deck load occupies (counts deck loads, not stacks)
+        private int _soloDeckLoadCount;
 
         public LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
@@ -225,6 +270,8 @@ namespace Cgs.Play
 
         public void ResetPlayArea()
         {
+            _soloDeckLoadCount = 0;
+
             var rectTransform = (RectTransform)playAreaCardZone.transform;
             if (!NetworkManager.Singleton.IsConnectedClient)
                 rectTransform.DestroyAllChildren();
@@ -383,24 +430,31 @@ namespace Cgs.Play
             var deckName = !string.IsNullOrEmpty(CardGameManager.Current.GamePlayDeckName)
                 ? CardGameManager.Current.GamePlayDeckName
                 : deck.Name;
-            var newDeckPosition = NewPlayablePosition;
+            var extraGroupNames = ExtraGroupNames;
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
             {
+                var seatIndex = CgsNetManager.Instance.LocalPlayer.SeatIndex;
                 var startingDeckCount = AllCardStacks.ToList().Count;
-                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards, false);
+                if (!TryGetSeatSlotPosition(seatIndex, 0, out var newDeckPosition))
+                    newDeckPosition = NewPlayablePosition;
+                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards, newDeckPosition, false);
                 var i = 1;
                 foreach (var (stackName, cards) in extraGroups)
                 {
-                    var position = newDeckPosition +
+                    var slotOffset = 1 + extraGroupNames.IndexOf(stackName);
+                    if (slotOffset < 1 || !TryGetSeatSlotPosition(seatIndex, slotOffset, out var position))
+                    {
+                        position = newDeckPosition +
                                    Vector2.right *
                                    (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X +
                                     DeckPositionBuffer);
 
-                    var deckCount = startingDeckCount + i;
-                    if (deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
-                    {
-                        var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
-                        position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
+                        var deckCount = startingDeckCount + i;
+                        if (deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
+                        {
+                            var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
+                            position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
+                        }
                     }
 
                     CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(stackName, cards.Cast<UnityCard>().Reverse(),
@@ -412,20 +466,28 @@ namespace Cgs.Play
             }
             else
             {
+                var blockIndex = _soloDeckLoadCount;
+                _soloDeckLoadCount++;
+                if (!TryGetSeatSlotPosition(blockIndex, 0, out var newDeckPosition))
+                    newDeckPosition = NewPlayablePosition;
                 List<CardStack> cardStacks = new();
                 CurrentDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, false);
                 cardStacks.Add(CurrentDeckStack);
                 var i = 1;
                 foreach (var (groupName, cards) in extraGroups)
                 {
-                    var position = newDeckPosition + Vector2.right *
-                        (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X);
-
-                    var deckCount = AllCardStacks.ToList().Count;
-                    if (deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
+                    var slotOffset = 1 + extraGroupNames.IndexOf(groupName);
+                    if (slotOffset < 1 || !TryGetSeatSlotPosition(blockIndex, slotOffset, out var position))
                     {
-                        var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
-                        position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
+                        position = newDeckPosition + Vector2.right *
+                            (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X);
+
+                        var deckCount = AllCardStacks.ToList().Count;
+                        if (deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
+                        {
+                            var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
+                            position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
+                        }
                     }
 
                     var cardStack = CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position,

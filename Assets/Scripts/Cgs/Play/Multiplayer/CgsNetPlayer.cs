@@ -88,6 +88,13 @@ namespace Cgs.Play.Multiplayer
 
         private NetworkVariable<int> _currentHand;
 
+        public int SeatIndex => _seatIndex.Value;
+
+        private NetworkVariable<int> _seatIndex;
+
+        // Server-only: next seat to assign; host player spawns first and resets it for the session
+        private static int _nextSeatIndex;
+
         public int DefaultZRotation { get; private set; }
 
         public Quaternion DefaultRotation => Quaternion.Euler(new Vector3(0, 0, DefaultZRotation));
@@ -125,6 +132,7 @@ namespace Cgs.Play.Multiplayer
         {
             _name = new NetworkVariable<CgsNetString>();
             _points = new NetworkVariable<int>();
+            _seatIndex = new NetworkVariable<int>();
             _currentDeck = new NetworkVariable<NetworkObjectReference>();
             _isDeckShared = new NetworkVariable<bool>();
             _cardStacks = new NetworkList<NetworkObjectReference>();
@@ -137,6 +145,14 @@ namespace Cgs.Play.Multiplayer
 
         public override void OnNetworkSpawn()
         {
+            if (IsServer)
+            {
+                if (IsOwner)
+                    _nextSeatIndex = 0;
+                _seatIndex.Value = _nextSeatIndex++;
+                Debug.Log($"[CgsNet Player] Assigned seat {_seatIndex.Value} to client {OwnerClientId}");
+            }
+
             if (!GetComponent<NetworkObject>().IsOwner)
                 return;
 
@@ -202,22 +218,21 @@ namespace Cgs.Play.Multiplayer
         [ServerRpc]
         private void ApplyPlayerRotationServerRpc()
         {
-            ApplyPlayerRotationOwnerClientRpc(NetworkManager.Singleton.ConnectedClients.Count, OwnerClientRpcParams);
+            ApplyPlayerRotationOwnerClientRpc(SeatIndex, OwnerClientRpcParams);
         }
 
         [ClientRpc]
         // ReSharper disable once UnusedParameter.Local
-        private void ApplyPlayerRotationOwnerClientRpc(int playerCount, ClientRpcParams clientRpcParams = default)
+        private void ApplyPlayerRotationOwnerClientRpc(int seatIndex, ClientRpcParams clientRpcParams = default)
         {
-            if (playerCount % 4 == 0)
-                DefaultZRotation = 270;
-            else if (playerCount % 3 == 0)
-                DefaultZRotation = 90;
-            else if (playerCount % 2 == 0)
-                DefaultZRotation = 180;
-            else
-                DefaultZRotation = 0;
-            Debug.Log("[CgsNet Player] Set PlayMat rotation based off player count: " + DefaultZRotation);
+            DefaultZRotation = (seatIndex % 4) switch
+            {
+                1 => 180,
+                2 => 90,
+                3 => 270,
+                _ => 0
+            };
+            Debug.Log("[CgsNet Player] Set PlayMat rotation based off seat index: " + DefaultZRotation);
             PlayController.Instance.playArea.CurrentRotation = DefaultZRotation;
 
             ApplyPlayerTranslationServerRpc();
@@ -315,11 +330,11 @@ namespace Cgs.Play.Multiplayer
 
         #region CardStacks
 
-        public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards, bool isFaceup)
+        public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards, Vector2 position, bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
-                PlayController.Instance.NewPlayablePosition, DefaultRotation, isFaceup);
+                position, DefaultRotation, isFaceup);
         }
 
         public void RequestSetCurrentDeck(NetworkObject deck)

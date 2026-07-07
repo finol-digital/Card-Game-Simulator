@@ -12,8 +12,10 @@ namespace Cgs.Play
 {
     public class PlaySelector : MonoBehaviour
     {
-        private static bool IsBlocked =>
-            CardGameManager.Instance.ModalCanvas != null || EventSystem.current.alreadySelecting;
+        private static bool IsBlocked => EventSystem.current.alreadySelecting ||
+                                         PlayController.Instance.scoreboard.nameInputField.isFocused ||
+                                         PlayController.Instance.scoreboard.pointsInputField.isFocused ||
+                                         CardGameManager.Instance.ModalCanvas != null;
 
         private InputAction _moveAction;
 
