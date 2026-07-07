@@ -302,19 +302,22 @@ namespace Cgs.Play
             rectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X + PlayAreaBuffer,
                 CardGameManager.Current.PlayMatSize.Y + PlayAreaBuffer) * CardGameManager.PixelsPerInch;
 
-            if (!NetworkManager.Singleton.IsConnectedClient || CgsNetManager.Instance.IsHost)
-            {
+            var isOfflineOrHost = !NetworkManager.Singleton.IsConnectedClient || CgsNetManager.Instance.IsHost;
+
+            // The playmat is not a networked object, so even connected clients must refresh their local playmat,
+            // e.g. after downloading the host's game
+            if (isOfflineOrHost || playMatImage == null)
                 playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform)
                     .GetOrAddComponent<Image>();
-                var playMatRectTransform = (RectTransform)playMatImage.transform;
-                playMatRectTransform.anchoredPosition = Vector2.zero;
-                playMatRectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X,
-                    CardGameManager.Current.PlayMatSize.Y) * CardGameManager.PixelsPerInch;
-                playMatImage.sprite = CardGameManager.Current.PlayMatImageSprite;
-                playMatImage.transform.SetAsFirstSibling();
+            var playMatRectTransform = (RectTransform)playMatImage.transform;
+            playMatRectTransform.anchoredPosition = Vector2.zero;
+            playMatRectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X,
+                CardGameManager.Current.PlayMatSize.Y) * CardGameManager.PixelsPerInch;
+            playMatImage.sprite = CardGameManager.Current.PlayMatImageSprite;
+            playMatImage.transform.SetAsFirstSibling();
 
+            if (isOfflineOrHost)
                 CreateZones();
-            }
 
             scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
         }
