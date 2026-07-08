@@ -17,6 +17,9 @@ namespace Cgs.Play.Multiplayer
 {
     public struct GamePlayZoneParams : INetworkSerializable
     {
+        // Public mutable fields are required so Netcode can (de)serialize them by ref,
+        // matching the existing DiscoveryResponseData DTO; hence S1104 is not applicable.
+#pragma warning disable S1104
         public string Type;
         public string Name;
         public Vector2 Position;
@@ -24,6 +27,7 @@ namespace Cgs.Play.Multiplayer
         public Vector2 Size;
         public string Face;
         public string Action;
+#pragma warning restore S1104
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
