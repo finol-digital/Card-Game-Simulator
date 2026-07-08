@@ -76,33 +76,35 @@ function Confirm-Analyzer {
     Set-Content -Path (Join-Path $AnalyzerDir '.version') -Value $AnalyzerVersion
 }
 
+# Parse one `git diff --unified=0` output, recording the new-side line numbers of each
+# hunk into $map (path -> HashSet[int]). A $null map value is left untouched (whole file).
+function Add-DiffLines([hashtable]$map, [string[]]$diff) {
+    $current = $null
+    foreach ($ln in $diff) {
+        if ($ln -match '^\+\+\+ b/(.*)$') {
+            $current = ($matches[1] -replace '\\', '/')
+            if (-not $map.ContainsKey($current)) { $map[$current] = New-Object System.Collections.Generic.HashSet[int] }
+        }
+        elseif ($ln -match '^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@') {
+            if ($null -eq $current -or $null -eq $map[$current]) { continue }
+            $start = [int]$matches[1]
+            $count = if ($matches[2]) { [int]$matches[2] } else { 1 }
+            for ($i = 0; $i -lt $count; $i++) { [void]$map[$current].Add($start + $i) }
+        }
+    }
+}
+
 # Build a map of repo-relative path -> set of changed (new-side) line numbers, mirroring
 # SonarCloud's "new code" behaviour so we only flag issues on lines this branch touched.
 # A $null value means "every line is new" (untracked file).
 function Get-ChangedLines {
     $map = @{}
-    $diffs = @()
-    $diffs += , (git diff --unified=0 2>$null)
-    $diffs += , (git diff --cached --unified=0 2>$null)
+    Add-DiffLines $map (git diff --unified=0 2>$null)
+    Add-DiffLines $map (git diff --cached --unified=0 2>$null)
     $base = (git merge-base origin/main HEAD 2>$null)
     if (-not $base) { $base = (git merge-base main HEAD 2>$null) }
-    if ($base) { $diffs += , (git diff --unified=0 "$base...HEAD" 2>$null) }
+    if ($base) { Add-DiffLines $map (git diff --unified=0 "$base...HEAD" 2>$null) }
 
-    $current = $null
-    foreach ($diff in $diffs) {
-        foreach ($ln in $diff) {
-            if ($ln -match '^\+\+\+ b/(.*)$') {
-                $current = ($matches[1] -replace '\\', '/')
-                if (-not $map.ContainsKey($current)) { $map[$current] = New-Object System.Collections.Generic.HashSet[int] }
-            }
-            elseif ($ln -match '^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@') {
-                if ($null -eq $current -or $null -eq $map[$current]) { continue }
-                $start = [int]$matches[1]
-                $count = if ($matches[2]) { [int]$matches[2] } else { 1 }
-                for ($i = 0; $i -lt $count; $i++) { [void]$map[$current].Add($start + $i) }
-            }
-        }
-    }
     (git ls-files --others --exclude-standard 2>$null) | ForEach-Object {
         if ($_ -like '*.cs') { $map[($_ -replace '\\', '/')] = $null }
     }

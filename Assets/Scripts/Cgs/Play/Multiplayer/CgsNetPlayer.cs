@@ -15,6 +15,28 @@ using UnityEngine;
 
 namespace Cgs.Play.Multiplayer
 {
+    public struct GamePlayZoneParams : INetworkSerializable
+    {
+        public string Type;
+        public string Name;
+        public Vector2 Position;
+        public Quaternion Rotation;
+        public Vector2 Size;
+        public string Face;
+        public string Action;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref Type);
+            serializer.SerializeValue(ref Name);
+            serializer.SerializeValue(ref Position);
+            serializer.SerializeValue(ref Rotation);
+            serializer.SerializeValue(ref Size);
+            serializer.SerializeValue(ref Face);
+            serializer.SerializeValue(ref Action);
+        }
+    }
+
     public class CgsNetPlayer : NetworkBehaviour
     {
         public const string GameSelectionErrorMessage = "The host has selected a game that is not available!";
@@ -757,19 +779,16 @@ namespace Cgs.Play.Multiplayer
 
         #region Zones
 
-        public void RequestNewZone(string type, string zoneName, Vector2 position, Quaternion rotation, Vector2 size,
-            string face, string action)
+        public void RequestNewZone(GamePlayZoneParams zone)
         {
-            CreateZoneServerRpc(type, zoneName, position, rotation, size, face, action);
+            CreateZoneServerRpc(zone);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateZoneServerRpc(string type, string zoneName, Vector2 position, Quaternion rotation,
-            Vector2 size, string face, string action, ServerRpcParams rpcParams = default)
+        private void CreateZoneServerRpc(GamePlayZoneParams zone, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateZone(type, zoneName, position, rotation, size, face, action,
-                rpcParams.Receive.SenderClientId);
+            PlayController.Instance.CreateZone(zone, rpcParams.Receive.SenderClientId);
         }
 
         #endregion
