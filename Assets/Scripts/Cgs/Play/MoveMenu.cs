@@ -26,7 +26,8 @@ namespace Cgs.Play
         private ICardContainer _selectedCardContainer;
 
         // Card containers are Unity objects that may have been destroyed since they were selected
-        private bool IsSelectedCardContainerAvailable => _selectedCardContainer as Object != null;
+        private bool IsSelectedCardContainerAvailable =>
+            _selectedCardContainer is Object unityObject && unityObject != null;
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
         private Modal _menu;
