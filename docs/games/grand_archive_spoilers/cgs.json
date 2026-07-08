@@ -175,12 +175,14 @@
 				"ACTION": "Action",
 				"ALLY": "Ally",
 				"ATTACK": "Attack",
-				"BOON": "Boon",
 				"CHAMPION": "Champion",
 				"DOMAIN": "Domain",
+				"GREATER+BOON": "Greater Boon",
 				"ITEM": "Item",
+				"LESSER+BOON": "Lesser Boon",
 				"PHANTASIA": "Phantasia",
 				"REGALIA": "Regalia",
+				"STATUS": "Status",
 				"TOKEN": "Token",
 				"UNIQUE": "Unique",
 				"WEAPON": "Weapon"
@@ -226,11 +228,6 @@
 			"group": "Material Deck",
 			"property": "types",
 			"value": "Regalia"
-		},
-		{
-			"group": "Material Deck",
-			"property": "types",
-			"value": "Boon"
 		}
 	],
 	"gameDefaultCardAction": "tap",
@@ -257,6 +254,7 @@
 		{
 			"defaultCardAction": "flip",
 			"face": "down",
+			"name": "Memory 1",
 			"position": {
 				"x": 0,
 				"y": -10.5
@@ -271,6 +269,7 @@
 		{
 			"defaultCardAction": "flip",
 			"face": "down",
+			"name": "Memory 2",
 			"position": {
 				"x": 0,
 				"y": 10.5

@@ -18,10 +18,15 @@ namespace Cgs.Play
     [RequireComponent(typeof(Modal))]
     public class MoveMenu : SelectionPanel
     {
+        private const string DefaultZoneName = "Zone";
+
         public Button moveButton;
 
         private CardModel _selectedCardModel;
         private ICardContainer _selectedCardContainer;
+
+        // Card containers are Unity objects that may have been destroyed since they were selected
+        private bool IsSelectedCardContainerAvailable => _selectedCardContainer as Object != null;
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
         private Modal _menu;
@@ -44,7 +49,7 @@ namespace Cgs.Play
         // Poll for Vector2 inputs
         private void Update()
         {
-            var isMoveable = _selectedCardContainer != null && toggleGroup.AnyTogglesOn();
+            var isMoveable = IsSelectedCardContainerAvailable && toggleGroup.AnyTogglesOn();
             if(moveButton.interactable != isMoveable)
                 moveButton.interactable = isMoveable;
 
@@ -87,6 +92,15 @@ namespace Cgs.Play
                 { PlayController.Instance.drawer, "Hand" }
             };
 
+            foreach (var cardZone in PlayController.Instance.AllCardZones)
+                if (cardZone != PlayController.Instance.playAreaCardZone)
+                    cardContainerOptions.Add(cardZone,
+                        string.IsNullOrEmpty(cardZone.Name) ? DefaultZoneName : cardZone.Name);
+
+            foreach (var cardStack in PlayController.Instance.AllCardStacks)
+                cardContainerOptions.Add(cardStack,
+                    string.IsNullOrEmpty(cardStack.Name) ? PlayController.DefaultStackName : cardStack.Name);
+
             Rebuild(cardContainerOptions, SelectCardContainer, _selectedCardContainer);
         }
 
@@ -108,7 +122,7 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void Move()
         {
-            if (_selectedCardModel == null || _selectedCardContainer == null)
+            if (_selectedCardModel == null || !IsSelectedCardContainerAvailable)
             {
                 Debug.LogError("ERROR: Move: Missing selected card model or container.");
                 return;

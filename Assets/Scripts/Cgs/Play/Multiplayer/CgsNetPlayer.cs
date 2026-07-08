@@ -676,6 +676,18 @@ namespace Cgs.Play.Multiplayer
                 Destroy(cardModel.gameObject);
         }
 
+        public void RequestNewCardInZone(CardZone cardZone, string cardId, Vector2 position, Quaternion rotation,
+            bool isFacedown, bool isCardShared)
+        {
+            if (cardZone.IsSpawned)
+                SpawnCardInZoneServerRpc(cardZone.gameObject, cardId, position, rotation, isFacedown, isCardShared);
+            else
+            {
+                // An unspawned zone cannot be referenced on the server, so spawn in the play area
+                SpawnCardInPlayAreaServerRpc(cardId, position, rotation, isFacedown, isCardShared);
+            }
+        }
+
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void SpawnCardInZoneServerRpc(NetworkObjectReference container, string cardId, Vector3 position,
@@ -745,18 +757,18 @@ namespace Cgs.Play.Multiplayer
 
         #region Zones
 
-        public void RequestNewZone(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
-            string action)
+        public void RequestNewZone(string type, string zoneName, Vector2 position, Quaternion rotation, Vector2 size,
+            string face, string action)
         {
-            CreateZoneServerRpc(type, position, rotation, size, face, action);
+            CreateZoneServerRpc(type, zoneName, position, rotation, size, face, action);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateZoneServerRpc(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
-            string action, ServerRpcParams rpcParams = default)
+        private void CreateZoneServerRpc(string type, string zoneName, Vector2 position, Quaternion rotation,
+            Vector2 size, string face, string action, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateZone(type, position, rotation, size, face, action,
+            PlayController.Instance.CreateZone(type, zoneName, position, rotation, size, face, action,
                 rpcParams.Receive.SenderClientId);
         }
 

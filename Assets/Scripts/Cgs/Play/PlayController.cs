@@ -865,6 +865,7 @@ namespace Cgs.Play
         private void CreateZone(GamePlayZone gamePlayZone)
         {
             var zoneType = gamePlayZone.Type.ToString();
+            var zoneName = gamePlayZone.Name ?? string.Empty;
             var position = CardGameManager.PixelsPerInch *
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
             var rotation = Quaternion.Euler(0, 0, gamePlayZone.Rotation);
@@ -874,14 +875,14 @@ namespace Cgs.Play
             var cardAction = gamePlayZone.DefaultCardAction ?? CardGameManager.Current.GameDefaultCardAction;
 
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewZone(zoneType, position, rotation, size, facePreference,
-                    cardAction.ToString());
+                CgsNetManager.Instance.LocalPlayer.RequestNewZone(zoneType, zoneName, position, rotation, size,
+                    facePreference, cardAction.ToString());
             else
-                CreateZone(zoneType, position, rotation, size, facePreference, cardAction.ToString());
+                CreateZone(zoneType, zoneName, position, rotation, size, facePreference, cardAction.ToString());
         }
 
-        public CgsNetPlayable CreateZone(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
-            string action, ulong? ownerClientId = null)
+        public CgsNetPlayable CreateZone(string type, string zoneName, Vector2 position, Quaternion rotation,
+            Vector2 size, string face, string action, ulong? ownerClientId = null)
         {
             if (Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType))
             {
@@ -901,6 +902,7 @@ namespace Cgs.Play
                 if (zone is not CardZone cardZone)
                     return zone;
 
+                cardZone.Name = zoneName;
                 if (Enum.TryParse(face, true, out FacePreference facePreference))
                     cardZone.DefaultFace = facePreference;
                 if (Enum.TryParse(action, true, out CardAction cardAction))

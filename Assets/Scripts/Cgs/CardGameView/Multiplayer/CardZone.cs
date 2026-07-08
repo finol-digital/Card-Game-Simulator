@@ -30,7 +30,7 @@ namespace Cgs.CardGameView.Multiplayer
         Vertical = 2
     }
 
-    public class CardZone : CgsNetPlayable
+    public class CardZone : CgsNetPlayable, ICardContainer
     {
         public CardZoneType type;
         public bool allowsFlip;
@@ -49,6 +49,20 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private NetworkVariable<int> _typeNetworkVariable;
+
+        public string Name
+        {
+            get => IsSpawned ? _nameNetworkVariable.Value : _name;
+            set
+            {
+                _name = value;
+                if (IsSpawned)
+                    _nameNetworkVariable.Value = value;
+            }
+        }
+
+        private string _name = string.Empty;
+        private NetworkVariable<CgsNetString> _nameNetworkVariable;
 
         public FacePreference DefaultFace
         {
@@ -88,6 +102,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnAwakePlayable()
         {
             _typeNetworkVariable = new NetworkVariable<int>();
+            _nameNetworkVariable = new NetworkVariable<CgsNetString>();
             _facePreferenceNetworkVariable = new NetworkVariable<int>();
             _cardActionNetworkVariable = new NetworkVariable<int>();
         }
@@ -97,11 +112,13 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsServer)
             {
                 _typeNetworkVariable.Value = (int)type;
+                _nameNetworkVariable.Value = _name;
                 _facePreferenceNetworkVariable.Value = (int)_facePreference;
                 _cardActionNetworkVariable.Value = (int)_cardAction;
             }
 
             type = (CardZoneType)_typeNetworkVariable.Value;
+            _name = _nameNetworkVariable.Value;
             _facePreference = (FacePreference)_facePreferenceNetworkVariable.Value;
             _cardAction = (CardAction)_cardActionNetworkVariable.Value;
         }
@@ -238,6 +255,20 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void UpdatePosition()
         {
             // Nothing
+        }
+
+        public void AddCard(Card card)
+        {
+            var isCardShared = SharePreference.Share == CardGameManager.Current.DeckSharePreference;
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestNewCardInZone(this, card.Id, Vector2.zero,
+                    Quaternion.identity, false, isCardShared);
+            else
+            {
+                var cardModel = PlayController.Instance.CreateCardModel(gameObject, card.Id, Vector2.zero,
+                    Quaternion.identity, false, isCardShared);
+                OnAdd(cardModel);
+            }
         }
 
         public void OnAdd(CardModel cardModel)
