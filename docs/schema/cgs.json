@@ -811,6 +811,10 @@
             }
           ]
         },
+        "name": {
+          "type": "string",
+          "description": "Indicates the Game Play Zone's name"
+        },
         "position": {
           "description": "Indicates the Game Play Zone's position in inches",
           "oneOf": [
