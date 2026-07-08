@@ -864,52 +864,56 @@ namespace Cgs.Play
 
         private void CreateZone(GamePlayZone gamePlayZone)
         {
-            var zoneType = gamePlayZone.Type.ToString();
-            var position = CardGameManager.PixelsPerInch *
-                           new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
-            var rotation = Quaternion.Euler(0, 0, gamePlayZone.Rotation);
-            var size = CardGameManager.PixelsPerInch *
-                       new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
-            var facePreference = gamePlayZone.Face.ToString();
             var cardAction = gamePlayZone.DefaultCardAction ?? CardGameManager.Current.GameDefaultCardAction;
+            var zone = new GamePlayZoneParams
+            {
+                Type = gamePlayZone.Type.ToString(),
+                Name = gamePlayZone.Name ?? string.Empty,
+                Position = CardGameManager.PixelsPerInch *
+                           new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y),
+                Rotation = Quaternion.Euler(0, 0, gamePlayZone.Rotation),
+                Size = CardGameManager.PixelsPerInch *
+                       new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y),
+                Face = gamePlayZone.Face.ToString(),
+                Action = cardAction.ToString()
+            };
 
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewZone(zoneType, position, rotation, size, facePreference,
-                    cardAction.ToString());
+                CgsNetManager.Instance.LocalPlayer.RequestNewZone(zone);
             else
-                CreateZone(zoneType, position, rotation, size, facePreference, cardAction.ToString());
+                CreateZone(zone);
         }
 
-        public CgsNetPlayable CreateZone(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
-            string action, ulong? ownerClientId = null)
+        public CgsNetPlayable CreateZone(GamePlayZoneParams zone, ulong? ownerClientId = null)
         {
-            if (Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType))
+            if (Enum.TryParse(zone.Type, true, out GamePlayZoneType gamePlayZoneType))
             {
-                CgsNetPlayable zone = gamePlayZoneType switch
+                CgsNetPlayable playable = gamePlayZoneType switch
                 {
-                    GamePlayZoneType.Area => CreateAreaZone(position, rotation),
-                    GamePlayZoneType.Dice => CreateDiceZone(position, rotation, ownerClientId),
-                    GamePlayZoneType.Horizontal => CreateHorizontalZone(position, rotation, ownerClientId),
-                    GamePlayZoneType.Vertical => CreateVerticalZone(position, rotation, ownerClientId),
-                    _ => CreateAreaZone(position, rotation)
+                    GamePlayZoneType.Area => CreateAreaZone(zone.Position, zone.Rotation),
+                    GamePlayZoneType.Dice => CreateDiceZone(zone.Position, zone.Rotation, ownerClientId),
+                    GamePlayZoneType.Horizontal => CreateHorizontalZone(zone.Position, zone.Rotation, ownerClientId),
+                    GamePlayZoneType.Vertical => CreateVerticalZone(zone.Position, zone.Rotation, ownerClientId),
+                    _ => CreateAreaZone(zone.Position, zone.Rotation)
                 };
 
-                zone.Position = position;
-                zone.Rotation = rotation;
-                zone.Size = size;
+                playable.Position = zone.Position;
+                playable.Rotation = zone.Rotation;
+                playable.Size = zone.Size;
 
-                if (zone is not CardZone cardZone)
-                    return zone;
+                if (playable is not CardZone cardZone)
+                    return playable;
 
-                if (Enum.TryParse(face, true, out FacePreference facePreference))
+                cardZone.Name = zone.Name;
+                if (Enum.TryParse(zone.Face, true, out FacePreference facePreference))
                     cardZone.DefaultFace = facePreference;
-                if (Enum.TryParse(action, true, out CardAction cardAction))
+                if (Enum.TryParse(zone.Action, true, out CardAction cardAction))
                     cardZone.DefaultAction = cardAction;
 
-                return zone;
+                return playable;
             }
 
-            Debug.LogError($"CreateZone failed to parse gamePlayZoneType: {type}");
+            Debug.LogError($"CreateZone failed to parse gamePlayZoneType: {zone.Type}");
             return null;
         }
 

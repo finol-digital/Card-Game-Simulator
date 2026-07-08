@@ -2,14 +2,13 @@
 	"name": "Grand Archive Pantheon",
 	"allCardsUrl": "https://api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
-	"allSetsUrl": "https://www.cardgamesimulator.com/games/grand_archive_pantheon/AllSets.json",
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive_pantheon/cgs.json",
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive_pantheon/Banner.png",
 	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
 	"cardDataIdentifier": "data",
 	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
-	"cardImageProperty": "spoilers_image_url",
+	"cardImageProperty": "editions0.other_orientations0.edition.image",
 	"cardImageUrl": "https://api.gatcg.com{editions[0].image}",
 	"cardNameBackIdentifier": "editions[].other_orientations[].name",
 	"cardPrimaryProperty": "effect_raw",
@@ -131,14 +130,6 @@
 					"backName": "other_orientations[].edition.rarity"
 				}
 			]
-		},
-		{
-			"name": "spoilers_image_url",
-			"display": "Spoilers image",
-			"displayEmpty": "-",
-			"type": "string",
-			"frontName": "card_image_url",
-			"backName": "back_card_image_url"
 		}
 	],
 	"cardSetIsObject": true,
@@ -193,12 +184,14 @@
 				"ACTION": "Action",
 				"ALLY": "Ally",
 				"ATTACK": "Attack",
-				"BOON": "Boon",
 				"CHAMPION": "Champion",
 				"DOMAIN": "Domain",
+				"GREATER+BOON": "Greater Boon",
 				"ITEM": "Item",
+				"LESSER+BOON": "Lesser Boon",
 				"PHANTASIA": "Phantasia",
 				"REGALIA": "Regalia",
+				"STATUS": "Status",
 				"TOKEN": "Token",
 				"UNIQUE": "Unique",
 				"WEAPON": "Weapon"
@@ -246,9 +239,14 @@
 			"value": "Regalia"
 		},
 		{
-			"group": "Material Deck",
+			"group": "Boon Deck",
 			"property": "types",
-			"value": "Boon"
+			"value": "Greater Boon"
+		},
+		{
+			"group": "Boon Deck",
+			"property": "types",
+			"value": "Lesser Boon"
 		}
 	],
 	"gameDefaultCardAction": "tap",
@@ -291,6 +289,7 @@
 		{
 			"defaultCardAction": "flip",
 			"face": "down",
+			"name": "Memory 1",
 			"position": {
 				"x": -28,
 				"y": -10.5
@@ -305,6 +304,7 @@
 		{
 			"defaultCardAction": "flip",
 			"face": "down",
+			"name": "Memory 2",
 			"position": {
 				"x": -28,
 				"y": 10.5
@@ -319,6 +319,7 @@
 		{
 			"defaultCardAction": "flip",
 			"face": "down",
+			"name": "Memory 3",
 			"position": {
 				"x": 28,
 				"y": -10.5
@@ -333,6 +334,7 @@
 		{
 			"defaultCardAction": "flip",
 			"face": "down",
+			"name": "Memory 4",
 			"position": {
 				"x": 28,
 				"y": 10.5

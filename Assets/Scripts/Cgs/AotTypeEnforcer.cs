@@ -101,12 +101,12 @@ namespace Cgs
                 cardGame.GamePlayDeckName = string.Empty;
                 cardGame.GamePlayDeckPositions = new List<Float2>();
                 cardGame.GameDefaultCardAction = CardAction.Flip;
-                var gamePlayZone = new GamePlayZone(FacePreference.Any, CardAction.Tap, float2, 0, float2,
-                    GamePlayZoneType.Area);
-                var gamePlayZone2 = new GamePlayZone(FacePreference.Up, CardAction.Move, float2, 0, float2,
-                    GamePlayZoneType.Area);
-                var gamePlayZone3 = new GamePlayZone(FacePreference.Down, CardAction.Rotate, float2, 0, float2,
-                    GamePlayZoneType.Area);
+                var gamePlayZone = new GamePlayZone(FacePreference.Any, CardAction.Tap, string.Empty, float2, 0,
+                    float2, GamePlayZoneType.Area);
+                var gamePlayZone2 = new GamePlayZone(FacePreference.Up, CardAction.Move, string.Empty, float2, 0,
+                    float2, GamePlayZoneType.Area);
+                var gamePlayZone3 = new GamePlayZone(FacePreference.Down, CardAction.Rotate, string.Empty, float2, 0,
+                    float2, GamePlayZoneType.Area);
                 cardGame.GamePlayZones = new List<GamePlayZone> {gamePlayZone, gamePlayZone2, gamePlayZone3};
                 cardGame.GameStartDecks = new List<DeckUrl>() {deckUrl};
                 cardGame.GameStartHandCount = 1;

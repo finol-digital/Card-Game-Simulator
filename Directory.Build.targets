@@ -1,0 +1,27 @@
+<Project>
+
+  <!--
+    Local Sonar scan wiring.
+
+    Injects SonarAnalyzer.CSharp as a Roslyn analyzer into every C# project so that
+    `dotnet build Card-Game-Simulator.sln` surfaces the same csharpsquid rules that the
+    SonarCloud quality gate enforces (e.g. S2219). This lets a local build catch code
+    smells before they ever reach the CI Sonar scan.
+
+    Notes:
+      * Unity regenerates the individual *.csproj files on every solution sync, but this
+        file is auto-imported by Microsoft.Common.targets for every project, so the wiring
+        survives re-syncs without editing the generated projects.
+      * Uses the raw <Analyzer> item (the same mechanism Unity uses for its own source
+        generators) instead of a NuGet <PackageReference>, because the Unity-generated
+        projects are legacy (non-SDK) style and set ResolveNuGetPackages=false.
+      * Skipped when running under the SonarScanner in CI, which injects SonarAnalyzer
+        itself; $(SonarQubeTempPath) is set by the scanner's "begin" step.
+      * The analyzer DLL lives in .sonar/analyzers/ and is fetched by scripts/sonar-scan.ps1
+        (and is git-ignored). If it is missing, this import is a no-op so builds still work.
+  -->
+  <ItemGroup Condition="'$(SonarQubeTempPath)' == '' And Exists('$(MSBuildThisFileDirectory).sonar\analyzers\SonarAnalyzer.CSharp.dll')">
+    <Analyzer Include="$(MSBuildThisFileDirectory).sonar\analyzers\SonarAnalyzer.CSharp.dll" />
+  </ItemGroup>
+
+</Project>

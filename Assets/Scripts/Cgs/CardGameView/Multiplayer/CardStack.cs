@@ -11,6 +11,7 @@ using Cgs.CardGameView.Viewer;
 using Cgs.Decks;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
+using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -48,7 +49,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
     }
 
-    public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
+    public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler, ICardContainer
     {
         private const float DragHoldTime = 0.5f;
         public const string ShuffleText = "Shuffled!";
@@ -431,6 +432,11 @@ namespace Cgs.CardGameView.Multiplayer
             for (var i = cards.Count - 1; i >= 0; i--)
                 cardStack.RequestInsert(0, cards[i].Id);
             RequestDelete();
+        }
+
+        public void AddCard(Card card)
+        {
+            RequestInsert(Cards.Count, card.Id);
         }
 
         public void RequestInsert(int index, string cardId)

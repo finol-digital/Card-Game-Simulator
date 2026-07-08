@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -File \"$CLAUDE_PROJECT_DIR/scripts/sonar-scan.ps1\" -Hook",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}
