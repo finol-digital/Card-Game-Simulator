@@ -1099,11 +1099,41 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
           MSIX_PATH: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
         run: |
-          $json = msstore submission get 9N96N5S4W3J0 | ConvertFrom-Json -AsHashtable
+          Write-Host "Retrieving current submission metadata for AppId 9N96N5S4W3J0..."
+          $rawSubmission = msstore submission get 9N96N5S4W3J0 --verbose
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "::error::msstore submission get failed with exit code $LASTEXITCODE. Output: $rawSubmission"
+            exit $LASTEXITCODE
+          }
+          $json = $rawSubmission | ConvertFrom-Json -AsHashtable
+          if ($null -eq $json -or $null -eq $json.Listings) {
+            Write-Host "::error::msstore submission get returned unexpected metadata: $rawSubmission"
+            exit 1
+          }
+          Write-Host "Setting en-us release notes to:"
+          Write-Host $env:RELEASE_NOTES
           $json.Listings.'en-us'.BaseListing.ReleaseNotes = $env:RELEASE_NOTES
-          $json | ConvertTo-Json -Depth 100 | msstore submission updateMetadata 9N96N5S4W3J0
-          msstore submission publish 9N96N5S4W3J0
-          msstore publish $env:MSIX_PATH -id 9N96N5S4W3J0
+          $updatedMetadata = $json | ConvertTo-Json -Depth 100
+          Write-Host "Updated submission metadata:"
+          Write-Host $updatedMetadata
+          Write-Host "Updating submission metadata..."
+          $updatedMetadata | msstore submission updateMetadata 9N96N5S4W3J0 --verbose
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "::error::msstore submission updateMetadata failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+          }
+          Write-Host "Publishing submission..."
+          msstore submission publish 9N96N5S4W3J0 --verbose
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "::error::msstore submission publish failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+          }
+          Write-Host "Publishing app package: $env:MSIX_PATH"
+          msstore publish $env:MSIX_PATH -id 9N96N5S4W3J0 --verbose
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "::error::msstore publish failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+          }
 
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
