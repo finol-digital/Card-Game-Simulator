@@ -206,6 +206,7 @@ namespace Cgs.Play.Multiplayer
                 PlayController.Instance.SpawnUnspawnedZones();
                 RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs,
                     Scoreboard.DefaultPlayerName));
+                RequestPointsUpdate(CardGameManager.Current.GameStartPointsCount);
                 RequestNewHand(CardDrawer.DefaultHandName);
                 ApplyPlayerTranslationServerRpc();
             }
@@ -326,6 +327,7 @@ namespace Cgs.Play.Multiplayer
                     break;
             }
 
+            RequestPointsUpdate(CardGameManager.Current.GameStartPointsCount);
             RequestNewHand(CardDrawer.DefaultHandName);
         }
 
