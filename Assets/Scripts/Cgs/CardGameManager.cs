@@ -883,6 +883,12 @@ namespace Cgs
 
         private void Update()
         {
+            if (!InputSystem.actions.enabled)
+            {
+                Debug.LogWarning("InputSystem.actions.enabled is false, enabling it.");
+                InputSystem.actions.Enable();
+            }
+
             if (_tooltipsAction?.WasPressedThisFrame() ?? false)
                 Settings.ButtonTooltipsEnabled = !Settings.ButtonTooltipsEnabled;
             if (_previewAction?.WasPressedThisFrame() ?? false)
