@@ -437,8 +437,10 @@ namespace Cgs.Menu
             Screen.fullScreen = !Screen.fullScreen;
         }
 
+#pragma warning disable S2325
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void Quit() =>
+#pragma warning restore S2325
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
 #else

@@ -42,7 +42,10 @@ namespace Cgs.CardGameView.Viewer
         public Button flipButton;
         public Button discardButton;
 
-        private bool IsBlocked => (PlayController.Instance != null && PlayController.Instance.IsBlocked)
+        private bool IsBlocked => (PlayController.Instance != null && (
+                                       PlayController.Instance.scoreboard.nameInputField.isFocused ||
+                                       PlayController.Instance.scoreboard.pointsInputField.isFocused))
+                                   || CardGameManager.Instance.ModalCanvas != null
                                    || !_canvasGroup.interactable;
 
         private CanvasGroup _canvasGroup;

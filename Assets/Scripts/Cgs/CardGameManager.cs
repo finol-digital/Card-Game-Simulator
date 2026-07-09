@@ -28,8 +28,6 @@ namespace Cgs
 {
     public class CardGameManager : MonoBehaviour
     {
-        // Show all Debug.Log() to help with debugging?
-        private const bool IsMessengerDebugLogVerbose = false;
         private const string CgsZipExtension = ".cgs.zip";
         private const string AddressableAssetsFolderName = "aa";
         public const string PlayerPrefsDefaultGame = "DefaultGame";
@@ -253,8 +251,10 @@ namespace Cgs
                 RegisterStaticEventHandlers();
         }
 
+#pragma warning disable S2325
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void CreateDefaultCardGames()
+#pragma warning restore S2325
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
@@ -385,9 +385,7 @@ namespace Cgs
 
         private void ShowLogToUser(string logString, string stackTrace, LogType type)
         {
-            // ReSharper disable once RedundantLogicalConditionalExpressionOperand
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (this != null && Messenger != null && (IsMessengerDebugLogVerbose || !LogType.Log.Equals(type)))
+            if (this != null && Messenger != null && !LogType.Log.Equals(type))
                 Messenger.Show(logString);
         }
 
@@ -672,8 +670,10 @@ namespace Cgs
                 Messenger.Show(string.Format(CardsLoadedMessage, cardGame.Name));
         }
 
+#pragma warning disable S2325
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private IEnumerator LoadSetCards(UnityCardGame cardGame)
+#pragma warning restore S2325
         {
             cardGame ??= Current;
 
@@ -915,7 +915,10 @@ namespace Cgs
                 Instance = null;
         }
 
+#pragma warning disable S2325
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void OnApplicationQuit()
+#pragma warning restore S2325
         {
             IsQuitting = true;
         }
