@@ -109,7 +109,6 @@ All C# files must start with the MPL 2.0 license header:
 
 ## Git Workflow
 - Main development branch: `develop`
-- All pull requests must go from the `develop` branch to the `main` branch
 - Use descriptive commit messages
 - Include tests for new features
 
