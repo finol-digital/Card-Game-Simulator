@@ -239,12 +239,12 @@
 			"value": "Regalia"
 		},
 		{
-			"group": "Boon Deck",
+			"group": "Boons",
 			"property": "types",
 			"value": "Greater Boon"
 		},
 		{
-			"group": "Boon Deck",
+			"group": "Boons",
 			"property": "types",
 			"value": "Lesser Boon"
 		}
@@ -262,6 +262,10 @@
 		},
 		{
 			"x": -53,
+			"y": 0
+		},
+		{
+			"x": -53,
 			"y": 5.5
 		},
 		{
@@ -269,6 +273,10 @@
 			"y": 5.5
 		},
 		{
+			"x": -3,
+			"y": 0
+		},
+		{
 			"x": 53,
 			"y": -5.5
 		},
@@ -277,12 +285,20 @@
 			"y": -5.5
 		},
 		{
+			"x": 3,
+			"y": 0
+		},
+		{
 			"x": 53,
 			"y": 5.5
 		},
 		{
 			"x": 3,
 			"y": 5.5
+		},
+		{
+			"x": 53,
+			"y": 0
 		}
 	],
 	"gamePlayZones": [
