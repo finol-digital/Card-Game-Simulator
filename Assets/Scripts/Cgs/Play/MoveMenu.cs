@@ -3,9 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using System.Linq;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Menu;
+using Cgs.Play.Multiplayer;
 using Cgs.UI;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -99,10 +101,27 @@ namespace Cgs.Play
                         string.IsNullOrEmpty(cardZone.Name) ? DefaultZoneName : cardZone.Name);
 
             foreach (var cardStack in PlayController.Instance.AllCardStacks)
+            {
+                var stackName = string.IsNullOrEmpty(cardStack.Name)
+                    ? PlayController.DefaultStackName
+                    : cardStack.Name;
+                var ownerName = GetOwnerName(cardStack);
                 cardContainerOptions.Add(cardStack,
-                    string.IsNullOrEmpty(cardStack.Name) ? PlayController.DefaultStackName : cardStack.Name);
+                    string.IsNullOrEmpty(ownerName) ? stackName : $"{stackName} ({ownerName})");
+            }
 
             Rebuild(cardContainerOptions, SelectCardContainer, _selectedCardContainer);
+        }
+
+        private static string GetOwnerName(CardStack cardStack)
+        {
+            if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline || !cardStack.IsSpawned)
+                return string.Empty;
+
+            var owner = GameObject.FindGameObjectsWithTag("Player")
+                .Select(player => player.GetComponent<CgsNetPlayer>())
+                .FirstOrDefault(player => player != null && player.OwnerClientId == cardStack.OwnerClientId);
+            return owner == null ? string.Empty : owner.Name;
         }
 
         [UsedImplicitly]
