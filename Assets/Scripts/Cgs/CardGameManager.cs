@@ -28,9 +28,6 @@ namespace Cgs
 {
     public class CardGameManager : MonoBehaviour
     {
-        private const string CgsZipExtension = ".cgs.zip";
-        private const string AddressableAssetsFolderName = "aa";
-        public const string PlayerPrefsDefaultGame = "DefaultGame";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!: ";
         public const string DownloadErrorMessage = "Error downloading game!: ";
         public const string LoadErrorMessage = "Error loading game!: ";
@@ -55,6 +52,10 @@ namespace Cgs
 
         public const int CardsLoadingMessageThreshold = 60;
         public const int PixelsPerInch = 100;
+
+        public const string PlayerPrefsDefaultGame = "DefaultGame";
+        private const string CgsZipExtension = ".cgs.zip";
+        private const string AddressableAssetsFolderName = "aa";
 
         public static CardGameManager Instance
         {
@@ -385,7 +386,7 @@ namespace Cgs
 
         private void ShowLogToUser(string logString, string stackTrace, LogType type)
         {
-            if (this != null && Messenger != null && !LogType.Log.Equals(type))
+            if (!IsQuitting && Messenger != null && !LogType.Log.Equals(type))
                 Messenger.Show(logString);
         }
 
