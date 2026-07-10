@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using Cgs.UI;
@@ -30,6 +31,29 @@ namespace Cgs.Play
         // Card containers are Unity objects that may have been destroyed since they were selected
         private bool IsSelectedCardContainerAvailable =>
             _selectedCardContainer is Object unityObject && unityObject != null;
+
+        private ICardContainer CurrentCardContainer
+        {
+            get
+            {
+                var parentCardZone = _selectedCardModel == null ? null : _selectedCardModel.ParentCardZone;
+                if (parentCardZone == null)
+                    return null;
+
+                if (parentCardZone == PlayController.Instance.playAreaCardZone)
+                    return PlayController.Instance;
+
+                if (parentCardZone.transform.IsChildOf(PlayController.Instance.drawer.cardZonesRectTransform))
+                    return PlayController.Instance.drawer;
+
+                var stackViewer = parentCardZone.GetComponentInParent<StackViewer>();
+                if (stackViewer != null)
+                    return PlayController.Instance.AllCardStacks.FirstOrDefault(cardStack =>
+                        cardStack.Viewer == stackViewer);
+
+                return parentCardZone;
+            }
+        }
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
         private Modal _menu;
@@ -109,6 +133,11 @@ namespace Cgs.Play
                 cardContainerOptions.Add(cardStack,
                     string.IsNullOrEmpty(ownerName) ? stackName : $"{stackName} ({ownerName})");
             }
+
+            // The card should not be able to be moved to the container it is already in
+            var currentCardContainer = CurrentCardContainer;
+            if (currentCardContainer != null)
+                cardContainerOptions.Remove(currentCardContainer);
 
             Rebuild(cardContainerOptions, SelectCardContainer, _selectedCardContainer);
         }
