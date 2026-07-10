@@ -7,7 +7,7 @@ All pull requests must follow these rules exactly:
 1. **Branch**: Always open PRs from `develop` to `main`.
 2. **Description length**: The PR description must be under 500 characters.
 3. **Audience**: Descriptions are used as release notes for end users. Write in simple, plain language — not developer jargon.
-4. **Format**: Use exactly this format:
+4. **Format**: Use exactly this format, replacing the placeholder bullets with meaningful, user-facing changes. Remove any placeholder text before submitting:
 
 ```markdown
 ## What's Changed
