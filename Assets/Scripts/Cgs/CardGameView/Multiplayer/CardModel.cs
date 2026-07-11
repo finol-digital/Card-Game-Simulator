@@ -245,7 +245,11 @@ namespace Cgs.CardGameView.Multiplayer
                 if (targetRotation == 0)
                     targetRotation = CardGameManager.Current.CardRotationDefault;
                 if (targetRotation != 0)
-                    Rotation = Quaternion.Euler(0, 0, targetRotation);
+                {
+                    // This initial rotation is not a transition, so it must not animate
+                    transform.localRotation = Quaternion.Euler(0, 0, targetRotation);
+                    Rotation = transform.localRotation;
+                }
             }
 
             SetIsNameVisible(!IsFacedown && !IsSpawned);
