@@ -9,6 +9,7 @@ using Cgs.Menu;
 using Cgs.Play;
 using Cgs.UI;
 using JetBrains.Annotations;
+using PrimeTween;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -44,6 +45,9 @@ namespace Cgs.CardGameView.Multiplayer
         private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
         private const string SelectableShaderName = "Shader Graphs/SelectableShader";
+
+        private const float RotationAnimationDuration = 0.25f;
+        private const float RotationAnimationMinDegrees = 1f;
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
@@ -116,20 +120,26 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Quaternion Rotation
         {
-            get => IsSpawned ? _rotationNetworkVariable.Value : transform.localRotation;
+            get => IsSpawned ? _rotationNetworkVariable.Value : _rotation;
             set
             {
-                transform.localRotation = value;
+                _rotation = value;
+                ApplyRotation(value);
                 if (!IsSpawned)
                     return;
                 if (IsServer)
-                    _rotationNetworkVariable.Value = transform.localRotation;
+                    _rotationNetworkVariable.Value = value;
                 else
-                    RequestUpdateRotation(transform.localRotation);
+                    RequestUpdateRotation(value);
             }
         }
 
+        // The visual transform may lag behind this logical rotation while ApplyRotation animates it
+        private Quaternion _rotation = Quaternion.identity;
         private NetworkVariable<Quaternion> _rotationNetworkVariable;
+
+        private Tween _rotationAnimation;
+        private Quaternion _rotationAnimationTarget;
 
         public Vector2 Size
         {
@@ -275,6 +285,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (!Quaternion.identity.Equals(Rotation))
                 transform.localRotation = Rotation;
+            _rotation = transform.localRotation;
 
             if (IsServer && !Vector2.zero.Equals(((RectTransform)transform).sizeDelta))
             {
@@ -613,6 +624,7 @@ namespace Cgs.CardGameView.Multiplayer
             var previousDirection = (CurrentPointerEventData.position - CurrentPointerEventData.delta) - referencePoint;
             var currentDirection = CurrentPointerEventData.position - referencePoint;
             transform.Rotate(0, 0, Vector2.SignedAngle(previousDirection, currentDirection));
+            _rotation = transform.localRotation;
 
             if (IsSpawned && IsOwner)
                 RequestUpdateRotation(transform.localRotation);
@@ -706,7 +718,47 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeRotation(Quaternion oldValue, Quaternion newValue)
         {
-            transform.localRotation = newValue;
+            _rotation = newValue;
+            ApplyRotation(newValue);
+        }
+
+        protected virtual void ApplyRotation(Quaternion newRotation)
+        {
+            // Instant while the local player holds this playable, so drag rotation and its echoed network updates
+            // stay under the player's fingers instead of fighting a tween toward lagging values
+            if (!didStart || !gameObject.activeInHierarchy || PointerPositions.Count > 0 ||
+                Quaternion.Angle(transform.localRotation, newRotation) < RotationAnimationMinDegrees)
+            {
+                if (_rotationAnimation.isAlive)
+                    _rotationAnimation.Stop();
+                transform.localRotation = newRotation;
+                return;
+            }
+
+            if (_rotationAnimation.isAlive)
+            {
+                // The local setter already animates toward this target; the echoed network update is not a new turn
+                if (newRotation == _rotationAnimationTarget)
+                    return;
+                _rotationAnimation.Stop();
+            }
+
+            _rotationAnimationTarget = newRotation;
+            _rotationAnimation = Tween.LocalRotation(transform, newRotation, RotationAnimationDuration);
+        }
+
+        protected void FinishRotationAnimation()
+        {
+            if (!_rotationAnimation.isAlive)
+                return;
+            _rotationAnimation.Stop();
+            transform.localRotation = Rotation;
+        }
+
+        public override void OnDestroy()
+        {
+            FinishRotationAnimation();
+            base.OnDestroy();
         }
 
         private void RequestUpdateSize(Vector2 size)
