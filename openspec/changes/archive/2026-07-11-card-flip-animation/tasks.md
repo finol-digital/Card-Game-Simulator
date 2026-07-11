@@ -20,7 +20,7 @@
 
 ## 4. Verification
 
-- [ ] 4.1 Manually verify in solo play: flip a card faceup/facedown via the action panel and double-click, confirm smooth flip, correct face at midpoint, and name label behavior for cards without loaded images
-- [ ] 4.2 Manually verify double-faced cards in solo play: transform to the back face and back again, confirm the flip animates and ends on the correct face each time
-- [ ] 4.3 Manually verify in multiplayer: flip a card as host and as client (including a double-faced transform), confirm the other side sees the animation; join a game with facedown cards and confirm no animation on load
-- [ ] 4.4 Verify edge cases: rapid double-flip settles at correct state and full scale; deleting/stacking a card mid-flip produces no errors; run existing test suite/CI
+- [x] 4.1 Manually verify in solo play: flip a card faceup/facedown via the action panel and double-click, confirm smooth flip, correct face at midpoint, and name label behavior for cards without loaded images
+- [x] 4.2 Manually verify double-faced cards in solo play: transform to the back face and back again, confirm the flip animates and ends on the correct face each time
+- [x] 4.3 Manually verify in multiplayer: flip a card as host and as client (including a double-faced transform), confirm the other side sees the animation; join a game with facedown cards and confirm no animation on load
+- [x] 4.4 Verify edge cases: rapid double-flip settles at correct state and full scale; deleting/stacking a card mid-flip produces no errors; run existing test suite/CI
