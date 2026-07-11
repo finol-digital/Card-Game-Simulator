@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ using Cgs.Play.Multiplayer;
 using Cgs.UI.ScrollRects;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
+using PrimeTween;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -33,6 +35,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private const float ZoomHoldTime = 0.5f;
         private const float MovementSpeed = 600f;
+        private const float FlipHalfDuration = 0.125f;
 
         public int Index { get; set; }
 
@@ -186,6 +189,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         private Image View => _view ??= GetComponent<Image>();
         private Image _view;
+
+        private Sequence _flipAnimation;
+        private Action _flipMidpointAction;
 
         protected override void OnAwakePlayable()
         {
@@ -787,7 +793,12 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeId(CgsNetString oldValue, CgsNetString newValue)
         {
-            Value.UnregisterDisplay(this);
+            UnityCard oldCard = null;
+            var isFaceFlip = didStart && gameObject.activeInHierarchy && !IsFacedown &&
+                             IsFaceFlip(oldValue, newValue, out oldCard);
+            if (!isFaceFlip)
+                Value.UnregisterDisplay(this);
+
             _id = newValue;
             if (string.IsNullOrEmpty(_id))
             {
@@ -811,11 +822,30 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             gameObject.name = $"[{_id}] {unityCard.Name}";
-            if (!IsFacedown)
+            if (isFaceFlip)
+                AnimateFlip(() =>
+                {
+                    oldCard.UnregisterDisplay(this);
+                    if (!IsFacedown)
+                        Value.RegisterDisplay(this);
+                });
+            else if (!IsFacedown)
                 unityCard.RegisterDisplay(this);
             if (CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
                 CardViewer.Instance.SelectedCardModel == this)
                 CardViewer.Instance.SelectedCardModel = this;
+        }
+
+        private static bool IsFaceFlip(string oldId, string newId, out UnityCard oldCard)
+        {
+            oldCard = null;
+            if (string.IsNullOrEmpty(oldId) || string.IsNullOrEmpty(newId) || oldId.Equals(newId))
+                return false;
+            if (!CardGameManager.Current.Cards.TryGetValue(oldId, out oldCard) || oldCard == null)
+                return false;
+            if (!CardGameManager.Current.Cards.TryGetValue(newId, out var newCard) || newCard == null)
+                return false;
+            return newId.Equals(oldCard.BackFaceId) || oldId.Equals(newCard.BackFaceId);
         }
 
         private IEnumerator WaitToResolveId(string cardId)
@@ -844,10 +874,43 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnChangeIsFacedown(bool oldValue, bool newValue)
         {
             _isFacedown = newValue;
+            if (oldValue == newValue || !didStart || !gameObject.activeInHierarchy)
+                ApplyFacedownDisplay();
+            else
+                AnimateFlip(ApplyFacedownDisplay);
+        }
+
+        private void ApplyFacedownDisplay()
+        {
             if (!IsFacedown)
                 Value.RegisterDisplay(this);
             else
                 Value.UnregisterDisplay(this);
+        }
+
+        private void AnimateFlip(Action midpointAction)
+        {
+            FinishFlipAnimation();
+            _flipMidpointAction = midpointAction;
+            _flipAnimation = Sequence.Create()
+                .Chain(Tween.ScaleX(transform, 0f, FlipHalfDuration))
+                .ChainCallback(this, cardModel => cardModel.ApplyFlipMidpoint(), false)
+                .Chain(Tween.ScaleX(transform, 1f, FlipHalfDuration));
+        }
+
+        private void ApplyFlipMidpoint()
+        {
+            var midpointAction = _flipMidpointAction;
+            _flipMidpointAction = null;
+            midpointAction?.Invoke();
+        }
+
+        // Interrupted flips must still apply their pending display swap, or the shown face desyncs from state
+        private void FinishFlipAnimation()
+        {
+            if (_flipAnimation.isAlive)
+                _flipAnimation.Stop();
+            ApplyFlipMidpoint();
         }
 
         public override void PromptDelete()
@@ -860,6 +923,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardGameManager.IsQuitting)
                 return;
 
+            FinishFlipAnimation();
             Value.UnregisterDisplay(this);
             if (PlaceHolder != null)
                 Destroy(PlaceHolder.gameObject);
