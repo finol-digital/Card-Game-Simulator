@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -114,7 +115,7 @@ namespace Cgs.CardGameView.Multiplayer
 
                 _cards = new List<UnityCard>();
                 foreach (var cardId in _cardIds)
-                    _cards.Add(CardGameManager.Current.Cards[cardId]);
+                    _cards.Add(LookupCard(cardId));
                 return _cards;
             }
             set
@@ -220,12 +221,60 @@ namespace Cgs.CardGameView.Multiplayer
             _name = _nameNetworkVariable.Value;
             _cards = new List<UnityCard>();
             foreach (var cardId in _cardIds)
-                _cards.Add(CardGameManager.Current.Cards[cardId]);
+                _cards.Add(LookupCard(cardId));
+            if (HasUnresolvedCardIds)
+                StartCoroutine(WaitToResolveCardIds());
             if (IsServer)
                 _isDeckSharedNetworkVariable.Value = _isDeckShared;
             _isDeckShared = _isDeckSharedNetworkVariable.Value;
             _isTopFaceup = _isTopFaceupNetworkVariable.Value;
         }
+
+        // A joining client may spawn card stacks before it finishes downloading and loading the host's card game,
+        // in which case card ids will temporarily fail to resolve and should be resolved later
+        private static UnityCard LookupCard(string cardId)
+        {
+            return CardGameManager.Current.Cards.TryGetValue(cardId, out var unityCard) && unityCard != null
+                ? unityCard
+                : UnityCard.Blank;
+        }
+
+        private bool HasUnresolvedCardIds
+        {
+            get
+            {
+                foreach (var cardId in _cardIds)
+                    if (!CardGameManager.Current.Cards.ContainsKey(cardId))
+                        return true;
+                return false;
+            }
+        }
+
+        private IEnumerator WaitToResolveCardIds()
+        {
+            if (_isResolvingCardIds)
+                yield break;
+
+            _isResolvingCardIds = true;
+            while (IsSpawned && HasUnresolvedCardIds)
+                yield return null;
+            _isResolvingCardIds = false;
+
+            if (!IsSpawned)
+                yield break;
+
+            Debug.Log($"CardStack: {name} resolved its card ids");
+            UnityCard.Blank.UnregisterDisplay(this);
+            _cards = new List<UnityCard>();
+            foreach (var cardId in _cardIds)
+                _cards.Add(LookupCard(cardId));
+            topCard.sprite = CardBackImageSprite;
+            if (IsTopFaceup)
+                TopCard?.RegisterDisplay(this);
+            SyncView();
+        }
+
+        private bool _isResolvingCardIds;
 
         protected override void OnStartPlayable()
         {
@@ -376,7 +425,7 @@ namespace Cgs.CardGameView.Multiplayer
             _cardIds.Clear();
             foreach (var cardId in cardIds)
             {
-                _cards.Add(CardGameManager.Current.Cards[cardId]);
+                _cards.Add(LookupCard(cardId));
                 _cardIds.Add(cardId);
             }
         }
@@ -385,7 +434,9 @@ namespace Cgs.CardGameView.Multiplayer
         {
             _cards = new List<UnityCard>();
             foreach (var cardId in _cardIds)
-                _cards.Add(CardGameManager.Current.Cards[cardId]);
+                _cards.Add(LookupCard(cardId));
+            if (HasUnresolvedCardIds)
+                StartCoroutine(WaitToResolveCardIds());
 
             if (IsTopFaceup)
             {
@@ -450,7 +501,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void OwnerInsert(int index, string cardId)
         {
             Debug.Log($"CardStack: {name} insert {cardId} at {index} of {Cards.Count}");
-            _cards.Insert(index, CardGameManager.Current.Cards[cardId]);
+            _cards.Insert(index, LookupCard(cardId));
             if (CgsNetManager.Instance.IsOnline)
                 _cardIds.Insert(index, cardId);
             else
@@ -534,7 +585,7 @@ namespace Cgs.CardGameView.Multiplayer
             var cards = Cards.Select(card => card.Id).ToList();
             cards.Shuffle();
 
-            _cards = cards.Select(card => CardGameManager.Current.Cards[card]).ToList();
+            _cards = cards.Select(LookupCard).ToList();
 
             if (!CgsNetManager.Instance.IsOnline)
                 return;

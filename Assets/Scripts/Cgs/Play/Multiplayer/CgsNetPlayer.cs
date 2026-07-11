@@ -675,6 +675,11 @@ namespace Cgs.Play.Multiplayer
         {
             var cardModelTransform = cardModel.transform;
             cardModelTransform.SetParent(cardZone.transform);
+            // Vertical and Horizontal zones order their cards by sibling index,
+            // which the local card got from its placeholder, so preserve it through the respawn
+            var siblingIndex = cardZone.Type is CardZoneType.Vertical or CardZoneType.Horizontal
+                ? cardModelTransform.GetSiblingIndex()
+                : -1;
             cardModel.SnapToGrid();
             var position = ((RectTransform) cardModelTransform).localPosition;
             var rotation = cardModelTransform.localRotation;
@@ -683,7 +688,7 @@ namespace Cgs.Play.Multiplayer
 
             if (cardZone.IsSpawned)
                 SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, isFacedown,
-                    isCardShared);
+                    isCardShared, siblingIndex);
             else
             {
                 // An unspawned zone cannot be referenced on the server,
@@ -708,7 +713,8 @@ namespace Cgs.Play.Multiplayer
             bool isFacedown, bool isCardShared)
         {
             if (cardZone.IsSpawned)
-                SpawnCardInZoneServerRpc(cardZone.gameObject, cardId, position, rotation, isFacedown, isCardShared);
+                SpawnCardInZoneServerRpc(cardZone.gameObject, cardId, position, rotation, isFacedown, isCardShared,
+                    -1);
             else
             {
                 // An unspawned zone cannot be referenced on the server, so spawn in the play area
@@ -719,7 +725,8 @@ namespace Cgs.Play.Multiplayer
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void SpawnCardInZoneServerRpc(NetworkObjectReference container, string cardId, Vector3 position,
-            Quaternion rotation, bool isFacedown, bool isCardShared, ServerRpcParams rpcParams = default)
+            Quaternion rotation, bool isFacedown, bool isCardShared, int siblingIndex,
+            ServerRpcParams rpcParams = default)
         {
             if (!container.TryGet(out var containerObject))
             {
@@ -733,7 +740,7 @@ namespace Cgs.Play.Multiplayer
 
             PlayController.Instance.CreateCardModel(containerObject.gameObject, cardId, position, rotation, isFacedown,
                 isCardShared, new PlayController.CardModelCreationOptions(defaultAction,
-                    rpcParams.Receive.SenderClientId));
+                    rpcParams.Receive.SenderClientId, siblingIndex));
         }
 
         [ServerRpc]
