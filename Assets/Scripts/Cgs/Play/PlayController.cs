@@ -79,14 +79,17 @@ namespace Cgs.Play
 
         public readonly struct CardModelCreationOptions
         {
-            public CardModelCreationOptions(string defaultAction = "", ulong? ownerClientId = null)
+            public CardModelCreationOptions(string defaultAction = "", ulong? ownerClientId = null,
+                int? siblingIndex = null)
             {
                 DefaultAction = defaultAction;
                 OwnerClientId = ownerClientId;
+                SiblingIndex = siblingIndex;
             }
 
             public string DefaultAction { get; }
             public ulong? OwnerClientId { get; }
+            public int? SiblingIndex { get; }
         }
 
         public Transform stackViewers;
@@ -760,6 +763,8 @@ namespace Cgs.Play
             cardModel.Container = container;
             cardModel.Position = position;
             cardModel.Rotation = rotation;
+            if (options.SiblingIndex is >= 0)
+                cardModel.SiblingIndex = options.SiblingIndex.Value;
             cardModel.IsCardShared = isCardShared;
             cardModel.IsFacedown = isFacedown;
             if (!string.IsNullOrEmpty(options.DefaultAction) &&

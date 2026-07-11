@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Viewer;
@@ -788,10 +789,24 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Value.UnregisterDisplay(this);
             _id = newValue;
-            if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out var unityCard) ||
-                unityCard == null)
+            if (string.IsNullOrEmpty(_id))
             {
                 Debug.LogError($"ERROR: Id for {gameObject.name} changed to unknown card!");
+                return;
+            }
+
+            if (!CardGameManager.Current.Cards.TryGetValue(_id, out var unityCard) || unityCard == null)
+            {
+                if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline)
+                {
+                    // A joining client may not yet have downloaded and loaded the host's card game,
+                    // so wait for the card to load and then try again
+                    Debug.Log($"CardModel: Waiting for {_id} to load before applying it to {gameObject.name}...");
+                    StartCoroutine(WaitToResolveId(_id));
+                }
+                else
+                    Debug.LogError($"ERROR: Id for {gameObject.name} changed to unknown card!");
+
                 return;
             }
 
@@ -801,6 +816,15 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
                 CardViewer.Instance.SelectedCardModel == this)
                 CardViewer.Instance.SelectedCardModel = this;
+        }
+
+        private IEnumerator WaitToResolveId(string cardId)
+        {
+            while (cardId.Equals(_id) && !CardGameManager.Current.Cards.ContainsKey(cardId))
+                yield return null;
+
+            if (cardId.Equals(_id))
+                OnChangeId(_id, _id);
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]

@@ -153,6 +153,22 @@ namespace Cgs.CardGameView.Multiplayer
         private Vector2 _size = Vector2.zero;
         private NetworkVariable<Vector2> _sizeNetworkVariable;
 
+        // Vertical and Horizontal CardZones order their cards by sibling index,
+        // which is not synced by Netcode, so it must be synced manually
+        public int SiblingIndex
+        {
+            get => IsSpawned ? _siblingIndexNetworkVariable.Value : transform.GetSiblingIndex();
+            set
+            {
+                if (value >= 0)
+                    transform.SetSiblingIndex(value);
+                if (IsSpawned && IsServer)
+                    _siblingIndexNetworkVariable.Value = value;
+            }
+        }
+
+        private NetworkVariable<int> _siblingIndexNetworkVariable;
+
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
         protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
@@ -226,6 +242,9 @@ namespace Cgs.CardGameView.Multiplayer
             _sizeNetworkVariable = new NetworkVariable<Vector2>();
             _sizeNetworkVariable.OnValueChanged += OnChangeSize;
 
+            _siblingIndexNetworkVariable = new NetworkVariable<int>(-1);
+            _siblingIndexNetworkVariable.OnValueChanged += OnChangeSiblingIndex;
+
             OnAwakePlayable();
         }
 
@@ -284,6 +303,8 @@ namespace Cgs.CardGameView.Multiplayer
             var rectTransform = (RectTransform)transform;
             rectTransform.SetParent(containerTransform);
             rectTransform.localScale = Vector3.one;
+            if (IsSpawned && _siblingIndexNetworkVariable.Value >= 0)
+                rectTransform.SetSiblingIndex(_siblingIndexNetworkVariable.Value);
         }
 
         protected virtual void OnNetworkSpawnPlayable()
@@ -704,6 +725,13 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             Size = size;
+        }
+
+        [PublicAPI]
+        public void OnChangeSiblingIndex(int oldValue, int newValue)
+        {
+            if (newValue >= 0)
+                transform.SetSiblingIndex(newValue);
         }
 
         [PublicAPI]
