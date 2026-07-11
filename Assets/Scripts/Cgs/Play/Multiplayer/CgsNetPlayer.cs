@@ -41,6 +41,30 @@ namespace Cgs.Play.Multiplayer
         }
     }
 
+    public struct CardSpawnParams : INetworkSerializable
+    {
+        // Public mutable fields are required so Netcode can (de)serialize them by ref,
+        // matching the existing DiscoveryResponseData DTO; hence S1104 is not applicable.
+#pragma warning disable S1104
+        public string CardId;
+        public Vector3 Position;
+        public Quaternion Rotation;
+        public bool IsFacedown;
+        public bool IsCardShared;
+        public int SiblingIndex;
+#pragma warning restore S1104
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref CardId);
+            serializer.SerializeValue(ref Position);
+            serializer.SerializeValue(ref Rotation);
+            serializer.SerializeValue(ref IsFacedown);
+            serializer.SerializeValue(ref IsCardShared);
+            serializer.SerializeValue(ref SiblingIndex);
+        }
+    }
+
     public class CgsNetPlayer : NetworkBehaviour
     {
         public const string GameSelectionErrorMessage = "The host has selected a game that is not available!";
@@ -687,8 +711,15 @@ namespace Cgs.Play.Multiplayer
             var isCardShared = cardModel.IsCardShared;
 
             if (cardZone.IsSpawned)
-                SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, isFacedown,
-                    isCardShared, siblingIndex);
+                SpawnCardInZoneServerRpc(cardZone.gameObject, new CardSpawnParams
+                {
+                    CardId = cardModel.Id,
+                    Position = position,
+                    Rotation = rotation,
+                    IsFacedown = isFacedown,
+                    IsCardShared = isCardShared,
+                    SiblingIndex = siblingIndex
+                });
             else
             {
                 // An unspawned zone cannot be referenced on the server,
@@ -713,8 +744,15 @@ namespace Cgs.Play.Multiplayer
             bool isFacedown, bool isCardShared)
         {
             if (cardZone.IsSpawned)
-                SpawnCardInZoneServerRpc(cardZone.gameObject, cardId, position, rotation, isFacedown, isCardShared,
-                    -1);
+                SpawnCardInZoneServerRpc(cardZone.gameObject, new CardSpawnParams
+                {
+                    CardId = cardId,
+                    Position = position,
+                    Rotation = rotation,
+                    IsFacedown = isFacedown,
+                    IsCardShared = isCardShared,
+                    SiblingIndex = -1
+                });
             else
             {
                 // An unspawned zone cannot be referenced on the server, so spawn in the play area
@@ -724,13 +762,13 @@ namespace Cgs.Play.Multiplayer
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void SpawnCardInZoneServerRpc(NetworkObjectReference container, string cardId, Vector3 position,
-            Quaternion rotation, bool isFacedown, bool isCardShared, int siblingIndex,
+        private void SpawnCardInZoneServerRpc(NetworkObjectReference container, CardSpawnParams cardSpawnParams,
             ServerRpcParams rpcParams = default)
         {
             if (!container.TryGet(out var containerObject))
             {
-                Debug.LogError($"[CgsNet Player] Failed to spawn {cardId}: Card zone container could not be resolved.");
+                Debug.LogError(
+                    $"[CgsNet Player] Failed to spawn {cardSpawnParams.CardId}: Card zone container could not be resolved.");
                 return;
             }
 
@@ -738,9 +776,10 @@ namespace Cgs.Play.Multiplayer
             if (containerObject.TryGetComponent<CardZone>(out var cardZone))
                 defaultAction = cardZone.DefaultAction.ToString();
 
-            PlayController.Instance.CreateCardModel(containerObject.gameObject, cardId, position, rotation, isFacedown,
-                isCardShared, new PlayController.CardModelCreationOptions(defaultAction,
-                    rpcParams.Receive.SenderClientId, siblingIndex));
+            PlayController.Instance.CreateCardModel(containerObject.gameObject, cardSpawnParams.CardId,
+                cardSpawnParams.Position, cardSpawnParams.Rotation, cardSpawnParams.IsFacedown,
+                cardSpawnParams.IsCardShared, new PlayController.CardModelCreationOptions(defaultAction,
+                    rpcParams.Receive.SenderClientId, cardSpawnParams.SiblingIndex));
         }
 
         [ServerRpc]
