@@ -1,0 +1,17 @@
+name: Cleanup Cancelled Develop Runs
+on:
+  workflow_run:
+    workflows: ["Test, Build, and Deploy with GameCI"]
+    types:
+      - completed
+jobs:
+  delete-cancelled:
+    if: github.event.workflow_run.conclusion == 'cancelled' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Delete cancelled run
+        run: gh api -X DELETE "repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
