@@ -1,5 +1,7 @@
 name: Test, Build, and Deploy with GameCI
-concurrency: unity
+concurrency:
+  group: unity
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
   UNITY_VERSION: 6000.3.15f1
 on:
