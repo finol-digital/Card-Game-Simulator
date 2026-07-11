@@ -1,2 +1,8 @@
 ## What's Changed
-- Fixed cards moving to zones
+* Move Menu no longer lists the card's current location
+* Show zone names in Move Menu
+* Show card stack owner name in Move Menu for multiplayer
+* Fix scoreboard showing 0 points at the start of multiplayer games
+* Fix multiplayer card sync and card zone drop order
+* Card flip animation
+* Animate card rotations
