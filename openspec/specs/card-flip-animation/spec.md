@@ -1,7 +1,7 @@
 # card-flip-animation Specification
 
 ## Purpose
-TBD - created by archiving change card-flip-animation. Update Purpose after archive.
+Add a flip animation when cards change between faceup and facedown, including double-faced transforms, so state changes are visually clear in both solo and multiplayer.
 ## Requirements
 ### Requirement: Card flip is animated
 When a visible card's facedown state changes, the card SHALL play a flip animation: it SHALL shrink horizontally to zero width, swap its displayed face, and expand back to full width, rather than instantly swapping the displayed face.
