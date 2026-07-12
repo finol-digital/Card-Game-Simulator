@@ -259,14 +259,27 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void AddCard(Card card)
         {
+            AddCard(card, false);
+        }
+
+        public void AddCard(Card card, bool isFacedown)
+        {
+            // Apply this zone's face preference, same as when a card is dragged and dropped into the zone
+            isFacedown = DefaultFace switch
+            {
+                FacePreference.Down => true,
+                FacePreference.Up => false,
+                _ => isFacedown
+            } && !card.IsBackFaceCard;
+
             var isCardShared = SharePreference.Share == CardGameManager.Current.DeckSharePreference;
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardInZone(this, card.Id, Vector2.zero,
-                    Quaternion.identity, false, isCardShared);
+                    Quaternion.identity, isFacedown, isCardShared);
             else
             {
                 var cardModel = PlayController.Instance.CreateCardModel(gameObject, card.Id, Vector2.zero,
-                    Quaternion.identity, false, isCardShared);
+                    Quaternion.identity, isFacedown, isCardShared);
                 OnAdd(cardModel);
             }
         }
