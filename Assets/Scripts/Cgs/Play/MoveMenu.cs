@@ -177,7 +177,19 @@ namespace Cgs.Play
                 return;
             }
 
-            _selectedCardContainer.AddCard(_selectedCardModel.Value);
+            switch (_selectedCardContainer)
+            {
+                case CardZone cardZone:
+                    cardZone.AddCard(_selectedCardModel.Value, _selectedCardModel.IsFacedown);
+                    break;
+                case PlayController playController:
+                    playController.AddCard(_selectedCardModel.Value, _selectedCardModel.IsFacedown);
+                    break;
+                default:
+                    _selectedCardContainer.AddCard(_selectedCardModel.Value);
+                    break;
+            }
+
             _selectedCardModel.RequestDelete();
 
             Hide();

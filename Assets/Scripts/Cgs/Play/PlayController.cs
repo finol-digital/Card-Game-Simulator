@@ -705,13 +705,20 @@ namespace Cgs.Play
 
         public void AddCard(Card card)
         {
+            AddCard(card, false);
+        }
+
+        public void AddCard(Card card, bool isFacedown)
+        {
+            isFacedown = isFacedown && !card.IsBackFaceCard;
+
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewCard(card.Id, Vector2.zero, Quaternion.identity, false,
-                    SharePreference.Share == CardGameManager.Current.DeckSharePreference);
+                CgsNetManager.Instance.LocalPlayer.RequestNewCard(card.Id, Vector2.zero, Quaternion.identity,
+                    isFacedown, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
             else
             {
                 var cardModel = CreateCardModel(playAreaCardZone.gameObject, card.Id, Vector2.zero, Quaternion.identity,
-                    false, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
+                    isFacedown, SharePreference.Share == CardGameManager.Current.DeckSharePreference);
                 AddCardToPlayArea(playAreaCardZone, cardModel);
             }
         }
