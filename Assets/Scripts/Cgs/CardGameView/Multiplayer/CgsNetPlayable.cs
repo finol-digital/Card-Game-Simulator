@@ -179,6 +179,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkVariable<int> _siblingIndexNetworkVariable;
 
+        // Playables being dragged, keyed by pointerId so that drag handoffs
+        // (eg CardStack to CardModel.CreateDrag) replace the previous holder
+        private static readonly Dictionary<int, CgsNetPlayable> DraggedPlayables = new();
+
+        public static bool IsAnyDragging => DraggedPlayables.Values.Any(playable => playable != null);
+
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
         protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
@@ -481,6 +487,8 @@ namespace Cgs.CardGameView.Multiplayer
             if (PreBeginDrag(eventData))
                 return;
 
+            DraggedPlayables[eventData.pointerId] = this;
+
             CurrentPointerEventData = eventData;
             CurrentDragPhase = DragPhase.Begin;
             PointerPositions[eventData.pointerId] = eventData.position;
@@ -521,6 +529,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            DraggedPlayables.Remove(eventData.pointerId);
+
             CurrentPointerEventData = eventData;
             CurrentDragPhase = DragPhase.End;
 
@@ -757,6 +767,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void OnDestroy()
         {
+            foreach (var pointerId in DraggedPlayables.Where(pair => pair.Value == this)
+                         .Select(pair => pair.Key).ToList())
+                DraggedPlayables.Remove(pointerId);
+
             FinishRotationAnimation();
             base.OnDestroy();
         }
