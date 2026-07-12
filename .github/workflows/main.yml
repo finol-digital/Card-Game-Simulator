@@ -1101,12 +1101,29 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
           MSIX_PATH: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
         run: |
-          Write-Host "Retrieving current submission metadata for AppId 9N96N5S4W3J0..."
-          $rawSubmission = msstore submission get 9N96N5S4W3J0 --verbose
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "::error::msstore submission get failed with exit code $LASTEXITCODE. Output: $rawSubmission"
-            exit $LASTEXITCODE
+          function Invoke-MsStoreWithRetry {
+            param(
+              [string]$Name,
+              [scriptblock]$Action,
+              [int]$MaxAttempts = 5
+            )
+            for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+              if ($attempt -gt 1) {
+                $delaySeconds = 30 * ($attempt - 1)
+                Write-Host "Waiting $delaySeconds seconds before attempt $attempt of $MaxAttempts for $Name..."
+                Start-Sleep -Seconds $delaySeconds
+              }
+              $output = & $Action
+              if ($LASTEXITCODE -eq 0) {
+                return $output
+              }
+              Write-Host "::warning::$Name failed with exit code $LASTEXITCODE (attempt $attempt of $MaxAttempts). Output: $($output | Out-String)"
+            }
+            Write-Host "::error::$Name failed after $MaxAttempts attempts."
+            exit 1
           }
+          Write-Host "Retrieving current submission metadata for AppId 9N96N5S4W3J0..."
+          $rawSubmission = Invoke-MsStoreWithRetry -Name "msstore submission get" -Action { msstore submission get 9N96N5S4W3J0 --verbose }
           $json = $rawSubmission | ConvertFrom-Json -AsHashtable
           if ($null -eq $json -or $null -eq $json.Listings) {
             Write-Host "::error::msstore submission get returned unexpected metadata: $rawSubmission"
@@ -1119,23 +1136,11 @@ jobs:
           Write-Host "Updated submission metadata:"
           Write-Host $updatedMetadata
           Write-Host "Updating submission metadata..."
-          $updatedMetadata | msstore submission updateMetadata 9N96N5S4W3J0 --verbose
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "::error::msstore submission updateMetadata failed with exit code $LASTEXITCODE"
-            exit $LASTEXITCODE
-          }
+          Invoke-MsStoreWithRetry -Name "msstore submission updateMetadata" -Action { $updatedMetadata | msstore submission updateMetadata 9N96N5S4W3J0 --verbose } | Write-Host
           Write-Host "Publishing submission..."
-          msstore submission publish 9N96N5S4W3J0 --verbose
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "::error::msstore submission publish failed with exit code $LASTEXITCODE"
-            exit $LASTEXITCODE
-          }
+          Invoke-MsStoreWithRetry -Name "msstore submission publish" -Action { msstore submission publish 9N96N5S4W3J0 --verbose } | Write-Host
           Write-Host "Publishing app package: $env:MSIX_PATH"
-          msstore publish $env:MSIX_PATH -id 9N96N5S4W3J0 --verbose
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "::error::msstore publish failed with exit code $LASTEXITCODE"
-            exit $LASTEXITCODE
-          }
+          Invoke-MsStoreWithRetry -Name "msstore publish" -Action { msstore publish $env:MSIX_PATH -id 9N96N5S4W3J0 --verbose } | Write-Host
 
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
