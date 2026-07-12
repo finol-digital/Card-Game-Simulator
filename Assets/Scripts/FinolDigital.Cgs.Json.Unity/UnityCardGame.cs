@@ -166,6 +166,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public void ClearDefinitionLists()
         {
+            CardBackFaceImageUrls.Clear();
             CardProperties.Clear();
             DeckPlayCards.Clear();
             DeckUrls.Clear();
@@ -173,6 +174,9 @@ namespace FinolDigital.Cgs.Json.Unity
             Extras.Clear();
             GameBoardCards.Clear();
             GameBoardUrls.Clear();
+            GamePlayDeckPositions.Clear();
+            GamePlayZones.Clear();
+            GameStartDecks.Clear();
         }
 
         public void ReadProperties()
