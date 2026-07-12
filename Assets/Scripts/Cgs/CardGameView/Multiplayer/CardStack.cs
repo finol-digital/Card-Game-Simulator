@@ -451,14 +451,16 @@ namespace Cgs.CardGameView.Multiplayer
                 {
                     if (CardGameManager.Current.Cards.TryGetValue(changeEvent.PreviousValue, out var previous))
                         previous.UnregisterDisplay(this);
-                    if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^1], out var current))
+                    if (_cardIds.Count > 0 &&
+                        CardGameManager.Current.Cards.TryGetValue(_cardIds[^1], out var current))
                         current.RegisterDisplay(this);
                 }
 
                 if (changeEvent.Type.Equals(NetworkListEvent<CgsNetString>.EventType.Insert) &&
                     changeEvent.Index == _cardIds.Count - 1)
                 {
-                    if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^2], out var previous))
+                    if (_cardIds.Count > 1 &&
+                        CardGameManager.Current.Cards.TryGetValue(_cardIds[^2], out var previous))
                         previous.UnregisterDisplay(this);
                     if (CardGameManager.Current.Cards.TryGetValue(changeEvent.Value, out var current))
                         current.RegisterDisplay(this);
