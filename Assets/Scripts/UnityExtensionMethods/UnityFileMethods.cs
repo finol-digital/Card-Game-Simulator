@@ -335,34 +335,57 @@ namespace UnityExtensionMethods
         }
 
         // Note: Memory Leak Potential
+        // Reads the image file directly from disk rather than through a file:// UnityWebRequest,
+        // which url-decodes '+' in the path to a space and fails for paths containing '+'
         public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageFilePath, string backUpImageUrl)
         {
             if (!File.Exists(imageFilePath))
                 yield return SaveUrlToFile(backUpImageUrl, imageFilePath);
 
-            var imageUrl = FilePrefix + imageFilePath;
-
-            using var unityWebRequest = CreateUnityWebRequest(new Uri(imageUrl));
-            yield return unityWebRequest.SendWebRequest();
-            if (unityWebRequest.result != UnityWebRequest.Result.Success ||
-                !string.IsNullOrEmpty(unityWebRequest.error))
+            if (!File.Exists(imageFilePath))
             {
-                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::unityWebRequest.Error:"
-                                 + unityWebRequest.error + " " + unityWebRequest.url);
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::TextureFileMissing:" + imageFilePath);
                 yield return null;
+                yield break;
             }
-            else
-            {
-                var bytes = unityWebRequest.downloadHandler.data;
-                if (bytes is not { Length: > 0 })
-                {
-                    Debug.LogWarning("CreateAndOutputSpriteFromImageFile::TextureFileEmpty:" + unityWebRequest.url);
-                    yield return null;
-                }
 
-                var texture = imageUrl.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
-                yield return CreateSprite(texture);
+            byte[] bytes;
+#if UNITY_WEBGL
+            bytes = File.ReadAllBytes(imageFilePath);
+#else
+            var loadTask = Task.Run(() => File.ReadAllBytes(imageFilePath));
+            while (!loadTask.IsCompleted)
+                yield return null;
+            if (loadTask.IsFaulted)
+            {
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::ReadFailed:" + loadTask.Exception);
+                yield return null;
+                yield break;
             }
+
+            bytes = loadTask.Result;
+#endif
+
+            if (bytes is not { Length: > 0 })
+            {
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::TextureFileEmpty:" + imageFilePath);
+                File.Delete(imageFilePath);
+                yield return null;
+                yield break;
+            }
+
+            var texture = imageFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
+            if (texture == null)
+            {
+                // An undecodable cached file is likely a bad download (e.g. an error page),
+                // so delete it to allow re-downloading it on the next attempt
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::UndecodableFileDeleted:" + imageFilePath);
+                File.Delete(imageFilePath);
+                yield return null;
+                yield break;
+            }
+
+            yield return CreateSprite(texture);
         }
 
         // Note: Memory Leak Potential
