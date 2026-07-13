@@ -35,6 +35,25 @@ namespace Cgs.UI
             selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, 0);
         }
 
+        private float GetContentHeight(int optionCount)
+        {
+            var height = selectionTemplate.rect.height * optionCount;
+            if (!selectionContent.TryGetComponent<LayoutGroup>(out var layoutGroup))
+                return height;
+
+            height += layoutGroup.padding.vertical;
+            var spacing = layoutGroup switch
+            {
+                FlowLayoutGroup flowLayoutGroup => flowLayoutGroup.spacing.y,
+                HorizontalOrVerticalLayoutGroup horizontalOrVerticalLayoutGroup =>
+                    horizontalOrVerticalLayoutGroup.spacing,
+                _ => 0f
+            };
+            if (optionCount > 1)
+                height += spacing * (optionCount - 1);
+            return height;
+        }
+
         protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select,
             TKey current)
         {
@@ -43,8 +62,7 @@ namespace Cgs.UI
 
             Toggles.Clear();
             selectionContent.DestroyAllChildren();
-            selectionContent.sizeDelta =
-                new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
+            selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, GetContentHeight(options.Count));
 
             var currentSelectionIndex = -1;
             var i = 0;
