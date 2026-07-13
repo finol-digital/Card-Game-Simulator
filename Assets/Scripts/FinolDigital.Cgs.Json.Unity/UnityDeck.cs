@@ -244,7 +244,13 @@ namespace FinolDigital.Cgs.Json.Unity
                     }
                 }
 
-                cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
+                if (tokens.Count == 1 && !SourceGame.CardNameIsUnique && string.IsNullOrEmpty(cardId))
+                {
+                    cardId = tokens[0];
+                    cardName = string.Empty;
+                }
+                else
+                    cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
             }
 
             var cards = ((UnityCardGame) SourceGame).FilterCards(new CardSearchFilters()
