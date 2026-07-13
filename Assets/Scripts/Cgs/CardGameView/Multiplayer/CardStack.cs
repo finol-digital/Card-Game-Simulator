@@ -294,6 +294,11 @@ namespace Cgs.CardGameView.Multiplayer
             topCard.sprite = CardBackImageSprite;
             if (IsTopFaceup)
                 TopCard?.RegisterDisplay(this);
+
+            // Empty stacks should not persist, but only the authority can delete them
+            if (Cards.Count == 0 &&
+                (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline || IsServer))
+                RequestDelete();
         }
 
         public void SetImageSprite(Sprite imageSprite)
@@ -395,13 +400,10 @@ namespace Cgs.CardGameView.Multiplayer
                 IsDeckShared, PlayController.Instance.playAreaCardZone);
             RemovePointer(eventData);
 
-            if (CgsNetManager.Instance.IsOnline && cards.Count > 1)
+            if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, cards.Count - 1);
-            else if (!CgsNetManager.Instance.IsOnline)
+            else
                 OwnerPopCard();
-
-            if (PlaySettings.AutoStackCards && cards.Count == 1)
-                RequestDelete();
         }
 
         [PublicAPI]
@@ -428,6 +430,9 @@ namespace Cgs.CardGameView.Multiplayer
                 _cards.Add(LookupCard(cardId));
                 _cardIds.Add(cardId);
             }
+
+            if (_cardIds.Count == 0)
+                RequestDelete();
         }
 
         private void OnCardsUpdated(NetworkListEvent<CgsNetString> changeEvent)
@@ -446,14 +451,16 @@ namespace Cgs.CardGameView.Multiplayer
                 {
                     if (CardGameManager.Current.Cards.TryGetValue(changeEvent.PreviousValue, out var previous))
                         previous.UnregisterDisplay(this);
-                    if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^1], out var current))
+                    if (_cardIds.Count > 0 &&
+                        CardGameManager.Current.Cards.TryGetValue(_cardIds[^1], out var current))
                         current.RegisterDisplay(this);
                 }
 
                 if (changeEvent.Type.Equals(NetworkListEvent<CgsNetString>.EventType.Insert) &&
                     changeEvent.Index == _cardIds.Count - 1)
                 {
-                    if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^2], out var previous))
+                    if (_cardIds.Count > 1 &&
+                        CardGameManager.Current.Cards.TryGetValue(_cardIds[^2], out var previous))
                         previous.UnregisterDisplay(this);
                     if (CardGameManager.Current.Cards.TryGetValue(changeEvent.Value, out var current))
                         current.RegisterDisplay(this);
@@ -526,6 +533,10 @@ namespace Cgs.CardGameView.Multiplayer
                 _cardIds.RemoveAt(index);
             else
                 SyncView();
+
+            if (Cards.Count == 0)
+                RequestDelete();
+
             return cardId;
         }
 
@@ -638,6 +649,9 @@ namespace Cgs.CardGameView.Multiplayer
         public override void OnDestroy()
         {
             TopCard?.UnregisterDisplay(this);
+
+            if (Viewer != null)
+                Viewer.Close();
 
             base.OnDestroy();
         }

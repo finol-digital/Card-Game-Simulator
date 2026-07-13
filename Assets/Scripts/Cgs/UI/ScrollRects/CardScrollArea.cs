@@ -36,6 +36,11 @@ namespace Cgs.UI.ScrollRects
 
         private void Update()
         {
+            // Only active while a playable is being dragged,
+            // so that presses on the edge pass through to playables underneath
+            if (!CgsNetPlayable.IsAnyDragging && (_isScrolling || _canvasGroup.alpha > 0))
+                Hide();
+
             bool blocksRayCast;
             switch (scrollDirection)
             {
@@ -51,7 +56,8 @@ namespace Cgs.UI.ScrollRects
                     break;
             }
 
-            _canvasGroup.blocksRaycasts = blocksRayCast && EventSystem.current.currentSelectedGameObject == null;
+            _canvasGroup.blocksRaycasts = blocksRayCast && CgsNetPlayable.IsAnyDragging &&
+                                          EventSystem.current.currentSelectedGameObject == null;
 
             if (!_isScrolling)
                 return;

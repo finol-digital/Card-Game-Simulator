@@ -163,6 +163,12 @@ namespace Cgs.Cards
 
         private void ShowCardEditorMenuFor(UnityCard unityCard)
         {
+            if (CardGameManager.Current.IsUploaded)
+            {
+                CardGameManager.Instance.Messenger.Show(CannotEditCardsMessage);
+                return;
+            }
+
             CardEditor.ShowFor(unityCard, searchResults.Search);
         }
 
