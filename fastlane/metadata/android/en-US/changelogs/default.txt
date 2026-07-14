@@ -1,5 +1,2 @@
 ## What's Changed
-* Improve support for loading decks
-* Fix facedown when moving cards with the Move Menu
-* Fix stale game play zones after updating a game
-* Fix cards at the edge of the play area being unclickable
+* Move Menu scrolling, deck loading, and card image fixes
