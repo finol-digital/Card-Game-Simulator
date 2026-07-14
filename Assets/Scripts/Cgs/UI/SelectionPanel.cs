@@ -37,20 +37,32 @@ namespace Cgs.UI
 
         private float GetContentHeight(int optionCount)
         {
-            var height = selectionTemplate.rect.height * optionCount;
             if (!selectionContent.TryGetComponent<LayoutGroup>(out var layoutGroup))
-                return height;
+                return selectionTemplate.rect.height * optionCount;
 
-            height += layoutGroup.padding.vertical;
-            var spacing = layoutGroup switch
+            var rowCount = optionCount;
+            var spacing = 0f;
+            switch (layoutGroup)
             {
-                FlowLayoutGroup flowLayoutGroup => flowLayoutGroup.spacing.y,
-                HorizontalOrVerticalLayoutGroup horizontalOrVerticalLayoutGroup =>
-                    horizontalOrVerticalLayoutGroup.spacing,
-                _ => 0f
-            };
-            if (optionCount > 1)
-                height += spacing * (optionCount - 1);
+                case FlowLayoutGroup flowLayoutGroup:
+                    spacing = flowLayoutGroup.spacing.y;
+                    var itemWidth = selectionTemplate.rect.width + flowLayoutGroup.spacing.x;
+                    if (flowLayoutGroup.horizontal && itemWidth > 0)
+                    {
+                        var availableWidth = selectionContent.rect.width - layoutGroup.padding.horizontal;
+                        var itemsPerRow = Mathf.Max(1, Mathf.FloorToInt((availableWidth + 0.001f) / itemWidth));
+                        rowCount = Mathf.CeilToInt(optionCount / (float) itemsPerRow);
+                    }
+
+                    break;
+                case VerticalLayoutGroup verticalLayoutGroup:
+                    spacing = verticalLayoutGroup.spacing;
+                    break;
+            }
+
+            var height = selectionTemplate.rect.height * rowCount + layoutGroup.padding.vertical;
+            if (rowCount > 1)
+                height += spacing * (rowCount - 1);
             return height;
         }
 
