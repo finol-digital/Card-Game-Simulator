@@ -35,6 +35,37 @@ namespace Cgs.UI
             selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, 0);
         }
 
+        private float GetContentHeight(int optionCount)
+        {
+            if (!selectionContent.TryGetComponent<LayoutGroup>(out var layoutGroup))
+                return selectionTemplate.rect.height * optionCount;
+
+            var rowCount = optionCount;
+            var spacing = 0f;
+            switch (layoutGroup)
+            {
+                case FlowLayoutGroup flowLayoutGroup:
+                    spacing = flowLayoutGroup.spacing.y;
+                    var itemWidth = selectionTemplate.rect.width + flowLayoutGroup.spacing.x;
+                    if (flowLayoutGroup.horizontal && itemWidth > 0)
+                    {
+                        var availableWidth = selectionContent.rect.width - layoutGroup.padding.horizontal;
+                        var itemsPerRow = Mathf.Max(1, Mathf.FloorToInt((availableWidth + 0.001f) / itemWidth));
+                        rowCount = Mathf.CeilToInt(optionCount / (float) itemsPerRow);
+                    }
+
+                    break;
+                case VerticalLayoutGroup verticalLayoutGroup:
+                    spacing = verticalLayoutGroup.spacing;
+                    break;
+            }
+
+            var height = selectionTemplate.rect.height * rowCount + layoutGroup.padding.vertical;
+            if (rowCount > 1)
+                height += spacing * (rowCount - 1);
+            return height;
+        }
+
         protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select,
             TKey current)
         {
@@ -43,8 +74,7 @@ namespace Cgs.UI
 
             Toggles.Clear();
             selectionContent.DestroyAllChildren();
-            selectionContent.sizeDelta =
-                new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
+            selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, GetContentHeight(options.Count));
 
             var currentSelectionIndex = -1;
             var i = 0;

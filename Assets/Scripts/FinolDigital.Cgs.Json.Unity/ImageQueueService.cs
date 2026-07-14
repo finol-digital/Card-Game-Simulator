@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using UnityEngine;
 using UnityExtensionMethods;
 #if !UNITY_WEBGL
+using System;
 using System.IO;
 #endif
 
@@ -47,32 +48,45 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             Sprite newSprite = null;
 
-#if !UNITY_WEBGL
-            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
-                UnityFileMethods.CreateAndOutputSpriteFromImageFile(unityCard.ImageFilePath,
-                    unityCard.ImageWebUrl.Replace(" ", "%20"))
-                , output => newSprite = output);
-            if (newSprite == null)
-                Debug.LogWarning(
-                    $"Failed to load image for card: {unityCard.Name} ({unityCard.Id}) at {unityCard.ImageFilePath}");
-            var fileInfo = new FileInfo(unityCard.ImageFilePath);
-            if (fileInfo.Exists && fileInfo.Length > MaxImageFileSizeBytes)
-                Debug.LogWarning(string.Format(SizeWarningMessage, unityCard.Name, unityCard.Id));
-#else
-            var url = unityCard.ImageWebUrl;
-            if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
+            try
             {
-                url = "https://cgs.games/api/proxy/" + url[8..];
-                Debug.Log("CGS Games WebGL url : " + url);
-            }
+#if !UNITY_WEBGL
+                yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
+                    UnityFileMethods.CreateAndOutputSpriteFromImageFile(unityCard.ImageFilePath,
+                        unityCard.ImageWebUrl.Replace(" ", "%20"))
+                    , output => newSprite = output);
+                if (newSprite == null)
+                    Debug.LogWarning(
+                        $"Failed to load image for card: {unityCard.Name} ({unityCard.Id}) at {unityCard.ImageFilePath}");
+                try
+                {
+                    var fileInfo = new FileInfo(unityCard.ImageFilePath);
+                    if (fileInfo.Exists && fileInfo.Length > MaxImageFileSizeBytes)
+                        Debug.LogWarning(string.Format(SizeWarningMessage, unityCard.Name, unityCard.Id));
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning(
+                        $"Failed to check image file size for card: {unityCard.Name} ({unityCard.Id}): {e}");
+                }
+#else
+                var url = unityCard.ImageWebUrl;
+                if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
+                {
+                    url = "https://cgs.games/api/proxy/" + url[8..];
+                    Debug.Log("CGS Games WebGL url : " + url);
+                }
 
-            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
-                UnityFileMethods.CreateAndOutputSpriteFromImageFile(url)
-                , output => newSprite = output);
+                yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
+                    UnityFileMethods.CreateAndOutputSpriteFromImageFile(url)
+                    , output => newSprite = output);
 #endif
-
-            unityCard.OnLoadImage(newSprite);
-            _concurrentQueueCount--;
+            }
+            finally
+            {
+                _concurrentQueueCount--;
+                unityCard.OnLoadImage(newSprite);
+            }
         }
     }
 }
