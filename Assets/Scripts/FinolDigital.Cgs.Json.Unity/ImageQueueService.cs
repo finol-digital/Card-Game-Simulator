@@ -81,12 +81,11 @@ namespace FinolDigital.Cgs.Json.Unity
                     UnityFileMethods.CreateAndOutputSpriteFromImageFile(url)
                     , output => newSprite = output);
 #endif
-
-                unityCard.OnLoadImage(newSprite);
             }
             finally
             {
                 _concurrentQueueCount--;
+                unityCard.OnLoadImage(newSprite);
             }
         }
     }
