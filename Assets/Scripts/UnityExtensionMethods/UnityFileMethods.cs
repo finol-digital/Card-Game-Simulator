@@ -351,7 +351,21 @@ namespace UnityExtensionMethods
 
             byte[] bytes;
 #if UNITY_WEBGL
-            bytes = File.ReadAllBytes(imageFilePath);
+            try
+            {
+                bytes = File.ReadAllBytes(imageFilePath);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::ReadFailed:" + ex);
+                bytes = null;
+            }
+
+            if (bytes == null)
+            {
+                yield return null;
+                yield break;
+            }
 #else
             var loadTask = Task.Run(() => File.ReadAllBytes(imageFilePath));
             while (!loadTask.IsCompleted)
@@ -369,7 +383,15 @@ namespace UnityExtensionMethods
             if (bytes is not { Length: > 0 })
             {
                 Debug.LogWarning("CreateAndOutputSpriteFromImageFile::TextureFileEmpty:" + imageFilePath);
-                File.Delete(imageFilePath);
+                try
+                {
+                    File.Delete(imageFilePath);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning("CreateAndOutputSpriteFromImageFile::DeleteFailed:" + ex);
+                }
+
                 yield return null;
                 yield break;
             }
