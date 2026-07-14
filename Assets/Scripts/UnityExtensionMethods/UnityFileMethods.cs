@@ -380,7 +380,14 @@ namespace UnityExtensionMethods
                 // An undecodable cached file is likely a bad download (e.g. an error page),
                 // so delete it to allow re-downloading it on the next attempt
                 Debug.LogWarning("CreateAndOutputSpriteFromImageFile::UndecodableFileDeleted:" + imageFilePath);
-                File.Delete(imageFilePath);
+                try
+                {
+                    File.Delete(imageFilePath);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning("CreateAndOutputSpriteFromImageFile::DeleteFailed:" + ex);
+                }
                 yield return null;
                 yield break;
             }
