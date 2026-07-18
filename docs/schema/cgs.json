@@ -183,6 +183,13 @@
       "description": "cardImageUrl is a parameterized template url from which CGS downloads card image files if <cardImageProperty> is empty. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {cardImageFileType}=<cardImageFileType>, {<property>}=*Card:<property>*. Example: https://www.cardgamesimulator.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
       "format": "uri-template"
     },
+    "cardImageUrlOverrides": {
+      "type": "object",
+      "description": "cardImageUrlOverrides is a map where the key is the *Card:Id* and the value is the parameterized template url for that Card, overriding <cardImageUrl>.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "cardNameBackIdentifier": {
       "type": "string",
       "description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Name* of the back face mapped to the field defined by cardNameBackIdentifier. Most custom games will likely want to keep the default cardNameBackIdentifier."
@@ -368,6 +375,20 @@
       "description": "Each deck loaded during a game will be loaded to its corresponding position in gamePlayDeckPositions. The first deck loaded will go to the first position, second to second, etc.",
       "items": {
         "$ref": "#/definitions/Float2"
+      }
+    },
+    "gamePlayPlayerRotations": {
+      "type": "array",
+      "description": "Players will be oriented around the play area by rotating (in degrees) according to the values in gamePlayPlayerRotations. The first value corresponds to the first player, the second to the second player, etc.",
+      "default": [
+        0.0,
+        180.0,
+        90.0,
+        270.0
+      ],
+      "items": {
+        "type": "number",
+        "format": "float"
       }
     },
     "gamePlayZones": {
