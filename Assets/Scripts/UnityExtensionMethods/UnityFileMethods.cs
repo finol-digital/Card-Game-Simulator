@@ -28,7 +28,7 @@ namespace UnityExtensionMethods
         public const string MetaExtension = ".meta";
         public const string ZipExtension = ".zip";
         public const string JsonExtension = ".json";
-        private const string WebpExtension = ".webp";
+        public const string WebpExtension = ".webp";
         private const int MaxRetries = 3;
 
         public static string GetSafeFilePath(string filePath)
@@ -511,6 +511,35 @@ namespace UnityExtensionMethods
         {
             var textures = WebPDecoderWrapper.Decode(bytes).Result;
             return textures?.FirstOrDefault().Item1;
+        }
+
+        // Textures from DecodeWebp() are gpu-only, so this is for when the pixel data must be accessible from scripts
+        // Can return null
+        public static Texture2D DecodeWebpReadable(byte[] bytes)
+        {
+            var texture = WebP.Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: false, lLinear: false,
+                out var error, makeNoLongerReadable: false);
+            if (error == WebP.Error.Success && texture != null)
+                return texture;
+
+            // The static decoder cannot decode animated webp, so fall back to the animation decoder
+            // and copy its gpu-only texture into a readable one
+            var animatedTexture = DecodeWebp(bytes);
+            if (animatedTexture == null)
+                return null;
+
+            var renderTexture = RenderTexture.GetTemporary(animatedTexture.width, animatedTexture.height, 0);
+            Graphics.Blit(animatedTexture, renderTexture);
+            var previousActive = RenderTexture.active;
+            RenderTexture.active = renderTexture;
+            var readableTexture =
+                new Texture2D(animatedTexture.width, animatedTexture.height, TextureFormat.RGBA32, false);
+            readableTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+            readableTexture.Apply();
+            RenderTexture.active = previousActive;
+            RenderTexture.ReleaseTemporary(renderTexture);
+            UnityEngine.Object.Destroy(animatedTexture);
+            return readableTexture;
         }
 
         // Can return null
