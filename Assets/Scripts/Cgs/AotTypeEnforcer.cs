@@ -50,6 +50,7 @@ namespace Cgs
                 cardGame.CardImageFileType = string.Empty;
                 cardGame.CardImageProperty = string.Empty;
                 cardGame.CardImageUrl = string.Empty;
+                cardGame.CardImageUrlOverrides = new Dictionary<string, string>();
                 cardGame.CardNameBackIdentifier = string.Empty;
                 cardGame.CardNameIdentifier = string.Empty;
                 cardGame.CardNameIsUnique = false;
@@ -101,6 +102,7 @@ namespace Cgs
                 cardGame.GamePlayDeckName = string.Empty;
                 cardGame.GamePlayDeckPositions = new List<Float2>();
                 cardGame.GameDefaultCardAction = CardAction.Flip;
+                cardGame.GamePlayPlayerRotations = new List<float>();
                 var gamePlayZone = new GamePlayZone(FacePreference.Any, CardAction.Tap, string.Empty, float2, 0,
                     float2, GamePlayZoneType.Area);
                 var gamePlayZone2 = new GamePlayZone(FacePreference.Up, CardAction.Move, string.Empty, float2, 0,

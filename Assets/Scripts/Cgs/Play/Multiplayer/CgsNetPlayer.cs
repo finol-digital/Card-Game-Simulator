@@ -74,7 +74,7 @@ namespace Cgs.Play.Multiplayer
         {
             Send = new ClientRpcSendParams
             {
-                TargetClientIds = new[] {OwnerClientId}
+                TargetClientIds = new[] { OwnerClientId }
             }
         };
 
@@ -162,7 +162,7 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        public int DefaultZRotation { get; private set; }
+        public float DefaultZRotation { get; private set; }
 
         public Quaternion DefaultRotation => Quaternion.Euler(new Vector3(0, 0, DefaultZRotation));
 
@@ -295,13 +295,10 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once UnusedParameter.Local
         private void ApplyPlayerRotationOwnerClientRpc(int seatIndex, ClientRpcParams clientRpcParams = default)
         {
-            DefaultZRotation = (seatIndex % 4) switch
-            {
-                1 => 180,
-                2 => 90,
-                3 => 270,
-                _ => 0
-            };
+            DefaultZRotation = CardGameManager.Current.GamePlayPlayerRotations.Count > 0
+                ? CardGameManager.Current.GamePlayPlayerRotations[
+                    seatIndex % CardGameManager.Current.GamePlayPlayerRotations.Count]
+                : 0;
             Debug.Log("[CgsNet Player] Set PlayMat rotation based off seat index: " + DefaultZRotation);
             PlayController.Instance.playArea.CurrentRotation = DefaultZRotation;
 
@@ -680,7 +677,8 @@ namespace Cgs.Play.Multiplayer
 
         #region Cards
 
-        public void RequestNewCard(string cardId, Vector2 position, Quaternion rotation, bool isFacedown, bool isCardShared)
+        public void RequestNewCard(string cardId, Vector2 position, Quaternion rotation, bool isFacedown,
+            bool isCardShared)
         {
             SpawnCardInPlayAreaServerRpc(cardId, position, rotation, isFacedown, isCardShared);
         }
