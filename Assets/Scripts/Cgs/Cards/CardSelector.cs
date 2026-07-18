@@ -20,6 +20,14 @@ namespace Cgs.Cards
         private InputAction _moveAction;
         private InputAction _pageAction;
 
+        private bool IsBlocked => results.inputField.isFocused || CardGameManager.Instance.ModalCanvas != null;
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.CardsPagePrevious).performed += InputPagePrevious;
+            InputSystem.actions.FindAction(Tags.CardsPageNext).performed += InputPageNext;
+        }
+
         private void Start()
         {
             CardViewer.Instance.buttonsPanel.gameObject.SetActive(true);
@@ -33,7 +41,7 @@ namespace Cgs.Cards
         // Poll for Vector2 inputs
         private void Update()
         {
-            if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
+            if (IsBlocked)
                 return;
 
             var pageVector2 = _pageAction?.ReadValue<Vector2>() ?? Vector2.zero;
@@ -92,7 +100,7 @@ namespace Cgs.Cards
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
+            if (IsBlocked)
                 return;
 
             var dragDelta = eventData.position - eventData.pressPosition;
@@ -118,7 +126,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SelectDown()
         {
-            if (EventSystem.current.alreadySelecting)
+            if (IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
             if (results.layoutArea.childCount < 1)
@@ -152,7 +160,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SelectUp()
         {
-            if (EventSystem.current.alreadySelecting)
+            if (IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
             if (results.layoutArea.childCount < 1)
@@ -186,7 +194,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SelectLeft()
         {
-            if (EventSystem.current.alreadySelecting)
+            if (IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
             if (results.layoutArea.childCount < 1)
@@ -220,7 +228,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SelectRight()
         {
-            if (EventSystem.current.alreadySelecting)
+            if (IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
             if (results.layoutArea.childCount < 1)
@@ -251,16 +259,38 @@ namespace Cgs.Cards
                 CardViewer.Instance.IsVisible = true;
         }
 
+        private void InputPagePrevious(InputAction.CallbackContext context)
+        {
+            if (IsBlocked || (CardViewer.Instance != null && CardViewer.Instance.Zoom))
+                return;
+
+            PageLeft();
+        }
+
         [UsedImplicitly]
         public void PageLeft()
         {
             results.DecrementPage();
         }
 
+        private void InputPageNext(InputAction.CallbackContext context)
+        {
+            if (IsBlocked || (CardViewer.Instance != null && CardViewer.Instance.Zoom))
+                return;
+
+            PageRight();
+        }
+
         [UsedImplicitly]
         public void PageRight()
         {
             results.IncrementPage();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.CardsPagePrevious).performed -= InputPagePrevious;
+            InputSystem.actions.FindAction(Tags.CardsPageNext).performed -= InputPageNext;
         }
     }
 }

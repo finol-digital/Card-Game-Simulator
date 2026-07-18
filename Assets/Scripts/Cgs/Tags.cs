@@ -38,6 +38,8 @@ namespace Cgs
         public const string CardsEdit = "Cards/Edit";
         public const string CardsSort = "Cards/Sort";
         public const string CardsFilter = "Cards/Filter";
+        public const string CardsPagePrevious = "Cards/PagePrevious";
+        public const string CardsPageNext = "Cards/PageNext";
 
         public const string DecksNew = "Decks/New";
         public const string DecksLoad = "Decks/Load";
