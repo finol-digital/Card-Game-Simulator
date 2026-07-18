@@ -517,10 +517,16 @@ namespace UnityExtensionMethods
         // Can return null
         public static Texture2D DecodeWebpReadable(byte[] bytes)
         {
+            if (bytes == null || bytes.Length == 0)
+                return null;
+
             var texture = WebP.Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: false, lLinear: false,
                 out var error, makeNoLongerReadable: false);
             if (error == WebP.Error.Success && texture != null)
                 return texture;
+
+            if (texture != null)
+                UnityEngine.Object.Destroy(texture);
 
             // The static decoder cannot decode animated webp, so fall back to the animation decoder
             // and copy its gpu-only texture into a readable one
@@ -529,17 +535,23 @@ namespace UnityExtensionMethods
                 return null;
 
             var renderTexture = RenderTexture.GetTemporary(animatedTexture.width, animatedTexture.height, 0);
-            Graphics.Blit(animatedTexture, renderTexture);
             var previousActive = RenderTexture.active;
-            RenderTexture.active = renderTexture;
-            var readableTexture =
-                new Texture2D(animatedTexture.width, animatedTexture.height, TextureFormat.RGBA32, false);
-            readableTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-            readableTexture.Apply();
-            RenderTexture.active = previousActive;
-            RenderTexture.ReleaseTemporary(renderTexture);
-            UnityEngine.Object.Destroy(animatedTexture);
-            return readableTexture;
+            try
+            {
+                Graphics.Blit(animatedTexture, renderTexture);
+                RenderTexture.active = renderTexture;
+                var readableTexture =
+                    new Texture2D(animatedTexture.width, animatedTexture.height, TextureFormat.RGBA32, false);
+                readableTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+                readableTexture.Apply();
+                return readableTexture;
+            }
+            finally
+            {
+                RenderTexture.active = previousActive;
+                RenderTexture.ReleaseTemporary(renderTexture);
+                UnityEngine.Object.Destroy(animatedTexture);
+            }
         }
 
         // Can return null
