@@ -301,6 +301,7 @@
 			"y": 0
 		}
 	],
+	"gamePlayPlayerRotations": [0, 180, 0, 180],
 	"gamePlayZones": [
 		{
 			"defaultCardAction": "flip",
