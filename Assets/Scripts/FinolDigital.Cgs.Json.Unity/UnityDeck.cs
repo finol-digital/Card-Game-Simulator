@@ -13,6 +13,7 @@ using Didstopia.PDFSharp;
 using Didstopia.PDFSharp.Drawing;
 using Didstopia.PDFSharp.Pdf;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
+using UnityEngine;
 #endif
 
 namespace FinolDigital.Cgs.Json.Unity
@@ -302,6 +303,7 @@ namespace FinolDigital.Cgs.Json.Unity
             PdfPage page = null;
             XGraphics gfx = null;
             double px = PrintPdfMargin * PrintPdfPixelsPerInch, py = PrintPdfMargin * PrintPdfPixelsPerInch;
+            var webpPngCache = new Dictionary<string, byte[]>();
             for (var cardNumber = 0; cardNumber < Cards.Count; cardNumber++)
             {
                 if (page == null || cardNumber % cardsPerPage == 0)
@@ -312,7 +314,39 @@ namespace FinolDigital.Cgs.Json.Unity
                     py = PrintPdfMargin * PrintPdfPixelsPerInch;
                 }
 
-                var xImage = XImage.FromFile(_cards[cardNumber].ImageFilePath);
+                var imageFilePath = _cards[cardNumber].ImageFilePath;
+                XImage xImage;
+                try
+                {
+                    if (imageFilePath.EndsWith(UnityFileMethods.WebpExtension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Texture2D.LoadImage() only supports png and jpg, so webp must be decoded and re-encoded
+                        if (!webpPngCache.TryGetValue(imageFilePath, out var pngBytes))
+                        {
+                            var texture = UnityFileMethods.DecodeWebpReadable(File.ReadAllBytes(imageFilePath));
+                            if (texture == null)
+                            {
+                                const string DecodeErrorMessage = "Unable to decode webp image: ";
+                                throw new InvalidOperationException(DecodeErrorMessage + imageFilePath);
+                            }
+                            pngBytes = texture.EncodeToPNG();
+                            UnityEngine.Object.Destroy(texture);
+                            webpPngCache[imageFilePath] = pngBytes;
+                        }
+
+                        xImage = XImage.FromImageSource(ImageSource.FromBinary(imageFilePath, () => pngBytes, false));
+                    }
+                    else
+                    {
+                        xImage = XImage.FromFile(imageFilePath);
+                    }
+                }
+                catch (Exception e)
+                {
+                    const string FileOpErrorMessage = "Failed to load image file for PDF rendering: ";
+                    Debug.LogError(FileOpErrorMessage + imageFilePath + " - " + e.Message);
+                    throw;
+                }
                 gfx.DrawImage(xImage, px, py, SourceGame.CardSize.X * PrintPdfPixelsPerInch,
                     SourceGame.CardSize.Y * PrintPdfPixelsPerInch);
                 px += SourceGame.CardSize.X * PrintPdfPixelsPerInch;
