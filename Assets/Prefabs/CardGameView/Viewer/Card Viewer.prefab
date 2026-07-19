@@ -4672,6 +4672,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Next
       objectReference: {fileID: 0}
+    - target: {fileID: 5634861638736528653, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
+        type: 3}
+      propertyPath: inputActionId
+      value: Cards/PageNext
+      objectReference: {fileID: 0}
     - target: {fileID: 7136752755737282221, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
       propertyPath: m_Sprite
@@ -6488,6 +6493,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Previous
+      objectReference: {fileID: 0}
+    - target: {fileID: 5634861638736528653, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
+        type: 3}
+      propertyPath: inputActionId
+      value: Cards/PagePrevious
       objectReference: {fileID: 0}
     - target: {fileID: 7136752755737282221, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}

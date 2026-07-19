@@ -2827,6 +2827,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Previous
       objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: inputActionId
+      value: Cards/PagePrevious
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -3227,6 +3232,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Next
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: inputActionId
+      value: Cards/PageNext
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -6145,6 +6155,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Next
+      objectReference: {fileID: 0}
+    - target: {fileID: 5634861638736528653, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
+        type: 3}
+      propertyPath: inputActionId
+      value: Cards/PageNext
       objectReference: {fileID: 0}
     - target: {fileID: 7136752755737282221, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
@@ -9156,6 +9171,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Previous
+      objectReference: {fileID: 0}
+    - target: {fileID: 5634861638736528653, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
+        type: 3}
+      propertyPath: inputActionId
+      value: Cards/PagePrevious
       objectReference: {fileID: 0}
     - target: {fileID: 7136752755737282221, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
