@@ -23,6 +23,10 @@ namespace Cgs.Decks
         private bool IsBlocked =>
             CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused;
 
+        private bool IsSelectedCardInDeck =>
+            CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null &&
+            editor.CardModels.Contains(CardViewer.Instance.SelectedCardModel);
+
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.CardsPagePrevious).performed += InputPagePrevious;
@@ -32,8 +36,8 @@ namespace Cgs.Decks
         private void Start()
         {
             CardViewer.Instance.buttonsPanel.gameObject.SetActive(true);
-            CardViewer.Instance.previousButton.onClick.AddListener(SelectResultsUp);
-            CardViewer.Instance.nextButton.onClick.AddListener(SelectResultsDown);
+            CardViewer.Instance.previousButton.onClick.AddListener(SelectPrevious);
+            CardViewer.Instance.nextButton.onClick.AddListener(SelectNext);
 
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
@@ -236,9 +240,17 @@ namespace Cgs.Decks
                 return;
 
             if (CardViewer.Instance != null && CardViewer.Instance.Zoom)
-                SelectResultsUp();
+                SelectPrevious();
             else
                 NavigateLeft();
+        }
+
+        private void SelectPrevious()
+        {
+            if (IsSelectedCardInDeck)
+                SelectEditorLeft();
+            else
+                SelectResultsUp();
         }
 
         [UsedImplicitly]
@@ -253,9 +265,17 @@ namespace Cgs.Decks
                 return;
 
             if (CardViewer.Instance != null && CardViewer.Instance.Zoom)
-                SelectResultsDown();
+                SelectNext();
             else
                 NavigateRight();
+        }
+
+        private void SelectNext()
+        {
+            if (IsSelectedCardInDeck)
+                SelectEditorRight();
+            else
+                SelectResultsDown();
         }
 
         [UsedImplicitly]
@@ -289,14 +309,14 @@ namespace Cgs.Decks
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
-                i++;
-                if (i == results.layoutArea.childCount)
+                var next = i + 1;
+                if (next == results.layoutArea.childCount)
                 {
                     results.IncrementPage();
-                    i = 0;
+                    next = 0;
                 }
 
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(next).gameObject);
                 return;
             }
 
@@ -320,14 +340,14 @@ namespace Cgs.Decks
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
-                i--;
-                if (i < 0)
+                var previous = i - 1;
+                if (previous < 0)
                 {
                     results.DecrementPage();
-                    i = results.layoutArea.childCount - 1;
+                    previous = results.layoutArea.childCount - 1;
                 }
 
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(previous).gameObject);
                 return;
             }
 
