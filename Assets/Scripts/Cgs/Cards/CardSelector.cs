@@ -261,10 +261,13 @@ namespace Cgs.Cards
 
         private void InputPagePrevious(InputAction.CallbackContext context)
         {
-            if (IsBlocked || (CardViewer.Instance != null && CardViewer.Instance.Zoom))
+            if (IsBlocked)
                 return;
 
-            PageLeft();
+            if (CardViewer.Instance != null && CardViewer.Instance.Zoom)
+                SelectLeft();
+            else
+                PageLeft();
         }
 
         [UsedImplicitly]
@@ -275,10 +278,13 @@ namespace Cgs.Cards
 
         private void InputPageNext(InputAction.CallbackContext context)
         {
-            if (IsBlocked || (CardViewer.Instance != null && CardViewer.Instance.Zoom))
+            if (IsBlocked)
                 return;
 
-            PageRight();
+            if (CardViewer.Instance != null && CardViewer.Instance.Zoom)
+                SelectRight();
+            else
+                PageRight();
         }
 
         [UsedImplicitly]
