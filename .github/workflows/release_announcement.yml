@@ -39,7 +39,7 @@ jobs:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
       - name: Bluesky Announcement
         if: github.ref == 'refs/heads/main'
-        uses: myConsciousness/bluesky-post@v5
+        uses: myConsciousness/bluesky-post@v6
         with:
           text:  ${{ steps.prepare.outputs.ANNOUNCEMENT }}
           identifier: ${{ secrets.BLUESKY_IDENTIFIER }}
