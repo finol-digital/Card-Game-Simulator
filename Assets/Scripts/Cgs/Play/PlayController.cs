@@ -744,10 +744,14 @@ namespace Cgs.Play
             if (cardModel.IsFacedown && cardModel.Value.IsBackFaceCard)
                 cardModel.IsFacedown = false;
 
+        private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)
+        {
+           if (cardModel == null)
+               return;
+
             // A card added over a card zone moves into that zone, which then applies its own add actions
             if (cardModel.MoveToOverlappingCardZone())
                 return;
-
             if (CgsNetManager.Instance.IsOnline && !cardModel.IsSpawned)
                 CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardZone, cardModel);
             else
