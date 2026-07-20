@@ -741,13 +741,11 @@ namespace Cgs.Play
 
         private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)
         {
+            if (cardModel == null)
+                return;
+
             if (cardModel.IsFacedown && cardModel.Value.IsBackFaceCard)
                 cardModel.IsFacedown = false;
-
-        private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)
-        {
-           if (cardModel == null)
-               return;
 
             // A card added over a card zone moves into that zone, which then applies its own add actions
             if (cardModel.MoveToOverlappingCardZone())
@@ -904,7 +902,7 @@ namespace Cgs.Play
             var zone = new GamePlayZoneParams
             {
                 Type = gamePlayZone.Type.ToString(),
-                Name = gamePlayZone.Name ?? string.Empty,
+                Name = gamePlayZone.Name,
                 Position = CardGameManager.PixelsPerInch *
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y),
                 Rotation = Quaternion.Euler(0, 0, gamePlayZone.Rotation),
