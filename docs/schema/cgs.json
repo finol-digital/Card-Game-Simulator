@@ -832,6 +832,12 @@
             }
           ]
         },
+        "defaultCardRotation": {
+          "type": "number",
+          "description": "When a Card enters the Game Play Zone, the Card will rotate to this angle in degrees",
+          "format": "float",
+          "default": 0.0
+        },
         "name": {
           "type": "string",
           "description": "Indicates the Game Play Zone's name"
@@ -845,9 +851,9 @@
           ]
         },
         "rotation": {
-          "type": "integer",
+          "type": "number",
           "description": "Indicates the Game Play Zone's rotation in degrees",
-          "format": "int32"
+          "format": "float"
         },
         "size": {
           "description": "Indicates the Game Play Zone's width and height in inches",
