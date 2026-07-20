@@ -192,6 +192,22 @@ namespace Cgs.Play
 
         public IEnumerable<CardZone> AllCardZones => playAreaCardZone.GetComponentsInChildren<CardZone>();
 
+        public CardZone FindCardZoneAt(Vector2 worldPosition)
+        {
+            foreach (var cardZone in AllCardZones)
+            {
+                if (cardZone == playAreaCardZone ||
+                    cardZone.Type is not (CardZoneType.Horizontal or CardZoneType.Vertical))
+                    continue;
+
+                var rectTransform = (RectTransform)cardZone.transform;
+                if (rectTransform.rect.Contains((Vector2)rectTransform.InverseTransformPoint(worldPosition)))
+                    return cardZone;
+            }
+
+            return null;
+        }
+
         public CardStack CurrentDeckStack { get; set; }
 
         // Solo play: which seat block the next deck load occupies (counts deck loads, not stacks)
@@ -725,9 +741,15 @@ namespace Cgs.Play
 
         private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)
         {
+            if (cardModel == null)
+                return;
+
             if (cardModel.IsFacedown && cardModel.Value.IsBackFaceCard)
                 cardModel.IsFacedown = false;
 
+            // A card added over a card zone moves into that zone, which then applies its own add actions
+            if (cardModel.MoveToOverlappingCardZone())
+                return;
             if (CgsNetManager.Instance.IsOnline && !cardModel.IsSpawned)
                 CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardZone, cardModel);
             else
@@ -880,7 +902,7 @@ namespace Cgs.Play
             var zone = new GamePlayZoneParams
             {
                 Type = gamePlayZone.Type.ToString(),
-                Name = gamePlayZone.Name ?? string.Empty,
+                Name = gamePlayZone.Name,
                 Position = CardGameManager.PixelsPerInch *
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y),
                 Rotation = Quaternion.Euler(0, 0, gamePlayZone.Rotation),

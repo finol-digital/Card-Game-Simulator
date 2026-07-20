@@ -232,6 +232,9 @@ namespace Cgs.CardGameView.Multiplayer
 
                 var stackDropArea = gameObject.GetOrAddComponent<StackDropArea>();
                 stackDropArea.DropHandler = this;
+
+                // Cards spawned over the network skip OnAdd, so the owner checks for card zone capture here
+                MoveToOverlappingCardZone();
             }
 
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -696,6 +699,29 @@ namespace Cgs.CardGameView.Multiplayer
             var cardZone = ParentCardZone;
             if (cardZone != null)
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
+        }
+
+        public bool MoveToOverlappingCardZone()
+        {
+            if (IsStatic || ToDelete || IsMovingToPlaceHolder || PlaceHolderCardZone != null)
+                return false;
+
+            if (PlayController.Instance == null ||
+                PlayController.Instance.playAreaCardZone.transform != transform.parent)
+                return false;
+
+            // For spawned cards, only the owner moves the card, and the move syncs through MoveCardToServer
+            if (IsSpawned && !IsOwner)
+                return false;
+
+            var cardZone = PlayController.Instance.FindCardZoneAt(transform.position);
+            if (cardZone == null)
+                return false;
+
+            PlaceHolderCardZone = cardZone;
+            cardZone.UpdateLayout(PlaceHolder, transform.position);
+            IsMovingToPlaceHolder = true;
+            return true;
         }
 
         private void UpdateCheckForPlaceHolder()

@@ -289,6 +289,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardModel == null)
                 return;
 
+            // A card added over a nested card zone belongs in that zone, not loose in this area
+            if (Type == CardZoneType.Area && cardModel.MoveToOverlappingCardZone())
+                return;
+
             if (Type == CardZoneType.Area)
                 cardModel.SnapToGrid();
 
