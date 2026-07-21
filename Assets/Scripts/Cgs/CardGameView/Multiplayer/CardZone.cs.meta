@@ -4,7 +4,9 @@ timeCreated: 1502481214
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - countLabelPrefab: {fileID: 7755028453825778640, guid: eb9a84c1b0b6d25479b907acb118cde9,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

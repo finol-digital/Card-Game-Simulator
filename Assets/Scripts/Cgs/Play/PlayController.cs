@@ -909,7 +909,8 @@ namespace Cgs.Play
                 Size = CardGameManager.PixelsPerInch *
                        new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y),
                 Face = gamePlayZone.Face.ToString(),
-                Action = cardAction.ToString()
+                Action = cardAction.ToString(),
+                DefaultCardRotation = gamePlayZone.DefaultCardRotation
             };
 
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
@@ -943,6 +944,7 @@ namespace Cgs.Play
                     cardZone.DefaultFace = facePreference;
                 if (Enum.TryParse(zone.Action, true, out CardAction cardAction))
                     cardZone.DefaultAction = cardAction;
+                cardZone.DefaultCardRotation = zone.DefaultCardRotation;
 
                 return playable;
             }
@@ -1044,6 +1046,7 @@ namespace Cgs.Play
             CardGameManager.Instance.Messenger.Prompt(RestartPrompt, Restart);
         }
 
+        [UsedImplicitly]
         public void BackToMainMenu()
         {
             StopNetworking();

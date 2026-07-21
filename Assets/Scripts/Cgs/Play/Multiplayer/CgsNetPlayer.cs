@@ -27,6 +27,7 @@ namespace Cgs.Play.Multiplayer
         public Vector2 Size;
         public string Face;
         public string Action;
+        public float DefaultCardRotation;
 #pragma warning restore S1104
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -38,6 +39,7 @@ namespace Cgs.Play.Multiplayer
             serializer.SerializeValue(ref Size);
             serializer.SerializeValue(ref Face);
             serializer.SerializeValue(ref Action);
+            serializer.SerializeValue(ref DefaultCardRotation);
         }
     }
 
@@ -101,6 +103,16 @@ namespace Cgs.Play.Multiplayer
         }
 
         private NetworkVariable<NetworkObjectReference> _currentDeck;
+
+        // True when a current deck reference is set, but its card stack has not (yet) spawned locally
+        public bool HasUnresolvedCurrentDeck
+        {
+            get
+            {
+                var currentDeckId = _currentDeck.Value.NetworkObjectId;
+                return currentDeckId != 0 && currentDeckId != ulong.MaxValue && CurrentDeck == null;
+            }
+        }
 
         public bool IsDeckShared
         {
@@ -423,6 +435,13 @@ namespace Cgs.Play.Multiplayer
         {
             if (PlayController.Instance != null && PlayController.Instance.drawer != null)
                 PlayController.Instance.drawer.RefreshCardStackDropdown();
+        }
+
+        // Server-only: un-references a despawning card stack, so the current deck does not go permanently stale
+        public void ClearCurrentDeck(ulong despawnedNetworkObjectId)
+        {
+            if (IsServer && _currentDeck.Value.NetworkObjectId == despawnedNetworkObjectId)
+                CurrentDeck = null;
         }
 
         public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position,
