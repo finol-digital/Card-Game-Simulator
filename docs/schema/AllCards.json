@@ -21,7 +21,7 @@
       },
       "backs": {
         "description": "List of backs for the Card. If blank, the default CardBackImage is used. If populated, each back must correspond to an id in <cardBackFaceImageUrls>. The empty string corresponds to the default CardBackImage.",
-        "type": "array"
+        "type": "array",
         "items": {
           "description": "*CardBackFaceImageUrl:Id*",
           "type": "string"
