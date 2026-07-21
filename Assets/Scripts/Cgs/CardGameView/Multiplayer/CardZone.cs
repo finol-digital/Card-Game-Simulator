@@ -225,10 +225,19 @@ namespace Cgs.CardGameView.Multiplayer
             _countLabel.text = "0";
         }
 
+        private bool _isCountDirty = true;
+
+        private void OnTransformChildrenChanged()
+        {
+            _isCountDirty = true;
+        }
+
         protected override void OnUpdatePlayable()
         {
-            if (_countLabel == null)
+            if (_countLabel == null || !_isCountDirty)
                 return;
+
+            _isCountDirty = false;
 
             var cardCount = 0;
             for (var i = 0; i < transform.childCount; i++)
@@ -246,7 +255,6 @@ namespace Cgs.CardGameView.Multiplayer
             if (countLabelTransform.GetSiblingIndex() != transform.childCount - 1)
                 countLabelTransform.SetAsLastSibling();
         }
-
         private IEnumerator WaitToAddMoveCardToServer()
         {
             while (CgsNetManager.Instance.LocalPlayer == null)
