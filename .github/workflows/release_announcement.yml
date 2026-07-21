@@ -39,8 +39,27 @@ jobs:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
       - name: Bluesky Announcement
         if: github.ref == 'refs/heads/main'
-        uses: myConsciousness/bluesky-post@v6
-        with:
-          text:  ${{ steps.prepare.outputs.ANNOUNCEMENT }}
-          identifier: ${{ secrets.BLUESKY_IDENTIFIER }}
-          password: ${{ secrets.BLUESKY_PASSWORD }}
+        shell: bash
+        env:
+          BLUESKY_IDENTIFIER: ${{ secrets.BLUESKY_IDENTIFIER }}
+          BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
+          ANNOUNCEMENT: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, urllib.request, datetime
+          identifier = os.environ['BLUESKY_IDENTIFIER']
+          password = os.environ['BLUESKY_PASSWORD']
+          text = os.environ['ANNOUNCEMENT']
+          session_body = json.dumps({'identifier': identifier, 'password': password}).encode()
+          req = urllib.request.Request('https://bsky.social/xrpc/com.atproto.server.createSession',
+            data=session_body, headers={'Content-Type': 'application/json'})
+          session = json.loads(urllib.request.urlopen(req).read())
+          token, did = session['accessJwt'], session['did']
+          now = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.000Z')
+          record = {'$type': 'app.bsky.feed.post', 'text': text, 'createdAt': now}
+          post_body = json.dumps({'repo': did, 'collection': 'app.bsky.feed.post', 'record': record}).encode()
+          req2 = urllib.request.Request('https://bsky.social/xrpc/com.atproto.repo.createRecord',
+            data=post_body, headers={'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'})
+          res = json.loads(urllib.request.urlopen(req2).read())
+          print('Posted to Bluesky:', res.get('uri', res))
+          EOF
