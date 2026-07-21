@@ -27,6 +27,7 @@ namespace Cgs.Play.Multiplayer
         public Vector2 Size;
         public string Face;
         public string Action;
+        public float DefaultCardRotation;
 #pragma warning restore S1104
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -38,6 +39,7 @@ namespace Cgs.Play.Multiplayer
             serializer.SerializeValue(ref Size);
             serializer.SerializeValue(ref Face);
             serializer.SerializeValue(ref Action);
+            serializer.SerializeValue(ref DefaultCardRotation);
         }
     }
 

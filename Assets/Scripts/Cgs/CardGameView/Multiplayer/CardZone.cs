@@ -32,10 +32,15 @@ namespace Cgs.CardGameView.Multiplayer
 
     public class CardZone : CgsNetPlayable, ICardContainer
     {
+        public GameObject countLabelPrefab;
+
         public CardZoneType type;
         public bool allowsFlip;
         public bool allowsRotation;
         public ScrollRect scrollRectContainer;
+
+        private Text _countLabel;
+        private int _countLabelCardCount = -1;
 
         public CardZoneType Type
         {
@@ -92,6 +97,21 @@ namespace Cgs.CardGameView.Multiplayer
         private CardAction _cardAction = CardAction.Move;
         private NetworkVariable<int> _cardActionNetworkVariable;
 
+        // 0 means cards keep their rotation when added, matching CardRotationDefault
+        public float DefaultCardRotation
+        {
+            get => IsSpawned ? _defaultCardRotationNetworkVariable.Value : _defaultCardRotation;
+            set
+            {
+                _defaultCardRotation = value;
+                if (IsSpawned)
+                    _defaultCardRotationNetworkVariable.Value = value;
+            }
+        }
+
+        private float _defaultCardRotation;
+        private NetworkVariable<float> _defaultCardRotationNetworkVariable;
+
         public bool DoesImmediatelyRelease { get; set; }
 
         public UnityAction OnLayout { get; set; }
@@ -105,6 +125,7 @@ namespace Cgs.CardGameView.Multiplayer
             _nameNetworkVariable = new NetworkVariable<CgsNetString>();
             _facePreferenceNetworkVariable = new NetworkVariable<int>();
             _cardActionNetworkVariable = new NetworkVariable<int>();
+            _defaultCardRotationNetworkVariable = new NetworkVariable<float>();
         }
 
         protected override void OnNetworkSpawnPlayable()
@@ -115,12 +136,14 @@ namespace Cgs.CardGameView.Multiplayer
                 _nameNetworkVariable.Value = _name;
                 _facePreferenceNetworkVariable.Value = (int)_facePreference;
                 _cardActionNetworkVariable.Value = (int)_cardAction;
+                _defaultCardRotationNetworkVariable.Value = _defaultCardRotation;
             }
 
             type = (CardZoneType)_typeNetworkVariable.Value;
             _name = _nameNetworkVariable.Value;
             _facePreference = (FacePreference)_facePreferenceNetworkVariable.Value;
             _cardAction = (CardAction)_cardActionNetworkVariable.Value;
+            _defaultCardRotation = _defaultCardRotationNetworkVariable.Value;
         }
 
         protected override void OnStartPlayable()
@@ -158,6 +181,8 @@ namespace Cgs.CardGameView.Multiplayer
             scrollRectContainer = PlayController.Instance.playArea;
             DoesImmediatelyRelease = true;
 
+            CreateCountLabel();
+
             OnAddCardActions.Add((cardZone, cardModel) =>
             {
                 cardModel.IsFacedown = cardZone.DefaultFace switch
@@ -168,9 +193,58 @@ namespace Cgs.CardGameView.Multiplayer
                 };
                 cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardZone.DefaultAction];
                 cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
+                if (cardZone.DefaultCardRotation != 0)
+                {
+                    // Set the transform directly so this rotation does not animate,
+                    // since MoveCardToServer may immediately read the final rotation from the transform
+                    cardModel.transform.localRotation = Quaternion.Euler(0, 0, cardZone.DefaultCardRotation);
+                    cardModel.Rotation = cardModel.transform.localRotation;
+                }
             });
 
             StartCoroutine(WaitToAddMoveCardToServer());
+        }
+
+        // Show the count of cards in this zone, like the count labels of card stacks and dice zones
+        private void CreateCountLabel()
+        {
+            if (countLabelPrefab == null)
+                return;
+
+            var countLabelGameObject = Instantiate(countLabelPrefab, transform);
+            // The label is not a card, so the layout group and the card raycasts must both ignore it
+            countLabelGameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = true;
+            var countLabelRectTransform = (RectTransform)countLabelGameObject.transform;
+            countLabelRectTransform.anchorMin = new Vector2(0.5f, 0);
+            countLabelRectTransform.anchorMax = new Vector2(0.5f, 0);
+            countLabelRectTransform.pivot = new Vector2(0.5f, 0);
+            countLabelRectTransform.anchoredPosition = new Vector2(0, -60);
+            countLabelRectTransform.sizeDelta = new Vector2(100, 60);
+            _countLabel = countLabelGameObject.GetComponent<Text>();
+            _countLabel.raycastTarget = false;
+            _countLabel.text = "0";
+        }
+
+        protected override void OnUpdatePlayable()
+        {
+            if (_countLabel == null)
+                return;
+
+            var cardCount = 0;
+            for (var i = 0; i < transform.childCount; i++)
+                if (transform.GetChild(i).TryGetComponent<CardModel>(out _))
+                    cardCount++;
+            if (cardCount != _countLabelCardCount)
+            {
+                _countLabelCardCount = cardCount;
+                _countLabel.text = cardCount.ToString();
+            }
+
+            // Cards in this zone are ordered by sibling index, which is synced across the network,
+            // so the label must stay last to keep card sibling indices consistent on all clients
+            var countLabelTransform = _countLabel.transform;
+            if (countLabelTransform.GetSiblingIndex() != transform.childCount - 1)
+                countLabelTransform.SetAsLastSibling();
         }
 
         private IEnumerator WaitToAddMoveCardToServer()
@@ -273,13 +347,14 @@ namespace Cgs.CardGameView.Multiplayer
             } && !card.IsBackFaceCard;
 
             var isCardShared = SharePreference.Share == CardGameManager.Current.DeckSharePreference;
+            var rotation = Quaternion.Euler(0, 0, DefaultCardRotation);
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardInZone(this, card.Id, Vector2.zero,
-                    Quaternion.identity, isFacedown, isCardShared);
+                    rotation, isFacedown, isCardShared);
             else
             {
                 var cardModel = PlayController.Instance.CreateCardModel(gameObject, card.Id, Vector2.zero,
-                    Quaternion.identity, isFacedown, isCardShared);
+                    rotation, isFacedown, isCardShared);
                 OnAdd(cardModel);
             }
         }
