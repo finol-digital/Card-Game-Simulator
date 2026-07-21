@@ -243,7 +243,17 @@ namespace Cgs.Play.Drawer
             if (selectedIndex >= 0 && selectedIndex < allCardStacks.Count)
                 cardStackDropdown.value = selectedIndex;
             else if (allCardStacks.Count > 0)
+            {
+                // The current deck is unset or its stack is gone, so fall back to the first stack and
+                // sync the current deck to it, since the current deck should always match this dropdown.
+                // Skip the sync while a new deck's card stack has not yet spawned locally.
                 cardStackDropdown.value = 0;
+                var localPlayer = CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline
+                    ? CgsNetManager.Instance.LocalPlayer
+                    : null;
+                if (localPlayer == null || !localPlayer.HasUnresolvedCurrentDeck)
+                    SetCurrentDeck(allCardStacks[0]);
+            }
 
             cardStackDropdown.RefreshShownValue();
 
@@ -263,18 +273,21 @@ namespace Cgs.Play.Drawer
             if (cardStackIndex < 0 || cardStackIndex >= allCardStacks.Count)
                 return;
 
-            var selectedStack = allCardStacks[cardStackIndex];
+            SetCurrentDeck(allCardStacks[cardStackIndex]);
+        }
 
+        private static void SetCurrentDeck(CardStack cardStack)
+        {
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline &&
                 CgsNetManager.Instance.LocalPlayer != null)
             {
-                var networkObject = selectedStack.GetComponent<NetworkObject>();
+                var networkObject = cardStack.GetComponent<NetworkObject>();
                 if (networkObject != null)
                     CgsNetManager.Instance.LocalPlayer.RequestSetCurrentDeck(networkObject);
             }
             else
             {
-                PlayController.Instance.CurrentDeckStack = selectedStack;
+                PlayController.Instance.CurrentDeckStack = cardStack;
             }
         }
 

@@ -646,6 +646,14 @@ namespace Cgs.CardGameView.Multiplayer
             IsTopFaceup = !IsTopFaceup;
         }
 
+        public override void OnNetworkDespawn()
+        {
+            if (IsServer)
+                foreach (var player in FindObjectsByType<CgsNetPlayer>(FindObjectsSortMode.None))
+                    player.ClearCurrentDeck(NetworkObjectId);
+            base.OnNetworkDespawn();
+        }
+
         public override void OnDestroy()
         {
             TopCard?.UnregisterDisplay(this);

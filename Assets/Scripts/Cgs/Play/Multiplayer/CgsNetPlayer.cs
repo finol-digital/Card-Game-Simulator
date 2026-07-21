@@ -104,6 +104,16 @@ namespace Cgs.Play.Multiplayer
 
         private NetworkVariable<NetworkObjectReference> _currentDeck;
 
+        // True when a current deck reference is set, but its card stack has not (yet) spawned locally
+        public bool HasUnresolvedCurrentDeck
+        {
+            get
+            {
+                var currentDeckId = _currentDeck.Value.NetworkObjectId;
+                return currentDeckId != 0 && currentDeckId != ulong.MaxValue && CurrentDeck == null;
+            }
+        }
+
         public bool IsDeckShared
         {
             get => _isDeckShared.Value;
@@ -425,6 +435,13 @@ namespace Cgs.Play.Multiplayer
         {
             if (PlayController.Instance != null && PlayController.Instance.drawer != null)
                 PlayController.Instance.drawer.RefreshCardStackDropdown();
+        }
+
+        // Server-only: un-references a despawning card stack, so the current deck does not go permanently stale
+        public void ClearCurrentDeck(ulong despawnedNetworkObjectId)
+        {
+            if (IsServer && _currentDeck.Value.NetworkObjectId == despawnedNetworkObjectId)
+                CurrentDeck = null;
         }
 
         public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position,

@@ -1046,6 +1046,7 @@ namespace Cgs.Play
             CardGameManager.Instance.Messenger.Prompt(RestartPrompt, Restart);
         }
 
+        [UsedImplicitly]
         public void BackToMainMenu()
         {
             StopNetworking();
