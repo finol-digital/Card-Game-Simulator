@@ -1,2 +1,3 @@
 ## What's Changed
-* Move Menu scrolling, deck loading, and card image fixes
+* Added cards pagination and card navigation while zoomed in the Deck Editor
+* Auto-move cards and card counts for play area zones
