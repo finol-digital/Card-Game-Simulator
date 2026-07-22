@@ -42,6 +42,7 @@ MonoBehaviour:
   m_BundleRedirectLimit: -1
   m_SharedBundleSettings: 0
   m_SharedBundleSettingsCustomGroupIndex: 0
+  m_simulatedLoadDelay: 0.1
   m_ContiguousBundles: 1
   m_StripUnityVersionFromBundleBuild: 0
   m_DisableVisibleSubAssetRepresentations: 0
