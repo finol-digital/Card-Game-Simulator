@@ -173,6 +173,40 @@ namespace Tests.PlayMode
 
             Directory.Delete(game.GameDirectoryPath, true);
         }
+
+        [Test]
+        public void LoadCards_NormalizesJsonLineBreakTokensInStringProperties()
+        {
+            var game = new UnityCardGame(null, "load_line_break_tokens_test_" + Guid.NewGuid())
+            {
+                CardProperties = new List<PropertyDef>
+                {
+                    new("rulesText", PropertyType.String)
+                }
+            };
+
+            if (Directory.Exists(game.GameDirectoryPath))
+                Directory.Delete(game.GameDirectoryPath, true);
+            Directory.CreateDirectory(game.GameDirectoryPath);
+
+            var allCards = new JArray
+            {
+                new JObject
+                {
+                    ["id"] = "line_break_card",
+                    ["name"] = "Line Break Card",
+                    ["set"] = Set.DefaultCode,
+                    ["rulesText"] = "One[br]Two<br>Three<br/>Four<br />Five"
+                }
+            };
+
+            File.WriteAllText(game.CardsFilePath, allCards.ToString(Formatting.None));
+            game.LoadCards(game.CardsFilePath, Set.DefaultCode);
+
+            Assert.IsTrue(game.Cards.TryGetValue("line_break_card", out var lineBreakCard));
+            Assert.AreEqual("One\nTwo\nThree\nFour\nFive", lineBreakCard.GetPropertyValueString("rulesText"));
+
+            Directory.Delete(game.GameDirectoryPath, true);
+        }
     }
 }
-
