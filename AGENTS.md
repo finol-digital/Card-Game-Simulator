@@ -26,9 +26,14 @@ Builds and tests run through the [Unity CLI](https://docs.unity.com/en-us/unity-
 
 **One-time setup:**
 ```bash
-# Install the Unity CLI (macOS/Linux/Windows PowerShell), then verify with `unity --version`
+# Install the Unity CLI (macOS/Linux), then verify with `unity --version`
 curl -fsSL https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.sh | UNITY_CLI_CHANNEL=beta bash
-
+```
+```powershell
+# Install the Unity CLI (Windows PowerShell), then verify with `unity --version`
+$env:UNITY_CLI_CHANNEL = "beta"; irm https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.ps1 | iex
+```
+```bash
 unity install <version>     # Install the Editor version this project uses (see ProjectSettings/ProjectVersion.txt)
 ```
 
