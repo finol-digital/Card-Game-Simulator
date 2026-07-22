@@ -33,5 +33,9 @@ jobs:
       - name: Install Unity Editor
         run: |
           UNITY_VERSION=$(awk '/m_EditorVersion:/ {print $2}' ProjectSettings/ProjectVersion.txt)
+          if [[ -z "$UNITY_VERSION" ]]; then
+            echo "m_EditorVersion not found in ProjectSettings/ProjectVersion.txt" >&2
+            exit 1
+          fi
           echo "Installing Unity $UNITY_VERSION"
           unity install "$UNITY_VERSION"
