@@ -1045,7 +1045,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                 if (listValueBuilder.Length > 0)
                                     listValueBuilder.Append(EnumDef.Delimiter);
                                 jObject = jToken as JObject;
-                                listValueBuilder.Append(NormalizeJsonLineBreaks(jObject?.Value<string>(CardPropertyIdentifier)));
+                                listValueBuilder.Append(NormalizeJsonLineBreaks(jObject?.Value<string>(CardPropertyIdentifier) ?? string.Empty));
                             }
 
                         newProperty.Value = listValueBuilder.ToString();
@@ -1083,7 +1083,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         break;
                     case PropertyType.ObjectEnum:
                         jObject = cardJToken[identifier] as JObject;
-                        newProperty.Value = NormalizeJsonLineBreaks(jObject?.Value<string>(CardPropertyIdentifier));
+                        newProperty.Value = NormalizeJsonLineBreaks(jObject?.Value<string>(CardPropertyIdentifier) ?? string.Empty);
                         cardProperties[key] = newProperty;
                         break;
                     case PropertyType.Object:
@@ -1106,7 +1106,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                 {
                                     if (listValueBuilder.Length > 0)
                                         listValueBuilder.Append(EnumDef.Delimiter);
-                                    listValueBuilder.Append(NormalizeJsonLineBreaks(jToken.Value<string>()));
+                                    listValueBuilder.Append(NormalizeJsonLineBreaks(jToken.Value<string>() ?? string.Empty));
                                 }
 
                                 if (listValueBuilder.Length == 0 && listTokens is JValue)
@@ -1131,7 +1131,7 @@ namespace FinolDigital.Cgs.Json.Unity
                             {
                                 if (listValueBuilder.Length > 0)
                                     listValueBuilder.Append(EnumDef.Delimiter);
-                                listValueBuilder.Append(NormalizeJsonLineBreaks(token));
+                                listValueBuilder.Append(NormalizeJsonLineBreaks(token ?? string.Empty));
                             }
                         }
 
@@ -1167,7 +1167,7 @@ namespace FinolDigital.Cgs.Json.Unity
                             identifier = segments[^1];
                         }
 
-                        newProperty.Value = NormalizeJsonLineBreaks(cardJToken?.Value<string>(identifier));
+                        newProperty.Value = NormalizeJsonLineBreaks(cardJToken?.Value<string>(identifier) ?? string.Empty);
                         cardProperties[key] = newProperty;
                         break;
                 }
