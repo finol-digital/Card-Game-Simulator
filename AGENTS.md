@@ -33,18 +33,17 @@ unity install <version>     # Install the Editor version this project uses (see 
 ```
 
 ### Unity Editor Commands
- - `unity open .` - Open this project in the correct Editor version (the Editor must be running for `unity command` to work)
+ - `unity open . --args "-automated"` - Open this project in the correct Editor version (the Editor must be running for `unity command` to work)
  - `unity command <name>` - Send a command to the running Editor; auto-discovers the project from the current directory (or pass `--project-path=<path>`)
- - `unity command build --target StandaloneWindows64 --outputPath Builds/Windows --confirm` - Start an async Player build
- - `unity command build_status` - Poll the status/report of the current build
  - `unity command list_build_targets` - List known build targets
+ - `unity command build --target StandaloneWindows64 --outputPath Builds/Windows --confirm` - Start an async Windows Player build
+ - `unity command build_status` - Poll the status/report of the current build
  - `unity command recompile` - Force a script recompile (poll with `unity command recompile_status`)
 
 ### Testing Commands
  - `unity command list_tests --mode playmode` - List available tests without running them (`--mode all|editor|playmode`)
- - `unity command run_tests --mode playmode` - Run the PlayMode test suite in `Assets/Tests/PlayMode/`
- - `unity command run_tests --mode playmode --filter <pattern>` - Run tests matching a case-insensitive partial name match (`--filter_type testName|assembly|category`)
  - `unity command run_tests --mode playmode --async_tests` - Start tests without blocking; poll with `unity command test_status`
+ - `unity command run_tests --mode playmode --filter <pattern>` - Run tests matching a case-insensitive partial name match (`--filter_type testName|assembly|category`)
  - `unity command cancel_tests` - Cancel running tests
  - Default test timeout is 300 seconds; override with `--timeout <seconds>`
 
@@ -87,7 +86,7 @@ All pull requests must follow these rules exactly:
 1. **Branch**: Always open PRs from `develop` to `main`.
 2. **Description length**: The PR description must be under 500 characters.
 3. **Audience**: Descriptions are used as release notes for end users. Write in simple, plain language — not developer jargon.
-4. **Format**: Use exactly this format, replacing the placeholder bullets with meaningful, user-facing changes. Remove any placeholder text before submitting:
+4. **Format**: Use exactly this format, replacing the placeholder bullets with meaningful, user-facing changes. Remove any placeholder text before submitting and do not include "Generated with Claude Code":
 
 ```markdown
 ## What's Changed
