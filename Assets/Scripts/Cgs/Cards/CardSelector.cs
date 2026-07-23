@@ -134,126 +134,54 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SelectDown()
         {
-            if (IsBlocked || EventSystem.current.alreadySelecting)
-                return;
-
-            if (results.layoutArea.childCount < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = 0; i < results.layoutArea.childCount; i++)
-            {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                i += results.CardsPerRow;
-                if (i >= results.layoutArea.childCount)
-                {
-                    results.IncrementPage();
-                    i = 0;
-                }
-
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                FocusScrollRectOn(i);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            FocusScrollRectOn(0);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
+            Select(results.CardsPerRow);
         }
 
         [UsedImplicitly]
         public void SelectUp()
         {
-            if (IsBlocked || EventSystem.current.alreadySelecting)
-                return;
-
-            if (results.layoutArea.childCount < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = results.layoutArea.childCount - 1; i >= 0; i--)
-            {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                i -= results.CardsPerRow;
-                if (i < 0)
-                {
-                    results.DecrementPage();
-                    i = results.layoutArea.childCount - 1;
-                }
-
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                FocusScrollRectOn(i);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            FocusScrollRectOn(0);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
+            Select(-results.CardsPerRow);
         }
 
         [UsedImplicitly]
         public void SelectLeft()
         {
-            if (IsBlocked || EventSystem.current.alreadySelecting)
-                return;
-
-            if (results.layoutArea.childCount < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = results.layoutArea.childCount - 1; i >= 0; i--)
-            {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                i--;
-                if (i < 0)
-                {
-                    results.DecrementPage();
-                    i = results.layoutArea.childCount - 1;
-                }
-
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                FocusScrollRectOn(i);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            FocusScrollRectOn(0);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
+            Select(-1);
         }
 
         [UsedImplicitly]
         public void SelectRight()
         {
+            Select(1);
+        }
+
+        private void Select(int step)
+        {
             if (IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
-            if (results.layoutArea.childCount < 1)
+            var childCount = results.layoutArea.childCount;
+            if (childCount < 1)
             {
                 EventSystem.current.SetSelectedGameObject(null);
                 return;
             }
 
-            for (var i = 0; i < results.layoutArea.childCount; i++)
+            var forward = step > 0;
+            for (var i = forward ? 0 : childCount - 1; forward ? i < childCount : i >= 0; i += forward ? 1 : -1)
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
-                i++;
-                if (i == results.layoutArea.childCount)
+                i += step;
+                if (i >= childCount)
                 {
                     results.IncrementPage();
                     i = 0;
+                }
+                else if (i < 0)
+                {
+                    results.DecrementPage();
+                    i = childCount - 1;
                 }
 
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
