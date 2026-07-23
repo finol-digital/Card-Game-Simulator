@@ -198,8 +198,8 @@ namespace Cgs.Decks
                 return;
             }
 
-            editor.scrollRect.verticalNormalizedPosition = 1;
             EventSystem.current.SetSelectedGameObject(editorCardModels[0].gameObject);
+            editor.FocusScrollRectOn(editorCardModels[0]);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
@@ -228,8 +228,8 @@ namespace Cgs.Decks
                 return;
             }
 
-            editor.scrollRect.verticalNormalizedPosition = 0;
             EventSystem.current.SetSelectedGameObject(editorCardModels[^1].gameObject);
+            editor.FocusScrollRectOn(editorCardModels[^1]);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }

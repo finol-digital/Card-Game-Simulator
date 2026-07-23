@@ -44,7 +44,7 @@ $Solution    = Join-Path $repoRoot 'Card-Game-Simulator.sln'
 $ExcludedPatterns = @('*/Assets/Plugins/*', '*/docs/*', '*.css', '*.scss', '*.sass')
 
 # In hook mode stdout must contain ONLY the final JSON, so route progress to stderr.
-function Note([string]$msg) {
+function Show-Note([string]$msg) {
     if ($Hook) { [Console]::Error.WriteLine($msg) } else { Write-Host $msg }
 }
 
@@ -61,7 +61,7 @@ if ($Hook -and $hookInput -and $hookInput.stop_hook_active) { exit 0 }
 
 function Confirm-Analyzer {
     if (Test-Path $AnalyzerDll) { return }
-    Note "Fetching SonarAnalyzer.CSharp $AnalyzerVersion ..."
+    Show-Note "Fetching SonarAnalyzer.CSharp $AnalyzerVersion ..."
     New-Item -ItemType Directory -Force -Path $AnalyzerDir | Out-Null
     $tmp = Join-Path $AnalyzerDir 'sonar.nupkg'
     $url = "https://api.nuget.org/v3-flatcontainer/sonaranalyzer.csharp/$AnalyzerVersion/sonaranalyzer.csharp.$AnalyzerVersion.nupkg"
@@ -120,7 +120,7 @@ function Test-Excluded([string]$path) {
 # --- main -------------------------------------------------------------------
 
 if (-not (Test-Path $Solution)) {
-    Note "Sonar scan skipped: Card-Game-Simulator.sln not found. Generate it from Unity (Assets > Open C# Project, or RiderScriptEditor.SyncSolution)."
+    Show-Note "Sonar scan skipped: Card-Game-Simulator.sln not found. Generate it from Unity (Assets > Open C# Project, or RiderScriptEditor.SyncSolution)."
     exit 0
 }
 
@@ -128,13 +128,13 @@ $changedLines = Get-ChangedLines
 $changedCs = @($changedLines.Keys | Where-Object { $_ -like '*.cs' -and -not (Test-Excluded $_) })
 
 if (-not $All -and $changedCs.Count -eq 0) {
-    Note "No changed C# files to scan."
+    Show-Note "No changed C# files to scan."
     exit 0
 }
 
 Confirm-Analyzer
 
-Note "Running local Sonar analysis (dotnet build)..."
+Show-Note "Running local Sonar analysis (dotnet build)..."
 $buildOutput = & dotnet build $Solution -v q -clp:NoSummary --tl:off 2>&1
 
 $regex = [regex]'\((?<line>\d+),\d+\):\s+warning\s+(?<rule>S\d+):\s+(?<msg>.+?)\s+\['
@@ -161,7 +161,7 @@ foreach ($line in $buildOutput) {
 $findings = @($findings | Sort-Object File, Line, Rule -Unique)
 
 if ($findings.Count -eq 0) {
-    Note "No Sonar issues in scanned code."
+    Show-Note "No Sonar issues in scanned code."
     exit 0
 }
 
