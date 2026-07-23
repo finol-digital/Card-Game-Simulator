@@ -99,6 +99,9 @@ All pull requests must follow these rules exactly:
 - Second user-facing change
 ```
 
+5. **Monitor**: After creating a pull request, monitor its status checks (e.g. `gh pr checks <number> --watch`) until they all pass. If any check fails (unit tests, SonarQube Quality Gate, security checks, etc.), investigate the failure, fix the underlying issues, and push the fixes to the PR branch. Repeat until all checks pass.
+6. **Protected files**: Never modify files in the `.github` folder. If fixing a failing check would require changing anything in `.github` (workflows, actions configuration, etc.), stop and notify the maintainer instead of making the change.
+
 ## Resources
 - Unity Documentation: https://docs.unity3d.com/
 - Unity CLI: https://docs.unity.com/en-us/unity-cli
