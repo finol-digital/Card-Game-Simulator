@@ -142,7 +142,8 @@ namespace Cgs.CardGameView.Viewer
             }
         }
 
-        private int SelectedPropertyIndex
+        [UsedImplicitly]
+        public int SelectedPropertyIndex
         {
             get => _selectedPropertyIndex;
             set

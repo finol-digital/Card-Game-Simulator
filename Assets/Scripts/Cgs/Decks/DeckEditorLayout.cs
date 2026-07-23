@@ -14,7 +14,7 @@ namespace Cgs.Decks
         private const float SearchAreaLandscapeWidth = 500f;
         private const float DeckLabelXOffset = -525;
 
-        public bool IsPortrait => ((RectTransform)transform).rect.width < 1200f;
+        private bool IsPortrait => ((RectTransform)transform).rect.width < 1200f;
 
         public RectTransform deckLabelContainer;
         public RectTransform deckLabel;
