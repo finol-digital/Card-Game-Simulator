@@ -33,6 +33,8 @@ namespace Cgs.Decks
         public const float CardPrefabHeight = 350f;
         public const float CardPrefabWidth = 250f;
         public const float CardZonePrefabSpacing = -225f;
+        public const float VerticalLayoutContentWidthDelta = -25f;
+        public const int HorizontalLayoutContentBottomPadding = 85;
 
         [FormerlySerializedAs("cardZonePrefab")]
         public GameObject cardZoneVerticalPrefab;
@@ -121,6 +123,9 @@ namespace Cgs.Decks
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
                                   CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused;
 
+        // false: horizontal card zones with a vertical scrollbar; true: vertical card zones with a horizontal scrollbar
+        private bool _isHorizontalLayout;
+
         private void OnEnable()
         {
             // CardViewer is already in the scene
@@ -148,7 +153,7 @@ namespace Cgs.Decks
         public void Reset()
         {
             ClearCards();
-            ConsolidateHorizontal();
+            Consolidate();
         }
 
         private void ClearCards()
@@ -156,10 +161,19 @@ namespace Cgs.Decks
             foreach (var cardZone in CardZones)
                 cardZone.transform.DestroyAllChildren();
             scrollRect.horizontalNormalizedPosition = 0;
+            scrollRect.verticalNormalizedPosition = 1;
 
             CardViewer.Instance.IsVisible = false;
             SavedDeck = null;
             UpdateDeckStats();
+        }
+
+        private void Consolidate()
+        {
+            if (_isHorizontalLayout)
+                ConsolidateVertical();
+            else
+                ConsolidateHorizontal();
         }
 
         private void ConsolidateVertical()
@@ -341,13 +355,13 @@ namespace Cgs.Decks
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
             cardModel.DefaultAction = DestroyCardModel;
 
-            ConsolidateHorizontal();
+            Consolidate();
             UpdateDeckStats();
         }
 
         private void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
         {
-            ConsolidateHorizontal();
+            Consolidate();
             UpdateDeckStats();
         }
 
@@ -360,7 +374,7 @@ namespace Cgs.Decks
             Destroy(cardModel.gameObject);
             CardViewer.Instance.IsVisible = false;
 
-            ConsolidateHorizontal();
+            Consolidate();
             UpdateDeckStats();
         }
 
@@ -370,7 +384,14 @@ namespace Cgs.Decks
                 return;
 
             var cardZoneIndex = CardZones.IndexOf(cardModel.ParentCardZone);
-            if (cardZoneIndex >= 0 && cardZoneIndex < CardZones.Count)
+            if (cardZoneIndex < 0 || cardZoneIndex >= CardZones.Count)
+                return;
+
+            if (_isHorizontalLayout)
+                scrollRect.horizontalNormalizedPosition = CardZones.Count > 1
+                    ? cardZoneIndex / (CardZones.Count - 1f)
+                    : 0f;
+            else
                 scrollRect.verticalNormalizedPosition = CardZones.Count > 1
                     ? 1 - cardZoneIndex / (CardZones.Count - 1f)
                     : 1f;
@@ -440,7 +461,10 @@ namespace Cgs.Decks
                 AddCard((UnityCard)card);
             SavedDeck = deck;
             UpdateDeckStats();
-            scrollRect.verticalNormalizedPosition = 1;
+            if (_isHorizontalLayout)
+                scrollRect.horizontalNormalizedPosition = 0;
+            else
+                scrollRect.verticalNormalizedPosition = 1;
         }
 
         private void InputSave(InputAction.CallbackContext callbackContext)
@@ -470,18 +494,71 @@ namespace Cgs.Decks
             if (IsBlocked)
                 return;
 
-            Sort();
+            ToggleLayout();
         }
 
         [UsedImplicitly]
-        public void Sort()
+        public void ToggleLayout()
         {
-            var sortedDeck = CurrentDeck;
-            sortedDeck.Sort();
+            _isHorizontalLayout = !_isHorizontalLayout;
+            ApplyLayout();
+        }
+
+        private void ApplyLayout()
+        {
+            var cards = CardModels.Select(cardModel => cardModel.Value).ToList();
+
             foreach (var cardZone in CardZones)
-                cardZone.transform.DestroyAllChildren();
-            foreach (var card in sortedDeck.Cards)
-                AddCard((UnityCard)card);
+                Destroy(cardZone.gameObject);
+            CardZones.Clear();
+
+            scrollRect.horizontal = _isHorizontalLayout;
+            scrollRect.vertical = !_isHorizontalLayout;
+            if (scrollRect.horizontalScrollbar != null)
+                scrollRect.horizontalScrollbar.gameObject.SetActive(_isHorizontalLayout);
+            if (scrollRect.verticalScrollbar != null)
+                scrollRect.verticalScrollbar.gameObject.SetActive(!_isHorizontalLayout);
+
+            var layoutGroup = layoutContent.GetComponent<HorizontalOrVerticalLayoutGroup>();
+            if (layoutGroup != null)
+                DestroyImmediate(layoutGroup);
+
+            if (_isHorizontalLayout)
+            {
+                layoutContent.anchorMin = Vector2.zero;
+                layoutContent.anchorMax = Vector2.up;
+                layoutContent.pivot = new Vector2(0, 0.5f);
+                layoutContent.sizeDelta = new Vector2(CardZoneWidth, 0);
+                layoutContent.anchoredPosition = Vector2.zero;
+                var horizontalLayoutGroup = layoutContent.gameObject.AddComponent<HorizontalLayoutGroup>();
+                horizontalLayoutGroup.padding = new RectOffset(0, 0, 0, HorizontalLayoutContentBottomPadding);
+                horizontalLayoutGroup.childControlWidth = false;
+                horizontalLayoutGroup.childControlHeight = true;
+                horizontalLayoutGroup.childForceExpandWidth = true;
+                horizontalLayoutGroup.childForceExpandHeight = false;
+            }
+            else
+            {
+                layoutContent.anchorMin = Vector2.up;
+                layoutContent.anchorMax = Vector2.one;
+                layoutContent.pivot = new Vector2(0.5f, 1);
+                layoutContent.sizeDelta = new Vector2(VerticalLayoutContentWidthDelta, CardZoneHeight);
+                layoutContent.anchoredPosition = Vector2.zero;
+                var verticalLayoutGroup = layoutContent.gameObject.AddComponent<VerticalLayoutGroup>();
+                verticalLayoutGroup.childControlWidth = true;
+                verticalLayoutGroup.childControlHeight = false;
+                verticalLayoutGroup.childForceExpandWidth = false;
+                verticalLayoutGroup.childForceExpandHeight = true;
+            }
+
+            Consolidate();
+            foreach (var card in cards)
+                AddCard(card);
+
+            if (_isHorizontalLayout)
+                scrollRect.horizontalNormalizedPosition = 0;
+            else
+                scrollRect.verticalNormalizedPosition = 1;
         }
 
         private void InputFocus(InputAction.CallbackContext callbackContext)
