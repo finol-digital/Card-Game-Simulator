@@ -521,7 +521,11 @@ namespace Cgs.Decks
 
             var layoutGroup = layoutContent.GetComponent<HorizontalOrVerticalLayoutGroup>();
             if (layoutGroup != null)
-                DestroyImmediate(layoutGroup);
+            {
+                // Disable before the deferred Destroy so the old group cannot fight the new one this frame
+                layoutGroup.enabled = false;
+                Destroy(layoutGroup);
+            }
 
             if (_isHorizontalLayout)
             {
@@ -552,8 +556,20 @@ namespace Cgs.Decks
             }
 
             Consolidate();
+
+            // Rebuild card models directly and consolidate once at the end, rather than
+            // going through AddCard, which consolidates per-card and would be O(n^2)
+            var cardZoneTransform = CardZones.Last().transform;
             foreach (var card in cards)
-                AddCard(card);
+            {
+                var cardModel = Instantiate(cardModelPrefab, cardZoneTransform).GetOrAddComponent<CardModel>();
+                cardModel.Value = card;
+                cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
+                cardModel.DefaultAction = DestroyCardModel;
+            }
+
+            Consolidate();
+            UpdateDeckStats();
 
             if (_isHorizontalLayout)
                 scrollRect.horizontalNormalizedPosition = 0;
