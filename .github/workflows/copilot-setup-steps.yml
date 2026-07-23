@@ -1,0 +1,41 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          large-packages: false
+      - name: Install Unity CLI
+        run: |
+          curl -fsSL https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.sh | UNITY_CLI_CHANNEL=beta bash
+          echo "$HOME/.unity/bin" >> "$GITHUB_PATH"
+      - name: Verify Unity CLI
+        run: unity --version
+      - name: Install Unity Editor
+        run: |
+          UNITY_VERSION=$(awk '/m_EditorVersion:/ {print $2}' ProjectSettings/ProjectVersion.txt)
+          if [[ -z "$UNITY_VERSION" ]]; then
+            echo "m_EditorVersion not found in ProjectSettings/ProjectVersion.txt" >&2
+            exit 1
+          fi
+          echo "Installing Unity $UNITY_VERSION"
+          unity install "$UNITY_VERSION"
