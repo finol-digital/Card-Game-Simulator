@@ -62,8 +62,7 @@ namespace Cgs.Cards
 
         private void OnEnable()
         {
-            Instantiate(cardViewerPrefab);
-            CardViewer.Instance.Mode = CardViewerMode.Expanded;
+            // CardViewer is already in the scene
             CardGameManager.Instance.OnSceneActions.Add(ResetBannerCardsAndButtons);
 
             InputSystem.actions.FindAction(Tags.CardsSort).performed += InputCardsSort;
