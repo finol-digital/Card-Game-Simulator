@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
@@ -31,5 +33,9 @@ jobs:
       - name: Install Unity Editor
         run: |
           UNITY_VERSION=$(awk '/m_EditorVersion:/ {print $2}' ProjectSettings/ProjectVersion.txt)
+          if [[ -z "$UNITY_VERSION" ]]; then
+            echo "m_EditorVersion not found in ProjectSettings/ProjectVersion.txt" >&2
+            exit 1
+          fi
           echo "Installing Unity $UNITY_VERSION"
           unity install "$UNITY_VERSION"
