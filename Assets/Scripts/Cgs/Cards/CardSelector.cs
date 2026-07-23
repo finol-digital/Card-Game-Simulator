@@ -134,13 +134,13 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SelectDown()
         {
-            Select(results.CardsPerRow);
+            Select(Mathf.Max(1, results.CardsPerRow));
         }
 
         [UsedImplicitly]
         public void SelectUp()
         {
-            Select(-results.CardsPerRow);
+            Select(-Mathf.Max(1, results.CardsPerRow));
         }
 
         [UsedImplicitly]
@@ -157,7 +157,7 @@ namespace Cgs.Cards
 
         private void Select(int step)
         {
-            if (IsBlocked || EventSystem.current.alreadySelecting)
+            if (step == 0 || IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
             var childCount = results.layoutArea.childCount;
@@ -176,12 +176,20 @@ namespace Cgs.Cards
                 if (i >= childCount)
                 {
                     results.IncrementPage();
+                    childCount = results.layoutArea.childCount;
                     i = 0;
                 }
                 else if (i < 0)
                 {
                     results.DecrementPage();
+                    childCount = results.layoutArea.childCount;
                     i = childCount - 1;
+                }
+
+                if (i < 0 || i >= childCount)
+                {
+                    EventSystem.current.SetSelectedGameObject(null);
+                    return;
                 }
 
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
