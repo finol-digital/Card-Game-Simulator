@@ -108,6 +108,15 @@ namespace Cgs.Cards
             CardGameManager.Instance.OnSceneActions.Add(ResetPlaceholderText);
         }
 
+        private void ResizeGridCells()
+        {
+            if (layoutGroup is not GridLayoutGroup gridLayoutGroup)
+                return;
+
+            var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
+            gridLayoutGroup.cellSize = cardSize * CardGameManager.PixelsPerInch;
+        }
+
         private void Start()
         {
             UpdateSearchResultsPanel();
@@ -163,6 +172,9 @@ namespace Cgs.Cards
         // Public to allow the layout classes to refresh on layout change
         public void UpdateSearchResultsPanel()
         {
+            // Cells must resize before CardsPerRow and CardsPerPage read the cell size
+            ResizeGridCells();
+
             layoutArea.DestroyAllChildren();
 
             for (var i = 0;
