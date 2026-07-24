@@ -204,7 +204,7 @@ namespace Cgs.Decks
             if (IsSelectedCardInDeck)
                 SelectEditorPrevious(1);
             else
-                SelectResultsUp();
+                SelectResultsLeft();
         }
 
         [UsedImplicitly]
@@ -229,7 +229,7 @@ namespace Cgs.Decks
             if (IsSelectedCardInDeck)
                 SelectEditorNext(1);
             else
-                SelectResultsDown();
+                SelectResultsRight();
         }
 
         [UsedImplicitly]
@@ -240,74 +240,74 @@ namespace Cgs.Decks
 
         private void SelectResultsLeft()
         {
-            results.DecrementPage();
+            SelectResults(-1);
         }
 
         private void SelectResultsRight()
         {
-            results.IncrementPage();
+            SelectResults(1);
         }
 
         private void SelectResultsDown()
         {
-            if (IsBlocked || EventSystem.current.alreadySelecting)
-                return;
-
-            if (results.layoutArea.childCount < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = 0; i < results.layoutArea.childCount; i++)
-            {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                var next = i + 1;
-                if (next == results.layoutArea.childCount)
-                {
-                    results.IncrementPage();
-                    next = 0;
-                }
-
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(next).gameObject);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
+            SelectResults(Mathf.Max(1, results.CardsPerRow));
         }
 
         private void SelectResultsUp()
         {
-            if (IsBlocked || EventSystem.current.alreadySelecting)
+            SelectResults(-Mathf.Max(1, results.CardsPerRow));
+        }
+
+        private void SelectResults(int step)
+        {
+            if (step == 0 || IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
-            if (results.layoutArea.childCount < 1)
+            var childCount = results.layoutArea.childCount;
+            if (childCount < 1)
             {
                 EventSystem.current.SetSelectedGameObject(null);
                 return;
             }
 
-            for (var i = results.layoutArea.childCount - 1; i >= 0; i--)
+            var selectedIndex = -1;
+            for (var i = 0; i < childCount; i++)
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
-                var previous = i - 1;
-                if (previous < 0)
-                {
-                    results.DecrementPage();
-                    previous = results.layoutArea.childCount - 1;
-                }
+                selectedIndex = i;
+                break;
+            }
 
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(previous).gameObject);
+            if (selectedIndex < 0)
+            {
+                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+                if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
+                    CardViewer.Instance.IsVisible = true;
                 return;
             }
 
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
+            var target = selectedIndex + step;
+            if (target >= childCount)
+            {
+                results.IncrementPage();
+                childCount = results.layoutArea.childCount;
+                target = 0;
+            }
+            else if (target < 0)
+            {
+                results.DecrementPage();
+                childCount = results.layoutArea.childCount;
+                target = childCount - 1;
+            }
+
+            if (target < 0 || target >= childCount)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                return;
+            }
+
+            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(target).gameObject);
         }
 
         private void OnDisable()

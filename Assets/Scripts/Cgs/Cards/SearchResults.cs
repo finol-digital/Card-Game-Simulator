@@ -104,8 +104,18 @@ namespace Cgs.Cards
         private void OnEnable()
         {
             CardSearcher.SearchCallback = ShowResults;
+            CardGameManager.Instance.OnSceneActions.Add(ResizeGridCells);
             CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
             CardGameManager.Instance.OnSceneActions.Add(ResetPlaceholderText);
+        }
+
+        private void ResizeGridCells()
+        {
+            if (layoutGroup is not GridLayoutGroup gridLayoutGroup)
+                return;
+
+            var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
+            gridLayoutGroup.cellSize = cardSize * CardGameManager.PixelsPerInch;
         }
 
         private void Start()
