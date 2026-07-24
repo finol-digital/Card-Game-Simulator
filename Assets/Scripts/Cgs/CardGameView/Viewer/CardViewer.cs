@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using System.Linq;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play;
 using FinolDigital.Cgs.Json;
@@ -461,9 +462,8 @@ namespace Cgs.CardGameView.Viewer
 
         public void SetImageSprite(Sprite imageSprite)
         {
-            foreach (var cardImage in cardImages)
-                if (cardImage != null)
-                    cardImage.sprite = imageSprite ? imageSprite : CardGameManager.Current.CardBackImageSprite;
+            foreach (var cardImage in cardImages.Where(cardImage => cardImage != null))
+                cardImage.sprite = imageSprite ? imageSprite : CardGameManager.Current.CardBackImageSprite;
             ResetTexts();
         }
 

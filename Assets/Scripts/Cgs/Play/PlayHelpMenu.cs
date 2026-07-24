@@ -35,13 +35,14 @@ namespace Cgs.Play
                 var page = GetBindingDisplayString(Tags.PlayerPage);
                 var toggle = GetBindingDisplayString(Tags.PlayGameToggleZoomRotation);
 
-                var helpText = new StringBuilder();
-                helpText.AppendLine($"Select Card: Left-Click a card, or move the selection with {move}.");
-                helpText.AppendLine($"Move Card: Drag a card with Left-Click, or use {page} while a card is selected.");
-                helpText.AppendLine($"Pan: Drag with Middle-Click or Shift+Left-Click, or use {page}.");
-                helpText.AppendLine($"Zoom: Ctrl+Scroll Wheel, or press {toggle} to toggle zooming with {page}.");
-                helpText.Append($"Rotate: Ctrl+Right-Click Drag, or press {toggle} to toggle rotating with {page}.");
-                return helpText.ToString();
+                var stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine($"Select Card: Left-Click a card, or move the selection with {move}.");
+                stringBuilder.AppendLine(
+                    $"Move Card: Drag a card with Left-Click, or use {page} while a card is selected.");
+                stringBuilder.AppendLine($"Pan: Drag with Middle-Click or Shift+Left-Click, or use {page}.");
+                stringBuilder.AppendLine($"Zoom: Ctrl+Scroll Wheel, or press {toggle} to toggle zooming with {page}.");
+                stringBuilder.Append($"Rotate: Ctrl+Right-Click Drag, or press {toggle} to toggle rotating with {page}.");
+                return stringBuilder.ToString();
             }
         }
 
