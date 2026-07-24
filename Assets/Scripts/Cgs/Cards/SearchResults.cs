@@ -104,7 +104,6 @@ namespace Cgs.Cards
         private void OnEnable()
         {
             CardSearcher.SearchCallback = ShowResults;
-            CardGameManager.Instance.OnSceneActions.Add(ResizeGridCells);
             CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
             CardGameManager.Instance.OnSceneActions.Add(ResetPlaceholderText);
         }
@@ -173,6 +172,9 @@ namespace Cgs.Cards
         // Public to allow the layout classes to refresh on layout change
         public void UpdateSearchResultsPanel()
         {
+            // Cells must resize before CardsPerRow and CardsPerPage read the cell size
+            ResizeGridCells();
+
             layoutArea.DestroyAllChildren();
 
             for (var i = 0;
