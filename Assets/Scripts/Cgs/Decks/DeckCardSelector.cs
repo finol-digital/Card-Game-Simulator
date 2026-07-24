@@ -114,7 +114,21 @@ namespace Cgs.Decks
             }
         }
 
-        private void SelectEditorLeft()
+        // CardModels is ordered along each zone: left-to-right within horizontal zones,
+        // top-to-bottom within vertical zones, so the stride for each direction depends on the layout
+        private void SelectEditorLeft() =>
+            SelectEditorPrevious(editor.IsHorizontalLayout ? DeckEditor.CardsPerZoneVertical : 1);
+
+        private void SelectEditorRight() =>
+            SelectEditorNext(editor.IsHorizontalLayout ? DeckEditor.CardsPerZoneVertical : 1);
+
+        private void SelectEditorDown() =>
+            SelectEditorNext(editor.IsHorizontalLayout ? 1 : DeckEditor.CardsPerZoneHorizontal);
+
+        private void SelectEditorUp() =>
+            SelectEditorPrevious(editor.IsHorizontalLayout ? 1 : DeckEditor.CardsPerZoneHorizontal);
+
+        private void SelectEditorPrevious(int stride)
         {
             if (IsBlocked || EventSystem.current.alreadySelecting)
                 return;
@@ -130,11 +144,11 @@ namespace Cgs.Decks
             {
                 if (editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
                     continue;
-                i--;
-                if (i < 0)
-                    i = editorCardModels.Count - 1;
-                EventSystem.current.SetSelectedGameObject(editorCardModels[i].gameObject);
-                editor.FocusScrollRectOn(editorCardModels[i]);
+                var previous = i - stride;
+                if (previous < 0)
+                    previous = editorCardModels.Count - 1;
+                EventSystem.current.SetSelectedGameObject(editorCardModels[previous].gameObject);
+                editor.FocusScrollRectOn(editorCardModels[previous]);
                 return;
             }
 
@@ -144,7 +158,7 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
-        private void SelectEditorRight()
+        private void SelectEditorNext(int stride)
         {
             if (IsBlocked || EventSystem.current.alreadySelecting)
                 return;
@@ -160,76 +174,16 @@ namespace Cgs.Decks
             {
                 if (editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
                     continue;
-                i++;
-                if (i == editorCardModels.Count)
-                    i = 0;
-                EventSystem.current.SetSelectedGameObject(editorCardModels[i].gameObject);
-                editor.FocusScrollRectOn(editorCardModels[i]);
+                var next = i + stride;
+                if (next >= editorCardModels.Count)
+                    next = 0;
+                EventSystem.current.SetSelectedGameObject(editorCardModels[next].gameObject);
+                editor.FocusScrollRectOn(editorCardModels[next]);
                 return;
             }
 
             EventSystem.current.SetSelectedGameObject(editorCardModels[0].gameObject);
             editor.FocusScrollRectOn(editorCardModels[0]);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
-        }
-
-        private void SelectEditorDown()
-        {
-            if (IsBlocked || EventSystem.current.alreadySelecting)
-                return;
-
-            var editorCardModels = editor.CardModels;
-            if (editorCardModels.Count < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = 0; i < editorCardModels.Count; i++)
-            {
-                if (editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                i += DeckEditor.CardsPerZoneHorizontal;
-                if (i >= editorCardModels.Count)
-                    i = 0;
-                EventSystem.current.SetSelectedGameObject(editorCardModels[i].gameObject);
-                editor.FocusScrollRectOn(editorCardModels[i]);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(editorCardModels[0].gameObject);
-            editor.FocusScrollRectOn(editorCardModels[0]);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
-        }
-
-        private void SelectEditorUp()
-        {
-            if (IsBlocked || EventSystem.current.alreadySelecting)
-                return;
-
-            var editorCardModels = editor.CardModels;
-            if (editorCardModels.Count < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = editorCardModels.Count - 1; i >= 0; i--)
-            {
-                if (editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                i -= DeckEditor.CardsPerZoneHorizontal;
-                if (i < 0)
-                    i = editorCardModels.Count - 1;
-                EventSystem.current.SetSelectedGameObject(editorCardModels[i].gameObject);
-                editor.FocusScrollRectOn(editorCardModels[i]);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(editorCardModels[^1].gameObject);
-            editor.FocusScrollRectOn(editorCardModels[^1]);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
@@ -248,7 +202,7 @@ namespace Cgs.Decks
         private void SelectPrevious()
         {
             if (IsSelectedCardInDeck)
-                SelectEditorLeft();
+                SelectEditorPrevious(1);
             else
                 SelectResultsUp();
         }
@@ -273,7 +227,7 @@ namespace Cgs.Decks
         private void SelectNext()
         {
             if (IsSelectedCardInDeck)
-                SelectEditorRight();
+                SelectEditorNext(1);
             else
                 SelectResultsDown();
         }

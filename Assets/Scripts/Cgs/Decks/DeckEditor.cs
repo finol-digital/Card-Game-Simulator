@@ -46,6 +46,13 @@ namespace Cgs.Decks
         public RectTransform layoutContent;
         public List<CardDropArea> dropZones;
         public ScrollRect scrollRect;
+
+        // top/bottom edge areas that scroll the deck while dragging a card, for the vertical scrollbar layout
+        public List<GameObject> verticalScrollAreas;
+
+        // left/right edge areas that scroll the deck while dragging a card, for the horizontal scrollbar layout
+        public List<GameObject> horizontalScrollAreas;
+
         public Text nameText;
         public Text countText;
         public SearchResults searchResults;
@@ -60,7 +67,7 @@ namespace Cgs.Decks
             { 0, 4 }, { 1, 8 }, { 2, 12 }, { 3, 16 }
         };
 
-        private static int CardsPerZoneVertical =>
+        public static int CardsPerZoneVertical =>
             Mathf.FloorToInt(CardPrefabHeight / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) *
                              ResolutionIndexToCardsPerColumn[ResolutionManager.ResolutionIndex]);
 
@@ -124,6 +131,8 @@ namespace Cgs.Decks
                                   CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused;
 
         // false: horizontal card zones with a vertical scrollbar; true: vertical card zones with a horizontal scrollbar
+        public bool IsHorizontalLayout => _isHorizontalLayout;
+
         private bool _isHorizontalLayout;
 
         private void OnEnable()
@@ -519,12 +528,17 @@ namespace Cgs.Decks
             if (scrollRect.verticalScrollbar != null)
                 scrollRect.verticalScrollbar.gameObject.SetActive(!_isHorizontalLayout);
 
+            foreach (var verticalScrollArea in verticalScrollAreas)
+                verticalScrollArea.SetActive(!_isHorizontalLayout);
+            foreach (var horizontalScrollArea in horizontalScrollAreas)
+                horizontalScrollArea.SetActive(_isHorizontalLayout);
+
             var layoutGroup = layoutContent.GetComponent<HorizontalOrVerticalLayoutGroup>();
             if (layoutGroup != null)
             {
-                // Disable before the deferred Destroy so the old group cannot fight the new one this frame
-                layoutGroup.enabled = false;
-                Destroy(layoutGroup);
+                // LayoutGroup is [DisallowMultipleComponent], so the old group must be gone
+                // before AddComponent below, or AddComponent returns null
+                DestroyImmediate(layoutGroup);
             }
 
             if (_isHorizontalLayout)
