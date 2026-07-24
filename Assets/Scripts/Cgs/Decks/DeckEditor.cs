@@ -144,7 +144,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
             InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSave;
-            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputSort;
+            InputSystem.actions.FindAction(Tags.DecksPivot).performed += InputPivot;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputFilter;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -498,16 +498,16 @@ namespace Cgs.Decks
             UpdateDeckStats();
         }
 
-        private void InputSort(InputAction.CallbackContext callbackContext)
+        private void InputPivot(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
                 return;
 
-            ToggleLayout();
+            Pivot();
         }
 
         [UsedImplicitly]
-        public void ToggleLayout()
+        public void Pivot()
         {
             _isHorizontalLayout = !_isHorizontalLayout;
             ApplyLayout();
@@ -637,7 +637,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSave;
-            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputSort;
+            InputSystem.actions.FindAction(Tags.DecksPivot).performed -= InputPivot;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputFilter;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
