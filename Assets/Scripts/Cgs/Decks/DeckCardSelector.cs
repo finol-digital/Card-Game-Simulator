@@ -240,12 +240,12 @@ namespace Cgs.Decks
 
         private void SelectResultsLeft()
         {
-            SelectResults(-1);
+            SelectResults(-1, true);
         }
 
         private void SelectResultsRight()
         {
-            SelectResults(1);
+            SelectResults(1, true);
         }
 
         private void SelectResultsDown()
@@ -258,7 +258,7 @@ namespace Cgs.Decks
             SelectResults(-Mathf.Max(1, results.CardsPerRow));
         }
 
-        private void SelectResults(int step)
+        private void SelectResults(int step, bool isHorizontal = false)
         {
             if (step == 0 || IsBlocked || EventSystem.current.alreadySelecting)
                 return;
@@ -287,14 +287,17 @@ namespace Cgs.Decks
                 return;
             }
 
+            // In a single-column grid, left/right move across pages rather than within the column
+            var pagesHorizontally = isHorizontal && results.CardsPerRow <= 1;
+
             var target = selectedIndex + step;
-            if (target >= childCount)
+            if ((pagesHorizontally && step > 0) || target >= childCount)
             {
                 results.IncrementPage();
                 childCount = results.layoutArea.childCount;
                 target = 0;
             }
-            else if (target < 0)
+            else if ((pagesHorizontally && step < 0) || target < 0)
             {
                 results.DecrementPage();
                 childCount = results.layoutArea.childCount;

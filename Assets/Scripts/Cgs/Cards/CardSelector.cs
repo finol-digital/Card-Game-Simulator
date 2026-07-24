@@ -146,16 +146,16 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SelectLeft()
         {
-            Select(-1);
+            Select(-1, true);
         }
 
         [UsedImplicitly]
         public void SelectRight()
         {
-            Select(1);
+            Select(1, true);
         }
 
-        private void Select(int step)
+        private void Select(int step, bool isHorizontal = false)
         {
             if (step == 0 || IsBlocked || EventSystem.current.alreadySelecting)
                 return;
@@ -167,19 +167,22 @@ namespace Cgs.Cards
                 return;
             }
 
+            // In a single-column grid, left/right move across pages rather than within the column
+            var pagesHorizontally = isHorizontal && results.CardsPerRow <= 1;
+
             var forward = step > 0;
             for (var i = forward ? 0 : childCount - 1; forward ? i < childCount : i >= 0; i += forward ? 1 : -1)
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
                 i += step;
-                if (i >= childCount)
+                if ((pagesHorizontally && step > 0) || i >= childCount)
                 {
                     results.IncrementPage();
                     childCount = results.layoutArea.childCount;
                     i = 0;
                 }
-                else if (i < 0)
+                else if ((pagesHorizontally && step < 0) || i < 0)
                 {
                     results.DecrementPage();
                     childCount = results.layoutArea.childCount;
