@@ -156,7 +156,7 @@ namespace Cgs.Menu
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.DecksPivot).performed += InputDownloadWeb;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputImportFile;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDownloadWebBack;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputImportFileBack;
@@ -651,7 +651,7 @@ namespace Cgs.Menu
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.DecksPivot).performed -= InputDownloadWeb;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputImportFile;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDownloadWebBack;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputImportFileBack;

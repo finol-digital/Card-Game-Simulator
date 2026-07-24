@@ -1000,7 +1000,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Sort",
+                    "name": "GamesManagementMenu",
                     "type": "Button",
                     "id": "c75eebc9-8bd9-40da-85d8-50990061a015",
                     "expectedControlType": "",
@@ -1143,18 +1143,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Sort",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4050b0b8-89ab-4011-9ac5-b5cc7df80e8d",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Sort",
+                    "action": "GamesManagementMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1165,7 +1154,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Sort",
+                    "action": "GamesManagementMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4050b0b8-89ab-4011-9ac5-b5cc7df80e8d",
+                    "path": "<Keyboard>/backslash",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "GamesManagementMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1219,6 +1219,15 @@
             "name": "Decks",
             "id": "3568bf69-37bf-42c5-9fea-8c1e3fdb0ac3",
             "actions": [
+                {
+                    "name": "Pivot",
+                    "type": "Button",
+                    "id": "1cc5b9d4-370a-4477-9194-6b2fcfbbaa01",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
                 {
                     "name": "New",
                     "type": "Button",
@@ -1322,6 +1331,39 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "New",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b317f1a7-1e3c-4a70-80ee-7e211f09cbf6",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Pivot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "38d5f868-b572-4e74-9734-29a482620391",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Pivot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "01781444-effe-40c7-83da-ac74198f3462",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Pivot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

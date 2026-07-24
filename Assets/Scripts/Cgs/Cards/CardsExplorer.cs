@@ -31,7 +31,6 @@ namespace Cgs.Cards
         public GameObject cardSetImportModalPrefab;
         public GameObject cardEditorMenuPrefab;
         public GameObject setImportMenuPrefab;
-        public GameObject cardViewerPrefab;
         public Image bannerImage;
         public List<GameObject> editButtons;
         public SearchResults searchResults;
@@ -65,9 +64,9 @@ namespace Cgs.Cards
             // CardViewer is already in the scene
             CardGameManager.Instance.OnSceneActions.Add(ResetBannerCardsAndButtons);
 
-            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputCardsSort;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputCardsFilter;
+            InputSystem.actions.FindAction(Tags.CardsGameManagementMenu).performed += InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.CardsNew).performed += InputNewCard;
             InputSystem.actions.FindAction(Tags.CardsEdit).performed += InputEditCard;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -80,20 +79,6 @@ namespace Cgs.Cards
             ((GridLayoutGroup)searchResults.layoutGroup).cellSize = cardSize * CardGameManager.PixelsPerInch;
             foreach (var button in editButtons)
                 button.SetActive(Settings.DeveloperMode && !CardGameManager.Current.IsUploaded);
-        }
-
-        private void InputCardsSort(InputAction.CallbackContext context)
-        {
-            if (IsBlocked)
-                return;
-
-            ShowGamesManagementMenu();
-        }
-
-        [UsedImplicitly]
-        public void ShowGamesManagementMenu()
-        {
-            GamesManagement.Show();
         }
 
         private void InputFocus(InputAction.CallbackContext context)
@@ -110,6 +95,20 @@ namespace Cgs.Cards
                 return;
 
             searchResults.ShowSearchMenu();
+        }
+
+        private void InputGamesManagementMenu(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            ShowGamesManagementMenu();
+        }
+
+        [UsedImplicitly]
+        public void ShowGamesManagementMenu()
+        {
+            GamesManagement.Show();
         }
 
         private void InputNewCard(InputAction.CallbackContext context)
@@ -197,9 +196,9 @@ namespace Cgs.Cards
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputCardsSort;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputCardsFilter;
+            InputSystem.actions.FindAction(Tags.CardsGameManagementMenu).performed -= InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.CardsNew).performed -= InputNewCard;
             InputSystem.actions.FindAction(Tags.CardsEdit).performed -= InputEditCard;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
