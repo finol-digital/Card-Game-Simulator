@@ -405,6 +405,9 @@ namespace Cgs.CardGameView.Viewer
                 propertySelector.value = PrimaryPropertyIndex;
                 propertySelector.onValueChanged.Invoke(propertySelector.value);
             }
+
+            if (SelectedCardModel == null)
+                SetImageSprite(null);
         }
 
         private void AddProperty(PropertyDef propertyDef, string parentPrefix = "")
@@ -459,7 +462,8 @@ namespace Cgs.CardGameView.Viewer
         public void SetImageSprite(Sprite imageSprite)
         {
             foreach (var cardImage in cardImages)
-                cardImage.sprite = imageSprite ? imageSprite : CardGameManager.Current.CardBackImageSprite;
+                if (cardImage != null)
+                    cardImage.sprite = imageSprite ? imageSprite : CardGameManager.Current.CardBackImageSprite;
             ResetTexts();
         }
 

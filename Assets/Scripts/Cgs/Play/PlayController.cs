@@ -65,6 +65,7 @@ namespace Cgs.Play
         public GameObject searchMenuPrefab;
         public GameObject handDealerPrefab;
         public GameObject moveMenuPrefab;
+        public GameObject playHelpMenuPrefab;
 
         public GameObject boardPrefab;
         public GameObject cardStackPrefab;
@@ -240,6 +241,11 @@ namespace Cgs.Play
 
         private MoveMenu _moveMenu;
 
+        private PlayHelpMenu Helper =>
+            _playHelpMenu ??= Instantiate(playHelpMenuPrefab).GetOrAddComponent<PlayHelpMenu>();
+
+        private PlayHelpMenu _playHelpMenu;
+
         private void Awake()
         {
             Instance = this;
@@ -255,6 +261,7 @@ namespace Cgs.Play
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
 
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed += InputPlayGameMenu;
+            InputSystem.actions.FindAction(Tags.PlayHelp).performed += InputPlayHelp;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
@@ -415,6 +422,20 @@ namespace Cgs.Play
 
             if (CardViewer.Instance.PreviewCardModel == null)
                 menu.ToggleMenu();
+        }
+
+        private void InputPlayHelp(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            ShowPlayHelpMenu();
+        }
+
+        [UsedImplicitly]
+        public void ShowPlayHelpMenu()
+        {
+            Helper.Show();
         }
 
         public void ShowPlaySettingsMenu()
@@ -1064,6 +1085,7 @@ namespace Cgs.Play
             StopNetworking();
 
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed -= InputPlayGameMenu;
+            InputSystem.actions.FindAction(Tags.PlayHelp).performed -= InputPlayHelp;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
