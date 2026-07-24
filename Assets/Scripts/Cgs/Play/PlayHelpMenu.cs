@@ -12,6 +12,8 @@ namespace Cgs.Play
 {
     public class PlayHelpMenu : Modal
     {
+        private const string MissingInputActionErrorFormat = "PlayHelpMenu: Input Action '{0}' not found.";
+
         private const string MobileHelpText = "Select Card: Tap a card.\n" +
                                               "View Card: Press-and-hold a card to zoom in on it.\n" +
                                               "Move Card: Drag a card with 1 finger.\n" +
@@ -51,7 +53,7 @@ namespace Cgs.Play
             var inputAction = InputSystem.actions.FindAction(inputActionId);
             if (inputAction == null)
             {
-                Debug.LogError($"PlayHelpMenu: Input Action '{inputActionId}' not found.");
+                Debug.LogError(string.Format(MissingInputActionErrorFormat, inputActionId));
                 return string.Empty;
             }
 

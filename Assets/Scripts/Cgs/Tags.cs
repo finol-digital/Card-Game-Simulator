@@ -46,8 +46,7 @@ namespace Cgs
         public const string DecksLoad = "Decks/Load";
         public const string DecksSave = "Decks/Save";
 
-        public const string PlayHelp = "Play/Help";
-
+        public const string PlayGameHelp = "PlayGame/Help";
         public const string PlayGameMenu = "PlayGame/Menu";
         public const string PlayGameSettings = "PlayGame/Settings";
         public const string PlayGameDie = "PlayGame/Die";

@@ -261,7 +261,7 @@ namespace Cgs.Play
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
 
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed += InputPlayGameMenu;
-            InputSystem.actions.FindAction(Tags.PlayHelp).performed += InputPlayHelp;
+            InputSystem.actions.FindAction(Tags.PlayGameHelp).performed += InputPlayHelp;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
@@ -1085,7 +1085,7 @@ namespace Cgs.Play
             StopNetworking();
 
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed -= InputPlayGameMenu;
-            InputSystem.actions.FindAction(Tags.PlayHelp).performed -= InputPlayHelp;
+            InputSystem.actions.FindAction(Tags.PlayGameHelp).performed -= InputPlayHelp;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
