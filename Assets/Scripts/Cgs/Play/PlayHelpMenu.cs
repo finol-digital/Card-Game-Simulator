@@ -23,6 +23,12 @@ namespace Cgs.Play
 
         public Text helpText;
 
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayGameHelp).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
         public override void Show()
         {
             base.Show();
@@ -63,6 +69,20 @@ namespace Cgs.Play
             return inputAction.GetBindingDisplayString(inputBinding)
                 .Replace("| `", "").Replace("| Backspace", "")
                 .Replace("Keypad ", "").Replace("Numpad ", "").Replace("Num ", "");
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayGameHelp).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }
