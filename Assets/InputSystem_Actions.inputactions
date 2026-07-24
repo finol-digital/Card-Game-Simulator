@@ -1767,6 +1767,34 @@
             ]
         },
         {
+            "name": "Play",
+            "id": "dc91c29a-82e7-44d1-bbb8-6332766d97d8",
+            "actions": [
+                {
+                    "name": "Help",
+                    "type": "Button",
+                    "id": "b9eda836-6f3e-478f-be81-b04b9d9cf3c4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "fc750b92-280c-4d5b-a32f-d551116e8ec6",
+                    "path": "<Keyboard>/f5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Help",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "MainMenu",
             "id": "00774a45-f30e-492c-bc7f-542ff66f419f",
             "actions": [
