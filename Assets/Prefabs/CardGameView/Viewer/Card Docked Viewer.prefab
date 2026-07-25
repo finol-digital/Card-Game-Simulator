@@ -495,7 +495,6 @@ MonoBehaviour:
   - {fileID: 7603630240227926939}
   - {fileID: 8529563614461424557}
   - {fileID: 7126045294037836214}
-  - {fileID: 5436329676496674114}
   cardImages:
   - {fileID: 9117401374665988874}
   - {fileID: 1521908834704067835}
@@ -1775,7 +1774,6 @@ GameObject:
   - component: {fileID: 5788882388657207090}
   - component: {fileID: 6365138097289247228}
   - component: {fileID: 4819511972905837331}
-  - component: {fileID: 5436329676496674114}
   m_Layer: 5
   m_Name: Card Image
   m_TagString: Untagged
@@ -1800,7 +1798,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -1147.8, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6365138097289247228
 CanvasRenderer:
@@ -1831,7 +1829,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 062b85b23e1058941a28497c2519e749, type: 3}
-  m_Type: 1
+  m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1840,20 +1838,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5436329676496674114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6751573758440649778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AspectMode: 3
-  m_AspectRatio: 0.715
 --- !u!1 &6847711490298176221
 GameObject:
   m_ObjectHideFlags: 0

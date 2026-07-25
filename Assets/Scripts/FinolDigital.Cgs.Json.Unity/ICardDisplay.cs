@@ -8,6 +8,10 @@ namespace FinolDigital.Cgs.Json.Unity
 {
     public interface ICardDisplay
     {
+        // Displays that size themselves to the game's card size should use the oriented image,
+        // while displays that fit the image itself, like the card viewer, should not
+        bool UsesOrientedImage { get; }
+
         void SetImageSprite(Sprite imageSprite);
     }
 }

@@ -260,6 +260,8 @@ namespace Cgs.CardGameView.Multiplayer
                 Value.RegisterDisplay(this);
         }
 
+        public bool UsesOrientedImage => true;
+
         public void SetImageSprite(Sprite imageSprite)
         {
             if (imageSprite == null)
