@@ -532,7 +532,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void RequestRemoveAt(int index)
         {
-            if (LacksOwnership && CanRequestFromServer)
+            if (!IsServer && CanRequestFromServer)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, index);
             else
                 OwnerRemoveAt(index);
