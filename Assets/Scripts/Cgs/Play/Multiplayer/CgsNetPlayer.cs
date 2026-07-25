@@ -722,6 +722,10 @@ namespace Cgs.Play.Multiplayer
                 ? cardModelTransform.GetSiblingIndex()
                 : -1;
             cardModel.SnapToGrid();
+            // Snapping may auto-stack this card into an overlapping card or stack, which consumes it
+            if (cardModel.ToDelete)
+                return;
+
             var position = ((RectTransform) cardModelTransform).localPosition;
             var rotation = cardModelTransform.localRotation;
             var isFacedown = cardModel.IsFacedown && !cardModel.Value.IsBackFaceCard;
