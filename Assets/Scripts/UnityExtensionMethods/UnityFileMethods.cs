@@ -570,5 +570,27 @@ namespace UnityExtensionMethods
             Debug.LogWarning("CreateSprite::TextureNull");
             return null;
         }
+
+        // Requires a readable texture; the caller is responsible for destroying the original texture
+        public static Texture2D Rotate90Clockwise(Texture2D texture)
+        {
+            var width = texture.width;
+            var height = texture.height;
+            var rotatedWidth = height;
+            var rotatedHeight = width;
+            var pixels = texture.GetPixels32();
+            var rotatedPixels = new Color32[pixels.Length];
+            for (var y = 0; y < height; y++)
+            {
+                var row = y * width;
+                for (var x = 0; x < width; x++)
+                    rotatedPixels[(width - 1 - x) * rotatedWidth + y] = pixels[row + x];
+            }
+
+            var rotatedTexture = new Texture2D(rotatedWidth, rotatedHeight, TextureFormat.RGBA32, false);
+            rotatedTexture.SetPixels32(rotatedPixels);
+            rotatedTexture.Apply();
+            return rotatedTexture;
+        }
     }
 }

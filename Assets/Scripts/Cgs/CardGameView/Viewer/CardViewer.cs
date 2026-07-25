@@ -460,6 +460,9 @@ namespace Cgs.CardGameView.Viewer
             SelectedPropertyIndex++;
         }
 
+        // The preview and zoom show the card image as it is, without rotating it to the game's card orientation
+        public bool UsesOrientedImage => false;
+
         public void SetImageSprite(Sprite imageSprite)
         {
             foreach (var cardImage in cardImages.Where(cardImage => cardImage != null))

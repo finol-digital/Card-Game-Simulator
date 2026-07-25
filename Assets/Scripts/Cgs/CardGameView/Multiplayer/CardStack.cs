@@ -301,6 +301,8 @@ namespace Cgs.CardGameView.Multiplayer
                 RequestDelete();
         }
 
+        public bool UsesOrientedImage => true;
+
         public void SetImageSprite(Sprite imageSprite)
         {
             if (imageSprite == null)
