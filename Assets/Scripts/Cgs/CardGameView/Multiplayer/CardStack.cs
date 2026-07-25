@@ -78,6 +78,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override bool IsAdditionalClientAuthorized(ulong clientId) => true;
 
+        // Offline (single-player) stacks keep all of their state locally, since there is nothing to sync
+        private static bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline;
+
+        // Only a spawned stack can be referenced on the server; any other stack is acted on locally
+        private bool CanRequestFromServer => IsSpawned && IsOnline && CgsNetManager.Instance.LocalPlayer != null;
+
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
 
@@ -110,7 +116,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             get
             {
-                if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline)
+                if (!IsOnline)
                     return _cards;
 
                 _cards = new List<UnityCard>();
@@ -124,7 +130,7 @@ namespace Cgs.CardGameView.Multiplayer
                 foreach (var unityCard in value)
                     _cards.Add(unityCard);
 
-                if (!CgsNetManager.Instance.IsOnline)
+                if (!IsOnline)
                     return;
 
                 if (!CgsNetManager.Instance.IsConnectedClient || IsOwner)
@@ -296,8 +302,7 @@ namespace Cgs.CardGameView.Multiplayer
                 TopCard?.RegisterDisplay(this);
 
             // Empty stacks should not persist, but only the authority can delete them
-            if (Cards.Count == 0 &&
-                (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline || IsServer))
+            if (Cards.Count == 0 && (!IsOnline || IsServer))
                 RequestDelete();
         }
 
@@ -328,7 +333,7 @@ namespace Cgs.CardGameView.Multiplayer
                 actionLabel.text = _actionText.Value;
             }
 
-            if (isAction && (!CgsNetManager.Instance.IsConnectedClient || IsServer))
+            if (isAction && (!IsOnline || !CgsNetManager.Instance.IsConnectedClient || IsServer))
                 _actionTime.Value -= Time.deltaTime;
 
             if (HoldTime > DragHoldTime)
@@ -402,7 +407,7 @@ namespace Cgs.CardGameView.Multiplayer
                 IsDeckShared, PlayController.Instance.playAreaCardZone);
             RemovePointer(eventData);
 
-            if (CgsNetManager.Instance.IsOnline)
+            if (CanRequestFromServer)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, cards.Count - 1);
             else
                 OwnerPopCard();
@@ -481,6 +486,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardModel cardModel)
         {
+            // The event system and PostDragPlayable can both deliver the same drop,
+            // so a card that has already been added to a stack must not be added again
+            if (ToDelete || cardModel.ToDelete)
+                return;
+
             cardModel.PlaceHolderCardZone = null;
             RequestInsert(Cards.Count, cardModel.Id);
             cardModel.RequestDelete();
@@ -488,6 +498,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardStack cardStack)
         {
+            if (ToDelete || cardStack.ToDelete)
+                return;
+
             var cards = Cards;
             for (var i = cards.Count - 1; i >= 0; i--)
                 cardStack.RequestInsert(0, cards[i].Id);
@@ -501,7 +514,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void RequestInsert(int index, string cardId)
         {
-            if (LacksOwnership || (CgsNetManager.Instance.IsOnline && !IsServer))
+            if ((LacksOwnership || !IsServer) && CanRequestFromServer)
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, index, cardId);
             else
                 OwnerInsert(index, cardId);
@@ -511,7 +524,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Debug.Log($"CardStack: {name} insert {cardId} at {index} of {Cards.Count}");
             _cards.Insert(index, LookupCard(cardId));
-            if (CgsNetManager.Instance.IsOnline)
+            if (IsOnline)
                 _cardIds.Insert(index, cardId);
             else
                 SyncView();
@@ -519,7 +532,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void RequestRemoveAt(int index)
         {
-            if (LacksOwnership)
+            if (LacksOwnership && CanRequestFromServer)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, index);
             else
                 OwnerRemoveAt(index);
@@ -531,7 +544,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return UnityCard.Blank.Id;
             var cardId = _cards[index].Id;
             _cards.RemoveAt(index);
-            if (CgsNetManager.Instance.IsOnline)
+            if (IsOnline)
                 _cardIds.RemoveAt(index);
             else
                 SyncView();
@@ -587,7 +600,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Shuffle()
         {
-            if (CgsNetManager.Instance.IsOnline)
+            if (CanRequestFromServer)
                 CgsNetManager.Instance.LocalPlayer.RequestShuffle(gameObject);
             else
                 DoShuffle();
@@ -595,23 +608,37 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void DoShuffle()
         {
-            var cards = Cards.Select(card => card.Id).ToList();
-            cards.Shuffle();
-
-            _cards = cards.Select(LookupCard).ToList();
-
-            if (!CgsNetManager.Instance.IsOnline)
-                return;
-
-            if (CgsNetManager.Instance.IsConnectedClient && !IsServer)
+            if (IsSpawned && !IsServer)
             {
                 Debug.LogError("Attempted to shuffle on client!");
                 return;
             }
 
-            _cardIds.Clear();
-            foreach (var card in cards)
-                _cardIds.Add(card);
+            var cards = Cards.Select(card => card.Id).ToList();
+            cards.Shuffle();
+
+            var previousTopCard = TopCard;
+            _cards = cards.Select(LookupCard).ToList();
+
+            if (IsOnline)
+            {
+                // Syncing the card ids updates every client's view of this stack
+                _cardIds.Clear();
+                foreach (var card in cards)
+                    _cardIds.Add(card);
+            }
+            else
+            {
+                // Offline stacks have no card ids to sync, so the shuffled result is applied here
+                var topCardValue = TopCard;
+                if (IsTopFaceup && previousTopCard != topCardValue)
+                {
+                    previousTopCard?.UnregisterDisplay(this);
+                    topCardValue?.RegisterDisplay(this);
+                }
+
+                SyncView();
+            }
 
             _actionText.Value = ShuffleText;
             _actionTime.Value = 1;

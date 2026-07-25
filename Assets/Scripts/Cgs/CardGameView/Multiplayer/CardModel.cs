@@ -377,6 +377,11 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardModel == this || (_placeHolder != null && cardModel == _placeHolder.GetComponent<CardModel>()))
                 return;
 
+            // The event system and PostDragPlayable can both deliver the same drop,
+            // so a card that has already been stacked must not be stacked again
+            if (ToDelete || cardModel.ToDelete)
+                return;
+
             Debug.Log($"Dropped {cardModel.gameObject.name} on {gameObject.name}");
 
             if (!PlaySettings.AutoStackCards)
@@ -393,7 +398,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             var cards = new List<UnityCard> { Value, cardModel.Value };
-            if (IsSpawned)
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
                     Position, Rotation, !IsFacedown);
             else
@@ -407,6 +412,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardStack cardStack)
         {
+            if (ToDelete || cardStack.ToDelete)
+                return;
+
             cardStack.RequestInsert(0, Id);
             RequestDelete();
         }
@@ -554,7 +562,9 @@ namespace Cgs.CardGameView.Multiplayer
 
             var gridPosition = CalculateGridPosition();
 
-            if (PlaySettings.AutoStackCards && PlayController.Instance != null)
+            // Grid positions are local to the play area, so only cards in the play area can be compared to siblings
+            if (PlaySettings.AutoStackCards && PlayController.Instance != null &&
+                PlayController.Instance.playAreaCardZone.transform == transform.parent)
             {
                 var playAreaCardZoneTransform = PlayController.Instance.playAreaCardZone.transform;
                 for (var i = 0; i < playAreaCardZoneTransform.childCount; i++)
@@ -563,7 +573,7 @@ namespace Cgs.CardGameView.Multiplayer
                     if (siblingTransform == transform)
                         continue;
 
-                    var distance = Vector2.Distance(siblingTransform.position, gridPosition);
+                    var distance = Vector2.Distance(siblingTransform.localPosition, gridPosition);
                     if (distance > 0.1f)
                         continue;
 
@@ -571,7 +581,8 @@ namespace Cgs.CardGameView.Multiplayer
                     if (siblingCardModel != null)
                     {
                         var cards = new List<UnityCard> { siblingCardModel.Value, Value };
-                        if (IsSpawned)
+                        if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline &&
+                            CgsNetManager.Instance.LocalPlayer != null)
                             CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
                                 cards, siblingCardModel.Position, siblingCardModel.Rotation,
                                 !siblingCardModel.IsFacedown);
@@ -781,14 +792,17 @@ namespace Cgs.CardGameView.Multiplayer
             cachedTransform.SetParent(PlaceHolder.parent);
             cachedTransform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
             cachedTransform.localScale = Vector3.one;
+
+            // The move is over before the zones are notified, since their add behaviors,
+            // like capture into an overlapping card zone, may start a new move
+            PlaceHolderCardZone = null;
+            Visibility.blocksRaycasts = true;
+            IsMovingToPlaceHolder = false;
+
             if (previousParentCardZone != null)
                 previousParentCardZone.OnRemove(this);
             if (ParentCardZone != null)
                 ParentCardZone.OnAdd(this);
-
-            PlaceHolderCardZone = null;
-            Visibility.blocksRaycasts = true;
-            IsMovingToPlaceHolder = false;
         }
 
         private void ParentToCanvas(Vector3 targetPosition)
