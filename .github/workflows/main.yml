@@ -121,6 +121,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           lfs: true
+          fetch-depth: 0
       - name: Cache Library
         uses: actions/cache@v6
         with:
@@ -164,6 +165,8 @@ jobs:
             /k:"finol-digital_Card-Game-Simulator" \
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io \
+            /d:sonar.projectBaseDir="$GITHUB_WORKSPACE" \
+            /d:sonar.scm.provider=git \
             /d:sonar.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**" \
             /d:sonar.coverage.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**" \
             /d:sonar.cpd.exclusions="**/docs/**,**/*.scss,**/*.sass,**/*.css,**/Assets/Plugins/**,**/Library/**"
