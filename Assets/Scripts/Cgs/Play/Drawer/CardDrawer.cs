@@ -113,6 +113,9 @@ namespace Cgs.Play.Drawer
             cardZonesRectTransform.sizeDelta = new Vector2(cardZonesRectTransform.sizeDelta.x, cardHeight);
             foreach (var cardZoneRectTransform in cardZoneRectTransforms)
                 cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
+
+            // The serialized position only docks the panel for the default card size, so re-dock for the current one
+            Dock();
         }
 
         private void Show()
