@@ -19,8 +19,10 @@ namespace Cgs.Play
         public CanvasGroup canvasGroup;
         public Button rotationButton;
         public Slider rotationSlider;
+        public Toggle rotationLockToggle;
         public Button zoomButton;
         public Slider zoomSlider;
+        public Toggle zoomLockToggle;
 
         private const float PageSensitivity = 0.2f;
         private const float Tolerance = 0.01f;
@@ -61,6 +63,12 @@ namespace Cgs.Play
                 rotationButton.interactable = _playController.playArea.RotationEnabled;
             if (zoomButton.interactable != _playController.playArea.ZoomEnabled)
                 zoomButton.interactable = _playController.playArea.ZoomEnabled;
+
+            // Sync lock toggles
+            if (rotationLockToggle.isOn != _playController.playArea.RotationEnabled)
+                rotationLockToggle.SetIsOnWithoutNotify(_playController.playArea.RotationEnabled);
+            if (zoomLockToggle.isOn != _playController.playArea.ZoomEnabled)
+                zoomLockToggle.SetIsOnWithoutNotify(_playController.playArea.ZoomEnabled);
 
             // Sync sliders
             if (rotationSlider.interactable != _playController.playArea.RotationEnabled)
@@ -145,7 +153,14 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void ToggleRotation()
         {
-            _playController.playArea.RotationEnabled = !_playController.playArea.RotationEnabled;
+            SetRotationEnabled(!_playController.playArea.RotationEnabled);
+        }
+
+        [UsedImplicitly]
+        public void SetRotationEnabled(bool isRotationEnabled)
+        {
+            _timeSinceChange = 0;
+            _playController.playArea.RotationEnabled = isRotationEnabled;
         }
 
         [UsedImplicitly]
@@ -176,7 +191,14 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void ToggleZoom()
         {
-            _playController.playArea.ZoomEnabled = !_playController.playArea.ZoomEnabled;
+            SetZoomEnabled(!_playController.playArea.ZoomEnabled);
+        }
+
+        [UsedImplicitly]
+        public void SetZoomEnabled(bool isZoomEnabled)
+        {
+            _timeSinceChange = 0;
+            _playController.playArea.ZoomEnabled = isZoomEnabled;
         }
 
         [UsedImplicitly]
