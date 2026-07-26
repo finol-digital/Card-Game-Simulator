@@ -65,8 +65,9 @@ namespace Cgs.Cards
             CardGameManager.Instance.OnSceneActions.Add(ResetBannerCardsAndButtons);
 
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputCardsFilter;
-            InputSystem.actions.FindAction(Tags.CardsGameManagementMenu).performed += InputGamesManagementMenu;
+            InputSystem.actions.FindAction(Tags.CardsGamesManagementMenu).performed += InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.CardsNew).performed += InputNewCard;
             InputSystem.actions.FindAction(Tags.CardsEdit).performed += InputEditCard;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -195,8 +196,9 @@ namespace Cgs.Cards
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputCardsFilter;
-            InputSystem.actions.FindAction(Tags.CardsGameManagementMenu).performed -= InputGamesManagementMenu;
+            InputSystem.actions.FindAction(Tags.CardsGamesManagementMenu).performed -= InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.CardsNew).performed -= InputNewCard;
             InputSystem.actions.FindAction(Tags.CardsEdit).performed -= InputEditCard;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
