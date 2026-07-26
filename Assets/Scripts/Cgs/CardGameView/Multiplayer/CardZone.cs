@@ -215,12 +215,13 @@ namespace Cgs.CardGameView.Multiplayer
             // The label is not a card, so the layout group and the card raycasts must both ignore it
             countLabelGameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = true;
             var countLabelRectTransform = (RectTransform)countLabelGameObject.transform;
-            countLabelRectTransform.anchorMin = new Vector2(0.5f, 0);
-            countLabelRectTransform.anchorMax = new Vector2(0.5f, 0);
-            countLabelRectTransform.pivot = new Vector2(0.5f, 0);
-            countLabelRectTransform.anchoredPosition = new Vector2(0, -60);
+            countLabelRectTransform.anchorMin = Vector2.one;
+            countLabelRectTransform.anchorMax = Vector2.one;
+            countLabelRectTransform.pivot = new Vector2(1, 0);
+            countLabelRectTransform.anchoredPosition = new Vector2(-10, 0);
             countLabelRectTransform.sizeDelta = new Vector2(100, 60);
             _countLabel = countLabelGameObject.GetComponent<Text>();
+            _countLabel.alignment = TextAnchor.MiddleRight;
             _countLabel.raycastTarget = false;
             _countLabel.text = "0";
         }
