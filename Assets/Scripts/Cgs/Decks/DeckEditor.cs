@@ -131,9 +131,7 @@ namespace Cgs.Decks
                                   CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused;
 
         // false: horizontal card zones with a vertical scrollbar; true: vertical card zones with a horizontal scrollbar
-        public bool IsHorizontalLayout => _isHorizontalLayout;
-
-        private bool _isHorizontalLayout;
+        public bool IsHorizontalLayout { get; private set; }
 
         private void OnEnable()
         {
@@ -145,8 +143,9 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
             InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSave;
             InputSystem.actions.FindAction(Tags.DecksPivot).performed += InputPivot;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputPivot;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputFilter;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
@@ -179,7 +178,7 @@ namespace Cgs.Decks
 
         private void Consolidate()
         {
-            if (_isHorizontalLayout)
+            if (IsHorizontalLayout)
                 ConsolidateVertical();
             else
                 ConsolidateHorizontal();
@@ -346,10 +345,10 @@ namespace Cgs.Decks
 
         private void AddCard(UnityCard card)
         {
-            if (card == null)
+            if (card == null || CardZones.Count <= 0)
                 return;
 
-            var cardZone = CardZones.Last();
+            var cardZone = CardZones[^1];
             var cardModel = Instantiate(cardModelPrefab, cardZone.transform).GetOrAddComponent<CardModel>();
             cardModel.Value = card;
 
@@ -396,7 +395,7 @@ namespace Cgs.Decks
             if (cardZoneIndex < 0 || cardZoneIndex >= CardZones.Count)
                 return;
 
-            if (_isHorizontalLayout)
+            if (IsHorizontalLayout)
                 scrollRect.horizontalNormalizedPosition = CardZones.Count > 1
                     ? cardZoneIndex / (CardZones.Count - 1f)
                     : 0f;
@@ -470,7 +469,7 @@ namespace Cgs.Decks
                 AddCard((UnityCard)card);
             SavedDeck = deck;
             UpdateDeckStats();
-            if (_isHorizontalLayout)
+            if (IsHorizontalLayout)
                 scrollRect.horizontalNormalizedPosition = 0;
             else
                 scrollRect.verticalNormalizedPosition = 1;
@@ -509,7 +508,7 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void Pivot()
         {
-            _isHorizontalLayout = !_isHorizontalLayout;
+            IsHorizontalLayout = !IsHorizontalLayout;
             ApplyLayout();
         }
 
@@ -521,17 +520,17 @@ namespace Cgs.Decks
                 Destroy(cardZone.gameObject);
             CardZones.Clear();
 
-            scrollRect.horizontal = _isHorizontalLayout;
-            scrollRect.vertical = !_isHorizontalLayout;
+            scrollRect.horizontal = IsHorizontalLayout;
+            scrollRect.vertical = !IsHorizontalLayout;
             if (scrollRect.horizontalScrollbar != null)
-                scrollRect.horizontalScrollbar.gameObject.SetActive(_isHorizontalLayout);
+                scrollRect.horizontalScrollbar.gameObject.SetActive(IsHorizontalLayout);
             if (scrollRect.verticalScrollbar != null)
-                scrollRect.verticalScrollbar.gameObject.SetActive(!_isHorizontalLayout);
+                scrollRect.verticalScrollbar.gameObject.SetActive(!IsHorizontalLayout);
 
             foreach (var verticalScrollArea in verticalScrollAreas)
-                verticalScrollArea.SetActive(!_isHorizontalLayout);
+                verticalScrollArea.SetActive(!IsHorizontalLayout);
             foreach (var horizontalScrollArea in horizontalScrollAreas)
-                horizontalScrollArea.SetActive(_isHorizontalLayout);
+                horizontalScrollArea.SetActive(IsHorizontalLayout);
 
             var layoutGroup = layoutContent.GetComponent<HorizontalOrVerticalLayoutGroup>();
             if (layoutGroup != null)
@@ -541,7 +540,7 @@ namespace Cgs.Decks
                 DestroyImmediate(layoutGroup);
             }
 
-            if (_isHorizontalLayout)
+            if (IsHorizontalLayout)
             {
                 layoutContent.anchorMin = Vector2.zero;
                 layoutContent.anchorMax = Vector2.up;
@@ -573,7 +572,7 @@ namespace Cgs.Decks
 
             // Rebuild card models directly and consolidate once at the end, rather than
             // going through AddCard, which consolidates per-card and would be O(n^2)
-            var cardZoneTransform = CardZones.Last().transform;
+            var cardZoneTransform = CardZones[^1].transform;
             foreach (var card in cards)
             {
                 var cardModel = Instantiate(cardModelPrefab, cardZoneTransform).GetOrAddComponent<CardModel>();
@@ -585,18 +584,10 @@ namespace Cgs.Decks
             Consolidate();
             UpdateDeckStats();
 
-            if (_isHorizontalLayout)
+            if (IsHorizontalLayout)
                 scrollRect.horizontalNormalizedPosition = 0;
             else
                 scrollRect.verticalNormalizedPosition = 1;
-        }
-
-        private void InputFocus(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            searchResults.inputField.ActivateInputField();
         }
 
         private void InputFilter(InputAction.CallbackContext callbackContext)
@@ -605,6 +596,14 @@ namespace Cgs.Decks
                 return;
 
             searchResults.ShowSearchMenu();
+        }
+
+        private void InputFocus(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            searchResults.inputField.ActivateInputField();
         }
 
         private void InputCancel(InputAction.CallbackContext callbackContext)
@@ -638,8 +637,9 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSave;
             InputSystem.actions.FindAction(Tags.DecksPivot).performed -= InputPivot;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputPivot;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputFilter;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }

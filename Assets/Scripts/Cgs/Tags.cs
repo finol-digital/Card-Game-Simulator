@@ -34,9 +34,10 @@ namespace Cgs
         public const string ViewerLess = "Viewer/Less";
         public const string ViewerMore = "Viewer/More";
 
+        public const string CardsGamesManagementMenu = "Cards/GamesManagementMenu";
         public const string CardsNew = "Cards/New";
         public const string CardsEdit = "Cards/Edit";
-        public const string CardsGameManagementMenu = "Cards/GamesManagementMenu";
+        public const string CardsSort = "Cards/Sort";
         public const string CardsFilter = "Cards/Filter";
         public const string CardsPagePrevious = "Cards/PagePrevious";
         public const string CardsPageNext = "Cards/PageNext";

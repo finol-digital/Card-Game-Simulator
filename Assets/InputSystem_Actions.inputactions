@@ -982,6 +982,15 @@
             "id": "9483d542-2816-4213-9c7e-74c404bbe456",
             "actions": [
                 {
+                    "name": "GamesManagementMenu",
+                    "type": "Button",
+                    "id": "c75eebc9-8bd9-40da-85d8-50990061a015",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "New",
                     "type": "Button",
                     "id": "bca32cfe-5dda-4ab5-9721-4c6e7c48dd41",
@@ -1000,9 +1009,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "GamesManagementMenu",
+                    "name": "Sort",
                     "type": "Button",
-                    "id": "c75eebc9-8bd9-40da-85d8-50990061a015",
+                    "id": "3eb40ad8-783c-4b83-9ffc-f04e6feb8c7a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1138,8 +1147,19 @@
                 },
                 {
                     "name": "",
-                    "id": "123ada3d-56df-4526-88da-d1a44402eab5",
+                    "id": "92fcbaf4-688c-426f-a5a7-69c32a3a9909",
                     "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "GamesManagementMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b96f43c-22e6-4a06-b2e6-d1afc14aebc3",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1166,6 +1186,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "GamesManagementMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a96e4d84-a367-4fdd-a94a-14cae1aecbc3",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Sort",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
