@@ -1,3 +1,5 @@
 ## What's Changed
-* Added cards pagination and card navigation while zoomed in the Deck Editor
-* Auto-move cards and card counts for play area zones
+* Cards Explorer: Card Viewer to match Deck Editor
+* Deck Editor: Pivot button toggles between vertical and horizontal layouts
+* Play: Help button
+
