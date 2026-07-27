@@ -546,27 +546,6 @@ namespace Cgs.CardGameView.Viewer
             Stack.Rotation *= Quaternion.Euler(0, 0, -CardGameManager.Current.GameCardRotationDegrees);
         }
 
-        private void InputFlip(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            if (SelectedPlayable is CardStack)
-                FlipStackTopFace();
-        }
-
-        [UsedImplicitly]
-        public void FlipStackTopFace()
-        {
-            if (Stack == null)
-            {
-                Debug.LogWarning("Ignoring flip top face request since there is no stack selected.");
-                return;
-            }
-
-            Stack.FlipTopFace();
-        }
-
         private void InputShuffle(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
@@ -586,6 +565,27 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Stack.PromptShuffle();
+        }
+
+        private void InputFlip(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is CardStack)
+                FlipStackTopFace();
+        }
+
+        [UsedImplicitly]
+        public void FlipStackTopFace()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring flip top face request since there is no stack selected.");
+                return;
+            }
+
+            Stack.FlipTopFace();
         }
 
         [UsedImplicitly]
