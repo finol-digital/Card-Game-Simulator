@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Cgs.Menu;
+using Cgs.UI.ScrollRects;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -32,6 +34,11 @@ namespace Cgs.Play
         private static readonly string[] PartDisplayOrder = {"up", "left", "down", "right"};
 
         public Text helpText;
+        public Toggle rotationToggle;
+        public Toggle zoomToggle;
+
+        private static RotateZoomableScrollRect PlayArea =>
+            PlayController.Instance != null ? PlayController.Instance.playArea : null;
 
         private void OnEnable()
         {
@@ -43,6 +50,39 @@ namespace Cgs.Play
         {
             base.Show();
             helpText.text = Application.isMobilePlatform ? MobileHelpText : DesktopHelpText;
+            SyncToggles();
+        }
+
+        private void Update()
+        {
+            SyncToggles();
+        }
+
+        // The play area can also be toggled through the keyboard shortcut or the play mat lock toggles.
+        private void SyncToggles()
+        {
+            var playArea = PlayArea;
+            if (playArea == null)
+                return;
+
+            if (rotationToggle != null && rotationToggle.isOn != playArea.RotationEnabled)
+                rotationToggle.SetIsOnWithoutNotify(playArea.RotationEnabled);
+            if (zoomToggle != null && zoomToggle.isOn != playArea.ZoomEnabled)
+                zoomToggle.SetIsOnWithoutNotify(playArea.ZoomEnabled);
+        }
+
+        [UsedImplicitly]
+        public void SetRotationEnabled(bool isRotationEnabled)
+        {
+            if (PlayArea != null)
+                PlayArea.RotationEnabled = isRotationEnabled;
+        }
+
+        [UsedImplicitly]
+        public void SetZoomEnabled(bool isZoomEnabled)
+        {
+            if (PlayArea != null)
+                PlayArea.ZoomEnabled = isZoomEnabled;
         }
 
         private static string DesktopHelpText
@@ -115,7 +155,7 @@ namespace Cgs.Play
                 partDisplayStrings[partName] = inputAction.GetBindingDisplayString(i, out var deviceLayoutName,
                     out var controlPath);
                 var separatorIndex = controlPath?.IndexOf('/') ?? -1;
-                partParentPaths[partName] = separatorIndex > 0
+                partParentPaths[partName] = controlPath != null && separatorIndex > 0
                     ? $"<{deviceLayoutName}>/{controlPath[..separatorIndex]}"
                     : null;
             }

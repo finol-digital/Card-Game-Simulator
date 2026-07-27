@@ -16,6 +16,13 @@ namespace Cgs.Decks
 
         private bool IsPortrait => ((RectTransform)transform).rect.width < 1200f;
 
+        // The serialized padding suits the landscape search area, which fills the screen height and fills from the top
+        private RectOffset SearchAreaGridPadding => _searchAreaGridPadding ??= new RectOffset(
+            searchAreaGridLayoutGroup.padding.left, searchAreaGridLayoutGroup.padding.right,
+            searchAreaGridLayoutGroup.padding.top, searchAreaGridLayoutGroup.padding.bottom);
+
+        private RectOffset _searchAreaGridPadding;
+
         public RectTransform deckLabelContainer;
         public RectTransform deckLabel;
         public RectTransform deckButtonsContainer;
@@ -34,8 +41,14 @@ namespace Cgs.Decks
             if (!gameObject.activeInHierarchy)
                 return;
 
+            // Capture before either branch can overwrite it
+            var landscapeGridPadding = SearchAreaGridPadding;
+
             if (IsPortrait) // Portrait
             {
+                // Set grid properties first: resizing searchArea below makes SearchResults repaginate off of them
+                SetSearchAreaGridVerticalPadding(0, 0);
+                searchAreaGridLayoutGroup.childAlignment = TextAnchor.MiddleCenter;
                 deckLabel.offsetMax = Vector2.zero;
                 deckEditorButtonsGroup.SetParent(deckButtonsContainer);
                 deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
@@ -49,12 +62,14 @@ namespace Cgs.Decks
                 searchArea.offsetMin = Vector2.down * SearchAreaPortraitHeight;
                 searchArea.offsetMax = Vector2.zero;
                 searchArea.anchoredPosition = Vector2.up * SearchAreaPortraitHeight;
-                searchAreaGridLayoutGroup.childAlignment = TextAnchor.LowerCenter;
                 cardCountLabel.anchoredPosition = Vector2.zero;
                 dockedCardViewer.offsetMin = new Vector2(0, SearchAreaPortraitHeight + 100);
             }
             else // Landscape
             {
+                // Set grid properties first: resizing searchArea below makes SearchResults repaginate off of them
+                SetSearchAreaGridVerticalPadding(landscapeGridPadding.top, landscapeGridPadding.bottom);
+                searchAreaGridLayoutGroup.childAlignment = TextAnchor.UpperCenter;
                 deckLabel.offsetMax = new Vector2(DeckLabelXOffset, 0);
                 deckEditorButtonsGroup.SetParent(deckLabelContainer);
                 deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
@@ -68,10 +83,17 @@ namespace Cgs.Decks
                 searchArea.offsetMin = Vector2.left * SearchAreaLandscapeWidth;
                 searchArea.offsetMax = Vector2.zero;
                 searchArea.anchoredPosition = Vector2.zero;
-                searchAreaGridLayoutGroup.childAlignment = TextAnchor.UpperCenter;
                 cardCountLabel.anchoredPosition = Vector2.zero;
                 dockedCardViewer.offsetMin = Vector2.zero;
             }
+        }
+
+        private void SetSearchAreaGridVerticalPadding(int top, int bottom)
+        {
+            var padding = searchAreaGridLayoutGroup.padding;
+            if (padding.top == top && padding.bottom == bottom)
+                return;
+            searchAreaGridLayoutGroup.padding = new RectOffset(padding.left, padding.right, top, bottom);
         }
     }
 }
