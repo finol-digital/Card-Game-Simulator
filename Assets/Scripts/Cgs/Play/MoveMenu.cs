@@ -27,6 +27,9 @@ namespace Cgs.Play
         private const string MissingSourceWarningMessage = "Ignoring move request since the card to move is gone.";
         private const string EmptyStackWarningMessage = "Ignoring move request since the selected card stack is empty.";
 
+        private const string MissingStackWarningMessage =
+            "Ignoring move request since there is no card stack to move from.";
+
         public Button moveButton;
 
         private CardModel _selectedCardModel;
@@ -127,6 +130,12 @@ namespace Cgs.Play
 
         public void Show(CardStack selectedCardStack)
         {
+            if (selectedCardStack == null)
+            {
+                Debug.LogWarning(MissingStackWarningMessage);
+                return;
+            }
+
             _selectedCardModel = null;
             _selectedCardStack = selectedCardStack;
             Menu.Show();

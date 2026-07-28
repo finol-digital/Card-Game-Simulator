@@ -742,6 +742,12 @@ namespace Cgs.Play
 
         public void ShowMoveMenu(CardStack cardStack)
         {
+            if (cardStack == null)
+            {
+                Debug.LogWarning("Ignoring move request since there is no card stack to move from.");
+                return;
+            }
+
             Mover.Show(cardStack);
         }
 
