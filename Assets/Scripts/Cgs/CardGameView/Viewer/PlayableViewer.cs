@@ -70,6 +70,8 @@ namespace Cgs.CardGameView.Viewer
         [FormerlySerializedAs("tokenActionPanel")]
         public CanvasGroup counterActionPanel;
 
+        public Button saveButton;
+
         public List<Text> valueTexts;
         public InputField dieValueInputField;
         public InputField dieMaxInputField;
@@ -116,9 +118,10 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.ViewerLess).performed += InputLess;
             InputSystem.actions.FindAction(Tags.ViewerMore).performed += InputMore;
             InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSave;
+            InputSystem.actions.FindAction(Tags.CardMove).performed += InputMove;
             InputSystem.actions.FindAction(Tags.CardRotate).performed += InputRotate;
-            InputSystem.actions.FindAction(Tags.CardFlip).performed += InputFlip;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputShuffle;
+            InputSystem.actions.FindAction(Tags.CardFlip).performed += InputFlip;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -192,6 +195,10 @@ namespace Cgs.CardGameView.Viewer
             view.alpha = IsVisible ? 1 : 0;
             view.interactable = IsVisible;
             view.blocksRaycasts = IsVisible;
+
+            // Save sits alongside Delete in the view bar, so it ignores ShowActionsMenu, but it only applies to stacks
+            if (saveButton != null)
+                saveButton.gameObject.SetActive(_selectedPlayable is CardStack);
 
             dieActionPanel.alpha = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Die ? 1 : 0;
             dieActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Die;
@@ -492,18 +499,6 @@ namespace Cgs.CardGameView.Viewer
             };
         }
 
-        [UsedImplicitly]
-        public void ViewStack()
-        {
-            if (Stack == null)
-            {
-                Debug.LogWarning("Ignoring view request since there is no stack selected.");
-                return;
-            }
-
-            Stack.View();
-        }
-
         private void InputSave(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
@@ -523,6 +518,33 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Stack.PromptSave();
+        }
+
+        private void InputMove(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is CardStack)
+                MoveStackTopCard();
+        }
+
+        [UsedImplicitly]
+        public void MoveStackTopCard()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring move request since there is no stack selected.");
+                return;
+            }
+
+            if (Stack.Cards.Count < 1)
+            {
+                Debug.LogWarning("Ignoring move request since the selected stack is empty.");
+                return;
+            }
+
+            PlayController.Instance.ShowMoveMenu(Stack);
         }
 
         private void InputRotate(InputAction.CallbackContext callbackContext)
@@ -589,6 +611,18 @@ namespace Cgs.CardGameView.Viewer
         }
 
         [UsedImplicitly]
+        public void ViewStack()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring view request since there is no stack selected.");
+                return;
+            }
+
+            Stack.View();
+        }
+
+        [UsedImplicitly]
         public void ChangeCounterColor(int option)
         {
             if (SelectedCounter == null)
@@ -644,9 +678,10 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.ViewerLess).performed -= InputLess;
             InputSystem.actions.FindAction(Tags.ViewerMore).performed -= InputMore;
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSave;
+            InputSystem.actions.FindAction(Tags.CardMove).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.CardRotate).performed -= InputRotate;
-            InputSystem.actions.FindAction(Tags.CardFlip).performed -= InputFlip;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputShuffle;
+            InputSystem.actions.FindAction(Tags.CardFlip).performed -= InputFlip;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

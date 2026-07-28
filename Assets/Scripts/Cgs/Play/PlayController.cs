@@ -740,6 +740,11 @@ namespace Cgs.Play
             Mover.Show(cardModel);
         }
 
+        public void ShowMoveMenu(CardStack cardStack)
+        {
+            Mover.Show(cardStack);
+        }
+
         public void AddCard(Card card)
         {
             AddCard(card, false);
