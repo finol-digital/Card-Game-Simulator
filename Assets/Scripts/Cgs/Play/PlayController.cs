@@ -740,6 +740,17 @@ namespace Cgs.Play
             Mover.Show(cardModel);
         }
 
+        public void ShowMoveMenu(CardStack cardStack)
+        {
+            if (cardStack == null)
+            {
+                Debug.LogWarning("Ignoring move request since there is no card stack to move from.");
+                return;
+            }
+
+            Mover.Show(cardStack);
+        }
+
         public void AddCard(Card card)
         {
             AddCard(card, false);

@@ -9,7 +9,8 @@
         "FinolDigital.Cgs.Json.Unity",
         "unity.webp",
         "WebP.Editor",
-        "Unity.Netcode.Runtime"
+        "Unity.Netcode.Runtime",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

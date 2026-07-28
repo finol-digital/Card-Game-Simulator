@@ -10,6 +10,7 @@ using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using Cgs.UI;
+using FinolDigital.Cgs.Json;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,20 +23,35 @@ namespace Cgs.Play
     public class MoveMenu : SelectionPanel
     {
         private const string DefaultZoneName = "Zone";
+        private const string MissingContainerErrorMessage = "ERROR: Move: Missing selected card container.";
+        private const string MissingSourceWarningMessage = "Ignoring move request since the card to move is gone.";
+        private const string EmptyStackWarningMessage = "Ignoring move request since the selected card stack is empty.";
+
+        private const string MissingStackWarningMessage =
+            "Ignoring move request since there is no card stack to move from.";
 
         public Button moveButton;
 
         private CardModel _selectedCardModel;
+        private CardStack _selectedCardStack;
         private ICardContainer _selectedCardContainer;
 
         // Card containers are Unity objects that may have been destroyed since they were selected
         private bool IsSelectedCardContainerAvailable =>
             _selectedCardContainer is Object unityObject && unityObject != null;
 
+        // A card stack deletes itself when it is emptied, which can happen while this menu is open
+        private bool IsSelectedCardStackAvailable => _selectedCardStack != null;
+
+        private bool IsSourceAvailable => _selectedCardModel != null || IsSelectedCardStackAvailable;
+
         private ICardContainer CurrentCardContainer
         {
             get
             {
+                if (IsSelectedCardStackAvailable)
+                    return _selectedCardStack;
+
                 var parentCardZone = _selectedCardModel == null ? null : _selectedCardModel.ParentCardZone;
                 if (parentCardZone == null)
                     return null;
@@ -76,7 +92,7 @@ namespace Cgs.Play
         // Poll for Vector2 inputs
         private void Update()
         {
-            var isMoveable = IsSelectedCardContainerAvailable && toggleGroup.AnyTogglesOn();
+            var isMoveable = IsSourceAvailable && IsSelectedCardContainerAvailable && toggleGroup.AnyTogglesOn();
             if(moveButton.interactable != isMoveable)
                 moveButton.interactable = isMoveable;
 
@@ -107,6 +123,21 @@ namespace Cgs.Play
         public void Show(CardModel selectedCardModel)
         {
             _selectedCardModel = selectedCardModel;
+            _selectedCardStack = null;
+            Menu.Show();
+            BuildCardZoneSelectionOptions();
+        }
+
+        public void Show(CardStack selectedCardStack)
+        {
+            if (selectedCardStack == null)
+            {
+                Debug.LogWarning(MissingStackWarningMessage);
+                return;
+            }
+
+            _selectedCardModel = null;
+            _selectedCardStack = selectedCardStack;
             Menu.Show();
             BuildCardZoneSelectionOptions();
         }
@@ -171,28 +202,66 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void Move()
         {
-            if (_selectedCardModel == null || !IsSelectedCardContainerAvailable)
+            // The card to move can be taken by another player while this menu is open
+            if (!IsSourceAvailable)
             {
-                Debug.LogError("ERROR: Move: Missing selected card model or container.");
+                Debug.LogWarning(MissingSourceWarningMessage);
+                Hide();
                 return;
             }
 
+            if (!IsSelectedCardContainerAvailable)
+            {
+                Debug.LogError(MissingContainerErrorMessage);
+                return;
+            }
+
+            if (IsSelectedCardStackAvailable)
+                MoveTopCardOfStack();
+            else
+                MoveSelectedCardModel();
+
+            Hide();
+        }
+
+        private void MoveSelectedCardModel()
+        {
+            AddToSelectedCardContainer(_selectedCardModel.Value, _selectedCardModel.IsFacedown);
+            _selectedCardModel.RequestDelete();
+        }
+
+        // The top card is read now instead of when this menu opened,
+        // since the stack may have been added to or taken from in the meantime
+        private void MoveTopCardOfStack()
+        {
+            var cards = _selectedCardStack.Cards;
+            var topIndex = cards.Count - 1;
+            if (topIndex < 0)
+            {
+                Debug.LogWarning(EmptyStackWarningMessage);
+                return;
+            }
+
+            AddToSelectedCardContainer(cards[topIndex], !_selectedCardStack.IsTopFaceup);
+            _selectedCardStack.RequestRemoveAt(topIndex);
+        }
+
+        // The card is added to its destination before it is removed from its source,
+        // since a card that is briefly duplicated is recoverable but a card that is lost is not
+        private void AddToSelectedCardContainer(Card card, bool isFacedown)
+        {
             switch (_selectedCardContainer)
             {
                 case CardZone cardZone:
-                    cardZone.AddCard(_selectedCardModel.Value, _selectedCardModel.IsFacedown);
+                    cardZone.AddCard(card, isFacedown);
                     break;
                 case PlayController playController:
-                    playController.AddCard(_selectedCardModel.Value, _selectedCardModel.IsFacedown);
+                    playController.AddCard(card, isFacedown);
                     break;
                 default:
-                    _selectedCardContainer.AddCard(_selectedCardModel.Value);
+                    _selectedCardContainer.AddCard(card);
                     break;
             }
-
-            _selectedCardModel.RequestDelete();
-
-            Hide();
         }
 
         private void InputCancel(InputAction.CallbackContext callbackContext)
