@@ -14,6 +14,7 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public class DiceZone : CgsNetPlayable
     {
+        public const string NoDiceMessage = "No dice in zone!";
         public const string RollXDicePrompt = "Roll {0} Dice?";
 
         public IReadOnlyList<Die> DiceInZone => _diceInZone;
@@ -51,6 +52,12 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void RollDiceInZone()
         {
+            if (DiceInZone.Count < 1)
+            {
+                CardGameManager.Instance.Messenger.Show(NoDiceMessage);
+                return;
+            }
+
             CardGameManager.Instance.Messenger.Prompt(string.Format(RollXDicePrompt, DiceInZone.Count),
                 () =>
                 {
