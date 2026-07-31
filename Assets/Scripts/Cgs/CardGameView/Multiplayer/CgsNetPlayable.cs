@@ -183,6 +183,12 @@ namespace Cgs.CardGameView.Multiplayer
         // (eg CardStack to CardModel.CreateDrag) replace the previous holder
         private static readonly Dictionary<int, CgsNetPlayable> DraggedPlayables = new();
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            DraggedPlayables.Clear();
+        }
+
         public static bool IsAnyDragging => DraggedPlayables.Values.Any(playable => playable != null);
 
         public PointerEventData CurrentPointerEventData { get; protected set; }

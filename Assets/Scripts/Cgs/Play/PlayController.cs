@@ -57,6 +57,12 @@ namespace Cgs.Play
 
         public static PlayController Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            Instance = null;
+        }
+
         public GameObject cardViewerPrefab;
         public GameObject playableViewerPrefab;
         public GameObject lobbyMenuPrefab;

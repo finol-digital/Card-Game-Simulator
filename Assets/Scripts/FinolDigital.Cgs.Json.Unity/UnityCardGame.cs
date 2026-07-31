@@ -28,6 +28,12 @@ namespace FinolDigital.Cgs.Json.Unity
         private static readonly Regex JsonLineBreakRegex = new(@"\[br\]|<br\s*/?>",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private static readonly Regex CardImageUrlPropertyRegex = new(@"\{(?<property>[\w\.]+)\}",
+            RegexOptions.Compiled);
+
+        private static readonly HashSet<string> CardImageUrlKeywords = new()
+            {"cardId", "cardName", "cardSet", "cardImageFileType"};
+
         public static readonly UnityCardGame UnityInvalid = new(null);
 
         public static string GamesImportPath => Path.Combine(Application.temporaryCachePath, "cgsGamesImport");
@@ -107,9 +113,16 @@ namespace FinolDigital.Cgs.Json.Unity
 
         protected Dictionary<string, Set> LoadedSets { get; } = new(StringComparer.OrdinalIgnoreCase);
 
+        private readonly HashSet<string> _warnedCardImageUrlProperties = new();
+
         public Sprite BannerImageSprite
         {
-            get => _bannerImageSprite ??= Resources.Load<Sprite>("Banner");
+            get
+            {
+                if (_bannerImageSprite == null)
+                    _bannerImageSprite = Resources.Load<Sprite>("Banner");
+                return _bannerImageSprite;
+            }
             private set
             {
                 if (_bannerImageSprite != null)
@@ -126,7 +139,12 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public Sprite CardBackImageSprite
         {
-            get => _cardBackImageSprite ??= Resources.Load<Sprite>("CardBack");
+            get
+            {
+                if (_cardBackImageSprite == null)
+                    _cardBackImageSprite = Resources.Load<Sprite>("CardBack");
+                return _cardBackImageSprite;
+            }
             private set
             {
                 if (_cardBackImageSprite != null)
@@ -145,7 +163,12 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public Sprite PlayMatImageSprite
         {
-            get => _playMatImageSprite ??= Resources.Load<Sprite>("PlayMat");
+            get
+            {
+                if (_playMatImageSprite == null)
+                    _playMatImageSprite = Resources.Load<Sprite>("PlayMat");
+                return _playMatImageSprite;
+            }
             private set
             {
                 if (_playMatImageSprite != null && _hasPlayMatImage)
@@ -172,6 +195,7 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             CardBackFaceImageUrls.Clear();
             CardProperties.Clear();
+            _warnedCardImageUrlProperties.Clear();
             DeckPlayCards.Clear();
             DeckUrls.Clear();
             Enums.Clear();
@@ -911,6 +935,9 @@ namespace FinolDigital.Cgs.Json.Unity
             }
 
             var cardImageUrl = CardImageUrl;
+            if (string.IsNullOrEmpty(cardImageWebUrl) && !string.IsNullOrEmpty(cardImageUrl))
+                WarnUnresolvedCardImageUrlProperties(cardImageUrl, cardProperties);
+
             if (string.IsNullOrEmpty(CardImageProperty) || !string.IsNullOrEmpty(cardImageWebUrl) ||
                 !string.IsNullOrEmpty(cardImageUrl))
             {
@@ -1176,6 +1203,22 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 Debug.LogWarning("PopulateCardProperty::ParsePropertyError:" + property.Name);
                 PopulateEmptyCardProperty(cardProperties, property, key);
+            }
+        }
+
+        private void WarnUnresolvedCardImageUrlProperties(string cardImageUrl,
+            IReadOnlyDictionary<string, PropertyDefValuePair> cardProperties)
+        {
+            foreach (Match match in CardImageUrlPropertyRegex.Matches(cardImageUrl))
+            {
+                var property = match.Groups["property"].Value;
+                if (CardImageUrlKeywords.Contains(property) || cardProperties.ContainsKey(property))
+                    continue;
+
+                if (_warnedCardImageUrlProperties.Add(property))
+                    Debug.LogWarning("LoadCardFromJToken::UnresolvedCardImageUrlProperty:" + match.Value +
+                                     " in cardImageUrl " + cardImageUrl +
+                                     " is not a cardProperty, so it will be replaced with an empty string");
             }
         }
 
