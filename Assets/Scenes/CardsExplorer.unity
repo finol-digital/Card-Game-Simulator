@@ -979,6 +979,7 @@ MonoBehaviour:
   - {fileID: 1473139182}
   - {fileID: 1558182032}
   searchResults: {fileID: 508283654}
+  explorerLayout: {fileID: 508283656}
 --- !u!114 &508283654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1028,6 +1029,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardsViewContent: {fileID: 21480367}
+  cardsViewGrid: {fileID: 21480368}
+  footer: {fileID: 101628742}
+  pageCountText: {fileID: 1272889841}
+  newCardButton: {fileID: 2140515672}
+  editCardButton: {fileID: 1558182031}
+  deleteCardButton: {fileID: 1473139181}
 --- !u!1001 &799426865
 PrefabInstance:
   m_ObjectHideFlags: 0
