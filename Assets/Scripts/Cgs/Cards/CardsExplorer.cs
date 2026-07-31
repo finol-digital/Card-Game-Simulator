@@ -34,6 +34,7 @@ namespace Cgs.Cards
         public Image bannerImage;
         public List<GameObject> editButtons;
         public SearchResults searchResults;
+        public CardsExplorerLayout explorerLayout;
 
         private GamesManagementMenu GamesManagement =>
             _gamesManagement ??= Instantiate(gamesManagementMenuPrefab).GetOrAddComponent<GamesManagementMenu>();
@@ -78,6 +79,7 @@ namespace Cgs.Cards
             bannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             foreach (var button in editButtons)
                 button.SetActive(Settings.DeveloperMode && !CardGameManager.Current.IsUploaded);
+            explorerLayout.ResetLayout();
         }
 
         private void InputFocus(InputAction.CallbackContext context)
