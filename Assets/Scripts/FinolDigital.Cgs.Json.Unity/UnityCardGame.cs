@@ -28,7 +28,7 @@ namespace FinolDigital.Cgs.Json.Unity
         private static readonly Regex JsonLineBreakRegex = new(@"\[br\]|<br\s*/?>",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex CardImageUrlPropertyRegex = new(@"\{(?<property>[\w\.]+)\}",
+        private static readonly Regex CardImageUrlPropertyRegex = new(@"\{(?<property>[\w\.\[\]]+)\}",
             RegexOptions.Compiled);
 
         private static readonly HashSet<string> CardImageUrlKeywords = new()
