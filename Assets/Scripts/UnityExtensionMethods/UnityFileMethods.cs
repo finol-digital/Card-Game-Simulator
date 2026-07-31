@@ -30,6 +30,32 @@ namespace UnityExtensionMethods
         public const string JsonExtension = ".json";
         public const string WebpExtension = ".webp";
         private const int MaxRetries = 3;
+        public const string CgsGamesProxyPrefix = "https://cgs.games/api/proxy/";
+        private const string HttpsPrefix = "https://";
+        private const string HttpPrefix = "http://";
+
+        public static string ToCgsGamesProxyUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                return url;
+
+            var target = url;
+            bool trimmed;
+            do
+            {
+                trimmed = true;
+                if (target.StartsWith(CgsGamesProxyPrefix))
+                    target = target[CgsGamesProxyPrefix.Length..];
+                else if (target.StartsWith(HttpsPrefix))
+                    target = target[HttpsPrefix.Length..];
+                else if (target.StartsWith(HttpPrefix))
+                    target = target[HttpPrefix.Length..];
+                else
+                    trimmed = false;
+            } while (trimmed);
+
+            return CgsGamesProxyPrefix + target;
+        }
 
         public static string GetSafeFilePath(string filePath)
         {
@@ -242,11 +268,14 @@ namespace UnityExtensionMethods
             }
 
 #if UNITY_WEBGL
-            if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
+            if (url.StartsWith(HttpsPrefix))
             {
-                url = "https://cgs.games/api/proxy/" + url[8..];
+                url = ToCgsGamesProxyUrl(url);
                 Debug.Log("CGS Games WebGL url : " + url);
             }
+#else
+            if (url.StartsWith(CgsGamesProxyPrefix))
+                url = ToCgsGamesProxyUrl(url);
 #endif
 
             var uriBuilder = url.StartsWith("http")
@@ -276,6 +305,21 @@ namespace UnityExtensionMethods
                 }
                 else
                     success = true;
+            }
+
+            if (!success && postJsonBody == null && headers == null && uri.Scheme == Uri.UriSchemeHttps
+                && !uri.AbsoluteUri.StartsWith(CgsGamesProxyPrefix))
+            {
+                var proxyUri = new Uri(ToCgsGamesProxyUrl(uri.AbsoluteUri));
+                Debug.Log("SaveUrlToFile::ProxyFallback:" + proxyUri);
+                unityWebRequest.Dispose();
+                unityWebRequest = CreateUnityWebRequest(proxyUri, null, null);
+                yield return unityWebRequest.SendWebRequest();
+                success = unityWebRequest.result == UnityWebRequest.Result.Success
+                          && string.IsNullOrEmpty(unityWebRequest.error);
+                if (!success)
+                    Debug.LogWarning(
+                        $"SaveUrlToFile::ProxyFallbackFailed got {unityWebRequest.responseCode} for {proxyUri} with error: {unityWebRequest.error}");
             }
 
             if (!success)
