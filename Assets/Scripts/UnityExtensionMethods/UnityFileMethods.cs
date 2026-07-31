@@ -307,13 +307,13 @@ namespace UnityExtensionMethods
                     success = true;
             }
 
-            if (!success && postJsonBody == null && uri.Scheme == Uri.UriSchemeHttps
+            if (!success && postJsonBody == null && headers == null && uri.Scheme == Uri.UriSchemeHttps
                 && !uri.AbsoluteUri.StartsWith(CgsGamesProxyPrefix))
             {
                 var proxyUri = new Uri(ToCgsGamesProxyUrl(uri.AbsoluteUri));
                 Debug.Log("SaveUrlToFile::ProxyFallback:" + proxyUri);
                 unityWebRequest.Dispose();
-                unityWebRequest = CreateUnityWebRequest(proxyUri, null, headers);
+                unityWebRequest = CreateUnityWebRequest(proxyUri, null, null);
                 yield return unityWebRequest.SendWebRequest();
                 success = unityWebRequest.result == UnityWebRequest.Result.Success
                           && string.IsNullOrEmpty(unityWebRequest.error);
