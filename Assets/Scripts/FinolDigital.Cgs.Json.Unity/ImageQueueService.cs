@@ -24,7 +24,13 @@ namespace FinolDigital.Cgs.Json.Unity
 
         private static int ConcurrentQueueSize => 5;
 
-        public static ImageQueueService Instance { get; } = new();
+        public static ImageQueueService Instance { get; private set; } = new();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            Instance = new ImageQueueService();
+        }
 
         private readonly ConcurrentQueue<UnityCard> _queue = new();
 
