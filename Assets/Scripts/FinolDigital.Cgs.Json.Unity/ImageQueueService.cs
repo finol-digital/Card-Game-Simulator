@@ -71,9 +71,9 @@ namespace FinolDigital.Cgs.Json.Unity
                 }
 #else
                 var url = unityCard.ImageWebUrl;
-                if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
+                if (url.StartsWith("https://"))
                 {
-                    url = "https://cgs.games/api/proxy/" + url[8..];
+                    url = UnityFileMethods.ToCgsGamesProxyUrl(url);
                     Debug.Log("CGS Games WebGL url : " + url);
                 }
 
