@@ -559,7 +559,7 @@ namespace UnityExtensionMethods
 
         public static bool IsWebpFile(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
                 return false;
 
             try
