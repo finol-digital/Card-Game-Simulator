@@ -318,7 +318,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 XImage xImage;
                 try
                 {
-                    if (imageFilePath.EndsWith(UnityFileMethods.WebpExtension, StringComparison.OrdinalIgnoreCase))
+                    if (UnityFileMethods.IsWebpFile(imageFilePath))
                     {
                         // Texture2D.LoadImage() only supports png and jpg, so webp must be decoded and re-encoded
                         if (!webpPngCache.TryGetValue(imageFilePath, out var pngBytes))
