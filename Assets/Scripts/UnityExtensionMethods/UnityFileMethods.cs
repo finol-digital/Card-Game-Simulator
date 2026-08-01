@@ -566,8 +566,16 @@ namespace UnityExtensionMethods
             {
                 using var fileStream = File.OpenRead(filePath);
                 var header = new byte[12];
-                var read = fileStream.Read(header, 0, header.Length);
-                return read == header.Length && IsWebp(header);
+                var offset = 0;
+                while (offset < header.Length)
+                {
+                    var read = fileStream.Read(header, offset, header.Length - offset);
+                    if (read <= 0)
+                        break;
+                    offset += read;
+                }
+
+                return offset == header.Length && IsWebp(header);
             }
             catch (Exception ex)
             {
