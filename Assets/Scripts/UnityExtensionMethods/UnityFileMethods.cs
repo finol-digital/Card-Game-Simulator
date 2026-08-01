@@ -559,6 +559,9 @@ namespace UnityExtensionMethods
 
         public static bool IsWebpFile(string filePath)
         {
+            if (string.IsNullOrEmpty(filePath))
+                return false;
+
             try
             {
                 using var fileStream = File.OpenRead(filePath);
