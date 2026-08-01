@@ -28,7 +28,6 @@ namespace UnityExtensionMethods
         public const string MetaExtension = ".meta";
         public const string ZipExtension = ".zip";
         public const string JsonExtension = ".json";
-        public const string WebpExtension = ".webp";
         private const int MaxRetries = 3;
         public const string CgsGamesProxyPrefix = "https://cgs.games/api/proxy/";
         private const string HttpsPrefix = "https://";
@@ -440,7 +439,7 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
-            var texture = imageFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
+            var texture = IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
             if (texture == null)
             {
                 // An undecodable cached file is likely a bad download (e.g. an error page),
@@ -482,7 +481,7 @@ namespace UnityExtensionMethods
                     yield return null;
                 }
 
-                var texture = imageUrl.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
+                var texture = IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
                 yield return CreateSprite(texture);
             }
         }
@@ -503,7 +502,7 @@ namespace UnityExtensionMethods
                 return null;
             }
 
-            var texture = textureFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
+            var texture = IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
             return CreateSprite(texture);
         }
 
@@ -546,8 +545,43 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
-            var texture = textureFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
+            var texture = IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
             output(CreateSprite(texture));
+        }
+
+        // Some hosts serve webp bytes under a .jpg/.png url with a mismatched Content-Type,
+        // so the file signature is checked instead of trusting the file extension
+        public static bool IsWebp(byte[] bytes)
+        {
+            return bytes is { Length: >= 12 } && bytes[0] == 'R' && bytes[1] == 'I' && bytes[2] == 'F' &&
+                   bytes[3] == 'F' && bytes[8] == 'W' && bytes[9] == 'E' && bytes[10] == 'B' && bytes[11] == 'P';
+        }
+
+        public static bool IsWebpFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+                return false;
+
+            try
+            {
+                using var fileStream = File.OpenRead(filePath);
+                var header = new byte[12];
+                var offset = 0;
+                while (offset < header.Length)
+                {
+                    var read = fileStream.Read(header, offset, header.Length - offset);
+                    if (read <= 0)
+                        break;
+                    offset += read;
+                }
+
+                return offset == header.Length && IsWebp(header);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("IsWebpFile::ReadFailed:" + filePath + " " + ex);
+                return false;
+            }
         }
 
         // Can return null
