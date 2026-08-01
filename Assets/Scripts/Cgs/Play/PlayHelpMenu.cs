@@ -40,10 +40,16 @@ namespace Cgs.Play
         private static RotateZoomableScrollRect PlayArea =>
             PlayController.Instance != null ? PlayController.Instance.playArea : null;
 
+        private static PlayMatRotationZoomController RotationZoomController =>
+            PlayController.Instance != null
+                ? PlayController.Instance.GetComponent<PlayMatRotationZoomController>()
+                : null;
+
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameHelp).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleZoomRotation;
         }
 
         public override void Show()
@@ -199,10 +205,25 @@ namespace Cgs.Play
             Hide();
         }
 
+        private void InputToggleZoomRotation(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            var rotationZoomController = RotationZoomController;
+            if (rotationZoomController == null)
+                return;
+
+            rotationZoomController.ToggleRotation();
+            rotationZoomController.ToggleZoom();
+            SyncToggles();
+        }
+
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameHelp).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed -= InputToggleZoomRotation;
         }
     }
 }
