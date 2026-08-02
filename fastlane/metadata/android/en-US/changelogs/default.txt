@@ -1,5 +1,4 @@
 ## What's Changed
-* Cards Explorer: Card Viewer to match Deck Editor
-* Deck Editor: Pivot button toggles between vertical and horizontal layouts
-* Play: Help button
-
+* Add Move action for card stacks
+* Fix card image loading
+* Improve Cards Explorer footer
