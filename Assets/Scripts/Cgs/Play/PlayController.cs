@@ -698,7 +698,7 @@ namespace Cgs.Play
 
         private void PromptForHand()
         {
-            if (CardGameManager.Current.GameStartHandCount > 0)
+            if (CardGameManager.Current.GameStartHandCount > 0 && !drawer.HasCards)
                 ShowDealer();
         }
 

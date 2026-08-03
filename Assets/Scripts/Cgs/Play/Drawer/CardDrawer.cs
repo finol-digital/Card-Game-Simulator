@@ -37,6 +37,17 @@ namespace Cgs.Play.Drawer
 
         private static bool IsBlocked => PlayController.Instance != null && PlayController.Instance.IsBlocked;
 
+        public bool HasCards
+        {
+            get
+            {
+                if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline &&
+                    CgsNetManager.Instance.LocalPlayer != null)
+                    return CgsNetManager.Instance.LocalPlayer.HandCards.Any(handCards => handCards.Count > 0);
+                return cardZonesRectTransform.GetComponentsInChildren<CardModel>(true).Length > 0;
+            }
+        }
+
         public StackViewer viewer;
         public Dropdown cardStackDropdown;
         public Button downButton;
