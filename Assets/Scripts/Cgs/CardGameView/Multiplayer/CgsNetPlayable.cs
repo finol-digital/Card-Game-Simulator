@@ -394,11 +394,16 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Debug.Log($"PruneStalePointers for {gameObject.name}");
             _stalePointerTime = 0;
+            if (CurrentDragPhase is DragPhase.Begin or DragPhase.Drag)
+            {
+                var eventData = CurrentPointerEventData ?? new PointerEventData(EventSystem.current);
+                OnEndDrag(eventData);
+                Visibility.blocksRaycasts = true;
+            }
+
             PointerPositions.Clear();
             PointerDragOffsets.Clear();
             DidDrag = false;
-            if (CurrentDragPhase == DragPhase.Drag)
-                CurrentDragPhase = DragPhase.End;
             foreach (var pointerId in DraggedPlayables.Where(pair => pair.Value == this)
                          .Select(pair => pair.Key).ToList())
                 DraggedPlayables.Remove(pointerId);
