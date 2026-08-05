@@ -1697,7 +1697,7 @@
                 {
                     "name": "",
                     "id": "526441d0-2659-4e5e-b0c1-63b00ff46ac2",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1730,7 +1730,7 @@
                 {
                     "name": "",
                     "id": "9de0afee-168d-4664-8979-2f075564203b",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1762,6 +1762,17 @@
                 },
                 {
                     "name": "",
+                    "id": "c72c9180-4203-4ba0-b15b-6b097fe8066a",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Action0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0c3615de-1030-4e2e-95b4-100dfe36ce80",
                     "path": "<Keyboard>/numpad0",
                     "interactions": "",
@@ -1779,6 +1790,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Action0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6269c183-2a00-44b3-9bc2-8b08c6176261",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Action1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

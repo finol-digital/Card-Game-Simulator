@@ -621,6 +621,9 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
 #endif
 
+            if (PointerPositions.Count == 0)
+                return;
+
             if (DropTarget == null && PlaceHolder == null && ParentCardZone == null)
                 HighlightMode = HighlightMode.Warn;
             else if (CurrentDragPhase != DragPhase.End)

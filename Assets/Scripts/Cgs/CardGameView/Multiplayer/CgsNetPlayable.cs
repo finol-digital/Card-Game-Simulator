@@ -49,6 +49,8 @@ namespace Cgs.CardGameView.Multiplayer
         private const float RotationAnimationDuration = 0.25f;
         private const float RotationAnimationMinDegrees = 1f;
 
+        private const float StalePointerPruneSeconds = 0.5f;
+
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
         protected bool LacksOwnership => IsSpawned && !IsOwner;
@@ -200,6 +202,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected float HoldTime { get; private set; }
 
         private float _disownedTime;
+        private float _stalePointerTime;
         private Vector2 _previousPosition;
 
         public bool ToDelete { get; private set; }
@@ -347,12 +350,71 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Update()
         {
+            if (PointerPositions.Count > 0 && !IsAnyPointerPressed)
+            {
+                _stalePointerTime += Time.deltaTime;
+                if (_stalePointerTime > StalePointerPruneSeconds)
+                    PruneStalePointers();
+            }
+            else
+                _stalePointerTime = 0;
+
             if (PointerPositions.Count > 0 && !DidDrag && !(Mouse.current?.rightButton?.isPressed ?? false))
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
 
             OnUpdatePlayable();
+        }
+
+        private static int _anyPointerPressedCacheFrame = -1;
+        private static bool _anyPointerPressedCache;
+
+        private static bool IsAnyPointerPressed
+        {
+            get
+            {
+                if (_anyPointerPressedCacheFrame == Time.frameCount)
+                    return _anyPointerPressedCache;
+
+                _anyPointerPressedCacheFrame = Time.frameCount;
+
+                if (Mouse.current != null && (Mouse.current.leftButton.isPressed ||
+                                              Mouse.current.rightButton.isPressed ||
+                                              Mouse.current.middleButton.isPressed))
+                    return _anyPointerPressedCache = true;
+
+                if (Pen.current != null && Pen.current.tip.isPressed)
+                    return _anyPointerPressedCache = true;
+
+                if (Touchscreen.current != null)
+                    foreach (var touch in Touchscreen.current.touches)
+                        if (touch.press.isPressed)
+                            return _anyPointerPressedCache = true;
+
+                return _anyPointerPressedCache = false;
+            }
+        }
+
+        private void PruneStalePointers()
+        {
+#if UNITY_EDITOR
+            Debug.Log($"PruneStalePointers for {gameObject.name}");
+#endif
+            _stalePointerTime = 0;
+            if (CurrentDragPhase is DragPhase.Begin or DragPhase.Drag)
+            {
+                var eventData = CurrentPointerEventData ?? new PointerEventData(EventSystem.current);
+                OnEndDrag(eventData);
+                Visibility.blocksRaycasts = true;
+            }
+
+            PointerPositions.Clear();
+            PointerDragOffsets.Clear();
+            DidDrag = false;
+            foreach (var pointerId in DraggedPlayables.Where(pair => pair.Value == this)
+                         .Select(pair => pair.Key).ToList())
+                DraggedPlayables.Remove(pointerId);
         }
 
         protected virtual void OnUpdatePlayable()
@@ -409,11 +471,10 @@ namespace Cgs.CardGameView.Multiplayer
 
             CurrentPointerEventData = eventData;
 
-            if (CurrentDragPhase == DragPhase.Drag)
+            if (DraggedPlayables.TryGetValue(eventData.pointerId, out var draggedPlayable) && draggedPlayable == this)
                 return;
 
-            PointerPositions.Remove(eventData.pointerId);
-            PointerDragOffsets.Remove(eventData.pointerId);
+            RemovePointer(eventData);
             if (DidDrag && PointerDragOffsets.Count == 0)
                 DidDrag = false;
         }
@@ -590,6 +651,9 @@ namespace Cgs.CardGameView.Multiplayer
                                           || Mouse.current.rightButton.wasReleasedThisFrame))
                 return;
 #endif
+
+            if (PointerPositions.Count == 0)
+                return;
 
             if (ParentCardZone == null)
                 HighlightMode = HighlightMode.Warn;
