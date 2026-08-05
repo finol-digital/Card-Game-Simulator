@@ -181,7 +181,8 @@ namespace Cgs.UI.ScrollRects
             if (PointerPositions.Count > 0 && Touch.activeTouches.Count == 0
                 && (Mouse.current == null || !(Mouse.current.leftButton.isPressed
                                                || Mouse.current.rightButton.isPressed
-                                               || Mouse.current.middleButton.isPressed)))
+                                               || Mouse.current.middleButton.isPressed))
+                && !(Pen.current?.tip?.isPressed ?? false))
                 PointerPositions.Clear();
 
             // Touch zoom
