@@ -392,7 +392,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void PruneStalePointers()
         {
+#if UNITY_EDITOR
             Debug.Log($"PruneStalePointers for {gameObject.name}");
+#endif
             _stalePointerTime = 0;
             if (CurrentDragPhase is DragPhase.Begin or DragPhase.Drag)
             {
