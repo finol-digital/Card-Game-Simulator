@@ -367,26 +367,32 @@ namespace Cgs.CardGameView.Multiplayer
             OnUpdatePlayable();
         }
 
+        private static int _anyPointerPressedCacheFrame = -1;
+        private static bool _anyPointerPressedCache;
+
         private static bool IsAnyPointerPressed
         {
             get
             {
+                if (_anyPointerPressedCacheFrame == Time.frameCount)
+                    return _anyPointerPressedCache;
+
+                _anyPointerPressedCacheFrame = Time.frameCount;
+
                 if (Mouse.current != null && (Mouse.current.leftButton.isPressed ||
                                               Mouse.current.rightButton.isPressed ||
                                               Mouse.current.middleButton.isPressed))
-                    return true;
+                    return _anyPointerPressedCache = true;
 
                 if (Pen.current != null && Pen.current.tip.isPressed)
-                    return true;
+                    return _anyPointerPressedCache = true;
 
-                if (Touchscreen.current == null)
-                    return false;
+                if (Touchscreen.current != null)
+                    foreach (var touch in Touchscreen.current.touches)
+                        if (touch.press.isPressed)
+                            return _anyPointerPressedCache = true;
 
-                foreach (var touch in Touchscreen.current.touches)
-                    if (touch.press.isPressed)
-                        return true;
-
-                return false;
+                return _anyPointerPressedCache = false;
             }
         }
 
