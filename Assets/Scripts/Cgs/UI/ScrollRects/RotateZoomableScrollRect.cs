@@ -178,6 +178,12 @@ namespace Cgs.UI.ScrollRects
 
         private void Update()
         {
+            if (PointerPositions.Count > 0 && Touch.activeTouches.Count == 0
+                && (Mouse.current == null || !(Mouse.current.leftButton.isPressed
+                                               || Mouse.current.rightButton.isPressed
+                                               || Mouse.current.middleButton.isPressed)))
+                PointerPositions.Clear();
+
             // Touch zoom
             var touches = new List<Vector2>(Touch.activeTouches.Select(touch => touch.screenPosition));
             for (var i = touches.Count - 1; i >= 0; i--)
