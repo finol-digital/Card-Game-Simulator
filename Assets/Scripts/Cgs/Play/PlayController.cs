@@ -600,9 +600,9 @@ namespace Cgs.Play
             return cardStack;
         }
 
-        public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerCount)
+        public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerSeat)
         {
-            var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerCount);
+            var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerSeat);
 
             var deckPlayCardsAsk = BuildAskForDeckPlayCards(decksToCardsToPlay);
             if (!string.IsNullOrEmpty(deckPlayCardsAsk))
@@ -613,11 +613,11 @@ namespace Cgs.Play
         }
 
         private static Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> FindDeckToCardsToPlay(
-            IReadOnlyList<CardStack> cardStacks, int playerCount)
+            IReadOnlyList<CardStack> cardStacks, int playerSeat)
         {
             var deckToCardsToPlay = new Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>>();
 
-            var deckQuery = "playerCount=" + playerCount;
+            var deckQuery = "playerSeat=" + playerSeat;
             foreach (var deckPlayCard in CardGameManager.Current.DeckPlayCards.Where(deckPlayCard =>
                          string.IsNullOrEmpty(deckPlayCard.DeckQuery) || deckPlayCard.DeckQuery.Equals(deckQuery)))
                 deckToCardsToPlay[deckPlayCard] = FindCardsToPlay(deckPlayCard, cardStacks);
