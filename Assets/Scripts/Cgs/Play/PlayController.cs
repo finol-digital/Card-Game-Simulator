@@ -36,6 +36,7 @@ namespace Cgs.Play
         public const string MainMenuPrompt = "Go back to the main menu?";
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
+        public const string InvalidPlayerSeatMessage = "Invalid playerSeat {0}. Supported playerSeat range is 1 through {1}.";
 
         public static string LoadStartDecksAsk
         {
@@ -542,7 +543,7 @@ namespace Cgs.Play
                     i++;
                 }
 
-                DecksCallback(cardStacks, 1);
+                DecksCallback(cardStacks, blockIndex + 1);
             }
         }
 
@@ -602,6 +603,13 @@ namespace Cgs.Play
 
         public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerSeat)
         {
+            var supportedSeatCount = GetSupportedSeatCount();
+            if (playerSeat < 1 || playerSeat > supportedSeatCount)
+            {
+                Debug.LogError(string.Format(InvalidPlayerSeatMessage, playerSeat, supportedSeatCount));
+                return;
+            }
+
             var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerSeat);
 
             var deckPlayCardsAsk = BuildAskForDeckPlayCards(decksToCardsToPlay);
@@ -610,6 +618,13 @@ namespace Cgs.Play
                     () => MoveToPlay(decksToCardsToPlay));
             else
                 PromptForHand();
+        }
+
+        private static int GetSupportedSeatCount()
+        {
+            var slotsPerPlayer = 1 + ExtraGroupNames.Count;
+            var deckPositionCount = CardGameManager.Current.GamePlayDeckPositions.Count;
+            return deckPositionCount % slotsPerPlayer == 0 ? deckPositionCount / slotsPerPlayer : 0;
         }
 
         private static Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> FindDeckToCardsToPlay(

@@ -227,7 +227,7 @@ namespace Cgs.Play.Multiplayer
             if (IsServer)
             {
                 _seatIndex.Value = NextAvailableSeatIndex;
-                Debug.Log($"[CgsNet Player] Assigned seat {_seatIndex.Value} to client {OwnerClientId}");
+                Debug.Log($"[CgsNet Player] Assigned seatIndex {_seatIndex.Value} to client {OwnerClientId}");
             }
 
             if (!GetComponent<NetworkObject>().IsOwner)
@@ -483,16 +483,16 @@ namespace Cgs.Play.Multiplayer
             if (sharedStack != null)
                 sharedStack.IsDeckShared = true;
             _cardStacks.Add(CurrentDeck);
-            ShareDeckOwnerClientRpc(NetworkManager.Singleton.ConnectedClients.Count, OwnerClientRpcParams);
+            ShareDeckOwnerClientRpc(SeatIndex + 1, OwnerClientRpcParams);
         }
 
         [ClientRpc]
         // ReSharper disable once UnusedParameter.Local
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void ShareDeckOwnerClientRpc(int playerCount, ClientRpcParams clientRpcParams = default)
+        private void ShareDeckOwnerClientRpc(int playerSeat, ClientRpcParams clientRpcParams = default)
         {
-            Debug.Log($"[CgsNet Player] Received share deck callback for {playerCount}!");
-            PlayController.Instance.DecksCallback(CardStacks, playerCount);
+            Debug.Log($"[CgsNet Player] Received share deck callback for playerSeat {playerSeat}!");
+            PlayController.Instance.DecksCallback(CardStacks, playerSeat);
         }
 
         public void RequestDecks(int deckCount)
@@ -513,16 +513,16 @@ namespace Cgs.Play.Multiplayer
         {
             while (CardStacks.Count < deckCount)
                 yield return null;
-            DecksCallbackOwnerClientRpc(NetworkManager.Singleton.ConnectedClients.Count, OwnerClientRpcParams);
+            DecksCallbackOwnerClientRpc(SeatIndex + 1, OwnerClientRpcParams);
         }
 
         [ClientRpc]
         // ReSharper disable once UnusedParameter.Local
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void DecksCallbackOwnerClientRpc(int playerCount, ClientRpcParams clientRpcParams = default)
+        private void DecksCallbackOwnerClientRpc(int playerSeat, ClientRpcParams clientRpcParams = default)
         {
-            Debug.Log($"[CgsNet Player] Received decks callback for {playerCount}!");
-            PlayController.Instance.DecksCallback(CardStacks, playerCount);
+            Debug.Log($"[CgsNet Player] Received decks callback for playerSeat {playerSeat}!");
+            PlayController.Instance.DecksCallback(CardStacks, playerSeat);
         }
 
         public void RequestShuffle(GameObject toShuffle)
