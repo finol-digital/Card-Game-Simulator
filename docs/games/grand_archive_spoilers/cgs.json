@@ -149,7 +149,7 @@
 	"deckPlayCards": [
 		{
 			"cardQuery": "classes:spirit",
-			"deckQuery": "playerCount=1",
+			"deckQuery": "playerSeat=1",
 			"position": {
 				"x": -20,
 				"y": -5.5
@@ -158,7 +158,7 @@
 		},
 		{
 			"cardQuery": "classes:spirit",
-			"deckQuery": "playerCount=2",
+			"deckQuery": "playerSeat=2",
 			"position": {
 				"x": 20,
 				"y": 5.5

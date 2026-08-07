@@ -36,6 +36,7 @@ namespace Cgs.Play
         public const string MainMenuPrompt = "Go back to the main menu?";
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
+        public const string InvalidPlayerSeatMessage = "Invalid playerSeat {0}. Supported playerSeat range is 1 through {1}.";
 
         public static string LoadStartDecksAsk
         {
@@ -542,7 +543,7 @@ namespace Cgs.Play
                     i++;
                 }
 
-                DecksCallback(cardStacks, 1);
+                DecksCallback(cardStacks, blockIndex + 1);
             }
         }
 
@@ -600,9 +601,13 @@ namespace Cgs.Play
             return cardStack;
         }
 
-        public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerCount)
+        public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerSeat)
         {
-            var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerCount);
+            var supportedSeatCount = GetSupportedSeatCount();
+            if (supportedSeatCount > 0 && (playerSeat < 1 || playerSeat > supportedSeatCount))
+                Debug.LogError(string.Format(InvalidPlayerSeatMessage, playerSeat, supportedSeatCount));
+
+            var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerSeat);
 
             var deckPlayCardsAsk = BuildAskForDeckPlayCards(decksToCardsToPlay);
             if (!string.IsNullOrEmpty(deckPlayCardsAsk))
@@ -612,12 +617,19 @@ namespace Cgs.Play
                 PromptForHand();
         }
 
+        private static int GetSupportedSeatCount()
+        {
+            var slotsPerPlayer = 1 + ExtraGroupNames.Count;
+            var deckPositionCount = CardGameManager.Current.GamePlayDeckPositions.Count;
+            return deckPositionCount % slotsPerPlayer == 0 ? deckPositionCount / slotsPerPlayer : 0;
+        }
+
         private static Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> FindDeckToCardsToPlay(
-            IReadOnlyList<CardStack> cardStacks, int playerCount)
+            IReadOnlyList<CardStack> cardStacks, int playerSeat)
         {
             var deckToCardsToPlay = new Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>>();
 
-            var deckQuery = "playerCount=" + playerCount;
+            var deckQuery = "playerSeat=" + playerSeat;
             foreach (var deckPlayCard in CardGameManager.Current.DeckPlayCards.Where(deckPlayCard =>
                          string.IsNullOrEmpty(deckPlayCard.DeckQuery) || deckPlayCard.DeckQuery.Equals(deckQuery)))
                 deckToCardsToPlay[deckPlayCard] = FindCardsToPlay(deckPlayCard, cardStacks);
