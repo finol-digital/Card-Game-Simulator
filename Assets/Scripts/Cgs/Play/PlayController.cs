@@ -604,11 +604,8 @@ namespace Cgs.Play
         public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerSeat)
         {
             var supportedSeatCount = GetSupportedSeatCount();
-            if (playerSeat < 1 || playerSeat > supportedSeatCount)
-            {
+            if (supportedSeatCount > 0 && (playerSeat < 1 || playerSeat > supportedSeatCount))
                 Debug.LogError(string.Format(InvalidPlayerSeatMessage, playerSeat, supportedSeatCount));
-                return;
-            }
 
             var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerSeat);
 
