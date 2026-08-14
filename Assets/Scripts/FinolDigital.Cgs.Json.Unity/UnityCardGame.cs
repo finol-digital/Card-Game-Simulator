@@ -1224,9 +1224,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
         private static string NormalizeJsonLineBreaks(string value)
         {
-            if (string.IsNullOrEmpty(value))
-                return string.Empty;
-            return JsonLineBreakRegex.Replace(value, "\n");
+            return string.IsNullOrEmpty(value) ? string.Empty : JsonLineBreakRegex.Replace(value, "\n");
         }
 
         private void PopulateEmptyCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties,
