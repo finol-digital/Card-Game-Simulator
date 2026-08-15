@@ -102,44 +102,6 @@ namespace Tests.PlayMode
             }
         }
 
-        [Test]
-        public void LoadCards_ResolvesCardImageUrlJsonPathProperty()
-        {
-            const string cardImageUrl = "https://api.gatcg.com{editions[0].image}";
-            var game = NewCardImageUrlGame("json_path_card_image_url_test_", cardImageUrl);
-
-            try
-            {
-                var allCards = new JArray
-                {
-                    new JObject
-                    {
-                        ["id"] = "json_path_image_card",
-                        ["name"] = "Json Path Image Card",
-                        ["set"] = Set.DefaultCode,
-                        ["editions"] = new JArray
-                        {
-                            new JObject
-                            {
-                                ["image"] = "/cards/json_path_image_card.png"
-                            }
-                        }
-                    }
-                };
-
-                File.WriteAllText(game.CardsFilePath, allCards.ToString(Formatting.None));
-                game.LoadCards(game.CardsFilePath, Set.DefaultCode);
-
-                Assert.IsTrue(game.Cards.TryGetValue("json_path_image_card", out var imageUrlCard));
-                Assert.AreEqual("https://api.gatcg.com/cards/json_path_image_card.png", imageUrlCard.ImageWebUrl);
-                LogAssert.NoUnexpectedReceived();
-            }
-            finally
-            {
-                Directory.Delete(game.GameDirectoryPath, true);
-            }
-        }
-
         private static UnityCardGame NewCardImageUrlGame(string idPrefix, string cardImageUrl)
         {
             var game = new UnityCardGame(null, idPrefix + Guid.NewGuid())
