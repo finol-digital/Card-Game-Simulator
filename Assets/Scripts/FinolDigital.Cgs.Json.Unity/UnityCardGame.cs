@@ -834,21 +834,19 @@ namespace FinolDigital.Cgs.Json.Unity
                 PopulateCardProperties(cardBackProperties, cardJToken, CardProperties, "", true);
 
             // Populate primary property if it was set in the CGS UI
-            if (cardJToken["properties"] is JObject { HasValues: true } jObject)
+            if (cardJToken["properties"] is JObject { HasValues: true } jObject
+                && jObject[CardPrimaryProperty] is JObject { HasValues: true } jObject2)
             {
-                if (jObject[CardPrimaryProperty] is JObject { HasValues: true } jObject2)
+                var propertyDef = CardProperties.Find(def => def.Name.Equals(CardPrimaryProperty));
+                var propertyValue = jObject2.Value<string>("value");
+                if (propertyDef != null && propertyValue != null)
                 {
-                    var propertyDef = CardProperties.Find(def => def.Name.Equals(CardPrimaryProperty));
-                    var propertyValue = jObject2.Value<string>("value");
-                    if (propertyDef != null && propertyValue != null)
+                    var propertyDefValuePair = new PropertyDefValuePair
                     {
-                        var propertyDefValuePair = new PropertyDefValuePair
-                        {
-                            Def = propertyDef,
-                            Value = propertyValue
-                        };
-                        cardProperties[CardPrimaryProperty] = propertyDefValuePair;
-                    }
+                        Def = propertyDef,
+                        Value = propertyValue
+                    };
+                    cardProperties[CardPrimaryProperty] = propertyDefValuePair;
                 }
             }
 
@@ -935,6 +933,13 @@ namespace FinolDigital.Cgs.Json.Unity
             }
 
             var cardImageUrl = CardImageUrl;
+            if (!string.IsNullOrEmpty(cardImageUrl))
+            {
+                PopulateCardImageUrlProperties(cardImageUrl, cardJToken, cardProperties);
+                if (!string.IsNullOrEmpty(cardBackName))
+                    PopulateCardImageUrlProperties(cardImageUrl, cardJToken, cardBackProperties);
+            }
+
             if (string.IsNullOrEmpty(cardImageWebUrl) && !string.IsNullOrEmpty(cardImageUrl))
                 WarnUnresolvedCardImageUrlProperties(cardImageUrl, cardProperties);
 
@@ -953,6 +958,10 @@ namespace FinolDigital.Cgs.Json.Unity
                     var cardDuplicateId = cardSets.Count > 1 && isReprint
                         ? cardId + PropertyDef.ObjectDelimiter + set.Key
                         : cardId;
+                    var resolvedCardImageWebUrl = cardImageWebUrl;
+                    if (string.IsNullOrEmpty(resolvedCardImageWebUrl) && !string.IsNullOrEmpty(cardImageUrl))
+                        resolvedCardImageWebUrl = ResolveCardImageUrl(cardImageUrl, cardProperties, cardDuplicateId,
+                            cardName, set.Key, cardImageFileType);
                     // Determine primary/back cards behavior:
                     // - If 'backs' was present in the source JSON, the primary card's BackFaceId should be the
                     //   first element (empty/null -> empty string). Any subsequent non-empty backs become separate
@@ -967,7 +976,7 @@ namespace FinolDigital.Cgs.Json.Unity
                             false, primaryBack)
                         {
                             ImageFileType = cardImageFileType,
-                            ImageWebUrl = cardImageWebUrl
+                            ImageWebUrl = resolvedCardImageWebUrl
                         };
                         // Always add the primary/front card when 'backs' defined
                         LoadedCards[unityCard.Id] = unityCard;
@@ -984,7 +993,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                 variantIsReprint, false, backId)
                             {
                                 ImageFileType = cardImageFileType,
-                                ImageWebUrl = cardImageWebUrl
+                                ImageWebUrl = resolvedCardImageWebUrl
                             };
                             LoadedCards[backUnityCard.Id] = backUnityCard;
                         }
@@ -996,26 +1005,30 @@ namespace FinolDigital.Cgs.Json.Unity
                             false, primaryBack)
                         {
                             ImageFileType = cardImageFileType,
-                            ImageWebUrl = cardImageWebUrl
+                            ImageWebUrl = resolvedCardImageWebUrl
                         };
                         LoadedCards[unityCard.Id] = unityCard;
                     }
                     if (!string.IsNullOrEmpty(cardBackName))
                     {
                         var backCardId = cardDuplicateId + "_b";
+                        var resolvedBackCardImageWebUrl = backCardImageWebUrl;
+                        if (string.IsNullOrEmpty(resolvedBackCardImageWebUrl) && !string.IsNullOrEmpty(cardImageUrl))
+                            resolvedBackCardImageWebUrl = ResolveCardImageUrl(cardImageUrl, cardBackProperties,
+                                backCardId, cardBackName, set.Key, cardImageFileType);
                         unityCard =
                             new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint, true,
                                 backCardId)
                             {
                                 ImageFileType = cardImageFileType,
-                                ImageWebUrl = cardImageWebUrl
+                                ImageWebUrl = resolvedCardImageWebUrl
                             };
                         var backUnityCard =
                             new UnityCard(this, backCardId, cardBackName, set.Key, cardBackProperties, isReprint, true,
                                 cardDuplicateId)
                             {
                                 ImageFileType = cardImageFileType,
-                                ImageWebUrl = backCardImageWebUrl
+                                ImageWebUrl = resolvedBackCardImageWebUrl
                             };
                         LoadedCards[backUnityCard.Id] = backUnityCard;
                         // Ensure the front/main card mapping is updated to the back-face pair
@@ -1141,7 +1154,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                     var listTokensValueString = listTokens.Value<string>();
                                     if (!string.IsNullOrEmpty(listTokensValueString))
                                     {
-                                        foreach (var valueChar in listTokensValueString.ToCharArray())
+                                        foreach (var valueChar in listTokensValueString)
                                         {
                                             if (listValueBuilder.Length > 0)
                                                 listValueBuilder.Append(EnumDef.Delimiter);
@@ -1220,6 +1233,73 @@ namespace FinolDigital.Cgs.Json.Unity
                                      " in cardImageUrl " + cardImageUrl +
                                      " is not a cardProperty, so it will be replaced with an empty string");
             }
+        }
+
+        private static void PopulateCardImageUrlProperties(string cardImageUrl, JToken cardJToken,
+            IDictionary<string, PropertyDefValuePair> cardProperties)
+        {
+            if (string.IsNullOrEmpty(cardImageUrl) || cardJToken == null || cardProperties == null)
+                return;
+
+            foreach (Match match in CardImageUrlPropertyRegex.Matches(cardImageUrl))
+            {
+                var property = match.Groups["property"].Value;
+                if (CardImageUrlKeywords.Contains(property) || cardProperties.ContainsKey(property)
+                    || !TryGetCardImageUrlJsonPathValue(cardJToken, property, out var value))
+                    continue;
+
+                cardProperties[property] = new PropertyDefValuePair
+                {
+                    Def = new PropertyDef(property, PropertyType.String),
+                    Value = value
+                };
+            }
+        }
+
+        private static bool TryGetCardImageUrlJsonPathValue(JToken cardJToken, string property, out string value)
+        {
+            value = string.Empty;
+            if (cardJToken == null || string.IsNullOrEmpty(property))
+                return false;
+
+            JToken propertyJToken;
+            try
+            {
+                propertyJToken = cardJToken.SelectToken(property, false);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (propertyJToken is not JValue jValue || propertyJToken.Type is JTokenType.Null or JTokenType.Undefined)
+                return false;
+
+            value = NormalizeJsonLineBreaks(jValue.Value?.ToString() ?? string.Empty);
+            return true;
+        }
+
+        private static string ResolveCardImageUrl(string cardImageUrl,
+            IReadOnlyDictionary<string, PropertyDefValuePair> cardProperties, string cardId, string cardName,
+            string cardSet, string cardImageFileType)
+        {
+            if (string.IsNullOrEmpty(cardImageUrl))
+                return string.Empty;
+
+            return CardImageUrlPropertyRegex.Replace(cardImageUrl, match =>
+            {
+                var property = match.Groups["property"].Value;
+                return property switch
+                {
+                    "cardId" => cardId ?? string.Empty,
+                    "cardName" => cardName ?? string.Empty,
+                    "cardSet" => cardSet ?? string.Empty,
+                    "cardImageFileType" => cardImageFileType ?? string.Empty,
+                    _ => cardProperties != null && cardProperties.TryGetValue(property, out var valuePair)
+                        ? valuePair.Value
+                        : string.Empty
+                };
+            });
         }
 
         private static string NormalizeJsonLineBreaks(string value)
