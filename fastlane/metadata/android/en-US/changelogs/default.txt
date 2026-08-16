@@ -1,4 +1,4 @@
 ## What's Changed
-* Add Move action for card stacks
-* Fix card image loading
-* Improve Cards Explorer footer
+* Only prompt to draw a hand if the hand is empty
+* Rename playerCount to playerSeat
+* Remap keyboard shortcuts
