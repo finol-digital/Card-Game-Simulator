@@ -60,13 +60,13 @@ namespace Tests.PlayMode
         [Test]
         public void LoadCards_WarnsWhenCardImageUrlHasUnresolvableProperty()
         {
-            const string cardImageUrl = "https://cgs.games/api/proxy/{card.image_url}";
+            const string cardImageUrl = "https://cgs.games/api/proxy/{card.image_url_unresolvable}";
             var game = NewCardImageUrlGame("unresolvable_card_image_url_test_", cardImageUrl);
 
             try
             {
                 LogAssert.Expect(LogType.Warning,
-                    "LoadCardFromJToken::UnresolvedCardImageUrlProperty:{card.image_url}" +
+                    "LoadCardFromJToken::UnresolvedCardImageUrlProperty:card.image_url_unresolvable" +
                     " in cardImageUrl " + cardImageUrl +
                     " is not a cardProperty, so it will be replaced with an empty string");
 

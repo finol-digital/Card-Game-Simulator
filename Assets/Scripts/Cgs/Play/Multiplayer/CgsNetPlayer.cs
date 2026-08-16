@@ -430,8 +430,10 @@ namespace Cgs.Play.Multiplayer
             CurrentDeck = deck;
         }
 
+#pragma warning disable S2325
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void OnCurrentDeckChanged(NetworkObjectReference previousValue, NetworkObjectReference newValue)
+#pragma warning restore S2325
         {
             if (PlayController.Instance != null && PlayController.Instance.drawer != null)
                 PlayController.Instance.drawer.RefreshCardStackDropdown();

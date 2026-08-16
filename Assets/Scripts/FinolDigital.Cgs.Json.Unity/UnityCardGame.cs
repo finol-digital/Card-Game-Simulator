@@ -28,7 +28,7 @@ namespace FinolDigital.Cgs.Json.Unity
         private static readonly Regex JsonLineBreakRegex = new(@"\[br\]|<br\s*/?>",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex CardImageUrlPropertyRegex = new(@"\{(?<property>[\w\.\[\]]+)\}",
+        private static readonly Regex CardImageUrlPropertyRegex = new(@"\{(?<property>[\w\.\[\d\]\.]+)\}",
             RegexOptions.Compiled);
 
         private static readonly HashSet<string> CardImageUrlKeywords = new()
@@ -834,21 +834,19 @@ namespace FinolDigital.Cgs.Json.Unity
                 PopulateCardProperties(cardBackProperties, cardJToken, CardProperties, "", true);
 
             // Populate primary property if it was set in the CGS UI
-            if (cardJToken["properties"] is JObject { HasValues: true } jObject)
+            if (cardJToken["properties"] is JObject { HasValues: true } jObject
+                && jObject[CardPrimaryProperty] is JObject { HasValues: true } jObject2)
             {
-                if (jObject[CardPrimaryProperty] is JObject { HasValues: true } jObject2)
+                var propertyDef = CardProperties.Find(def => def.Name.Equals(CardPrimaryProperty));
+                var propertyValue = jObject2.Value<string>("value");
+                if (propertyDef != null && propertyValue != null)
                 {
-                    var propertyDef = CardProperties.Find(def => def.Name.Equals(CardPrimaryProperty));
-                    var propertyValue = jObject2.Value<string>("value");
-                    if (propertyDef != null && propertyValue != null)
+                    var propertyDefValuePair = new PropertyDefValuePair
                     {
-                        var propertyDefValuePair = new PropertyDefValuePair
-                        {
-                            Def = propertyDef,
-                            Value = propertyValue
-                        };
-                        cardProperties[CardPrimaryProperty] = propertyDefValuePair;
-                    }
+                        Def = propertyDef,
+                        Value = propertyValue
+                    };
+                    cardProperties[CardPrimaryProperty] = propertyDefValuePair;
                 }
             }
 
@@ -1141,7 +1139,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                     var listTokensValueString = listTokens.Value<string>();
                                     if (!string.IsNullOrEmpty(listTokensValueString))
                                     {
-                                        foreach (var valueChar in listTokensValueString.ToCharArray())
+                                        foreach (var valueChar in listTokensValueString)
                                         {
                                             if (listValueBuilder.Length > 0)
                                                 listValueBuilder.Append(EnumDef.Delimiter);
@@ -1212,11 +1210,12 @@ namespace FinolDigital.Cgs.Json.Unity
             foreach (Match match in CardImageUrlPropertyRegex.Matches(cardImageUrl))
             {
                 var property = match.Groups["property"].Value;
+                property = property.Replace("[", string.Empty).Replace("]", string.Empty);
                 if (CardImageUrlKeywords.Contains(property) || cardProperties.ContainsKey(property))
                     continue;
 
                 if (_warnedCardImageUrlProperties.Add(property))
-                    Debug.LogWarning("LoadCardFromJToken::UnresolvedCardImageUrlProperty:" + match.Value +
+                    Debug.LogWarning("LoadCardFromJToken::UnresolvedCardImageUrlProperty:" + property +
                                      " in cardImageUrl " + cardImageUrl +
                                      " is not a cardProperty, so it will be replaced with an empty string");
             }
@@ -1224,9 +1223,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
         private static string NormalizeJsonLineBreaks(string value)
         {
-            if (string.IsNullOrEmpty(value))
-                return string.Empty;
-            return JsonLineBreakRegex.Replace(value, "\n");
+            return string.IsNullOrEmpty(value) ? string.Empty : JsonLineBreakRegex.Replace(value, "\n");
         }
 
         private void PopulateEmptyCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties,

@@ -1346,7 +1346,7 @@
                 {
                     "name": "",
                     "id": "47c6c077-cc9a-4b21-87fd-ed06673efd0d",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1357,7 +1357,7 @@
                 {
                     "name": "",
                     "id": "80ee892f-d3f7-4ca6-8fef-ca37f1d17022",
-                    "path": "<Keyboard>/k",
+                    "path": "<Keyboard>/n",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1412,7 +1412,7 @@
                 {
                     "name": "",
                     "id": "b5a495b1-54c0-495f-b502-f4f20af2a1af",
-                    "path": "<Keyboard>/r",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1653,7 +1653,7 @@
                 {
                     "name": "",
                     "id": "97705730-eb69-4e29-8fc8-ba9ce111fee0",
-                    "path": "<Keyboard>/semicolon",
+                    "path": "<Keyboard>/quote",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1675,7 +1675,7 @@
                 {
                     "name": "",
                     "id": "a49251cb-8c43-4b2c-a4b9-a6f01733b555",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1686,7 +1686,7 @@
                 {
                     "name": "",
                     "id": "8560ba1a-f112-4b21-959b-6a95886d75ce",
-                    "path": "<Keyboard>/k",
+                    "path": "<Keyboard>/semicolon",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -2235,7 +2235,7 @@
                 {
                     "name": "",
                     "id": "a84a9fa5-f125-47ca-9c53-69569ed32ec7",
-                    "path": "<Keyboard>/semicolon",
+                    "path": "<Keyboard>/quote",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
