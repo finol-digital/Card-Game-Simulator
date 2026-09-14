@@ -6,8 +6,73 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="{{ site.title | default: site.github.repository_name }} : {{ site.description | default: site.github.project_tagline }}">
+    <meta property="og:image" content="https://www.cardgamesimulator.com/assets/img/CGSLogo.png">
     <link rel="stylesheet" href="/assets/css/index.css" />
 {% seo %}
+    {% if page.url == "/" %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.cardgamesimulator.com/#organization",
+          "name": "Finol Digital LLC",
+          "url": "https://www.cardgamesimulator.com/",
+          "logo": "https://www.cardgamesimulator.com/assets/img/CGSLogo.png",
+          "email": "david@finoldigital.com",
+          "telephone": "+1-713-363-3389",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "email": "david@finoldigital.com",
+            "telephone": "+1-713-363-3389",
+            "availableLanguage": "English"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "219 Glenridge Frst",
+            "addressLocality": "Houston",
+            "addressRegion": "TX",
+            "postalCode": "77094",
+            "addressCountry": "US"
+          },
+          "sameAs": [
+            "https://github.com/finol-digital",
+            "https://bsky.app/profile/cardgamesim.bsky.social",
+            "https://www.facebook.com/cardgamesimulator/",
+            "https://www.reddit.com/r/CardGameSimulator/"
+          ]
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://www.cardgamesimulator.com/#softwareapplication",
+          "name": "Card Game Simulator",
+          "description": "A virtual tabletop for creating, sharing, and playing custom card games.",
+          "url": "https://www.cardgamesimulator.com/",
+          "image": "https://www.cardgamesimulator.com/assets/img/CGSLogo.png",
+          "applicationCategory": "GameApplication",
+          "operatingSystem": "Web, Windows, macOS, iOS, Android",
+          "publisher": {
+            "@id": "https://www.cardgamesimulator.com/#organization"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": "https://cgs.gg/"
+          },
+          "sameAs": [
+            "https://github.com/finol-digital/Card-Game-Simulator",
+            "https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim",
+            "https://apps.apple.com/us/app/card-game-simulator/id1392877362"
+          ]
+        }
+      ]
+    }
+    </script>
+    {% endif %}
   </head>
 
   <body>
@@ -55,7 +120,7 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p><a href="/PRIVACY.html">Privacy Policy</a></p>
+      <p><a href="/about/">About</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a></p>
       <p>&copy; Finol Digital LLC</p>
     </div>
   </footer>

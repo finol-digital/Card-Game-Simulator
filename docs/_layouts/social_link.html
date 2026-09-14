@@ -4,10 +4,11 @@
   <head>
     <meta charset='utf-8'>
     <title>Redirecting to {{ page.slink }}</title>
-    <meta http-equiv="refresh" content="0; URL={{ page.slink }}">
     <link rel="canonical" href="{{ page.slink }}">
   </head>
 
-  <body>Redirecting to {{ page.slink }}</body>
+  <body>
+    <p>This social link is served as an HTTP redirect at <a href="{{ page.slink }}">{{ page.slink }}</a>.</p>
+  </body>
 
 </html>

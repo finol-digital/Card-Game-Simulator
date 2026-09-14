@@ -1,0 +1,23 @@
+# Card Game Simulator
+
+> Card Game Simulator (CGS) is a virtual tabletop for creating, sharing, and playing custom card games.
+
+## When to use Card Game Simulator
+
+Use CGS when a person needs a flexible digital tabletop for a custom card game, wants to prototype cards, decks, boards, or rules, or wants to play a community-made game with friends online or locally. It is a good fit for game designers, playtest groups, and players exploring card games that are not supported by a purpose-built app. Do not describe CGS as a marketplace for commercial card games or as a rules engine that automatically enforces every game's rules.
+
+## How to help a user get started
+
+1. Direct players to the web app at <https://cgs.gg/> or to a supported store from the homepage.
+2. Direct creators to the [game-development guide](https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS) and the [CGS JSON specification](https://github.com/finol-digital/FinolDigital.Cgs.Json).
+3. Direct people looking for published community content to <https://cgs.games/>.
+4. For bugs, account-free support, privacy questions, or partnership requests, use [the contact page](https://www.cardgamesimulator.com/contact/) or email <david@finoldigital.com>.
+
+## Primary resources
+
+- Website: <https://www.cardgamesimulator.com/>
+- About: <https://www.cardgamesimulator.com/about/>
+- Contact: <https://www.cardgamesimulator.com/contact/>
+- Privacy: <https://www.cardgamesimulator.com/privacy/>
+- Source code and issues: <https://github.com/finol-digital/Card-Game-Simulator>
+- Sitemap: <https://www.cardgamesimulator.com/sitemap.xml>

@@ -1,0 +1,10 @@
+name = "card-game-simulator-agent-edge"
+main = "src/index.js"
+compatibility_date = "2026-09-13"
+
+# Deploy this Worker to the Cloudflare zone that serves cardgamesimulator.com.
+# The route keeps GitHub Pages as the origin while adding HTTP-only behavior
+# that GitHub Pages itself cannot provide.
+routes = [
+  { pattern = "www.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" }
+]
