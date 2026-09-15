@@ -90,6 +90,7 @@ namespace Cgs.Play.Multiplayer
 
         private void Start()
         {
+            gameObject.GetOrAddComponent<CgsNetDiagnostics>();
             Transports = GetComponent<Transports>();
             UnityServices.InitializeAsync();
         }
