@@ -38,7 +38,7 @@ test("homepage has agent-discoverable identity and metadata", async () => {
   assert.match(homeLayout, /"@type": "Organization"/);
   assert.match(homeLayout, /"@type": "SoftwareApplication"/);
   assert.match(homeLayout, /"contactPoint"/);
-  assert.match(homeLayout, /"PostalAddress"/);
+  assert.match(homeLayout, /"email": "david@finoldigital\.com"/);
 });
 
 test("static social fallback contains no client-side redirect", async () => {
