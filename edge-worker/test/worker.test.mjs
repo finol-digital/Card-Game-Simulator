@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import worker, { acceptsMarkdown } from "../src/index.js";
+import worker, { acceptsMarkdown, mergeVary } from "../src/index.js";
 
+/** Restores global fetch even if a mocked origin request or assertion fails. */
 async function withMockFetch(mock, action) {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = mock;
@@ -17,6 +18,42 @@ test("recognizes explicit markdown acceptance and rejects q=0", () => {
   assert.equal(acceptsMarkdown("text/markdown;q=0"), false);
   assert.equal(acceptsMarkdown("text/markdown;q=0.0"), false);
   assert.equal(acceptsMarkdown("text/html"), false);
+  assert.equal(acceptsMarkdown("text/markdown;q=NaN"), false);
+  assert.equal(acceptsMarkdown("text/markdown;q=Infinity"), false);
+  assert.equal(acceptsMarkdown("text/markdown;q=-1"), false);
+});
+
+test("only compatible Markdown parameters match, with more specific ranges taking precedence", () => {
+  assert.equal(acceptsMarkdown('text/markdown; charset="UTF-8"'), true);
+  assert.equal(acceptsMarkdown("text/markdown;charset=utf-16"), false);
+  assert.equal(acceptsMarkdown("text/markdown;variant=GFM"), false);
+  assert.equal(acceptsMarkdown("text/markdown;charset=utf-16, text/markdown;q=0.5"), true);
+  assert.equal(acceptsMarkdown("text/markdown;q=1, text/markdown;charset=utf-8;q=0"), false);
+  assert.equal(acceptsMarkdown("text/markdown;charset=utf-8;q=0, text/markdown;q=1"), false);
+  assert.equal(acceptsMarkdown("text/markdown;q=0, text/markdown;charset=utf-8;q=0.5"), true);
+  assert.equal(acceptsMarkdown("*/*, text/*"), false);
+});
+
+test("Vary preserves origin fields, ignores case, and respects wildcard variance", () => {
+  assert.equal(mergeVary("accept, Origin", "Accept"), "accept, Origin");
+  assert.equal(mergeVary("*", "Accept"), "*");
+});
+
+test("incompatible Markdown requests retain HTML with both cache variance fields", async () => {
+  for (const [path, status] of [["/", 200], ["/missing", 404]]) {
+    await withMockFetch(async (request) => {
+      assert.equal(new URL(request.url).pathname, path);
+      return new Response("<html>origin</html>", { status, headers: { "Content-Type": "text/html" } });
+    }, async () => {
+      const response = await worker.fetch(new Request(`https://www.cardgamesimulator.com${path}`, {
+        headers: { Accept: "text/markdown;charset=utf-16" }
+      }));
+      assert.equal(response.status, status);
+      assert.equal(response.headers.get("Content-Type"), "text/html");
+      assert.equal(response.headers.get("Vary"), "Accept, Accept-Encoding");
+      assert.equal(await response.text(), "<html>origin</html>");
+    });
+  }
 });
 
 test("social paths issue permanent HTTP redirects without fetching the origin", async () => {

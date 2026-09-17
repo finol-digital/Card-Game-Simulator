@@ -2,14 +2,17 @@ import assert from "node:assert/strict";
 
 const siteUrl = new URL(process.env.SITE_URL || "https://www.cardgamesimulator.com/");
 
+/** Resolves a public route against the deployment under verification. */
 function urlFor(path) {
   return new URL(path, siteUrl);
 }
 
+/** Fetches without following redirects so their status and destination can be checked. */
 async function fetchResponse(path, options = {}) {
   return fetch(urlFor(path), { redirect: "manual", ...options });
 }
 
+/** Checks that a legacy or social route returns its permanent HTTP redirect. */
 async function verifyRedirect(path, target) {
   const response = await fetchResponse(path);
   assert.equal(response.status, 301, `${path} must return HTTP 301`);
@@ -18,9 +21,15 @@ async function verifyRedirect(path, target) {
 
 for (const [path, target] of [
   ["/bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
+  ["/discord", "https://discord.gg/RkCCAXb5sz"],
   ["/facebook", "https://www.facebook.com/cardgamesimulator/"],
+  ["/games", "https://cgs.games/"],
   ["/github", "https://github.com/finol-digital/Card-Game-Simulator"],
-  ["/reddit", "https://www.reddit.com/r/CardGameSimulator/"]
+  ["/play", "https://cgs.gg/"],
+  ["/reddit", "https://www.reddit.com/r/CardGameSimulator/"],
+  ["/twitter", "https://twitter.com/cardgamesim"],
+  ["/x", "https://x.com/cardgamesim"],
+  ["/PRIVACY.html", "https://www.cardgamesimulator.com/privacy/"]
 ]) {
   await verifyRedirect(path, target);
 }
@@ -35,6 +44,7 @@ assert.match(await markdownHome.text(), /When to use Card Game Simulator/);
 const htmlHome = await fetchResponse("/");
 assert.equal(htmlHome.status, 200, "HTML homepage must return 200");
 assert.match(htmlHome.headers.get("vary") || "", /(^|,)\s*accept\s*(,|$)/i);
+assert.match(htmlHome.headers.get("vary") || "", /(^|,)\s*accept-encoding\s*(,|$)/i);
 const html = await htmlHome.text();
 assert.match(html, /property="og:image"/i);
 assert.match(html, /property="og:type"/i);

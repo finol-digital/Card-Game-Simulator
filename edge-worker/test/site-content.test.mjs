@@ -7,6 +7,7 @@ import test from "node:test";
 const testDirectory = path.dirname(fileURLToPath(import.meta.url));
 const docsDirectory = path.resolve(testDirectory, "../../docs");
 
+/** Reads a public website source file independently of the test runner's directory. */
 async function readDocsFile(fileName) {
   return readFile(path.join(docsDirectory, fileName), "utf8");
 }
