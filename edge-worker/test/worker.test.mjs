@@ -22,9 +22,14 @@ test("recognizes explicit markdown acceptance and rejects q=0", () => {
 test("social paths issue permanent HTTP redirects without fetching the origin", async () => {
   const expectedRedirects = new Map([
     ["bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
+    ["discord", "https://discord.gg/RkCCAXb5sz"],
     ["facebook", "https://www.facebook.com/cardgamesimulator/"],
+    ["games", "https://cgs.games/"],
     ["github", "https://github.com/finol-digital/Card-Game-Simulator"],
-    ["reddit", "https://www.reddit.com/r/CardGameSimulator/"]
+    ["play", "https://cgs.gg/"],
+    ["reddit", "https://www.reddit.com/r/CardGameSimulator/"],
+    ["twitter", "https://twitter.com/cardgamesim"],
+    ["x", "https://x.com/cardgamesim"]
   ]);
 
   await withMockFetch(async () => assert.fail("origin must not be fetched"), async () => {

@@ -1,8 +1,13 @@
 const SOCIAL_REDIRECTS = new Map([
   ["/bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
+  ["/discord", "https://discord.gg/RkCCAXb5sz"],
   ["/facebook", "https://www.facebook.com/cardgamesimulator/"],
+  ["/games", "https://cgs.games/"],
   ["/github", "https://github.com/finol-digital/Card-Game-Simulator"],
-  ["/reddit", "https://www.reddit.com/r/CardGameSimulator/"]
+  ["/play", "https://cgs.gg/"],
+  ["/reddit", "https://www.reddit.com/r/CardGameSimulator/"],
+  ["/twitter", "https://twitter.com/cardgamesim"],
+  ["/x", "https://x.com/cardgamesim"]
 ]);
 
 const SITE_REDIRECTS = new Map([
