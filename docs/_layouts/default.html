@@ -4,15 +4,17 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width,maximum-scale=2">
-    <meta name="description" content="{{ site.title | default: site.github.repository_name }} : {{ site.description | default: site.github.project_tagline }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
 
 {% seo %}
+    {% if page.markdown_url %}
+    <link rel="alternate" type="text/markdown" href="{{ page.markdown_url | relative_url }}" title="Plain Markdown">
+    {% endif %}
   </head>
 
-  <body>
+  <body class="{{ page.body_class | escape }}">
 
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
@@ -32,7 +34,7 @@
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p><a href="/about/">About</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a></p>
+        <p><a href="/how-to-play/">How to play</a> · <a href="/about/">About</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a></p>
         {% if site.github.is_project_page %}
         <p class="copyright">{{ site.title | default: site.github.repository_name }} maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
         {% endif %}
