@@ -8,6 +8,7 @@ compatibility_date = "2026-09-13"
 routes = [
   { pattern = "www.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
   { pattern = "bluesky.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "bsky.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
   { pattern = "create.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
   { pattern = "discord.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
   { pattern = "facebook.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
