@@ -40,7 +40,7 @@ description: Create, share, and play card games with Card Game Simulator. No acc
   <h2>Why CGS?</h2>
   <ul class="feature-list">
     <li><strong>Fast prototyping:</strong> Author cards with JSON or visual tools.</li>
-    <li><strong>Cross-platform:</strong> Windows, macOS, iOS, Android, Steam, and Web.</li>
+    <li><strong>Cross-platform:</strong> Windows, macOS, Linux, iOS, Android, Steam, and Web.</li>
     <li><strong>Community-driven:</strong> Publish and discover games in the CGS ecosystem.</li>
   </ul>
 
