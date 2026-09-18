@@ -1,14 +1,21 @@
 const SOCIAL_REDIRECTS = new Map([
   ["/bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
+  ["/create", "https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS"],
   ["/discord", "https://discord.gg/RkCCAXb5sz"],
   ["/facebook", "https://www.facebook.com/cardgamesimulator/"],
   ["/games", "https://cgs.games/"],
   ["/github", "https://github.com/finol-digital/Card-Game-Simulator"],
   ["/play", "https://cgs.gg/"],
   ["/reddit", "https://www.reddit.com/r/CardGameSimulator/"],
+  ["/share", "https://cgs.games/"],
   ["/twitter", "https://twitter.com/cardgamesim"],
+  ["/wiki", "https://github.com/finol-digital/Card-Game-Simulator/wiki"],
   ["/x", "https://x.com/cardgamesim"]
 ]);
+
+const SOCIAL_HOST_REDIRECTS = new Map(
+  [...SOCIAL_REDIRECTS].map(([path, target]) => [`${path.slice(1)}.cardgamesimulator.com`, target])
+);
 
 const SITE_REDIRECTS = new Map([
   ["/PRIVACY.html", "https://www.cardgamesimulator.com/privacy/"]
@@ -103,7 +110,9 @@ function markdownResponse(body, status = 200) {
 /** Routes redirects and negotiated Markdown requests, otherwise preserving the Pages origin. */
 async function handleRequest(request) {
   const url = new URL(request.url);
-  const redirectTarget = SOCIAL_REDIRECTS.get(url.pathname) || SITE_REDIRECTS.get(url.pathname);
+  // A shortcut subdomain always points to its fixed destination, regardless of path/query.
+  const redirectTarget = SOCIAL_HOST_REDIRECTS.get(url.hostname)
+    || SOCIAL_REDIRECTS.get(url.pathname) || SITE_REDIRECTS.get(url.pathname);
 
   if (redirectTarget) {
     return Response.redirect(redirectTarget, 301);

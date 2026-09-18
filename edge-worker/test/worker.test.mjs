@@ -59,13 +59,16 @@ test("incompatible Markdown requests retain HTML with both cache variance fields
 test("social paths issue permanent HTTP redirects without fetching the origin", async () => {
   const expectedRedirects = new Map([
     ["bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
+    ["create", "https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS"],
     ["discord", "https://discord.gg/RkCCAXb5sz"],
     ["facebook", "https://www.facebook.com/cardgamesimulator/"],
     ["games", "https://cgs.games/"],
     ["github", "https://github.com/finol-digital/Card-Game-Simulator"],
     ["play", "https://cgs.gg/"],
     ["reddit", "https://www.reddit.com/r/CardGameSimulator/"],
+    ["share", "https://cgs.games/"],
     ["twitter", "https://twitter.com/cardgamesim"],
+    ["wiki", "https://github.com/finol-digital/Card-Game-Simulator/wiki"],
     ["x", "https://x.com/cardgamesim"]
   ]);
 
@@ -86,6 +89,16 @@ test("legacy privacy URL permanently redirects to the canonical trust page", asy
     assert.equal(response.status, 301);
     assert.equal(response.headers.get("Location"), "https://www.cardgamesimulator.com/privacy/");
   });
+});
+
+test("social subdomain matching requires the exact configured hostname", async () => {
+  for (const hostname of ["unknown.cardgamesimulator.com", "x.cardgamesimulator.com.example.org", "nested.x.cardgamesimulator.com"]) {
+    await withMockFetch(async () => new Response("origin"), async () => {
+      const response = await worker.fetch(new Request(`https://${hostname}/`));
+      assert.equal(response.status, 200);
+      assert.equal(await response.text(), "origin");
+    });
+  }
 });
 
 test("homepage returns markdown and cache-safe Vary header when requested", async () => {

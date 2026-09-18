@@ -21,18 +21,31 @@ async function verifyRedirect(path, target) {
 
 for (const [path, target] of [
   ["/bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
+  ["/create", "https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS"],
   ["/discord", "https://discord.gg/RkCCAXb5sz"],
   ["/facebook", "https://www.facebook.com/cardgamesimulator/"],
   ["/games", "https://cgs.games/"],
   ["/github", "https://github.com/finol-digital/Card-Game-Simulator"],
   ["/play", "https://cgs.gg/"],
   ["/reddit", "https://www.reddit.com/r/CardGameSimulator/"],
+  ["/share", "https://cgs.games/"],
   ["/twitter", "https://twitter.com/cardgamesim"],
-  ["/x", "https://x.com/cardgamesim"],
-  ["/PRIVACY.html", "https://www.cardgamesimulator.com/privacy/"]
+  ["/wiki", "https://github.com/finol-digital/Card-Game-Simulator/wiki"],
+  ["/x", "https://x.com/cardgamesim"]
 ]) {
   await verifyRedirect(path, target);
+  await verifyRedirect(`${path}?ignored=yes`, target);
+  const hostname = `${path.slice(1)}.cardgamesimulator.com`;
+  for (const shortcutUrl of [
+    `https://${hostname}/`,
+    `https://${hostname}/ignored/path?ignored=yes`,
+    `http://${hostname}/ignored/path?ignored=yes`
+  ]) {
+    await verifyRedirect(shortcutUrl, target);
+  }
 }
+
+await verifyRedirect("/PRIVACY.html", "https://www.cardgamesimulator.com/privacy/");
 
 const markdownHome = await fetchResponse("/", { headers: { Accept: "text/markdown" } });
 assert.equal(markdownHome.status, 200, "markdown homepage must return 200");

@@ -6,5 +6,17 @@ compatibility_date = "2026-09-13"
 # The route keeps GitHub Pages as the origin while adding HTTP-only behavior
 # that GitHub Pages itself cannot provide.
 routes = [
-  { pattern = "www.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" }
+  { pattern = "www.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "bluesky.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "create.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "discord.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "facebook.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "games.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "github.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "play.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "reddit.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "share.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "twitter.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "wiki.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" },
+  { pattern = "x.cardgamesimulator.com/*", zone_name = "cardgamesimulator.com" }
 ]
