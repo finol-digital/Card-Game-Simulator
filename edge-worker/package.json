@@ -1,0 +1,9 @@
+{
+  "name": "card-game-simulator-agent-edge",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "verify:deployed": "node scripts/verify-deployed.mjs"
+  }
+}

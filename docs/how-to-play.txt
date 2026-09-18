@@ -1,0 +1,6 @@
+---
+layout: null
+permalink: /how-to-play.md
+sitemap: false
+---
+{% include playing-guide.md %}

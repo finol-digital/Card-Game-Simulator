@@ -4,4 +4,17 @@ plugins:
 title: Card Game Simulator
 description: Create, Share, and Play card games with Card Game Simulator
 url: 'https://www.cardgamesimulator.com'
+lang: en-US
+logo: /assets/img/CGSLogo.png
+image: https://www.cardgamesimulator.com/assets/img/CGSLogo.png
+social:
+  name: Card Game Simulator
+  links:
+    - https://github.com/finol-digital/Card-Game-Simulator
+    - https://bsky.app/profile/cardgamesim.bsky.social
+    - https://discord.gg/RkCCAXb5sz
+    - https://www.facebook.com/cardgamesimulator/
+    - https://www.reddit.com/r/CardGameSimulator/
+    - https://twitter.com/cardgamesim
+    - https://x.com/cardgamesim
 theme: jekyll-theme-slate
