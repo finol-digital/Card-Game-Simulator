@@ -91,7 +91,10 @@ namespace Cgs.CardGameView.Multiplayer
                 var oldValue = _isFacedown;
                 _isFacedown = value;
                 if (IsSpawned)
+                {
+                    CgsNetDiagnostics.Record("card-flip-send", this);
                     SetIsFacedownServerRpc(_isFacedown);
+                }
                 else if (oldValue != _isFacedown)
                     OnChangeIsFacedown(oldValue, _isFacedown);
             }
@@ -909,6 +912,7 @@ namespace Cgs.CardGameView.Multiplayer
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void SetIsFacedownServerRpc(bool isFacedown, RpcParams rpcParams = default)
         {
+            TraceServerAction("card-flip-received", rpcParams.Receive.SenderClientId);
             if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
             {
                 Debug.LogWarning(

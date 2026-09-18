@@ -181,7 +181,10 @@ namespace Cgs.CardGameView.Multiplayer
                 var oldValue = _isTopFaceup;
                 _isTopFaceup = value;
                 if (IsSpawned)
+                {
+                    CgsNetDiagnostics.Record("stack-flip-send", this);
                     SetIsTopFaceupServerRpc(_isTopFaceup);
+                }
                 else if (oldValue != _isTopFaceup)
                     OnChangeIsTopFaceup(oldValue, _isTopFaceup);
             }
@@ -563,6 +566,7 @@ namespace Cgs.CardGameView.Multiplayer
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void SetIsTopFaceupServerRpc(bool isTopFaceup, RpcParams rpcParams = default)
         {
+            TraceServerAction("stack-flip-received", rpcParams.Receive.SenderClientId);
             if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
             {
                 Debug.LogWarning(

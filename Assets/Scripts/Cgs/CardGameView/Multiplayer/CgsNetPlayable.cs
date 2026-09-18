@@ -7,6 +7,7 @@ using System.Linq;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
+using Cgs.Play.Multiplayer;
 using Cgs.UI;
 using JetBrains.Annotations;
 using PrimeTween;
@@ -280,6 +281,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void OnNetworkSpawn()
         {
+            CgsNetDiagnostics.Record("object-spawn", this);
             if (transform.parent == null)
                 ParentTo(Container == null ? PlayController.Instance.playAreaCardZone.transform : Container.transform);
 
@@ -398,6 +400,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void PruneStalePointers()
         {
+            if (CgsNetDiagnostics.IsRecording)
+                CgsNetDiagnostics.Record("pointer-pruned", this,
+                    $"phase={CurrentDragPhase} pointers={PointerPositions.Count} pressed={IsAnyPointerPressed} " +
+                    $"{CgsNetDiagnostics.PointerState} elapsed={_stalePointerTime}");
 #if UNITY_EDITOR
             Debug.Log($"PruneStalePointers for {gameObject.name}");
 #endif
@@ -447,6 +453,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            TracePointer("pointer-down", eventData);
             CurrentPointerEventData = eventData;
             PointerPositions[eventData.pointerId] = eventData.position;
             PointerDragOffsets[eventData.pointerId] = (Vector2)transform.position - eventData.position;
@@ -467,6 +474,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            TracePointer("pointer-up", eventData);
             OnPointerUpSelectPlayable(eventData);
 
             CurrentPointerEventData = eventData;
@@ -551,8 +559,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            TracePointer("drag-begin", eventData);
             if (PreBeginDrag(eventData))
+            {
+                TracePointer("drag-handled-by-subclass", eventData);
                 return;
+            }
 
             DraggedPlayables[eventData.pointerId] = this;
 
@@ -576,6 +588,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrag(PointerEventData eventData)
         {
+            TracePointer("drag", eventData, true);
             CurrentPointerEventData = eventData;
             CurrentDragPhase = DragPhase.Drag;
             PointerPositions[eventData.pointerId] = eventData.position;
@@ -596,6 +609,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            TracePointer("drag-end", eventData);
             DraggedPlayables.Remove(eventData.pointerId);
 
             CurrentPointerEventData = eventData;
@@ -712,7 +726,31 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected void RequestChangeOwnership()
         {
+            CgsNetDiagnostics.Record("ownership-request", this, sampled: true);
             ChangeOwnershipServerRpc();
+        }
+
+        private void TracePointer(string stage, PointerEventData eventData, bool sampled = false)
+        {
+            if (!CgsNetDiagnostics.IsRecording)
+                return;
+            CgsNetDiagnostics.Record(stage, this,
+                $"pointer={eventData.pointerId} phase={CurrentDragPhase} screen={eventData.position} " +
+                $"pointers={PointerPositions.Count} pressed={IsAnyPointerPressed} " +
+                $"canRequest={CanRequestOwnership} blocksRaycasts={GetComponent<CanvasGroup>()?.blocksRaycasts} " +
+                CgsNetDiagnostics.PointerState, sampled);
+        }
+
+        public override void OnGainedOwnership()
+        {
+            base.OnGainedOwnership();
+            CgsNetDiagnostics.Record("ownership-gained", this);
+        }
+
+        public override void OnLostOwnership()
+        {
+            base.OnLostOwnership();
+            CgsNetDiagnostics.Record("ownership-lost", this);
         }
 
         /// <summary>
@@ -731,35 +769,54 @@ namespace Cgs.CardGameView.Multiplayer
             return false;
         }
 
+        protected void TraceServerAction(string action, ulong sender, bool sampled = false)
+        {
+            if (CgsNetDiagnostics.IsRecording)
+                CgsNetDiagnostics.Record(action, this, $"sender={sender} authorized={IsClientAuthorized(sender)}",
+                    sampled, sender.ToString());
+        }
+
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         // ReSharper disable once SuggestBaseTypeForParameter
         private void ChangeOwnershipServerRpc(RpcParams rpcParams = default)
         {
             var clientId = rpcParams.Receive.SenderClientId;
+            if (CgsNetDiagnostics.IsRecording)
+                CgsNetDiagnostics.Record("ownership-received", this, $"sender={clientId}", true, clientId.ToString());
             if (!NetworkManager.ConnectedClients.ContainsKey(clientId))
             {
+                CgsNetDiagnostics.Record("ownership-denied-disconnected", this);
                 Debug.LogWarning($"CgsNetPlayable: Ignoring request to transfer authority for {gameObject.name}");
                 return;
             }
 
             if (!IsClientAuthorized(clientId) && MyNetworkObject.OwnerClientId != NetworkManager.ServerClientId)
             {
+                CgsNetDiagnostics.Record("ownership-denied-permission", this);
                 Debug.LogWarning(
                     $"CgsNetPlayable: Rejecting ownership request for {gameObject.name} from client {clientId} - already owned by {MyNetworkObject.OwnerClientId}");
                 return;
             }
 
             MyNetworkObject.ChangeOwnership(clientId);
+            if (CgsNetDiagnostics.IsRecording)
+                CgsNetDiagnostics.Record("ownership-granted", this, $"sender={clientId}", true, clientId.ToString());
         }
 
         protected void RequestUpdatePosition(Vector2 position)
         {
+            if (CgsNetDiagnostics.IsRecording)
+                CgsNetDiagnostics.Record("position-send", this, $"position={position}", true);
             UpdatePositionServerRpc(position);
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void UpdatePositionServerRpc(Vector2 position, RpcParams rpcParams = default)
         {
+            if (CgsNetDiagnostics.IsRecording)
+                CgsNetDiagnostics.Record("position-received", this,
+                    $"sender={rpcParams.Receive.SenderClientId} position={position}", true,
+                    rpcParams.Receive.SenderClientId.ToString());
             if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
             {
                 Debug.LogWarning(
@@ -768,11 +825,14 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             Position = position;
+            CgsNetDiagnostics.Record("position-applied", this, sampled: true);
         }
 
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
+            if (CgsNetDiagnostics.IsRecording)
+                CgsNetDiagnostics.Record("position-observed", this, $"position={newValue}", true);
             _position = newValue;
             transform.localPosition = _position;
         }
@@ -785,6 +845,7 @@ namespace Cgs.CardGameView.Multiplayer
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void UpdateRotationServerRpc(Quaternion rotation, RpcParams rpcParams = default)
         {
+            TraceServerAction("rotation-received", rpcParams.Receive.SenderClientId, true);
             if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
             {
                 Debug.LogWarning(
@@ -904,6 +965,7 @@ namespace Cgs.CardGameView.Multiplayer
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         protected void DeleteServerRpc(RpcParams rpcParams = default)
         {
+            TraceServerAction("delete-received", rpcParams.Receive.SenderClientId);
             if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
             {
                 Debug.LogWarning(

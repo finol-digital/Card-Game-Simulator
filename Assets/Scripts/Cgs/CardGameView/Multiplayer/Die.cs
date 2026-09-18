@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Play;
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
@@ -211,7 +212,10 @@ namespace Cgs.CardGameView.Multiplayer
         public void Roll()
         {
             if (IsSpawned)
+            {
+                CgsNetDiagnostics.Record("die-roll-send", this);
                 RollServerRpc();
+            }
             else
                 _rollRemainingTime = RollTotalTime;
         }
@@ -219,6 +223,7 @@ namespace Cgs.CardGameView.Multiplayer
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void RollServerRpc(RpcParams rpcParams = default)
         {
+            TraceServerAction("die-roll-received", rpcParams.Receive.SenderClientId);
             if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
             {
                 Debug.LogWarning(
