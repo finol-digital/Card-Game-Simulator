@@ -59,6 +59,7 @@ test("incompatible Markdown requests retain HTML with both cache variance fields
 test("social paths issue permanent HTTP redirects without fetching the origin", async () => {
   const expectedRedirects = new Map([
     ["bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
+    ["bsky", "https://bsky.app/profile/cardgamesim.bsky.social"],
     ["create", "https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS"],
     ["discord", "https://discord.gg/RkCCAXb5sz"],
     ["facebook", "https://www.facebook.com/cardgamesimulator/"],
