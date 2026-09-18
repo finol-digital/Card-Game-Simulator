@@ -104,6 +104,64 @@ test("homepage returns markdown and cache-safe Vary header when requested", asyn
   });
 });
 
+test("Markdown GET and HEAD ignore range and validators for the original representation", async () => {
+  const incomingHeaders = {
+    Accept: "text/markdown",
+    Range: "bytes=0-3",
+    "If-Range": '"html-etag"',
+    "If-None-Match": '"html-etag"',
+    "If-Match": '"html-etag"',
+    "If-Modified-Since": "Thu, 17 Sep 2026 00:00:00 GMT",
+    "If-Unmodified-Since": "Thu, 17 Sep 2026 00:00:00 GMT"
+  };
+  for (const method of ["GET", "HEAD"]) {
+    await withMockFetch(async (request) => {
+      assert.equal(new URL(request.url).pathname, "/llms.txt");
+      assert.equal(request.method, "GET");
+      for (const header of Object.keys(incomingHeaders)) {
+        if (header !== "Accept") assert.equal(request.headers.get(header), null, header);
+      }
+      return new Response("# Complete guide");
+    }, async () => {
+      const response = await worker.fetch(new Request("https://www.cardgamesimulator.com/", {
+        method, headers: incomingHeaders
+      }));
+      assert.equal(response.status, 200);
+      assert.equal(await response.text(), method === "HEAD" ? "" : "# Complete guide");
+    });
+  }
+});
+
+test("an unexpected partial origin response is never relabeled as complete Markdown", async () => {
+  for (const method of ["GET", "HEAD"]) {
+    await withMockFetch(async () => new Response("# Pa", {
+      status: 206,
+      headers: { "Content-Range": "bytes 0-3/20", "Content-Type": "text/plain" }
+    }), async () => {
+      const response = await worker.fetch(new Request("https://www.cardgamesimulator.com/", {
+        method, headers: { Accept: "text/markdown" }
+      }));
+      assert.equal(response.status, 206);
+      assert.equal(response.headers.get("Content-Range"), "bytes 0-3/20");
+      assert.equal(response.headers.get("Cache-Control"), null);
+      assert.equal(await response.text(), method === "HEAD" ? "" : "# Pa");
+    });
+  }
+});
+
+test("non-read homepage requests still reach the original resource", async () => {
+  await withMockFetch(async (request) => {
+    assert.equal(new URL(request.url).pathname, "/");
+    assert.equal(request.method, "POST");
+    return new Response("Method not allowed", { status: 405 });
+  }, async () => {
+    const response = await worker.fetch(new Request("https://www.cardgamesimulator.com/", {
+      method: "POST", headers: { Accept: "text/markdown" }
+    }));
+    assert.equal(response.status, 405);
+  });
+});
+
 test("HTML homepage variant also varies by Accept", async () => {
   await withMockFetch(async () => new Response("<html></html>", {
     headers: { "Content-Type": "text/html", Vary: "Accept-Encoding" }

@@ -112,15 +112,16 @@ async function handleRequest(request) {
   const wantsMarkdown = acceptsMarkdown(request.headers.get("Accept"));
   const isHomepage = url.pathname === "/" || url.pathname === "/index.html";
 
-  if (isHomepage && wantsMarkdown) {
+  if (isHomepage && wantsMarkdown && (request.method === "GET" || request.method === "HEAD")) {
     const markdownUrl = new URL("/llms.txt", url);
-    const markdown = await fetch(new Request(markdownUrl, request));
+    // Fetch the complete source without the client's range or representation validators.
+    const markdown = await fetch(new Request(markdownUrl, { method: "GET" }));
 
-    if (markdown.ok) {
+    if (markdown.status === 200) {
       return markdownResponse(request.method === "HEAD" ? null : markdown.body);
     }
 
-    return withVary(markdown);
+    return withVary(request.method === "HEAD" ? new Response(null, markdown) : markdown);
   }
 
   const originResponse = await fetch(request);
