@@ -51,7 +51,7 @@ assert.match(html, /property="og:type"/i);
 assert.match(html, /"@type": "Organization"/);
 assert.match(html, /"@type": "SoftwareApplication"/);
 
-for (const path of ["/about/", "/contact/", "/privacy/", "/llms.txt", "/sitemap.xml"]) {
+for (const path of ["/how-to-play/", "/how-to-play.md", "/about/", "/contact/", "/privacy/", "/llms.txt", "/sitemap.xml"]) {
   const response = await fetchResponse(path);
   assert.equal(response.status, 200, `${path} must return 200`);
 }

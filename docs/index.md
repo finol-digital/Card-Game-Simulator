@@ -1,5 +1,6 @@
 ---
 layout: home
+description: Create, share, and play card games with Card Game Simulator. No account or registration is required, including for online multiplayer.
 ---
 <section class="hero">
   <div class="hero-inner">
@@ -7,9 +8,11 @@ layout: home
       <img class="hero-logo-large" src="/assets/img/CGSLogo.png" alt="Card Game Simulator" />
       <h1>Create, Share, and Play Card Games — Anywhere</h1>
       <p class="lead">Design custom card games, play with friends online or locally, and publish your creations. CGS is a flexible tabletop sandbox for players and creators.</p>
+      <p><strong>No account or registration required, including for online multiplayer.</strong></p>
 
       <p class="cta-row">
         <a class="btn primary" href="https://cgs.gg/">Play Now — Web</a>
+        <a class="btn" href="/how-to-play/">How to play</a>
       </p>
 
       <div class="store-row">
@@ -48,7 +51,7 @@ layout: home
     </div>
     <div class="feature">
       <h3>Play</h3>
-      <p>Play locally or online with friends — private tables, spectating, and matchmaking supported.</p>
+      <p>Load a deck, move cards on the table, and follow your game's rules with friends. <a href="/how-to-play/">Learn the controls and how to host or join a game.</a></p>
     </div>
     <div class="feature">
       <h3>Share</h3>
