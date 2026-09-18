@@ -11,4 +11,4 @@ It provides permanent HTTP redirects for `/bluesky`, `/discord`, `/facebook`, `/
 3. Confirm the configured route is `www.cardgamesimulator.com/*` and that it is enabled.
 4. Run `npm --prefix edge-worker run verify:deployed` from the repository root after the DNS and Worker changes have propagated.
 
-The Worker does not alter HTML for normal browser requests, apart from adding the required cache variance header to the homepage and 404 response.
+The Worker does not alter HTML for normal browser requests, apart from adding the required cache variance header to the homepage and 404 response. When the Worker is absent, GitHub Pages social pages retain a browser refresh redirect and a clickable destination link; these fallbacks do not provide an HTTP 301 response.

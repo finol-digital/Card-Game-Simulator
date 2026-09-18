@@ -22,12 +22,12 @@ test("agent guide includes concrete when-to-use and recovery guidance", async ()
 });
 
 test("trust pages have substantial content and usable public routes", async () => {
-  for (const page of ["about.md", "contact.md", "PRIVACY.md"]) {
+  for (const [page, route] of [["about.md", "/about/"], ["contact.md", "/contact/"], ["PRIVACY.md", "/privacy/"]]) {
     const content = await readDocsFile(page);
     const prose = content.replace(/^---[\s\S]*?---\s*/, "").replace(/\s+/g, " ").trim();
 
     assert.ok(prose.length >= 500, `${page} must contain at least 500 characters of content`);
-    assert.match(content, /permalink: \/(?:about|contact|privacy)\//);
+    assert.match(content, new RegExp(`^permalink: ${route}\\r?$`, "m"));
   }
 });
 
@@ -42,11 +42,11 @@ test("homepage has agent-discoverable identity and metadata", async () => {
   assert.match(homeLayout, /"email": "david@finoldigital\.com"/);
 });
 
-test("static social fallback contains no client-side redirect", async () => {
+test("static social pages retain a redirect and usable link without the Worker", async () => {
   const socialLayout = await readDocsFile("_layouts/social_link.html");
 
-  assert.doesNotMatch(socialLayout, /http-equiv="refresh"/i);
-  assert.match(socialLayout, /served as an HTTP redirect/);
+  assert.match(socialLayout, /http-equiv="refresh" content="0; URL={{ page\.slink }}"/i);
+  assert.match(socialLayout, /<a href="{{ page\.slink }}">/);
 });
 
 test("browser 404 page points visitors and agents to recovery resources", async () => {
