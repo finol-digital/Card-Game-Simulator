@@ -23,13 +23,13 @@ namespace Cgs.UI
         private Image _image;
         private Outline _outline;
 
-        private void Awake()
+        protected void Awake()
         {
             _image = GetComponent<Image>();
             _outline = GetComponent<Outline>();
         }
 
-        private void Start()
+        protected void Start()
         {
             if (_image == null)
                 return;

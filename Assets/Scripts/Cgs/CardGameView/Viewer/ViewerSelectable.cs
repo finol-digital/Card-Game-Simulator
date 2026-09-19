@@ -9,7 +9,7 @@ namespace Cgs.CardGameView.Viewer
 {
     public class ViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
-        public bool ignoreDeselect;
+        [SerializeField] bool ignoreDeselect;
 
         public void OnPointerDown(PointerEventData eventData)
         {

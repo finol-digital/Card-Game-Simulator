@@ -13,25 +13,25 @@ namespace Cgs.UI.ScrollRects
     [RequireComponent(typeof(ScrollRect))]
     public class ScrollRectAutoScroll : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        public float scrollSpeed = 10f;
+        [SerializeField] float scrollSpeed = 10f;
 
         private bool _active;
         private ScrollRect _scrollRect;
         private Vector2 _nextScrollPosition = Vector2.up;
         private readonly List<Selectable> _selectables = new List<Selectable>();
 
-        private void Awake()
+        protected void Awake()
         {
             _scrollRect = GetComponent<ScrollRect>();
         }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             if (_scrollRect)
                 _scrollRect.content.GetComponentsInChildren(_selectables);
         }
 
-        private void Start()
+        protected void Start()
         {
             if (_scrollRect)
                 _scrollRect.content.GetComponentsInChildren(_selectables);
@@ -39,7 +39,7 @@ namespace Cgs.UI.ScrollRects
             ScrollToSelected(true);
         }
 
-        private void Update()
+        protected void Update()
         {
             // Scroll via input
             if (_selectables.Count > 0 && InputSystem.actions.FindAction(Tags.PlayerMove).WasPressedThisFrame())

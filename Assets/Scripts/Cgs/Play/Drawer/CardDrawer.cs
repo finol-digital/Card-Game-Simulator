@@ -48,22 +48,32 @@ namespace Cgs.Play.Drawer
             }
         }
 
-        public StackViewer viewer;
-        public Dropdown cardStackDropdown;
-        public Button downButton;
-        public Button upButton;
-        public RectTransform panelRectTransform;
-        public RectTransform cardZonesRectTransform;
-        public List<RectTransform> cardZoneRectTransforms;
+        [SerializeField] StackViewer viewer;
+        [SerializeField] Dropdown cardStackDropdown;
+        [SerializeField] Button downButton;
+        [SerializeField] Button upButton;
+        [SerializeField] RectTransform panelRectTransform;
+        [SerializeField] RectTransform cardZonesRectTransform;
+        [SerializeField] List<RectTransform> cardZoneRectTransforms;
 
-        public Toggle handToggle;
-        public Text handNameText;
-        public Text handCountText;
+        [SerializeField] Toggle handToggle;
+        [SerializeField] Text handNameText;
+        [SerializeField] Text handCountText;
 
-        public RectTransform tabsRectTransform;
+        [SerializeField] RectTransform tabsRectTransform;
 
-        public GameObject tabPrefab;
-        public GameObject cardZonePrefab;
+        [SerializeField] GameObject tabPrefab;
+        [SerializeField] GameObject cardZonePrefab;
+
+        public Button DownButton => downButton;
+
+        public Button UpButton => upButton;
+
+        public RectTransform PanelRectTransform => panelRectTransform;
+
+        public RectTransform CardZonesRectTransform => cardZonesRectTransform;
+
+        public RectTransform GetCardZoneTransform(int handIndex) => cardZoneRectTransforms[handIndex];
 
         private readonly List<Toggle> _toggles = new();
         private readonly List<Text> _nameTexts = new();
@@ -74,7 +84,7 @@ namespace Cgs.Play.Drawer
         private string _previousCardStackNames = string.Empty;
         private bool _isRefreshingDropdown;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(Resize);
 
@@ -84,14 +94,14 @@ namespace Cgs.Play.Drawer
             InputSystem.actions.FindAction(Tags.PlayGameAction1).performed += InputAction1;
         }
 
-        private void Awake()
+        protected void Awake()
         {
             _toggles.Add(handToggle);
             _nameTexts.Add(handNameText);
             _countTexts.Add(handCountText);
         }
 
-        private void Start()
+        protected void Start()
         {
             _toggles[0].GetComponent<CardDropArea>().Index = 0;
             _toggles[0].onValueChanged.AddListener(isOn =>
@@ -101,7 +111,7 @@ namespace Cgs.Play.Drawer
             });
         }
 
-        private void Update()
+        protected void Update()
         {
             if (PlaySettings.StackViewerOverlap != _previousOverlapSpacing)
                 viewer.ApplyOverlapSpacing();
@@ -355,7 +365,7 @@ namespace Cgs.Play.Drawer
             tabTemplate.transform.SetSiblingIndex(tabIndex);
             tabTemplate.TabIndex = tabIndex;
 
-            _toggles.Add(tabTemplate.toggle);
+            _toggles.Add(tabTemplate.Toggle);
             _toggles[tabIndex].group = _toggles[0].group;
             _toggles[tabIndex].onValueChanged.AddListener(isOn =>
             {
@@ -363,16 +373,16 @@ namespace Cgs.Play.Drawer
                     SelectTab(tabTemplate.TabIndex);
             });
 
-            _nameTexts.Add(tabTemplate.nameText);
-            _countTexts.Add(tabTemplate.countText);
+            _nameTexts.Add(tabTemplate.NameText);
+            _countTexts.Add(tabTemplate.CountText);
 
-            tabTemplate.removeButton.onClick.AddListener(() => PromptRemoveTab(tabTemplate.TabIndex));
-            tabTemplate.drawerHandle.cardDrawer = this;
+            tabTemplate.RemoveButton.onClick.AddListener(() => PromptRemoveTab(tabTemplate.TabIndex));
+            tabTemplate.DrawerHandle.CardDrawer = this;
 
             var tabCardDropArea = _toggles[tabIndex].GetComponent<CardDropArea>();
             tabCardDropArea.DropHandler = viewer;
             tabCardDropArea.Index = tabIndex;
-            viewer.drops.Add(tabCardDropArea);
+            viewer.AddDropArea(tabCardDropArea);
             tabTemplate.TabCardDropArea = tabCardDropArea;
 
             var cardZoneRectTransform = (RectTransform)Instantiate(cardZonePrefab, cardZonesRectTransform).transform;
@@ -382,7 +392,7 @@ namespace Cgs.Play.Drawer
 
             var cardZoneCardDropArea = cardZoneRectTransform.GetComponent<CardDropArea>();
             cardZoneCardDropArea.DropHandler = viewer;
-            viewer.drops.Add(cardZoneCardDropArea);
+            viewer.AddDropArea(cardZoneCardDropArea);
             tabTemplate.CardZoneCardDropArea = cardZoneCardDropArea;
 
             if (CgsNetManager.Instance.IsOnline)
@@ -422,7 +432,7 @@ namespace Cgs.Play.Drawer
                     cardZone.transform.DestroyAllChildren();
                     foreach (var unityCard in serverCards)
                     {
-                        var cardModel = Instantiate(viewer.cardModelPrefab, cardZone.transform)
+                        var cardModel = Instantiate(viewer.CardModelPrefab, cardZone.transform)
                             .GetOrAddComponent<CardModel>();
                         cardModel.Value = unityCard;
                         var cardTransform = cardModel.transform;
@@ -469,12 +479,12 @@ namespace Cgs.Play.Drawer
             var tabRectTransform = tabsRectTransform.GetChild(tabIndex);
             var tabTemplate = tabRectTransform.GetComponent<TabTemplate>();
 
-            _toggles.Remove(tabTemplate.toggle);
-            _countTexts.Remove(tabTemplate.countText);
-            _nameTexts.Remove(tabTemplate.nameText);
+            _toggles.Remove(tabTemplate.Toggle);
+            _countTexts.Remove(tabTemplate.CountText);
+            _nameTexts.Remove(tabTemplate.NameText);
 
-            viewer.drops.Remove(tabTemplate.CardZoneCardDropArea);
-            viewer.drops.Remove(tabTemplate.TabCardDropArea);
+            viewer.RemoveDropArea(tabTemplate.CardZoneCardDropArea);
+            viewer.RemoveDropArea(tabTemplate.TabCardDropArea);
 
             var cardZoneRectTransform = cardZoneRectTransforms[tabIndex];
             cardZoneRectTransforms.Remove(cardZoneRectTransform);
@@ -511,7 +521,7 @@ namespace Cgs.Play.Drawer
             upButton.interactable = true;
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.ViewerLess).performed -= InputLess;
             InputSystem.actions.FindAction(Tags.ViewerMore).performed -= InputMore;

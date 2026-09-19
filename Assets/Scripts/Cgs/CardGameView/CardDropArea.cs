@@ -20,9 +20,15 @@ namespace Cgs.CardGameView
 
         public int? Index { get; set; }
 
-        public bool isBlocker;
+        [SerializeField] bool isBlocker;
 
-        private void OnTriggerEnter2D(Collider2D other)
+        public bool IsBlocker
+        {
+            get => isBlocker;
+            set => isBlocker = value;
+        }
+
+        protected void OnTriggerEnter2D(Collider2D other)
         {
             var cardModel = other.GetComponent<CardModel>();
             if (cardModel == null || cardModel.ParentCardZone == null ||

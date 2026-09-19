@@ -65,32 +65,40 @@ namespace Cgs.CardGameView.Viewer
 
         private CardViewerMode _mode;
 
-        public CanvasGroup preview;
-        public CanvasGroup minimal;
-        public CanvasGroup expanded;
-        public CardActionPanel cardActionPanel;
-        public CanvasGroup maximal;
+        [SerializeField] CanvasGroup preview;
+        [SerializeField] CanvasGroup minimal;
+        [SerializeField] CanvasGroup expanded;
+        [SerializeField] CardActionPanel cardActionPanel;
+        [SerializeField] CanvasGroup maximal;
 
-        public ScrollRect maximalScrollRect;
+        [SerializeField] ScrollRect maximalScrollRect;
 
-        public RectTransform zoomPanel;
+        [SerializeField] RectTransform zoomPanel;
 
-        public List<Text> previewNameText;
-        public List<Text> previewIdText;
-        public Button expandButton;
-        public Button imageButton;
-        public List<AspectRatioFitter> cardAspectRatioFitters;
-        public List<Image> cardImages;
-        public List<Text> nameTexts;
-        public List<Text> uniqueIdTexts;
-        public Text idText;
-        public Text setText;
-        public Text propertyTextTemplate;
-        public List<Dropdown> propertySelectors;
-        public List<Text> propertyValueTexts;
-        public RectTransform buttonsPanel;
-        public Button previousButton;
-        public Button nextButton;
+        [SerializeField] List<Text> previewNameText;
+        [SerializeField] List<Text> previewIdText;
+        [SerializeField] Button expandButton;
+        [SerializeField] Button imageButton;
+        [SerializeField] List<AspectRatioFitter> cardAspectRatioFitters;
+        [SerializeField] List<Image> cardImages;
+        [SerializeField] List<Text> nameTexts;
+        [SerializeField] List<Text> uniqueIdTexts;
+        [SerializeField] Text idText;
+        [SerializeField] Text setText;
+        [SerializeField] Text propertyTextTemplate;
+        [SerializeField] List<Dropdown> propertySelectors;
+        [SerializeField] List<Text> propertyValueTexts;
+        [SerializeField] RectTransform buttonsPanel;
+        [SerializeField] Button previousButton;
+        [SerializeField] Button nextButton;
+
+        public RectTransform ZoomPanel => zoomPanel;
+
+        public RectTransform ButtonsPanel => buttonsPanel;
+
+        public Button PreviousButton => previousButton;
+
+        public Button NextButton => nextButton;
 
         private List<Text> PropertyTexts { get; } = new();
         private List<Dropdown.OptionData> PropertyOptions { get; } = new();
@@ -254,7 +262,7 @@ namespace Cgs.CardGameView.Viewer
 
         private Vector2 _cardActionPanelPosition;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetInfo);
 
@@ -267,13 +275,13 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
         }
 
-        private void Start()
+        protected void Start()
         {
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
             ResetInfo();
         }
 
-        private void Update()
+        protected void Update()
         {
             if (Zoom)
                 ZoomTime += Time.deltaTime;
@@ -516,7 +524,7 @@ namespace Cgs.CardGameView.Viewer
         {
             // Gamepad does not have enough buttons for all card actions, so prefer rotation over less/more
             var block = callbackContext.control.device is Gamepad && SelectedCardModel != null &&
-                        SelectedCardModel.ParentCardZone != null && SelectedCardModel.ParentCardZone.allowsRotation;
+                        SelectedCardModel.ParentCardZone != null && SelectedCardModel.ParentCardZone.AllowsRotation;
             if (IsBlocked || block)
                 return;
 
@@ -532,7 +540,7 @@ namespace Cgs.CardGameView.Viewer
         {
             // Gamepad does not have enough buttons for all card actions, so prefer rotation over less/more
             var block = callbackContext.control.device is Gamepad && SelectedCardModel != null &&
-                        SelectedCardModel.ParentCardZone != null && SelectedCardModel.ParentCardZone.allowsRotation;
+                        SelectedCardModel.ParentCardZone != null && SelectedCardModel.ParentCardZone.AllowsRotation;
             if (IsBlocked || block)
                 return;
 
@@ -646,7 +654,7 @@ namespace Cgs.CardGameView.Viewer
             preview.alpha = 0;
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

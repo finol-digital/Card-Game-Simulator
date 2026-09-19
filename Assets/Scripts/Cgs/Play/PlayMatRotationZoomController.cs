@@ -16,13 +16,13 @@ namespace Cgs.Play
     [RequireComponent(typeof(PlayController))]
     public class PlayMatRotationZoomController : MonoBehaviour
     {
-        public CanvasGroup canvasGroup;
-        public Button rotationButton;
-        public Slider rotationSlider;
-        public Toggle rotationLockToggle;
-        public Button zoomButton;
-        public Slider zoomSlider;
-        public Toggle zoomLockToggle;
+        [SerializeField] CanvasGroup canvasGroup;
+        [SerializeField] Button rotationButton;
+        [SerializeField] Slider rotationSlider;
+        [SerializeField] Toggle rotationLockToggle;
+        [SerializeField] Button zoomButton;
+        [SerializeField] Slider zoomSlider;
+        [SerializeField] Toggle zoomLockToggle;
 
         private const float PageSensitivity = 0.2f;
         private const float Tolerance = 0.01f;
@@ -37,56 +37,56 @@ namespace Cgs.Play
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
                                   PlayableViewer.Instance.IsVisible ||
                                   CardGameManager.Instance.ModalCanvas != null ||
-                                  _playController.menu.panels.activeSelf ||
-                                  _playController.scoreboard.nameInputField.isFocused;
+                                  _playController.Menu.Panels.activeSelf ||
+                                  _playController.Scoreboard.NameInputField.isFocused;
 
-        private void Awake()
+        protected void Awake()
         {
             _playController = GetComponent<PlayController>();
         }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleRotation;
             InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleZoom;
         }
 
-        private void Start()
+        protected void Start()
         {
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
 
-        private void Update()
+        protected void Update()
         {
             // Sync buttons
-            if (rotationButton.interactable != _playController.playArea.RotationEnabled)
-                rotationButton.interactable = _playController.playArea.RotationEnabled;
-            if (zoomButton.interactable != _playController.playArea.ZoomEnabled)
-                zoomButton.interactable = _playController.playArea.ZoomEnabled;
+            if (rotationButton.interactable != _playController.PlayArea.RotationEnabled)
+                rotationButton.interactable = _playController.PlayArea.RotationEnabled;
+            if (zoomButton.interactable != _playController.PlayArea.ZoomEnabled)
+                zoomButton.interactable = _playController.PlayArea.ZoomEnabled;
 
             // Sync lock toggles
-            if (rotationLockToggle.isOn != _playController.playArea.RotationEnabled)
-                rotationLockToggle.SetIsOnWithoutNotify(_playController.playArea.RotationEnabled);
-            if (zoomLockToggle.isOn != _playController.playArea.ZoomEnabled)
-                zoomLockToggle.SetIsOnWithoutNotify(_playController.playArea.ZoomEnabled);
+            if (rotationLockToggle.isOn != _playController.PlayArea.RotationEnabled)
+                rotationLockToggle.SetIsOnWithoutNotify(_playController.PlayArea.RotationEnabled);
+            if (zoomLockToggle.isOn != _playController.PlayArea.ZoomEnabled)
+                zoomLockToggle.SetIsOnWithoutNotify(_playController.PlayArea.ZoomEnabled);
 
             // Sync sliders
-            if (rotationSlider.interactable != _playController.playArea.RotationEnabled)
-                rotationSlider.interactable = _playController.playArea.RotationEnabled;
-            if (zoomSlider.interactable != _playController.playArea.ZoomEnabled)
-                zoomSlider.interactable = _playController.playArea.ZoomEnabled;
+            if (rotationSlider.interactable != _playController.PlayArea.RotationEnabled)
+                rotationSlider.interactable = _playController.PlayArea.RotationEnabled;
+            if (zoomSlider.interactable != _playController.PlayArea.ZoomEnabled)
+                zoomSlider.interactable = _playController.PlayArea.ZoomEnabled;
 
             var changed = false;
-            if (Math.Abs(rotationSlider.value - _playController.playArea.CurrentRotation) > Tolerance)
+            if (Math.Abs(rotationSlider.value - _playController.PlayArea.CurrentRotation) > Tolerance)
             {
-                rotationSlider.value = _playController.playArea.CurrentRotation;
+                rotationSlider.value = _playController.PlayArea.CurrentRotation;
                 _timeSinceChange = 0;
                 changed = true;
             }
 
-            if (Math.Abs(zoomSlider.value - _playController.playArea.CurrentZoom) > Tolerance)
+            if (Math.Abs(zoomSlider.value - _playController.PlayArea.CurrentZoom) > Tolerance)
             {
-                zoomSlider.value = _playController.playArea.CurrentZoom;
+                zoomSlider.value = _playController.PlayArea.CurrentZoom;
                 _timeSinceChange = 0;
                 changed = true;
             }
@@ -116,11 +116,11 @@ namespace Cgs.Play
             if (Mathf.Abs(pageHorizontal) > PageSensitivity)
             {
                 var horizontal = pageHorizontal * Time.deltaTime;
-                if (_playController.playArea.RotationEnabled)
-                    _playController.playArea.CurrentRotation += horizontal * RotateZoomableScrollRect.RotationSpeed;
+                if (_playController.PlayArea.RotationEnabled)
+                    _playController.PlayArea.CurrentRotation += horizontal * RotateZoomableScrollRect.RotationSpeed;
                 else
-                    _playController.playArea.horizontalNormalizedPosition =
-                        Mathf.Clamp01(_playController.playArea.horizontalNormalizedPosition + horizontal);
+                    _playController.PlayArea.horizontalNormalizedPosition =
+                        Mathf.Clamp01(_playController.PlayArea.horizontalNormalizedPosition + horizontal);
             }
 
             var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
@@ -128,18 +128,18 @@ namespace Cgs.Play
                 return;
 
             var delta = pageVertical * Time.deltaTime;
-            if (_playController.playArea.ZoomEnabled)
+            if (_playController.PlayArea.ZoomEnabled)
             {
                 var zoomFactor = Mathf.Clamp(1 + delta, RotateZoomableScrollRect.MinZoom,
                     RotateZoomableScrollRect.MaxZoom);
-                _playController.playArea.CurrentZoom = Mathf.Clamp(
-                    _playController.playArea.CurrentZoom * zoomFactor,
+                _playController.PlayArea.CurrentZoom = Mathf.Clamp(
+                    _playController.PlayArea.CurrentZoom * zoomFactor,
                     RotateZoomableScrollRect.MinZoom,
                     RotateZoomableScrollRect.MaxZoom);
             }
             else
-                _playController.playArea.verticalNormalizedPosition =
-                    Mathf.Clamp01(_playController.playArea.verticalNormalizedPosition + delta);
+                _playController.PlayArea.verticalNormalizedPosition =
+                    Mathf.Clamp01(_playController.PlayArea.verticalNormalizedPosition + delta);
         }
 
         private void InputToggleRotation(InputAction.CallbackContext obj)
@@ -153,21 +153,21 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void ToggleRotation()
         {
-            SetRotationEnabled(!_playController.playArea.RotationEnabled);
+            SetRotationEnabled(!_playController.PlayArea.RotationEnabled);
         }
 
         [UsedImplicitly]
         public void SetRotationEnabled(bool isRotationEnabled)
         {
             _timeSinceChange = 0;
-            _playController.playArea.RotationEnabled = isRotationEnabled;
+            _playController.PlayArea.RotationEnabled = isRotationEnabled;
         }
 
         [UsedImplicitly]
         public void UpdateRotation(float rotation)
         {
             _timeSinceChange = 0;
-            _playController.playArea.CurrentRotation = rotation;
+            _playController.PlayArea.CurrentRotation = rotation;
         }
 
         [UsedImplicitly]
@@ -175,9 +175,9 @@ namespace Cgs.Play
         {
             _timeSinceChange = 0;
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
-                _playController.playArea.CurrentRotation = CgsNetManager.Instance.LocalPlayer.DefaultZRotation;
+                _playController.PlayArea.CurrentRotation = CgsNetManager.Instance.LocalPlayer.DefaultZRotation;
             else
-                _playController.playArea.CurrentRotation = 0;
+                _playController.PlayArea.CurrentRotation = 0;
         }
 
         private void InputToggleZoom(InputAction.CallbackContext obj)
@@ -191,31 +191,31 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void ToggleZoom()
         {
-            SetZoomEnabled(!_playController.playArea.ZoomEnabled);
+            SetZoomEnabled(!_playController.PlayArea.ZoomEnabled);
         }
 
         [UsedImplicitly]
         public void SetZoomEnabled(bool isZoomEnabled)
         {
             _timeSinceChange = 0;
-            _playController.playArea.ZoomEnabled = isZoomEnabled;
+            _playController.PlayArea.ZoomEnabled = isZoomEnabled;
         }
 
         [UsedImplicitly]
         public void UpdateZoom(float zoom)
         {
             _timeSinceChange = 0;
-            _playController.playArea.CurrentZoom = zoom;
+            _playController.PlayArea.CurrentZoom = zoom;
         }
 
         [UsedImplicitly]
         public void ResetZoom()
         {
             _timeSinceChange = 0;
-            _playController.playArea.CurrentZoom = RotateZoomableScrollRect.DefaultZoom;
+            _playController.PlayArea.CurrentZoom = RotateZoomableScrollRect.DefaultZoom;
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed -= InputToggleRotation;
             InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed -= InputToggleZoom;

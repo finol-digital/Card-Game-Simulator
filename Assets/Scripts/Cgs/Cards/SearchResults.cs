@@ -18,14 +18,18 @@ namespace Cgs.Cards
         public static string InputPrompt => $"Search {CardGameManager.Current.Name} cards";
         private const string CountSeparator = " / ";
 
-        public GameObject cardSearchMenuPrefab;
-        public GameObject cardModelPrefab;
-        public RectTransform layoutArea;
-        public LayoutGroup layoutGroup;
-        public InputField inputField;
-        public Text countText;
-        public ScrollRect scrollRect;
-        public bool isInteractable;
+        [SerializeField] GameObject cardSearchMenuPrefab;
+        [SerializeField] GameObject cardModelPrefab;
+        [SerializeField] RectTransform layoutArea;
+        [SerializeField] LayoutGroup layoutGroup;
+        [SerializeField] InputField inputField;
+        [SerializeField] Text countText;
+        [SerializeField] ScrollRect scrollRect;
+        [SerializeField] bool isInteractable;
+
+        public RectTransform LayoutArea => layoutArea;
+
+        public InputField InputField => inputField;
 
         public int CardsPerRow
         {
@@ -101,7 +105,7 @@ namespace Cgs.Cards
 
         public CardAction DoubleClickAction { get; set; }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             CardSearcher.SearchCallback = ShowResults;
             CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
@@ -117,7 +121,7 @@ namespace Cgs.Cards
             gridLayoutGroup.cellSize = cardSize * CardGameManager.PixelsPerInch;
         }
 
-        private void Start()
+        protected void Start()
         {
             UpdateSearchResultsPanel();
         }
@@ -150,7 +154,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void DecrementPage()
         {
-            if (!CardViewer.Instance.zoomPanel.gameObject.activeSelf)
+            if (!CardViewer.Instance.ZoomPanel.gameObject.activeSelf)
                 CardViewer.Instance.SelectedCardModel = null;
             CurrentPageIndex--;
             if (CurrentPageIndex < 0)
@@ -161,7 +165,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void IncrementPage()
         {
-            if (!CardViewer.Instance.zoomPanel.gameObject.activeSelf)
+            if (!CardViewer.Instance.ZoomPanel.gameObject.activeSelf)
                 CardViewer.Instance.SelectedCardModel = null;
             CurrentPageIndex++;
             if (CurrentPageIndex > TotalPageCount)

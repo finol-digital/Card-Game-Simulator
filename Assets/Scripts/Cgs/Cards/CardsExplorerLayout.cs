@@ -29,16 +29,16 @@ namespace Cgs.Cards
 
         private bool HasTwoFooterRows => IsPortrait && AreEditButtonsVisible;
 
-        public RectTransform cardsViewContent;
-        public GridLayoutGroup cardsViewGrid;
+        [SerializeField] RectTransform cardsViewContent;
+        [SerializeField] GridLayoutGroup cardsViewGrid;
 
-        public RectTransform footer;
-        public RectTransform pageCountText;
-        public RectTransform newCardButton;
-        public RectTransform editCardButton;
-        public RectTransform deleteCardButton;
+        [SerializeField] RectTransform footer;
+        [SerializeField] RectTransform pageCountText;
+        [SerializeField] RectTransform newCardButton;
+        [SerializeField] RectTransform editCardButton;
+        [SerializeField] RectTransform deleteCardButton;
 
-        private void OnRectTransformDimensionsChange()
+        protected void OnRectTransformDimensionsChange()
         {
             ResetLayout();
         }

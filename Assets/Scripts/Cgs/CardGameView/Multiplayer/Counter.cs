@@ -22,9 +22,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         public const int DefaultValue = 1;
 
-        public Image counterImage;
-        public Transform logoTransform;
-        public Text valueText;
+        [SerializeField] Image counterImage;
+        [SerializeField] Transform logoTransform;
+        [SerializeField] Text valueText;
 
         public override string ViewValue => $"Counter: {Value}";
 

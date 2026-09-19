@@ -62,24 +62,24 @@ namespace Cgs.CardGameView.Viewer
         private CardStack Stack => SelectedPlayable as CardStack;
         private Counter SelectedCounter => SelectedPlayable as Counter;
 
-        public CanvasGroup preview;
-        public CanvasGroup view;
-        public CanvasGroup dieActionPanel;
-        public CanvasGroup stackActionPanel;
+        [SerializeField] CanvasGroup preview;
+        [SerializeField] CanvasGroup view;
+        [SerializeField] CanvasGroup dieActionPanel;
+        [SerializeField] CanvasGroup stackActionPanel;
 
         [FormerlySerializedAs("tokenActionPanel")]
-        public CanvasGroup counterActionPanel;
+        [SerializeField] CanvasGroup counterActionPanel;
 
-        public Button saveButton;
+        [SerializeField] Button saveButton;
 
-        public List<Text> valueTexts;
-        public InputField dieValueInputField;
-        public InputField dieMaxInputField;
-        public Dropdown dieDropdown;
-        public InputField counterValueInputField;
+        [SerializeField] List<Text> valueTexts;
+        [SerializeField] InputField dieValueInputField;
+        [SerializeField] InputField dieMaxInputField;
+        [SerializeField] Dropdown dieDropdown;
+        [SerializeField] InputField counterValueInputField;
 
         [FormerlySerializedAs("tokenDropdown")]
-        public Dropdown counterDropdown;
+        [SerializeField] Dropdown counterDropdown;
 
         public bool IsVisible
         {
@@ -108,7 +108,7 @@ namespace Cgs.CardGameView.Viewer
 
         private InputAction _pageAction;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(Reset);
 
@@ -126,13 +126,13 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        private void Start()
+        protected void Start()
         {
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
             Reset();
         }
 
-        private void Update()
+        protected void Update()
         {
             WasVisible = IsVisible;
 
@@ -183,7 +183,7 @@ namespace Cgs.CardGameView.Viewer
             IsVisible = false;
         }
 
-        public void Reset()
+        protected void Reset()
         {
             IsVisible = false;
         }
@@ -670,7 +670,7 @@ namespace Cgs.CardGameView.Viewer
             SelectedPlayable = null;
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputSub;

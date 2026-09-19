@@ -53,13 +53,13 @@ namespace Cgs.Menu
         public const string CreationWarningMessage = "Failed to create the custom card game! ";
         public const string CreationCleanupErrorMessage = "Failed to both create and cleanup during creation! ";
 
-        public GameObject downloadMenuPrefab;
-        public List<InputField> inputFields;
-        public Image bannerImage;
-        public Image cardBackImage;
-        public Image playMatImage;
-        public Text backsFolderText;
-        public Button saveButton;
+        [SerializeField] GameObject downloadMenuPrefab;
+        [SerializeField] List<InputField> inputFields;
+        [SerializeField] Image bannerImage;
+        [SerializeField] Image cardBackImage;
+        [SerializeField] Image playMatImage;
+        [SerializeField] Text backsFolderText;
+        [SerializeField] Button saveButton;
 
         public GamesManagementMenu ParentMenu { get; set; }
 
@@ -153,7 +153,7 @@ namespace Cgs.Menu
 
         private bool _isEdit;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.DecksPivot).performed += InputDownloadWeb;
@@ -648,7 +648,7 @@ namespace Cgs.Menu
             }
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.DecksPivot).performed -= InputDownloadWeb;

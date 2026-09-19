@@ -23,13 +23,15 @@ Useful examples:
 | Named error messages and service boundaries | [CardGameManager.cs](../Assets/Scripts/Cgs/CardGameManager.cs) |
 | Framework-required public cleanup override | [CgsNetPlayable.cs](../Assets/Scripts/Cgs/CardGameView/Multiplayer/CgsNetPlayable.cs) |
 
-Two conventions are deliberately changing: Inspector-only public fields become
-`[SerializeField]` fields, and private Unity lifecycle methods become protected.
-The initial scan found 148 private declarations across `Awake`, `Start`, `Update`,
-`LateUpdate`, `FixedUpdate`, `OnEnable`, `OnDisable`, and `OnDestroy`. Existing files
-are therefore migration work, not templates for these two decisions. Other
-recommendations below describe expectations for new or substantively changed
-code; they do not claim that every existing file already complies.
+The Inspector-field and lifecycle migration now covers maintained components:
+serialized configuration uses `[SerializeField]` fields, and ordinary Unity
+messages use protected methods. Callers use properties or focused methods while
+serialized names, types, initializers, and attributes remain unchanged. Public
+network/data-transfer contracts and framework overrides retain their access.
+The upstream-derived `FlowLayoutGroup` and `NetworkDiscovery` implementations
+retain their original conventions. Other recommendations below describe
+expectations for new or substantively changed code; they do not claim that every
+existing file already complies.
 
 ## File layout and formatting
 
@@ -201,10 +203,13 @@ protected override void Start()
 
 ## Adoption and validation
 
-Apply both new conventions to new code and focused migrations. The initial
-example is `MainMenu`; unrelated existing files do not need a sweeping rewrite.
-Keep behavior fixes separable from broad formatting/API migrations. For each
-migration, check serialization and inheritance independently.
+Apply both conventions to new maintained components. `MainMenu` shows basic
+Inspector fields; `SelectionPanel` shows protected read-only access for derived
+classes, and `StackViewer` exposes focused methods for its drop-area collection.
+Keep behavior fixes separable from formatting/API migrations. For each migration,
+check serialization and inheritance independently. `Dialog.LateUpdate` and
+`DiceZone.Update` explicitly retain their pre-existing replacement callbacks;
+changing those to run base work is a separate behavior change.
 
 Use `.editorconfig` for the existing whitespace rules. Review enforces the
 Inspector/lifecycle exceptions above; a global naming/accessibility rule cannot

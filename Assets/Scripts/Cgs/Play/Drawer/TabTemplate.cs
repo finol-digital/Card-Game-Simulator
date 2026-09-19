@@ -10,11 +10,21 @@ namespace Cgs.Play.Drawer
 {
     public class TabTemplate : MonoBehaviour
     {
-        public Button removeButton;
-        public Toggle toggle;
-        public Text nameText;
-        public Text countText;
-        public DrawerHandle drawerHandle;
+        [SerializeField] Button removeButton;
+        [SerializeField] Toggle toggle;
+        [SerializeField] Text nameText;
+        [SerializeField] Text countText;
+        [SerializeField] DrawerHandle drawerHandle;
+
+        public Button RemoveButton => removeButton;
+
+        public Toggle Toggle => toggle;
+
+        public Text NameText => nameText;
+
+        public Text CountText => countText;
+
+        public DrawerHandle DrawerHandle => drawerHandle;
 
         public int TabIndex { get; set; }
         public CardDropArea TabCardDropArea { get; set; }

@@ -13,12 +13,12 @@ namespace Cgs.UI
 {
     public class ToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        public GameObject tooltipPrefab;
-        public string tooltip = "";
-        public bool avoidOverlap;
-        public bool isBelow;
-        public string inputActionId;
-        public Transform parentTransform;
+        [SerializeField] GameObject tooltipPrefab;
+        [SerializeField] string tooltip = "";
+        [SerializeField] bool avoidOverlap;
+        [SerializeField] bool isBelow;
+        [SerializeField] string inputActionId;
+        [SerializeField] Transform parentTransform;
 
         private GameObject ToolTipGameObject => _toolTipGameObject ??= Instantiate(tooltipPrefab,
             parentTransform == null ? transform : parentTransform);
@@ -74,14 +74,14 @@ namespace Cgs.UI
             }
         }
 
-        private void Awake()
+        protected void Awake()
         {
             ToolTipCanvasGroup.interactable = false;
             ToolTipCanvasGroup.blocksRaycasts = false;
             ToolTipCanvasGroup.alpha = 0; // Initially invisible
         }
 
-        private void Start()
+        protected void Start()
         {
             var rectTransform = (RectTransform)ToolTipGameObject.transform;
             if (!isBelow)
@@ -93,7 +93,7 @@ namespace Cgs.UI
             rectTransform.offsetMax = Vector2.zero;
         }
 
-        private void Update()
+        protected void Update()
         {
             if (!Settings.ButtonTooltipsEnabled)
             {

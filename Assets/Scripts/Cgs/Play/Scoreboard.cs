@@ -24,18 +24,22 @@ namespace Cgs.Play
         public const string DefaultPlayerName = "Unnamed Player";
         public const string PlayerNamePlayerPrefs = "PlayerName";
 
-        public Transform scoreboardPanel;
+        [SerializeField] Transform scoreboardPanel;
 
-        public Text roomNameText;
-        public Text roomIdIpText;
+        [SerializeField] Text roomNameText;
+        [SerializeField] Text roomIdIpText;
 
-        public InputField nameInputField;
+        [SerializeField] InputField nameInputField;
 
-        public InputField pointsInputField;
+        [SerializeField] InputField pointsInputField;
 
-        public RectTransform scoreContent;
+        [SerializeField] RectTransform scoreContent;
 
-        public ScoreTemplate scoreTemplate;
+        [SerializeField] ScoreTemplate scoreTemplate;
+
+        public InputField NameInputField => nameInputField;
+
+        public InputField PointsInputField => pointsInputField;
 
         private static bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline;
 
@@ -58,18 +62,18 @@ namespace Cgs.Play
             }
         }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed += InputSub;
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
         }
 
-        private void Start()
+        protected void Start()
         {
             nameInputField.text = PlayerPrefs.GetString(PlayerNamePlayerPrefs, DefaultPlayerName);
         }
 
-        private void Update()
+        protected void Update()
         {
             if (scoreboardPanel.gameObject.activeInHierarchy)
                 Refresh();
@@ -161,17 +165,17 @@ namespace Cgs.Play
             {
                 var entry = Instantiate(scoreTemplate.gameObject, scoreContent).GetComponent<ScoreTemplate>();
                 entry.gameObject.SetActive(true);
-                entry.nameText.text = playerName;
-                entry.pointsText.text = points.ToString();
-                entry.handCountText.text = string.IsNullOrEmpty(handCount)
-                    ? PlayController.Instance.drawer
-                        .cardZoneRectTransforms[CgsNetManager.Instance.LocalPlayer.CurrentHand]
+                entry.NameText.text = playerName;
+                entry.PointsText.text = points.ToString();
+                entry.HandCountText.text = string.IsNullOrEmpty(handCount)
+                    ? PlayController.Instance.Drawer
+                        .GetCardZoneTransform(CgsNetManager.Instance.LocalPlayer.CurrentHand)
                         .GetComponentsInChildren<CardModel>().Length.ToString()
                     : handCount;
             }
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputSub;
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;

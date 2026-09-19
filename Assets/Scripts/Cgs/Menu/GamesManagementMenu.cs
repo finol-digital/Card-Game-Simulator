@@ -33,15 +33,15 @@ namespace Cgs.Menu
 
         public static string NoSyncMessage => $"{CardGameManager.Current.Name} does not have a CGS AutoUpdate URL!";
 
-        public GameObject cgsGamesBrowserPrefab;
-        public GameObject cardGameEditorMenuPrefab;
-        public GameObject gameImportModalPrefab;
-        public GameObject downloadMenuPrefab;
+        [SerializeField] GameObject cgsGamesBrowserPrefab;
+        [SerializeField] GameObject cardGameEditorMenuPrefab;
+        [SerializeField] GameObject gameImportModalPrefab;
+        [SerializeField] GameObject downloadMenuPrefab;
 
-        public RectTransform browseButton;
-        public RectTransform newButton;
-        public RectTransform editButton;
-        public RectTransform syncButton;
+        [SerializeField] RectTransform browseButton;
+        [SerializeField] RectTransform newButton;
+        [SerializeField] RectTransform editButton;
+        [SerializeField] RectTransform syncButton;
 
         protected override bool AllowSwitchOff => false;
 
@@ -74,7 +74,7 @@ namespace Cgs.Menu
         private InputAction _moveAction;
         private InputAction _pageAction;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(BuildGameSelectionOptions);
 
@@ -90,7 +90,7 @@ namespace Cgs.Menu
         private static string ZipFileType { get; set; }
 #endif
 
-        private void Start()
+        protected void Start()
         {
 #if UNITY_ANDROID || UNITY_IOS
             ZipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
@@ -100,7 +100,7 @@ namespace Cgs.Menu
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (Menu.IsBlocked)
                 return;
@@ -109,7 +109,7 @@ namespace Cgs.Menu
             if (Mathf.Abs(pageVertical) > 0)
             {
                 var delta = pageVertical * Time.deltaTime;
-                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
+                ScrollRect.verticalNormalizedPosition = Mathf.Clamp01(ScrollRect.verticalNormalizedPosition + delta);
             }
 
             if (!(_moveAction?.WasPressedThisFrame() ?? false))
@@ -302,7 +302,7 @@ namespace Cgs.Menu
             Menu.Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
