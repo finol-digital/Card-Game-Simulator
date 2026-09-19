@@ -6,6 +6,9 @@ reviews:
   poem: false
   review_status: false
   review_details: false
+  pre_merge_checks:
+    docstrings:
+      mode: "off"
   auto_review:
     enabled: true
     drafts: false

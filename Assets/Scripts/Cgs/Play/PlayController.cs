@@ -272,8 +272,9 @@ namespace Cgs.Play
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        private IEnumerator Start()
+        protected IEnumerator Start()
         {
+            gameObject.GetOrAddComponent<CgsNetDiagnostics>();
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
             playAreaCardZone.OnAddCardActions.Add(AddCardToPlayArea);

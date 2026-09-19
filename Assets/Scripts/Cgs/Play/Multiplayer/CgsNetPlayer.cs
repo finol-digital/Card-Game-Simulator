@@ -224,6 +224,7 @@ namespace Cgs.Play.Multiplayer
 
         public override void OnNetworkSpawn()
         {
+            CgsNetDiagnostics.Record("player-spawn", this);
             if (IsServer)
             {
                 _seatIndex.Value = NextAvailableSeatIndex;
@@ -257,6 +258,7 @@ namespace Cgs.Play.Multiplayer
 
         private void RequestCardGameSelection()
         {
+            CgsNetDiagnostics.Record("game-selection-request", this);
             Debug.Log("[CgsNet Player] Requesting game id...");
             SelectCardGameServerRpc();
         }
@@ -276,6 +278,9 @@ namespace Cgs.Play.Multiplayer
             ClientRpcParams clientRpcParams = default)
         {
             Debug.Log($"[CgsNet Player] Game id is {gameId}! Loading game details...");
+            if (CgsNetDiagnostics.IsRecording)
+                CgsNetDiagnostics.Record("game-selection-received", this,
+                    $"id={gameId} installed={CardGameManager.Instance.AllCardGames.ContainsKey(gameId)}");
             if (!CardGameManager.Instance.AllCardGames.ContainsKey(gameId))
             {
                 if (!Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.Absolute))
@@ -344,6 +349,7 @@ namespace Cgs.Play.Multiplayer
                 yield return null;
 
             Debug.Log("[CgsNet Player] Game loaded and ready!");
+            CgsNetDiagnostics.Record("game-ready", this);
 
             switch (CardGameManager.Current.DeckSharePreference)
             {

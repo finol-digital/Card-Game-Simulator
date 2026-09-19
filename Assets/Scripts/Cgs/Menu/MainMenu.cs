@@ -41,7 +41,7 @@ namespace Cgs.Menu
         private const float StartBufferTime = 0.1f;
         private const float AnimationDuration = 0.25f;
 
-        public GameObject gamesManagementMenuPrefab;
+        [SerializeField] GameObject gamesManagementMenuPrefab;
 
         [SerializeField] Text versionText;
         [SerializeField] Text copyrightText;
@@ -52,7 +52,7 @@ namespace Cgs.Menu
         [SerializeField] Image nextCardImage;
         [SerializeField] Image offLeftImage;
         [SerializeField] Image offRightImage;
-        public List<GameObject> selectableButtons;
+        [SerializeField] List<GameObject> selectableButtons;
 
         [SerializeField] Button fullscreenButton;
         [SerializeField] GameObject quitButton;
@@ -69,7 +69,7 @@ namespace Cgs.Menu
         private InputAction _moveAction;
         private InputAction _pageAction;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
             CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
@@ -92,7 +92,7 @@ namespace Cgs.Menu
             copyrightText.text = string.IsNullOrWhiteSpace(copyright) ? FinolDigitalLlc : copyright;
         }
 
-        private void Start()
+        protected void Start()
         {
             versionText.text = TitleScreen.VersionMessage;
 
@@ -115,7 +115,7 @@ namespace Cgs.Menu
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
@@ -447,7 +447,7 @@ namespace Cgs.Menu
             Application.Quit();
 #endif
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputSelectNext;

@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
@@ -35,7 +36,10 @@ namespace Cgs.CardGameView.Multiplayer
                 var oldValue = _value;
                 _value = value;
                 if (IsSpawned)
+                {
+                    CgsNetDiagnostics.Record("counter-value-send", this);
                     UpdateValueServerRpc(_value);
+                }
                 else
                     OnChangeValue(oldValue, _value);
             }
@@ -85,6 +89,7 @@ namespace Cgs.CardGameView.Multiplayer
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void UpdateValueServerRpc(int value, RpcParams rpcParams = default)
         {
+            TraceServerAction("counter-value-received", rpcParams.Receive.SenderClientId);
             if (!IsClientAuthorized(rpcParams.Receive.SenderClientId))
             {
                 Debug.LogWarning(
