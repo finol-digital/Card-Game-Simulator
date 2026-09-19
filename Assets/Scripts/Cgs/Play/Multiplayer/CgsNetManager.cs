@@ -88,9 +88,8 @@ namespace Cgs.Play.Multiplayer
 
         private Lobby _currentLobby;
 
-        private void Start()
+        protected void Start()
         {
-            gameObject.GetOrAddComponent<CgsNetDiagnostics>();
             Transports = GetComponent<Transports>();
             UnityServices.InitializeAsync();
         }

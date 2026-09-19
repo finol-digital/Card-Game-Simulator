@@ -2,19 +2,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using NUnit.Framework;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Tests.PlayMode
 {
     public class NetworkDiagnosticsTests
     {
         private GameObject _gameObject;
+        private GameObject _networkGameObject;
+        private CgsNetManager _manager;
+        private NetworkManager _previousNetworkManager;
         private CgsNetDiagnostics _diagnostics;
         private bool _previousDeveloperMode;
         private object _previousRecorder;
@@ -26,21 +32,34 @@ namespace Tests.PlayMode
         private string[] Entries => ((Queue<string>)typeof(CgsNetDiagnostics)
             .GetField("_entries", PrivateInstance).GetValue(_diagnostics)).ToArray();
 
+        private GameObject Toolbar => (GameObject)typeof(CgsNetDiagnostics)
+            .GetField("_toolbar", PrivateInstance).GetValue(_diagnostics);
+
         [SetUp]
         public void SetUp()
         {
             _previousDeveloperMode = Settings.DeveloperMode;
             _previousRecorder = RecorderField.GetValue(null);
+            _previousNetworkManager = NetworkManager.Singleton;
             Settings.DeveloperMode = false;
-            _gameObject = new GameObject("Diagnostics test");
-            _gameObject.AddComponent<CgsNetManager>();
+            _networkGameObject = new GameObject("Persistent network manager");
+            _manager = _networkGameObject.AddComponent<CgsNetManager>();
+            _manager.SetSingleton();
+            // Avoid starting Unity Services; diagnostics only needs local manager state.
+            _manager.enabled = false;
+            _gameObject = new GameObject("Play canvas", typeof(RectTransform), typeof(Canvas));
             _diagnostics = _gameObject.AddComponent<CgsNetDiagnostics>();
         }
 
         [TearDown]
         public void TearDown()
         {
+            if (Toolbar != null)
+                Object.DestroyImmediate(Toolbar);
             Object.DestroyImmediate(_gameObject);
+            Object.DestroyImmediate(_networkGameObject);
+            if (_previousNetworkManager != null)
+                _previousNetworkManager.SetSingleton();
             RecorderField.SetValue(null, _previousRecorder);
             Settings.DeveloperMode = _previousDeveloperMode;
         }
@@ -58,7 +77,7 @@ namespace Tests.PlayMode
             SetRecording(false);
             CgsNetDiagnostics.Record("test-event");
             Assert.IsEmpty(Entries);
-            Assert.IsNull(_gameObject.transform.Find("Network diagnostics"));
+            Assert.IsNull(Toolbar);
         }
 
         [Test]
@@ -67,14 +86,44 @@ namespace Tests.PlayMode
             SetRecording(true);
             CgsNetDiagnostics.Record("captured-event");
             Assert.IsTrue(Entries.Any(entry => entry.Contains("captured-event")));
-            Assert.IsTrue(_gameObject.transform.Find("Network diagnostics").gameObject.activeSelf);
-            Assert.IsFalse(_gameObject.GetComponent<CgsNetManager>().IsListening);
+            Assert.IsTrue(Toolbar.activeSelf);
+            Assert.IsFalse(_manager.IsListening);
 
             SetRecording(false);
             var count = Entries.Length;
             CgsNetDiagnostics.Record("disabled-event");
             Assert.AreEqual(count, Entries.Length);
-            Assert.IsFalse(_gameObject.transform.Find("Network diagnostics").gameObject.activeSelf);
+            Assert.IsFalse(Toolbar.activeSelf);
+        }
+
+        [Test]
+        public void ToolbarKeepsIndependentCanvasScalingInPlayScene()
+        {
+            SetRecording(true);
+
+            Assert.IsNull(_manager.GetComponent<CgsNetDiagnostics>());
+            Assert.IsTrue(Toolbar.GetComponent<Canvas>().isRootCanvas);
+            Assert.AreEqual(_gameObject.scene, Toolbar.scene);
+            Assert.AreEqual(new Vector2(1280, 720),
+                Toolbar.GetComponent<UnityEngine.UI.CanvasScaler>().referenceResolution);
+        }
+
+        [UnityTest]
+        public IEnumerator LeavingPlayDestroysToolbarButKeepsNetworkManager()
+        {
+            SetRecording(true);
+            var toolbar = Toolbar;
+
+            Object.Destroy(_gameObject);
+            yield return null;
+            yield return null;
+
+            Assert.IsTrue(toolbar == null);
+            Assert.IsTrue(_manager != null);
+            Assert.IsTrue(Settings.DeveloperMode);
+            Assert.IsFalse(CgsNetDiagnostics.IsRecording);
+            Assert.IsNull(RecorderField.GetValue(null));
+            Assert.DoesNotThrow(() => CgsNetDiagnostics.Record("back-in-menu"));
         }
 
         [Test]

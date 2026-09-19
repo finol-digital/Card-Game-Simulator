@@ -14,11 +14,12 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Cgs.Play.Multiplayer
 {
-    /// <summary>Local, bounded diagnostics enabled by Settings > Developer Mode.</summary>
+    /// <summary>Local, bounded gameplay diagnostics enabled by Settings > Developer Mode.</summary>
     public class CgsNetDiagnostics : MonoBehaviour
     {
         private const int MaxEntries = 2000;
@@ -58,7 +59,7 @@ namespace Cgs.Play.Multiplayer
         protected void Awake()
         {
             RegisterRecorder(this);
-            _manager = GetComponent<CgsNetManager>();
+            _manager = CgsNetManager.Instance;
             _manager.OnClientConnectedCallback += OnConnected;
             _manager.OnClientDisconnectCallback += OnDisconnected;
             Application.logMessageReceived += OnLog;
@@ -258,7 +259,8 @@ namespace Cgs.Play.Multiplayer
         {
             _toolbar = new GameObject("Network diagnostics", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
-            _toolbar.transform.SetParent(transform, false);
+            // Keep a root canvas so the play canvas does not override the toolbar's scaling.
+            SceneManager.MoveGameObjectToScene(_toolbar, gameObject.scene);
             var canvas = _toolbar.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = short.MaxValue;
@@ -320,6 +322,8 @@ namespace Cgs.Play.Multiplayer
                 _manager.OnClientDisconnectCallback -= OnDisconnected;
             }
             UnregisterRecorder(this);
+            if (_toolbar != null)
+                Destroy(_toolbar);
         }
     }
 }

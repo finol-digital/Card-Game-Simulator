@@ -28,7 +28,8 @@ Build the diagnostic revision for both participants. This is new instrumentation
 not present in the published 1.164 APK. No new RPCs or network messages are added.
 
 1. On **both devices**, enable **Settings > Developer Mode** before hosting/joining.
-   A **NET TRACE** toolbar appears. Recording is local; there is no automatic upload.
+   The **NET TRACE** toolbar appears only in the play scene, including the lobby.
+   Recording is local; there is no automatic upload. Menus and card/deck editors do not record traces.
 2. Join the same game. Press **Mark / snapshot** after loading on both devices.
 3. Use one host-created card, stack, die, and counter. Have the joining player try a slow
    drag, quick drag, flip, roll, and counter change. Note the order and which action failed.
@@ -44,7 +45,8 @@ The buffer retains the latest 2,000 events, each capped at 2,000 characters. Hig
 drag/position/ownership-request events are sampled once per second per stage/object (and
 sender for incoming requests). They are **not** a packet count or exact latency measurement.
 Repeated warnings are sampled too. Enabling Developer Mode or **Clear trace** starts a new capture.
-Export before clearing, disabling/re-enabling Developer Mode, or quitting.
+The recorder belongs to the play scene; leaving it removes the toolbar and discards the capture.
+Export before returning to the main menu, clearing, disabling/re-enabling Developer Mode, or quitting.
 
 Exports include UTC timestamps, frame numbers, app/build/Unity versions, device/OS, connection
 and local-player state, network object/owner IDs, input hits, and warnings/exceptions.
