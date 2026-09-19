@@ -194,6 +194,55 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void SamplingCapacityPreservesActiveWindows()
+        {
+            SetRecording(true);
+            for (var i = 0; i < 513; i++)
+                CgsNetDiagnostics.Record("capacity-event", sampled: true, sampleKey: i.ToString());
+
+            CgsNetDiagnostics.Record("capacity-event", details: "duplicate", sampled: true, sampleKey: "0");
+            CgsNetDiagnostics.Record("unsampled-event");
+
+            Assert.AreEqual(512, Entries.Count(entry => entry.Contains("capacity-event")));
+            Assert.IsFalse(Entries.Any(entry => entry.Contains("duplicate")));
+            Assert.IsTrue(Entries.Any(entry => entry.Contains("unsampled-event")));
+        }
+
+        [Test]
+        public void SamplingExpiresOnlyCompletedWindows()
+        {
+            SetRecording(true);
+            var sampleMethod = typeof(CgsNetDiagnostics).GetMethod("TryRecordSample", PrivateInstance);
+            // Supply a deterministic clock to cover exact window boundaries without frame timing races.
+            bool TrySample(string key, float now) =>
+                (bool)sampleMethod.Invoke(_diagnostics, new object[] { key, now });
+
+            Assert.IsTrue(TrySample("older", 10));
+            for (var i = 0; i < 511; i++)
+                Assert.IsTrue(TrySample(i.ToString(), 10.5f));
+
+            Assert.IsFalse(TrySample("overflow", 10.75f));
+            Assert.IsTrue(TrySample("overflow", 11));
+            Assert.IsFalse(TrySample("0", 11));
+            Assert.IsTrue(TrySample("0", 11.5f));
+            Assert.IsFalse(TrySample("overflow", 11.5f));
+            Assert.IsTrue(TrySample("overflow", 12));
+        }
+
+        [Test]
+        public void RestartingCaptureResetsSamplingWindows()
+        {
+            SetRecording(true);
+            CgsNetDiagnostics.Record("sample-before-reset", sampled: true, sampleKey: "same-key");
+
+            SetRecording(false);
+            SetRecording(true);
+            CgsNetDiagnostics.Record("sample-before-reset", sampled: true, sampleKey: "same-key");
+
+            Assert.AreEqual(1, Entries.Count(entry => entry.Contains("sample-before-reset")));
+        }
+
+        [Test]
         public void DestroyingActiveRecorderStopsCapture()
         {
             SetRecording(true);

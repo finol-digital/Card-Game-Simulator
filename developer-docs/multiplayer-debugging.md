@@ -44,6 +44,8 @@ not present in the published 1.164 APK. No new RPCs or network messages are adde
 The buffer retains the latest 2,000 events, each capped at 2,000 characters. High-frequency
 drag/position/ownership-request events are sampled once per second per stage/object (and
 sender for incoming requests). They are **not** a packet count or exact latency measurement.
+Up to 512 sampling keys can be active at once. When full, new sampled keys are skipped until
+an existing one-second window expires; active windows are never cleared to make room.
 Repeated warnings are sampled too. Enabling Developer Mode or **Clear trace** starts a new capture.
 The recorder belongs to the play scene; leaving it removes the toolbar and discards the capture.
 Export before returning to the main menu, clearing, disabling/re-enabling Developer Mode, or quitting.

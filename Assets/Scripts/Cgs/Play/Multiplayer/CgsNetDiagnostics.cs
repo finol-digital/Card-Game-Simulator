@@ -24,9 +24,12 @@ namespace Cgs.Play.Multiplayer
     {
         private const int MaxEntries = 2000;
         private const int MaxEntryLength = 2000;
+        private const int MaxSampleKeys = 512;
+        private const float SampleInterval = 1;
         private const string ExportError = "Could not export multiplayer diagnostics: ";
         private readonly Queue<string> _entries = new();
         private readonly Dictionary<string, float> _lastSamples = new();
+        private readonly Queue<KeyValuePair<string, float>> _sampleOrder = new();
         private readonly List<RaycastResult> _hits = new();
         private static CgsNetDiagnostics _instance;
         private CgsNetManager _manager;
@@ -123,6 +126,7 @@ namespace Cgs.Play.Multiplayer
         {
             _entries.Clear();
             _lastSamples.Clear();
+            _sampleOrder.Clear();
             _marker = 0;
             _lastState = null;
             _header = $"CGS network trace {DateTime.UtcNow:O}\n" +
@@ -143,17 +147,31 @@ namespace Cgs.Play.Multiplayer
             if (sampled)
             {
                 var key = $"{stage}/{subject?.GetInstanceID()}/{sampleKey}";
-                if (recorder._lastSamples.TryGetValue(key, out var last) && Time.unscaledTime - last < 1)
+                if (!recorder.TryRecordSample(key, Time.unscaledTime))
                     return;
-                if (recorder._lastSamples.Count >= 512)
-                    recorder._lastSamples.Clear();
-                recorder._lastSamples[key] = Time.unscaledTime;
             }
             var identity = subject == null ? "session" :
                 $"{subject.GetType().Name} instance={subject.GetInstanceID()} object={subject.NetworkObjectId} " +
                 $"spawned={subject.IsSpawned} owner={subject.OwnerClientId} isOwner={subject.IsOwner}";
             recorder.Append($"{DateTime.UtcNow:O} frame={Time.frameCount} local={recorder._manager.LocalClientId} " +
                             $"server={recorder._manager.IsServer} {stage} {identity} {details}");
+        }
+
+        private bool TryRecordSample(string key, float now)
+        {
+            while (_sampleOrder.TryPeek(out var sample) && now - sample.Value >= SampleInterval)
+            {
+                _sampleOrder.Dequeue();
+                _lastSamples.Remove(sample.Key);
+            }
+
+            // Preserve active windows at capacity; new keys wait until an existing window expires.
+            if (_lastSamples.ContainsKey(key) || _lastSamples.Count >= MaxSampleKeys)
+                return false;
+
+            _lastSamples.Add(key, now);
+            _sampleOrder.Enqueue(new KeyValuePair<string, float>(key, now));
+            return true;
         }
 
         private void Append(string entry)
