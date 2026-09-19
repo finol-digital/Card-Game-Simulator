@@ -67,6 +67,12 @@ unity install <version>     # Install the Editor version this project uses (see 
 
 ## Code Style Guidelines
 
+Read [the Unity C# style guide](developer-docs/unity-csharp-style-guide.md) before changing `Assets/Scripts`. It documents the existing patterns and the migration rules for humans and AI agents.
+
+- For new or deliberately migrated Inspector-only fields, use `[SerializeField] Type camelCaseName;` (implicitly private), preserving serialized names, types, and attributes. Check callers before reducing access.
+- Use `protected` Unity lifecycle methods on inheritable components. Preserve framework-required access and override/base-call contracts; use private callbacks in sealed classes unless overriding a base member. Do not make every callback virtual automatically.
+- Migrate existing code in focused batches; do not include unrelated repository-wide style rewrites in behavior fixes.
+
 ### File Headers
 All C# files must start with the MPL 2.0 license header:
 ```csharp

@@ -55,16 +55,27 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private void Awake()
+        protected void Awake()
         {
-            _instance = this;
+            RegisterRecorder(this);
             _manager = GetComponent<CgsNetManager>();
             _manager.OnClientConnectedCallback += OnConnected;
             _manager.OnClientDisconnectCallback += OnDisconnected;
             Application.logMessageReceived += OnLog;
         }
 
-        private void Update()
+        private static void RegisterRecorder(CgsNetDiagnostics recorder)
+        {
+            _instance = recorder;
+        }
+
+        private static void UnregisterRecorder(CgsNetDiagnostics recorder)
+        {
+            if (_instance == recorder)
+                _instance = null;
+        }
+
+        protected void Update()
         {
             if (_recording != Settings.DeveloperMode)
             {
@@ -90,7 +101,11 @@ namespace Cgs.Play.Multiplayer
                     Record("connection-state", details: state);
                     _lastState = state;
                 }
-                var role = _manager.IsHost ? "Host" : _manager.IsConnectedClient ? "Client" : "Offline";
+                var role = "Offline";
+                if (_manager.IsHost)
+                    role = "Host";
+                else if (_manager.IsConnectedClient)
+                    role = "Client";
                 _status.text = $"NET TRACE  {role} " +
                                $"{_manager.LocalClientId}\n{_entries.Count}/{MaxEntries} events";
             }
@@ -296,7 +311,7 @@ namespace Cgs.Play.Multiplayer
             text.offsetMin = text.offsetMax = Vector2.zero;
         }
 
-        private void OnDestroy()
+        protected void OnDestroy()
         {
             Application.logMessageReceived -= OnLog;
             if (_manager != null)
@@ -304,8 +319,7 @@ namespace Cgs.Play.Multiplayer
                 _manager.OnClientConnectedCallback -= OnConnected;
                 _manager.OnClientDisconnectCallback -= OnDisconnected;
             }
-            if (_instance == this)
-                _instance = null;
+            UnregisterRecorder(this);
         }
     }
 }

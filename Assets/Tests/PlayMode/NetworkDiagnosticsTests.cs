@@ -90,6 +90,28 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void DestroyingActiveRecorderStopsCapture()
+        {
+            SetRecording(true);
+
+            Object.DestroyImmediate(_diagnostics);
+
+            Assert.IsNull(RecorderField.GetValue(null));
+            Assert.IsFalse(CgsNetDiagnostics.IsRecording);
+            Assert.DoesNotThrow(() => CgsNetDiagnostics.Record("after-destroy"));
+        }
+
+        [Test]
+        public void DestroyingPreviousRecorderPreservesCurrentRecorder()
+        {
+            var currentRecorder = _gameObject.AddComponent<CgsNetDiagnostics>();
+
+            Object.DestroyImmediate(_diagnostics);
+
+            Assert.AreSame(currentRecorder, RecorderField.GetValue(null));
+        }
+
+        [Test]
         public void LongCaptureRetainsNewestEventsAndBoundsEntryLength()
         {
             SetRecording(true);
