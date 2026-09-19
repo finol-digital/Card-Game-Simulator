@@ -26,15 +26,15 @@ namespace Cgs.Cards
         public const string SingleCard = "Single Card";
         public const string SetOfCards = "Set of Cards";
 
-        public GameObject gamesManagementMenuPrefab;
+        [SerializeField] GameObject gamesManagementMenuPrefab;
 
-        public GameObject cardSetImportModalPrefab;
-        public GameObject cardEditorMenuPrefab;
-        public GameObject setImportMenuPrefab;
-        public Image bannerImage;
-        public List<GameObject> editButtons;
-        public SearchResults searchResults;
-        public CardsExplorerLayout explorerLayout;
+        [SerializeField] GameObject cardSetImportModalPrefab;
+        [SerializeField] GameObject cardEditorMenuPrefab;
+        [SerializeField] GameObject setImportMenuPrefab;
+        [SerializeField] Image bannerImage;
+        [SerializeField] List<GameObject> editButtons;
+        [SerializeField] SearchResults searchResults;
+        [SerializeField] CardsExplorerLayout explorerLayout;
 
         private GamesManagementMenu GamesManagement =>
             _gamesManagement ??= Instantiate(gamesManagementMenuPrefab).GetOrAddComponent<GamesManagementMenu>();
@@ -58,9 +58,9 @@ namespace Cgs.Cards
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
                                   CardViewer.Instance.Zoom ||
-                                  CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused;
+                                  CardGameManager.Instance.ModalCanvas != null || searchResults.InputField.isFocused;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             // CardViewer is already in the scene
             CardGameManager.Instance.OnSceneActions.Add(ResetBannerCardsAndButtons);
@@ -87,7 +87,7 @@ namespace Cgs.Cards
             if (IsBlocked)
                 return;
 
-            searchResults.inputField.ActivateInputField();
+            searchResults.InputField.ActivateInputField();
         }
 
         private void InputCardsFilter(InputAction.CallbackContext context)
@@ -195,7 +195,7 @@ namespace Cgs.Cards
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputGamesManagementMenu;

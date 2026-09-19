@@ -37,16 +37,16 @@ namespace Cgs.Cards
         public const string ImportImageWarningMessage = "No image file selected for import!";
         public const string ImageImportFailedWarningMessage = "Failed to get the image! Unable to import the card.";
 
-        public GameObject downloadMenuPrefab;
-        public RectTransform scrollRectContent;
-        public RectTransform cardPropertyTemplate;
-        public List<InputField> inputFields;
-        public InputField cardNameInputField;
-        public InputField cardIdInputField;
-        public InputField setCodeInputField;
-        public Dropdown backSelector;
-        public Image cardImage;
-        public Button saveButton;
+        [SerializeField] GameObject downloadMenuPrefab;
+        [SerializeField] RectTransform scrollRectContent;
+        [SerializeField] RectTransform cardPropertyTemplate;
+        [SerializeField] List<InputField> inputFields;
+        [SerializeField] InputField cardNameInputField;
+        [SerializeField] InputField cardIdInputField;
+        [SerializeField] InputField setCodeInputField;
+        [SerializeField] Dropdown backSelector;
+        [SerializeField] Image cardImage;
+        [SerializeField] Button saveButton;
 
         public override bool IsBlocked => base.IsBlocked || inputFields.Any(inputField => inputField.isFocused) ||
                                           _inputFields.Any(field => field.isFocused);
@@ -142,7 +142,7 @@ namespace Cgs.Cards
 
         private readonly List<TMP_InputField> _inputFields = new();
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.DecksPivot).performed += InputDownloadWeb;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputImportFile;
@@ -411,7 +411,7 @@ namespace Cgs.Cards
             Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.DecksPivot).performed -= InputDownloadWeb;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputImportFile;

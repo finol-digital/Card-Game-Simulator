@@ -31,9 +31,9 @@ namespace Cgs.Decks
         public const string DeckPrintOpenErrorMessage = "Unable to open the deck pdf! ";
         public const string DeckPrintOpenPathErrorMessage = "Please check: ";
 
-        public InputField nameInputField;
-        public TMP_Text textOutputArea;
-        public Button printPdfButton;
+        [SerializeField] InputField nameInputField;
+        [SerializeField] TMP_Text textOutputArea;
+        [SerializeField] Button printPdfButton;
 
         private UnityDeck _currentDeck;
         private OnNameChangeDelegate _nameChangeCallback;
@@ -42,7 +42,7 @@ namespace Cgs.Decks
 
         public override bool IsBlocked => base.IsBlocked || nameInputField.isFocused;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
@@ -254,7 +254,7 @@ namespace Cgs.Decks
             Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;

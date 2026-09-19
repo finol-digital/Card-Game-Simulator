@@ -32,12 +32,22 @@ namespace Cgs.CardGameView.Multiplayer
 
     public class CardZone : CgsNetPlayable, ICardContainer
     {
-        public GameObject countLabelPrefab;
+        [SerializeField] GameObject countLabelPrefab;
 
-        public CardZoneType type;
-        public bool allowsFlip;
-        public bool allowsRotation;
-        public ScrollRect scrollRectContainer;
+        [SerializeField] CardZoneType type;
+        [SerializeField] bool allowsFlip;
+        [SerializeField] bool allowsRotation;
+        [SerializeField] ScrollRect scrollRectContainer;
+
+        public bool AllowsFlip => allowsFlip;
+
+        public bool AllowsRotation => allowsRotation;
+
+        public ScrollRect ScrollRectContainer
+        {
+            get => scrollRectContainer;
+            set => scrollRectContainer = value;
+        }
 
         private Text _countLabel;
         private int _countLabelCardCount = -1;
@@ -149,7 +159,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnStartPlayable()
         {
             if (PlayController.Instance == null ||
-                PlayController.Instance.playAreaCardZone.transform != transform.parent)
+                PlayController.Instance.PlayAreaCardZone.transform != transform.parent)
                 return;
 
             var rectTransform = (RectTransform)transform;
@@ -178,7 +188,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             allowsFlip = true;
             allowsRotation = true;
-            scrollRectContainer = PlayController.Instance.playArea;
+            scrollRectContainer = PlayController.Instance.PlayArea;
             DoesImmediatelyRelease = true;
 
             CreateCountLabel();
@@ -228,7 +238,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private bool _isCountDirty = true;
 
-        private void OnTransformChildrenChanged()
+        protected void OnTransformChildrenChanged()
         {
             _isCountDirty = true;
         }

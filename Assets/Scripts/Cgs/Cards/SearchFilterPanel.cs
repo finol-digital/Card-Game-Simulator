@@ -9,12 +9,26 @@ namespace Cgs.Cards
 {
     public class SearchFilterPanel : MonoBehaviour
     {
-        public Text nameLabelText;
-        public InputField stringInputField;
-        public Text stringPlaceHolderText;
-        public InputField integerMinInputField;
-        public InputField integerMaxInputField;
-        public RectTransform toggleGroupContainer;
-        public Toggle toggle;
+        [SerializeField] Text nameLabelText;
+        [SerializeField] InputField stringInputField;
+        [SerializeField] Text stringPlaceHolderText;
+        [SerializeField] InputField integerMinInputField;
+        [SerializeField] InputField integerMaxInputField;
+        [SerializeField] RectTransform toggleGroupContainer;
+        [SerializeField] Toggle toggle;
+
+        public Text NameLabelText => nameLabelText;
+
+        public InputField StringInputField => stringInputField;
+
+        public Text StringPlaceHolderText => stringPlaceHolderText;
+
+        public InputField IntegerMinInputField => integerMinInputField;
+
+        public InputField IntegerMaxInputField => integerMaxInputField;
+
+        public RectTransform ToggleGroupContainer => toggleGroupContainer;
+
+        public Toggle Toggle => toggle;
     }
 }

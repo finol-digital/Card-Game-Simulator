@@ -15,11 +15,11 @@ namespace Cgs.Menu
 {
     public class Dialog : Modal
     {
-        public GameObject copyButton;
-        public GameObject shareButton;
-        public Text messageText;
-        public Button noButton;
-        public Button yesButton;
+        [SerializeField] GameObject copyButton;
+        [SerializeField] GameObject shareButton;
+        [SerializeField] Text messageText;
+        [SerializeField] Button noButton;
+        [SerializeField] Button yesButton;
         private bool _ignoreClose;
 
         protected struct Message : IEquatable<Message>
@@ -66,7 +66,8 @@ namespace Cgs.Menu
         }
 
         // Popup needs to update last to consume the input over what it covers
-        private void LateUpdate()
+        // Preserve the dialog's own input loop in place of Modal's focus bookkeeping.
+        protected override void LateUpdate()
         {
             if (_isNewMessage)
             {

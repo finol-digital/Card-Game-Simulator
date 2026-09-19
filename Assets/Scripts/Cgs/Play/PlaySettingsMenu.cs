@@ -17,21 +17,21 @@ namespace Cgs.Play
         public const string NoAutoupdateErrorMessage = "This game has not configured a valid autoupdate url!";
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
-        public Toggle autoStackCardsToggle;
-        public Toggle doubleClickToViewStacksToggle;
-        public Dropdown stackViewerOverlapDropdown;
-        public Toggle doubleClickToRollDiceToggle;
-        public InputField dieFaceCountInputField;
-        public Toggle showActionsMenuToggle;
-        public Transform launchNativeButton;
-        public Transform viewRulesButton;
-        public ScrollRect scrollRect;
+        [SerializeField] Toggle autoStackCardsToggle;
+        [SerializeField] Toggle doubleClickToViewStacksToggle;
+        [SerializeField] Dropdown stackViewerOverlapDropdown;
+        [SerializeField] Toggle doubleClickToRollDiceToggle;
+        [SerializeField] InputField dieFaceCountInputField;
+        [SerializeField] Toggle showActionsMenuToggle;
+        [SerializeField] Transform launchNativeButton;
+        [SerializeField] Transform viewRulesButton;
+        [SerializeField] ScrollRect scrollRect;
 
         public override bool IsBlocked => !IsFocused || dieFaceCountInputField.isFocused
                                                      || EventSystem.current.currentSelectedGameObject ==
                                                      dieFaceCountInputField.gameObject;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
             InputSystem.actions.FindAction(Tags.PlayGameSettings).performed += InputCancel;
@@ -39,7 +39,7 @@ namespace Cgs.Play
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (IsBlocked)
                 return;
@@ -155,7 +155,7 @@ namespace Cgs.Play
             Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
             InputSystem.actions.FindAction(Tags.PlayGameSettings).performed -= InputCancel;

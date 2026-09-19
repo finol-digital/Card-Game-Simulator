@@ -142,7 +142,7 @@ namespace Cgs.Play.Multiplayer
             }
 
             var relayServerData = serverRelayUtilityTask.Result;
-            Transport = Transports.relayUnityTransport;
+            Transport = Transports.RelayUnityTransport;
             Transport.SetRelayServerData(relayServerData.Item1);
 #if UNITY_WEBGL && !UNITY_EDITOR
             Transport.UseWebSockets = true;
@@ -250,7 +250,7 @@ namespace Cgs.Play.Multiplayer
 
         public void StartJoin(string address, ushort port = DefaultPort)
         {
-            Transport = Transports.unityTransport;
+            Transport = Transports.UnityTransport;
             Transport.SetConnectionData(address, port);
             StartClient();
         }
@@ -411,10 +411,10 @@ namespace Cgs.Play.Multiplayer
 
             var relayServerData = clientRelayUtilityTask.Result;
 
-            Transport = Transports.relayUnityTransport;
+            Transport = Transports.RelayUnityTransport;
             Transport.SetRelayServerData(relayServerData);
 #if UNITY_WEBGL && !UNITY_EDITOR
-            Transports.relayUnityTransport.UseWebSockets = true;
+            Transports.RelayUnityTransport.UseWebSockets = true;
 #endif
             StartClient();
 
@@ -473,7 +473,7 @@ namespace Cgs.Play.Multiplayer
             StopAllCoroutines();
         }
 
-        private void OnApplicationQuit()
+        protected void OnApplicationQuit()
         {
             Stop();
         }

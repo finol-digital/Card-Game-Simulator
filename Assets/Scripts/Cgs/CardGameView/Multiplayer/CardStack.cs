@@ -84,13 +84,15 @@ namespace Cgs.CardGameView.Multiplayer
         // Only a spawned stack can be referenced on the server; any other stack is acted on locally
         private bool CanRequestFromServer => IsSpawned && IsOnline && CgsNetManager.Instance.LocalPlayer != null;
 
-        public GameObject stackViewerPrefab;
-        public GameObject cardModelPrefab;
+        [SerializeField] GameObject stackViewerPrefab;
+        [SerializeField] GameObject cardModelPrefab;
 
-        public Text deckLabel;
-        public Text countLabel;
-        public Text actionLabel;
-        public Image topCard;
+        [SerializeField] Text deckLabel;
+        [SerializeField] Text countLabel;
+        [SerializeField] Text actionLabel;
+        [SerializeField] Image topCard;
+
+        public Text DeckLabel => deckLabel;
 
         public string Name
         {
@@ -407,7 +409,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             var unityCard = cards[^1];
             CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, !IsTopFaceup,
-                IsDeckShared, PlayController.Instance.playAreaCardZone);
+                IsDeckShared, PlayController.Instance.PlayAreaCardZone);
             RemovePointer(eventData);
 
             if (CanRequestFromServer)
@@ -591,7 +593,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void View()
         {
             if (Viewer == null)
-                Viewer = Instantiate(stackViewerPrefab, PlayController.Instance.stackViewers)
+                Viewer = Instantiate(stackViewerPrefab, PlayController.Instance.StackViewers)
                     .GetComponent<StackViewer>();
             Viewer.Show(this);
         }

@@ -12,13 +12,15 @@ namespace Cgs.Play
 {
     public class PlayMenu : MonoBehaviour
     {
-        public GameObject panels;
-        public Button fullscreenButton;
-        public Button backButton;
+        [SerializeField] GameObject panels;
+        [SerializeField] Button fullscreenButton;
+        [SerializeField] Button backButton;
 
-        public PlayController controller;
+        [SerializeField] PlayController controller;
 
-        private void OnEnable()
+        public GameObject Panels => panels;
+
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameSettings).performed += InputPlaySettings;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputCardsFilter;
@@ -28,7 +30,7 @@ namespace Cgs.Play
         }
 
 #if CGS_SINGLEPLAYER
-        private void Start()
+        protected void Start()
         {
             fullscreenButton.gameObject.SetActive(true);
             backButton.gameObject.SetActive(false);
@@ -43,7 +45,7 @@ namespace Cgs.Play
         private void InputPlaySettings(InputAction.CallbackContext callbackContext)
         {
             if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
-                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
             ShowPlaySettingsMenu();
@@ -59,7 +61,7 @@ namespace Cgs.Play
         private void InputCardsFilter(InputAction.CallbackContext callbackContext)
         {
             if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
-                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
             ShowCardsMenu();
@@ -75,7 +77,7 @@ namespace Cgs.Play
         private void InputDecksLoad(InputAction.CallbackContext callbackContext)
         {
             if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
-                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
             ShowDeckMenu();
@@ -91,7 +93,7 @@ namespace Cgs.Play
         private void InputDie(InputAction.CallbackContext callbackContext)
         {
             if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
-                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
             CreateDie();
@@ -107,7 +109,7 @@ namespace Cgs.Play
         private void InputCounter(InputAction.CallbackContext callbackContext)
         {
             if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
-                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
             CreateCounter();
@@ -140,7 +142,7 @@ namespace Cgs.Play
             panels.SetActive(false);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameSettings).performed -= InputPlaySettings;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputCardsFilter;

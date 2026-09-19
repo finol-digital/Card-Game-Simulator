@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -13,7 +17,10 @@ namespace Cgs
     [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
     public class AotTypeEnforcer : MonoBehaviour
     {
-        public void Awake()
+        // Unity invokes this callback on the component instance.
+#pragma warning disable S2325
+        protected void Awake()
+#pragma warning restore S2325
         {
             AotHelper.EnsureType<StringEnumConverter>();
             AotHelper.Ensure(() =>

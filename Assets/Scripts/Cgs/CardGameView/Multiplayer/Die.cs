@@ -26,8 +26,8 @@ namespace Cgs.CardGameView.Multiplayer
         private const float RollTotalTime = 1.0f;
         private const float RollPeriodTime = 0.05f;
 
-        public Text valueText;
-        public Image dieImage;
+        [SerializeField] Text valueText;
+        [SerializeField] Image dieImage;
 
         private static int Min => 1;
 

@@ -16,22 +16,22 @@ namespace Cgs.Cards
     {
         public const string DeletePrompt = "Delete {}?";
 
-        public SearchResults searchResults;
+        [SerializeField] SearchResults searchResults;
         private Button _deleteButton;
         private InputAction _deleteAction;
 
-        private void Start()
+        protected void Start()
         {
             _deleteButton = gameObject.GetOrAddComponent<Button>();
             _deleteAction = InputSystem.actions.FindAction(Tags.PlayerDelete);
         }
 
-        private void Update()
+        protected void Update()
         {
             _deleteButton.interactable = CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null;
             if (_deleteButton.interactable && _deleteAction.WasPressedThisFrame()
                                            && CardGameManager.Instance.ModalCanvas == null
-                                           && !searchResults.inputField.isFocused)
+                                           && !searchResults.InputField.isFocused)
                 PromptDelete();
         }
 
