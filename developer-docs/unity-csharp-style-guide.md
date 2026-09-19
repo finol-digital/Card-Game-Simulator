@@ -208,7 +208,8 @@ Inspector fields; `SelectionPanel` shows protected read-only access for derived
 classes, and `StackViewer` exposes focused methods for its drop-area collection.
 Keep behavior fixes separable from formatting/API migrations. For each migration,
 check serialization and inheritance independently. `Dialog.LateUpdate` and
-`DiceZone.Update` explicitly retain their pre-existing replacement callbacks;
+`DiceZone.Update` override virtual base callbacks to retain their pre-existing
+replacement behavior without method hiding. They deliberately omit a base call;
 changing those to run base work is a separate behavior change.
 
 Use `.editorconfig` for the existing whitespace rules. Review enforces the

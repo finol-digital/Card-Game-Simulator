@@ -204,7 +204,7 @@ namespace Cgs.Menu
             FocusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
         }
 
-        protected void LateUpdate()
+        protected virtual void LateUpdate()
         {
             WasFocused = IsFocused;
         }

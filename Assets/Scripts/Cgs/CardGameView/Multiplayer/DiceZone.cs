@@ -31,7 +31,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         // Dice zones retain their standalone update loop rather than playable drag tracking.
-        protected new void Update()
+        protected override void Update()
         {
             _diceInZone.Clear();
             var diceSum = 0;

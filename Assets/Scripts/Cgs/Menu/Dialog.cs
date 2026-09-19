@@ -67,7 +67,7 @@ namespace Cgs.Menu
 
         // Popup needs to update last to consume the input over what it covers
         // Preserve the dialog's own input loop in place of Modal's focus bookkeeping.
-        protected new void LateUpdate()
+        protected override void LateUpdate()
         {
             if (_isNewMessage)
             {

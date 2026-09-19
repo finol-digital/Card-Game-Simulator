@@ -350,7 +350,7 @@ namespace Cgs.CardGameView.Multiplayer
             // Child classes may override
         }
 
-        protected void Update()
+        protected virtual void Update()
         {
             if (PointerPositions.Count > 0 && !IsAnyPointerPressed)
             {
