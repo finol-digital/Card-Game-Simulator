@@ -41,13 +41,13 @@ namespace Cgs.Play.Multiplayer
 
         private const float SecondsPerRefresh = 5;
 
-        public ToggleGroup lanToggleGroup;
-        public Toggle lanToggle;
-        public Toggle internetToggle;
-        public Button joinButton;
-        public Text roomIdIpLabel;
-        public InputField roomIdIpInputField;
-        public InputField passwordInputField;
+        [SerializeField] ToggleGroup lanToggleGroup;
+        [SerializeField] Toggle lanToggle;
+        [SerializeField] Toggle internetToggle;
+        [SerializeField] Button joinButton;
+        [SerializeField] Text roomIdIpLabel;
+        [SerializeField] InputField roomIdIpInputField;
+        [SerializeField] InputField passwordInputField;
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
@@ -92,7 +92,7 @@ namespace Cgs.Play.Multiplayer
         private InputAction _pageAction;
         private InputAction _shiftAction;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputToggleConnection;
@@ -103,7 +103,7 @@ namespace Cgs.Play.Multiplayer
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        private void Start()
+        protected void Start()
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
@@ -136,7 +136,7 @@ namespace Cgs.Play.Multiplayer
             Refresh();
         }
 
-        private void Update()
+        protected void Update()
         {
             _secondsSinceRefresh += Time.deltaTime;
             if (_secondsSinceRefresh > SecondsPerRefresh)
@@ -155,7 +155,7 @@ namespace Cgs.Play.Multiplayer
             else if (Mathf.Abs(pageVector2.y) > 0)
             {
                 var delta = pageVector2.y * Time.deltaTime;
-                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
+                ScrollRect.verticalNormalizedPosition = Mathf.Clamp01(ScrollRect.verticalNormalizedPosition + delta);
             }
 
             if (!(_moveAction?.WasPressedThisFrame() ?? false))
@@ -375,7 +375,7 @@ namespace Cgs.Play.Multiplayer
             }
             else
             {
-                CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.UnityTransport;
                 CgsNetManager.Instance.Transport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
                 NetworkManager.Singleton.StartHost();
                 if (CgsNetManager.Instance.Discovery.IsRunning)
@@ -412,14 +412,14 @@ namespace Cgs.Play.Multiplayer
             {
                 if (DiscoveredServers.TryGetValue(_selectedServer, out var discoveryResponse))
                 {
-                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.UnityTransport;
                     CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, discoveryResponse.Port,
                         "0.0.0.0");
                     NetworkManager.Singleton.StartClient();
                 }
                 else if (Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute))
                 {
-                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.UnityTransport;
                     CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, 7777, "0.0.0.0");
                     NetworkManager.Singleton.StartClient();
                 }
@@ -459,7 +459,7 @@ namespace Cgs.Play.Multiplayer
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputToggleConnection;

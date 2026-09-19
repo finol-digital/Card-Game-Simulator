@@ -207,7 +207,7 @@ namespace Cgs.Play.Multiplayer
 
         private NetworkList<CgsNetString> _handNames;
 
-        private void Awake()
+        protected void Awake()
         {
             _name = new NetworkVariable<CgsNetString>();
             _points = new NetworkVariable<int>();
@@ -317,7 +317,7 @@ namespace Cgs.Play.Multiplayer
                     seatIndex % CardGameManager.Current.GamePlayPlayerRotations.Count]
                 : 0;
             Debug.Log("[CgsNet Player] Set PlayMat rotation based off seat index: " + DefaultZRotation);
-            PlayController.Instance.playArea.CurrentRotation = DefaultZRotation;
+            PlayController.Instance.PlayArea.CurrentRotation = DefaultZRotation;
 
             ApplyPlayerTranslationServerRpc();
         }
@@ -333,7 +333,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void ApplyPlayerTranslationOwnerClientRpc(ClientRpcParams clientRpcParams = default)
         {
-            PlayController.Instance.playArea.verticalNormalizedPosition = 0;
+            PlayController.Instance.PlayArea.verticalNormalizedPosition = 0;
         }
 
         private IEnumerator DownloadGame(string url)
@@ -441,8 +441,8 @@ namespace Cgs.Play.Multiplayer
         private void OnCurrentDeckChanged(NetworkObjectReference previousValue, NetworkObjectReference newValue)
 #pragma warning restore S2325
         {
-            if (PlayController.Instance != null && PlayController.Instance.drawer != null)
-                PlayController.Instance.drawer.RefreshCardStackDropdown();
+            if (PlayController.Instance != null && PlayController.Instance.Drawer != null)
+                PlayController.Instance.Drawer.RefreshCardStackDropdown();
         }
 
         // Server-only: un-references a despawning card stack, so the current deck does not go permanently stale
@@ -633,7 +633,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once UnusedParameter.Local
         private void UseHandClientRpc(int handIndex, ClientRpcParams clientRpcParams = default)
         {
-            PlayController.Instance.drawer.SelectTab(handIndex);
+            PlayController.Instance.Drawer.SelectTab(handIndex);
         }
 
         public void RequestUseHand(int handIndex)
@@ -675,7 +675,7 @@ namespace Cgs.Play.Multiplayer
         private void SyncHandClientRpc(int handIndex, CgsNetString[] cardIds, ClientRpcParams clientRpcParams = default)
         {
             Debug.Log($"[CgsNet Player] Sync hand {handIndex} to {cardIds.Length} cards on client!");
-            PlayController.Instance.drawer.SyncHand(handIndex, cardIds);
+            PlayController.Instance.Drawer.SyncHand(handIndex, cardIds);
         }
 
         public void RequestRemoveHand(int handIndex)
@@ -715,7 +715,7 @@ namespace Cgs.Play.Multiplayer
         private void SpawnCardInPlayAreaServerRpc(string cardId, Vector3 position, Quaternion rotation,
             bool isFacedown, bool isCardShared, ServerRpcParams rpcParams = default)
         {
-            PlayController.Instance.CreateCardModel(PlayController.Instance.playAreaCardZone.gameObject, cardId,
+            PlayController.Instance.CreateCardModel(PlayController.Instance.PlayAreaCardZone.gameObject, cardId,
                 position, rotation, isFacedown, isCardShared,
                 new PlayController.CardModelCreationOptions(ownerClientId: rpcParams.Receive.SenderClientId));
         }
@@ -753,7 +753,7 @@ namespace Cgs.Play.Multiplayer
             {
                 // An unspawned zone cannot be referenced on the server,
                 // so spawn in the play area at the equivalent position
-                var playAreaTransform = PlayController.Instance.playAreaCardZone.transform;
+                var playAreaTransform = PlayController.Instance.PlayAreaCardZone.transform;
                 if (cardZone.transform != playAreaTransform)
                 {
                     position = playAreaTransform.InverseTransformPoint(cardModelTransform.position);
@@ -887,13 +887,13 @@ namespace Cgs.Play.Multiplayer
         private void RestartServerRpc()
         {
             Debug.Log("[CgsNet Player] Game server to restart!...");
-            foreach (var cardStack in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<CardStack>())
+            foreach (var cardStack in PlayController.Instance.PlayAreaCardZone.GetComponentsInChildren<CardStack>())
                 cardStack.MyNetworkObject.Despawn();
-            foreach (var cardModel in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<CardModel>())
+            foreach (var cardModel in PlayController.Instance.PlayAreaCardZone.GetComponentsInChildren<CardModel>())
                 cardModel.MyNetworkObject.Despawn();
-            foreach (var die in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Die>())
+            foreach (var die in PlayController.Instance.PlayAreaCardZone.GetComponentsInChildren<Die>())
                 die.MyNetworkObject.Despawn();
-            foreach (var counter in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Counter>())
+            foreach (var counter in PlayController.Instance.PlayAreaCardZone.GetComponentsInChildren<Counter>())
                 counter.MyNetworkObject.Despawn();
             foreach (var player in FindObjectsByType<CgsNetPlayer>(FindObjectsSortMode.None))
                 player.RestartClientRpc(player.OwnerClientRpcParams);
@@ -905,7 +905,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log("[CgsNet Player] Game is restarting!...");
             PlayController.Instance.ResetPlayArea();
-            PlayController.Instance.drawer.Clear();
+            PlayController.Instance.Drawer.Clear();
             Points = CardGameManager.Current.GameStartPointsCount;
             CurrentDeck = null;
             CurrentHand = 0;

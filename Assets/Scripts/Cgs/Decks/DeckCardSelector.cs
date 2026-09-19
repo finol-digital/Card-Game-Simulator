@@ -14,37 +14,37 @@ namespace Cgs.Decks
 {
     public class DeckCardSelector : MonoBehaviour, IDragHandler, IEndDragHandler
     {
-        public DeckEditor editor;
-        public SearchResults results;
+        [SerializeField] DeckEditor editor;
+        [SerializeField] SearchResults results;
 
         private InputAction _moveAction;
         private InputAction _pageAction;
 
         private bool IsBlocked =>
-            CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused;
+            CardGameManager.Instance.ModalCanvas != null || editor.SearchResults.InputField.isFocused;
 
         private bool IsSelectedCardInDeck =>
             CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null &&
             editor.CardModels.Contains(CardViewer.Instance.SelectedCardModel);
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.CardsPagePrevious).performed += InputPagePrevious;
             InputSystem.actions.FindAction(Tags.CardsPageNext).performed += InputPageNext;
         }
 
-        private void Start()
+        protected void Start()
         {
-            CardViewer.Instance.buttonsPanel.gameObject.SetActive(true);
-            CardViewer.Instance.previousButton.onClick.AddListener(SelectPrevious);
-            CardViewer.Instance.nextButton.onClick.AddListener(SelectNext);
+            CardViewer.Instance.ButtonsPanel.gameObject.SetActive(true);
+            CardViewer.Instance.PreviousButton.onClick.AddListener(SelectPrevious);
+            CardViewer.Instance.NextButton.onClick.AddListener(SelectNext);
 
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (IsBlocked)
                 return;
@@ -263,7 +263,7 @@ namespace Cgs.Decks
             if (step == 0 || IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
-            var childCount = results.layoutArea.childCount;
+            var childCount = results.LayoutArea.childCount;
             if (childCount < 1)
             {
                 EventSystem.current.SetSelectedGameObject(null);
@@ -273,7 +273,7 @@ namespace Cgs.Decks
             var selectedIndex = -1;
             for (var i = 0; i < childCount; i++)
             {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
+                if (results.LayoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
                 selectedIndex = i;
                 break;
@@ -281,7 +281,7 @@ namespace Cgs.Decks
 
             if (selectedIndex < 0)
             {
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+                EventSystem.current.SetSelectedGameObject(results.LayoutArea.GetChild(0).gameObject);
                 if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                     CardViewer.Instance.IsVisible = true;
                 return;
@@ -294,13 +294,13 @@ namespace Cgs.Decks
             if ((pagesHorizontally && step > 0) || target >= childCount)
             {
                 results.IncrementPage();
-                childCount = results.layoutArea.childCount;
+                childCount = results.LayoutArea.childCount;
                 target = 0;
             }
             else if ((pagesHorizontally && step < 0) || target < 0)
             {
                 results.DecrementPage();
-                childCount = results.layoutArea.childCount;
+                childCount = results.LayoutArea.childCount;
                 target = childCount - 1;
             }
 
@@ -310,10 +310,10 @@ namespace Cgs.Decks
                 return;
             }
 
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(target).gameObject);
+            EventSystem.current.SetSelectedGameObject(results.LayoutArea.GetChild(target).gameObject);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.CardsPagePrevious).performed -= InputPagePrevious;
             InputSystem.actions.FindAction(Tags.CardsPageNext).performed -= InputPageNext;

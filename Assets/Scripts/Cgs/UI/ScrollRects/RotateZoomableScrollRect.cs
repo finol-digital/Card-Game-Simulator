@@ -176,7 +176,7 @@ namespace Cgs.UI.ScrollRects
             PointerPositions.Remove(eventData.pointerId);
         }
 
-        private void Update()
+        protected void Update()
         {
             if (PointerPositions.Count > 0 && Touch.activeTouches.Count == 0
                 && (Mouse.current == null || !(Mouse.current.leftButton.isPressed

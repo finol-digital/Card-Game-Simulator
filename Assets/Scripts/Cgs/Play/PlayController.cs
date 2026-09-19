@@ -64,26 +64,26 @@ namespace Cgs.Play
             Instance = null;
         }
 
-        public GameObject cardViewerPrefab;
-        public GameObject playableViewerPrefab;
-        public GameObject lobbyMenuPrefab;
-        public GameObject playSettingsMenuPrefab;
-        public GameObject deckLoadMenuPrefab;
-        public GameObject searchMenuPrefab;
-        public GameObject handDealerPrefab;
-        public GameObject moveMenuPrefab;
-        public GameObject playHelpMenuPrefab;
+        [SerializeField] GameObject cardViewerPrefab;
+        [SerializeField] GameObject playableViewerPrefab;
+        [SerializeField] GameObject lobbyMenuPrefab;
+        [SerializeField] GameObject playSettingsMenuPrefab;
+        [SerializeField] GameObject deckLoadMenuPrefab;
+        [SerializeField] GameObject searchMenuPrefab;
+        [SerializeField] GameObject handDealerPrefab;
+        [SerializeField] GameObject moveMenuPrefab;
+        [SerializeField] GameObject playHelpMenuPrefab;
 
-        public GameObject boardPrefab;
-        public GameObject cardStackPrefab;
-        public GameObject cardModelPrefab;
-        public GameObject diePrefab;
-        [FormerlySerializedAs("tokenPrefab")] public GameObject counterPrefab;
+        [SerializeField] GameObject boardPrefab;
+        [SerializeField] GameObject cardStackPrefab;
+        [SerializeField] GameObject cardModelPrefab;
+        [SerializeField] GameObject diePrefab;
+        [FormerlySerializedAs("tokenPrefab")] [SerializeField] GameObject counterPrefab;
 
-        public GameObject diceZonePrefab;
-        public GameObject horizontalCardZonePrefab;
-        public GameObject verticalCardZonePrefab;
-        public GameObject playMatPrefab;
+        [SerializeField] GameObject diceZonePrefab;
+        [SerializeField] GameObject horizontalCardZonePrefab;
+        [SerializeField] GameObject verticalCardZonePrefab;
+        [SerializeField] GameObject playMatPrefab;
 
         public readonly struct CardModelCreationOptions
         {
@@ -100,20 +100,32 @@ namespace Cgs.Play
             public int? SiblingIndex { get; }
         }
 
-        public Transform stackViewers;
+        [SerializeField] Transform stackViewers;
 
-        public RotateZoomableScrollRect playArea;
-        public CardZone playAreaCardZone;
-        public Image playMatImage;
-        public List<CardDropArea> playDropZones;
-        public CardDrawer drawer;
-        public PlayMenu menu;
-        public Scoreboard scoreboard;
+        [SerializeField] RotateZoomableScrollRect playArea;
+        [SerializeField] CardZone playAreaCardZone;
+        [SerializeField] Image playMatImage;
+        [SerializeField] List<CardDropArea> playDropZones;
+        [SerializeField] CardDrawer drawer;
+        [SerializeField] PlayMenu menu;
+        [SerializeField] Scoreboard scoreboard;
+
+        public Transform StackViewers => stackViewers;
+
+        public RotateZoomableScrollRect PlayArea => playArea;
+
+        public CardZone PlayAreaCardZone => playAreaCardZone;
+
+        public CardDrawer Drawer => drawer;
+
+        public PlayMenu Menu => menu;
+
+        public Scoreboard Scoreboard => scoreboard;
 
         public bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
                                  CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible ||
-                                 PlayableViewer.Instance.WasVisible || scoreboard.nameInputField.isFocused ||
-                                 scoreboard.pointsInputField.isFocused || CardGameManager.Instance.ModalCanvas != null;
+                                 PlayableViewer.Instance.WasVisible || scoreboard.NameInputField.isFocused ||
+                                 scoreboard.PointsInputField.isFocused || CardGameManager.Instance.ModalCanvas != null;
 
         public Vector2 NewPlayablePosition
         {
@@ -129,7 +141,7 @@ namespace Cgs.Play
 
                 var cardStack = cardStackPrefab.GetComponent<CardStack>();
                 var cardStackLabelHeight =
-                    ((RectTransform)cardStack.deckLabel.transform.parent).rect.height * playArea.CurrentZoom;
+                    ((RectTransform)cardStack.DeckLabel.transform.parent).rect.height * playArea.CurrentZoom;
                 var cardSize = CardGameManager.PixelsPerInch * playArea.CurrentZoom *
                                new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
 
@@ -253,16 +265,16 @@ namespace Cgs.Play
 
         private PlayHelpMenu _playHelpMenu;
 
-        private void Awake()
+        protected void Awake()
         {
             Instance = this;
         }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             Instantiate(cardViewerPrefab);
             Instantiate(playableViewerPrefab);
-            if (Menu.Settings.PreviewOnMouseOver)
+            if (Cgs.Menu.Settings.PreviewOnMouseOver)
                 CardViewer.Instance.Mode = CardViewerMode.Expanded;
             CardViewer.Instance.IsActionable = true;
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
@@ -1075,7 +1087,7 @@ namespace Cgs.Play
             var isAnyStackViewer = AllCardStacks.Select(stack => stack.Viewer).Any(v => v != null && !v.IsNew);
             if (isAnyStackViewer)
                 FocusPlayArea();
-            else if (menu.panels.activeSelf)
+            else if (menu.Panels.activeSelf)
                 menu.ToggleMenu();
             else
 #if CGS_SINGLEPLAYER
@@ -1110,7 +1122,7 @@ namespace Cgs.Play
                 CgsNetManager.Instance.Stop();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             StopNetworking();
 

@@ -20,7 +20,7 @@ namespace Cgs.CardGameView.Multiplayer
         public IReadOnlyList<Die> DiceInZone => _diceInZone;
         private readonly List<Die> _diceInZone = new();
 
-        public Text sumLabel;
+        [SerializeField] Text sumLabel;
 
         private Collider2D _collider2D;
         private readonly List<Collider2D> _overlapResults = new(32);
@@ -30,7 +30,8 @@ namespace Cgs.CardGameView.Multiplayer
             _collider2D = gameObject.GetOrAddComponent<BoxCollider2D>();
         }
 
-        private void Update()
+        // Dice zones retain their standalone update loop rather than playable drag tracking.
+        protected new void Update()
         {
             _diceInZone.Clear();
             var diceSum = 0;

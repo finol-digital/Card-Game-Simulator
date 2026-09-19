@@ -9,8 +9,14 @@ namespace Cgs.Play
 {
     public class ScoreTemplate : MonoBehaviour
     {
-        public Text nameText;
-        public Text pointsText;
-        public Text handCountText;
+        [SerializeField] Text nameText;
+        [SerializeField] Text pointsText;
+        [SerializeField] Text handCountText;
+
+        public Text NameText => nameText;
+
+        public Text PointsText => pointsText;
+
+        public Text HandCountText => handCountText;
     }
 }

@@ -108,13 +108,16 @@ namespace Cgs
 
         private bool _wasGamepadConnected;
 
-        private void OnApplicationFocus(bool haveFocus)
+        // Unity invokes this callback on the component instance.
+#pragma warning disable S2325
+        protected void OnApplicationFocus(bool haveFocus)
+#pragma warning restore S2325
         {
             if (haveFocus)
                 ResetOrientation();
         }
 
-        private void Update()
+        protected void Update()
         {
             if (DoesGamepadLockToLandscape && IsGamepadConnected != _wasGamepadConnected)
                 ResetOrientation();

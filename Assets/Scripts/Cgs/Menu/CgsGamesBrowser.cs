@@ -44,7 +44,7 @@ namespace Cgs.Menu
         private InputAction _moveAction;
         private InputAction _pageAction;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
@@ -53,7 +53,7 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        private void Start()
+        protected void Start()
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
@@ -61,7 +61,7 @@ namespace Cgs.Menu
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (Menu.IsBlocked)
                 return;
@@ -70,7 +70,7 @@ namespace Cgs.Menu
             if (Mathf.Abs(pageVertical) > 0)
             {
                 var delta = pageVertical * Time.deltaTime;
-                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
+                ScrollRect.verticalNormalizedPosition = Mathf.Clamp01(ScrollRect.verticalNormalizedPosition + delta);
             }
 
             if (!(_moveAction?.WasPressedThisFrame() ?? false))
@@ -222,7 +222,7 @@ namespace Cgs.Menu
             Menu.Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;

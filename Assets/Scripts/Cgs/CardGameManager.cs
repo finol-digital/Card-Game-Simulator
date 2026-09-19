@@ -182,13 +182,13 @@ namespace Cgs
             }
         }
 
+        [SerializeField] Dialog messenger;
+
+        [SerializeField] ProgressBar progress;
+
         public Dialog Messenger => messenger;
 
-        public Dialog messenger;
-
         public ProgressBar Progress => progress;
-
-        public ProgressBar progress;
 
         private InputAction _tooltipsAction;
         private InputAction _previewAction;
@@ -206,7 +206,7 @@ namespace Cgs
             IsQuitting = false;
         }
 
-        private void Awake()
+        protected void Awake()
         {
             if (_instance != null && _instance != this)
             {
@@ -246,7 +246,7 @@ namespace Cgs
             Application.deepLinkActivated += OnDeepLinkActivated;
         }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             if (_instance == this)
                 RegisterStaticEventHandlers();
@@ -512,7 +512,7 @@ namespace Cgs
             return autoUpdateUrl;
         }
 
-        private IEnumerator Start()
+        protected IEnumerator Start()
         {
             _tooltipsAction = InputSystem.actions.FindAction(Tags.SettingsToolTips);
             _previewAction = InputSystem.actions.FindAction(Tags.SettingsPreviewMouseOver);
@@ -882,7 +882,7 @@ namespace Cgs
             }
         }
 
-        private void Update()
+        protected void Update()
         {
             if (!InputSystem.actions.enabled)
             {
@@ -902,7 +902,7 @@ namespace Cgs
             ImageQueueService.Instance.ProcessQueue(this);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             UnregisterStaticEventHandlers();
         }
@@ -915,7 +915,7 @@ namespace Cgs
             Application.deepLinkActivated -= OnDeepLinkActivated;
         }
 
-        private void OnDestroy()
+        protected void OnDestroy()
         {
             UnregisterStaticEventHandlers();
             if (_instance == this)
@@ -924,7 +924,7 @@ namespace Cgs
 
 #pragma warning disable S2325
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void OnApplicationQuit()
+        protected void OnApplicationQuit()
 #pragma warning restore S2325
         {
             IsQuitting = true;

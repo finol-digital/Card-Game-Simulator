@@ -33,19 +33,19 @@ namespace Cgs.Play
 
         private static readonly string[] PartDisplayOrder = {"up", "left", "down", "right"};
 
-        public Text helpText;
-        public Toggle rotationToggle;
-        public Toggle zoomToggle;
+        [SerializeField] Text helpText;
+        [SerializeField] Toggle rotationToggle;
+        [SerializeField] Toggle zoomToggle;
 
         private static RotateZoomableScrollRect PlayArea =>
-            PlayController.Instance != null ? PlayController.Instance.playArea : null;
+            PlayController.Instance != null ? PlayController.Instance.PlayArea : null;
 
         private static PlayMatRotationZoomController RotationZoomController =>
             PlayController.Instance != null
                 ? PlayController.Instance.GetComponent<PlayMatRotationZoomController>()
                 : null;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameHelp).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -59,7 +59,7 @@ namespace Cgs.Play
             SyncToggles();
         }
 
-        private void Update()
+        protected void Update()
         {
             SyncToggles();
         }
@@ -219,7 +219,7 @@ namespace Cgs.Play
             SyncToggles();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameHelp).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

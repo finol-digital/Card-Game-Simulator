@@ -41,10 +41,10 @@ namespace Cgs.Cards
 
         public string ImportStatus => $"Importing {SetName}...";
 
-        public Text setNameText;
-        public TMP_Text cardNamesText;
-        public Dropdown backSelector;
-        public Button importButton;
+        [SerializeField] Text setNameText;
+        [SerializeField] TMP_Text cardNamesText;
+        [SerializeField] Dropdown backSelector;
+        [SerializeField] Button importButton;
 
         public float ProgressPercentage { get; private set; }
         public string ProgressStatus { get; private set; }
@@ -99,7 +99,7 @@ namespace Cgs.Cards
 
         private UnityAction _onCreationCallback;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSelectFolder;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
@@ -258,7 +258,7 @@ namespace Cgs.Cards
             Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSelectFolder;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;

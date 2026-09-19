@@ -9,7 +9,11 @@ namespace Cgs.Play.Multiplayer
 {
     public class Transports : MonoBehaviour
     {
-        public UnityTransport unityTransport;
-        public UnityTransport relayUnityTransport;
+        [SerializeField] UnityTransport unityTransport;
+        [SerializeField] UnityTransport relayUnityTransport;
+
+        public UnityTransport UnityTransport => unityTransport;
+
+        public UnityTransport RelayUnityTransport => relayUnityTransport;
     }
 }

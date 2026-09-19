@@ -36,26 +36,26 @@ namespace Cgs.CardGameView.Viewer
             _cardActionDictionary = null;
         }
 
-        public Button moveButton;
-        public Button rotateButton;
-        public Button tapButton;
-        public Button flipButton;
-        public Button discardButton;
+        [SerializeField] Button moveButton;
+        [SerializeField] Button rotateButton;
+        [SerializeField] Button tapButton;
+        [SerializeField] Button flipButton;
+        [SerializeField] Button discardButton;
 
         private bool IsBlocked => (PlayController.Instance != null && (
-                                       PlayController.Instance.scoreboard.nameInputField.isFocused ||
-                                       PlayController.Instance.scoreboard.pointsInputField.isFocused))
+                                       PlayController.Instance.Scoreboard.NameInputField.isFocused ||
+                                       PlayController.Instance.Scoreboard.PointsInputField.isFocused))
                                    || CardGameManager.Instance.ModalCanvas != null
                                    || !_canvasGroup.interactable;
 
         private CanvasGroup _canvasGroup;
 
-        private void Awake()
+        protected void Awake()
         {
             _canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
         }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.CardMove).performed += InputMove;
             InputSystem.actions.FindAction(Tags.CardRotate).performed += InputRotate;
@@ -75,7 +75,7 @@ namespace Cgs.CardGameView.Viewer
 
             rotateButton.interactable =
                 CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
-                CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+                CardViewer.Instance.SelectedCardModel.ParentCardZone.AllowsRotation;
             rotateButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color =
                 CardViewer.Instance.SelectedCardModel.DefaultAction == Rotate
                     ? Color.green
@@ -83,7 +83,7 @@ namespace Cgs.CardGameView.Viewer
 
             tapButton.interactable =
                 CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
-                CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+                CardViewer.Instance.SelectedCardModel.ParentCardZone.AllowsRotation;
             tapButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color =
                 CardViewer.Instance.SelectedCardModel.DefaultAction == Tap
                     ? Color.green
@@ -91,7 +91,7 @@ namespace Cgs.CardGameView.Viewer
 
             flipButton.interactable =
                 CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
-                CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
+                CardViewer.Instance.SelectedCardModel.ParentCardZone.AllowsFlip;
             flipButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color =
                 CardViewer.Instance.SelectedCardModel.DefaultAction == Flip
                     ? Color.green
@@ -135,7 +135,7 @@ namespace Cgs.CardGameView.Viewer
 
         public static void Rotate(CardModel cardModel)
         {
-            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsRotation)
+            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.AllowsRotation)
             {
                 Debug.LogWarning("Ignoring rotation request since the parent card zone does not support it.");
                 return;
@@ -161,7 +161,7 @@ namespace Cgs.CardGameView.Viewer
 
         public static void Tap(CardModel cardModel)
         {
-            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsRotation)
+            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.AllowsRotation)
             {
                 Debug.LogWarning("Ignoring rotation request since the parent card zone does not support it.");
                 return;
@@ -193,7 +193,7 @@ namespace Cgs.CardGameView.Viewer
 
         public static void Flip(CardModel cardModel)
         {
-            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsFlip)
+            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.AllowsFlip)
             {
                 Debug.LogWarning("Ignoring flip request since the parent card zone does not support it.");
                 return;
@@ -242,7 +242,7 @@ namespace Cgs.CardGameView.Viewer
             _canvasGroup.blocksRaycasts = false;
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.CardMove).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.CardRotate).performed -= InputRotate;

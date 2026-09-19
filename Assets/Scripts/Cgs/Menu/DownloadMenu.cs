@@ -17,16 +17,16 @@ namespace Cgs.Menu
     {
         public const string ClearPrompt = "Clear the URL input field?";
 
-        public Text labelText;
-        public InputField urlInputField;
-        public Button downloadButton;
-        public Transform gamesButton;
+        [SerializeField] Text labelText;
+        [SerializeField] InputField urlInputField;
+        [SerializeField] Button downloadButton;
+        [SerializeField] Transform gamesButton;
 
         private DownloadCoroutineDelegate _downloadCoroutine;
 
         public override bool IsBlocked => base.IsBlocked || urlInputField.isFocused;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
@@ -153,7 +153,7 @@ namespace Cgs.Menu
             Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;

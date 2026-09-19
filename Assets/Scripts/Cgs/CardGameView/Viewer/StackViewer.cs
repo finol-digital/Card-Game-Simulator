@@ -25,27 +25,33 @@ namespace Cgs.CardGameView.Viewer
         private const float HandleHeight = 100.0f;
         private const float ScrollbarHeight = 50.0f;
 
-        public GameObject cardModelPrefab;
+        [SerializeField] GameObject cardModelPrefab;
 
-        public RectTransform cardZoneTransform;
+        [SerializeField] RectTransform cardZoneTransform;
 
-        public List<CardDropArea> drops;
-        public CardZone contentCardZone;
-        public HorizontalLayoutGroup contentLayoutGroup;
-        public Text nameLabel;
-        public Text countLabel;
+        [SerializeField] List<CardDropArea> drops;
+        [SerializeField] CardZone contentCardZone;
+        [SerializeField] HorizontalLayoutGroup contentLayoutGroup;
+        [SerializeField] Text nameLabel;
+        [SerializeField] Text countLabel;
+
+        public GameObject CardModelPrefab => cardModelPrefab;
+
+        public void AddDropArea(CardDropArea dropArea) => drops.Add(dropArea);
+
+        public void RemoveDropArea(CardDropArea dropArea) => drops.Remove(dropArea);
 
         public bool IsNew { get; private set; }
 
         private CardStack _cardStack;
         private int? _handIndex;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputShuffle;
         }
 
-        private void Start()
+        protected void Start()
         {
             foreach (var cardDropArea in drops)
                 cardDropArea.DropHandler = this;
@@ -53,7 +59,7 @@ namespace Cgs.CardGameView.Viewer
             contentCardZone.OnRemoveCardActions.Add(OnRemoveCardModel);
         }
 
-        private void Update()
+        protected void Update()
         {
             IsNew = false;
         }
@@ -72,7 +78,7 @@ namespace Cgs.CardGameView.Viewer
 
             Sync(stack);
 
-            contentCardZone.scrollRectContainer.horizontalNormalizedPosition = 0;
+            contentCardZone.ScrollRectContainer.horizontalNormalizedPosition = 0;
 
             IsNew = true;
         }
@@ -186,7 +192,7 @@ namespace Cgs.CardGameView.Viewer
             if (CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom
                 || PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible
                 || CardGameManager.Instance.ModalCanvas != null
-                || PlayController.Instance.scoreboard.nameInputField.isFocused)
+                || PlayController.Instance.Scoreboard.NameInputField.isFocused)
                 return;
 
             PromptShuffle();
@@ -208,7 +214,7 @@ namespace Cgs.CardGameView.Viewer
             Destroy(gameObject);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputShuffle;
         }

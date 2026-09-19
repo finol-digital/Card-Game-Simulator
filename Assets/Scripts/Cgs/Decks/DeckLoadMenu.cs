@@ -45,15 +45,15 @@ namespace Cgs.Decks
         public const string DeckLoadErrorMessage = "There was an error while loading the deck: ";
         public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
 
-        public Button deleteFileButton;
-        public Button editFileButton;
-        public Button shareFileButton;
-        public Button loadFromFileButton;
+        [SerializeField] Button deleteFileButton;
+        [SerializeField] Button editFileButton;
+        [SerializeField] Button shareFileButton;
+        [SerializeField] Button loadFromFileButton;
 
-        public RectTransform newDeckPanel;
-        public InputField nameInputField;
-        public TMP_Text instructionsText;
-        public TMP_InputField textInputField;
+        [SerializeField] RectTransform newDeckPanel;
+        [SerializeField] InputField nameInputField;
+        [SerializeField] TMP_Text instructionsText;
+        [SerializeField] TMP_InputField textInputField;
 
         private OnDeckLoadedDelegate _loadCallback;
 
@@ -71,7 +71,7 @@ namespace Cgs.Decks
         private InputAction _pageAction;
         private InputAction _shiftAction;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDecksNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputDecksLoad;
@@ -84,7 +84,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        private void Start()
+        protected void Start()
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
@@ -92,7 +92,7 @@ namespace Cgs.Decks
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (IsBlocked || newDeckPanel.gameObject.activeSelf)
                 return;
@@ -101,7 +101,7 @@ namespace Cgs.Decks
             if (Mathf.Abs(pageVertical) > 0)
             {
                 var delta = pageVertical * Time.deltaTime;
-                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
+                ScrollRect.verticalNormalizedPosition = Mathf.Clamp01(ScrollRect.verticalNormalizedPosition + delta);
             }
 
             if (!(_moveAction?.WasPressedThisFrame() ?? false))
@@ -482,7 +482,7 @@ namespace Cgs.Decks
             Menu.Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDecksNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputDecksLoad;

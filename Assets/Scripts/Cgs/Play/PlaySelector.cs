@@ -13,19 +13,19 @@ namespace Cgs.Play
     public class PlaySelector : MonoBehaviour
     {
         private static bool IsBlocked => EventSystem.current.alreadySelecting ||
-                                         PlayController.Instance.scoreboard.nameInputField.isFocused ||
-                                         PlayController.Instance.scoreboard.pointsInputField.isFocused ||
+                                         PlayController.Instance.Scoreboard.NameInputField.isFocused ||
+                                         PlayController.Instance.Scoreboard.PointsInputField.isFocused ||
                                          CardGameManager.Instance.ModalCanvas != null;
 
         private InputAction _moveAction;
 
-        private void Start()
+        protected void Start()
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (_moveAction?.WasPressedThisFrame() ?? false)
                 InputMove();

@@ -68,7 +68,10 @@ namespace Cgs
             }
         }
 
-        private void Start()
+        // Unity invokes this callback on the component instance.
+#pragma warning disable S2325
+        protected void Start()
+#pragma warning restore S2325
         {
             Application.targetFrameRate = FrameRate;
         }

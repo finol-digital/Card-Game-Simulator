@@ -11,10 +11,10 @@ namespace Cgs.UI.ScrollRects
 {
     public class PassThroughScrollRect : ScrollRect
     {
-        [Header("Additional Fields")] [SerializeField]
-        public ScrollRect parentScrollRect;
+        [Header("Additional Fields")]
+        [SerializeField] ScrollRect parentScrollRect;
 
-        public bool routeToParent;
+        [SerializeField] bool routeToParent;
 
         public override void OnInitializePotentialDrag(PointerEventData eventData)
         {

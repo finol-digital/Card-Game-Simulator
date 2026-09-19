@@ -23,20 +23,20 @@ namespace Cgs.Decks
 
         private RectOffset _searchAreaGridPadding;
 
-        public RectTransform deckLabelContainer;
-        public RectTransform deckLabel;
-        public RectTransform deckButtonsContainer;
-        public RectTransform deckEditorButtonsGroup;
-        public RectTransform deckEditorLayoutArea;
+        [SerializeField] RectTransform deckLabelContainer;
+        [SerializeField] RectTransform deckLabel;
+        [SerializeField] RectTransform deckButtonsContainer;
+        [SerializeField] RectTransform deckEditorButtonsGroup;
+        [SerializeField] RectTransform deckEditorLayoutArea;
 
-        public RectTransform searchArea;
-        public GridLayoutGroup searchAreaGridLayoutGroup;
+        [SerializeField] RectTransform searchArea;
+        [SerializeField] GridLayoutGroup searchAreaGridLayoutGroup;
 
-        public RectTransform cardCountLabel;
+        [SerializeField] RectTransform cardCountLabel;
 
-        public RectTransform dockedCardViewer;
+        [SerializeField] RectTransform dockedCardViewer;
 
-        private void OnRectTransformDimensionsChange()
+        protected void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
