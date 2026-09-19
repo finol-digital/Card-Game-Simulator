@@ -734,10 +734,13 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (!CgsNetDiagnostics.IsRecording)
                 return;
+            var blocksRaycasts = TryGetComponent<CanvasGroup>(out var canvasGroup)
+                ? canvasGroup.blocksRaycasts.ToString()
+                : "missing";
             CgsNetDiagnostics.Record(stage, this,
                 $"pointer={eventData.pointerId} phase={CurrentDragPhase} screen={eventData.position} " +
                 $"pointers={PointerPositions.Count} pressed={IsAnyPointerPressed} " +
-                $"canRequest={CanRequestOwnership} blocksRaycasts={GetComponent<CanvasGroup>()?.blocksRaycasts} " +
+                $"canRequest={CanRequestOwnership} blocksRaycasts={blocksRaycasts} " +
                 CgsNetDiagnostics.PointerState, sampled);
         }
 

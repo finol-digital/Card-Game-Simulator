@@ -6,11 +6,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Cgs.CardGameView.Multiplayer;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
 
 namespace Tests.PlayMode
@@ -124,6 +126,59 @@ namespace Tests.PlayMode
             Assert.IsFalse(CgsNetDiagnostics.IsRecording);
             Assert.IsNull(RecorderField.GetValue(null));
             Assert.DoesNotThrow(() => CgsNetDiagnostics.Record("back-in-menu"));
+        }
+
+        [TestCase(null)]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void PointerTracingHandlesOptionalCanvasGroup(bool? blocksRaycasts)
+        {
+            SetRecording(true);
+            var zone = CreateCardZone();
+            if (blocksRaycasts.HasValue)
+                zone.gameObject.AddComponent<CanvasGroup>().blocksRaycasts = blocksRaycasts.Value;
+
+            AssertPointerTrace(zone, blocksRaycasts?.ToString() ?? "missing");
+
+            Assert.AreEqual(blocksRaycasts.HasValue, zone.TryGetComponent<CanvasGroup>(out _));
+        }
+
+        [Test]
+        public void PointerTracingHandlesDestroyedCanvasGroup()
+        {
+            SetRecording(true);
+            var zone = CreateCardZone();
+            Object.DestroyImmediate(zone.gameObject.AddComponent<CanvasGroup>());
+
+            AssertPointerTrace(zone, "missing");
+
+            Assert.IsFalse(zone.TryGetComponent<CanvasGroup>(out _));
+        }
+
+        private CardZone CreateCardZone()
+        {
+            var zoneObject = new GameObject("PlayArea CardZone", typeof(RectTransform));
+            zoneObject.transform.SetParent(_gameObject.transform, false);
+            zoneObject.AddComponent<NetworkObject>();
+            return zoneObject.AddComponent<CardZone>();
+        }
+
+        private void AssertPointerTrace(CardZone zone, string expectedBlocksRaycasts)
+        {
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                pointerId = 7,
+                position = new Vector2(25, 50)
+            };
+
+            Assert.DoesNotThrow(() => zone.OnPointerDown(pointer));
+            Assert.AreEqual(pointer.position, zone.PointerPositions[pointer.pointerId]);
+            StringAssert.Contains("pointer-down", Entries[^1]);
+            StringAssert.Contains($"blocksRaycasts={expectedBlocksRaycasts}", Entries[^1]);
+
+            Assert.DoesNotThrow(() => zone.OnPointerUp(pointer));
+            Assert.IsEmpty(zone.PointerPositions);
+            StringAssert.Contains("pointer-up", Entries[^1]);
         }
 
         [Test]
