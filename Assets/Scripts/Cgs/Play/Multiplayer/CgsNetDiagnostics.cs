@@ -261,7 +261,7 @@ namespace Cgs.Play.Multiplayer
                 var path = Path.Combine(Application.temporaryCachePath, "cgs-network-trace.txt");
                 File.WriteAllText(path, report);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-                new NativeShare().AddFile(path, "text/plain").Share();
+                TextSharing.ShareFile(path, CardGameManager.Instance.Messenger.ShowStatus, "text/plain");
 #else
                 var feedback = TextSharing.Copy(report);
                 _status.text = feedback == TextSharing.CopiedMessage ? "Trace copied\nto clipboard" : "Copy not confirmed";

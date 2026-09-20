@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.IO;
 using UnityEngine;
 
 namespace UnityExtensionMethods
@@ -14,6 +15,9 @@ namespace UnityExtensionMethods
         public const string CopyUnconfirmedMessage = "Couldn't confirm the copy. Try pasting to check, or copy again.";
         public const string EmptyMessage = "There is no text to copy or share.";
         public const string ShareErrorMessage = "Couldn't open sharing. Please try again.";
+        public const string ShareUnavailableMessage = "Sharing is not available on this platform.";
+        public const string FileMissingMessage = "Couldn't find the file to share. Export it again and retry.";
+        public const string FileReadErrorMessage = "Couldn't prepare the file for sharing. Please try again.";
 
         public static void CopyOrShare(string text, Action<string> report, string copiedMessage = CopiedMessage)
         {
@@ -27,27 +31,57 @@ namespace UnityExtensionMethods
             }
 
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            ShareNative(share => share.SetText(text), report);
+#else
+            report(Copy(text, copiedMessage));
+#endif
+        }
+
+        public static void ShareFile(string path, Action<string> report, string mimeType = null)
+        {
+            if (report == null)
+                throw new ArgumentNullException(nameof(report));
+
+            if (!File.Exists(path))
+            {
+                report(FileMissingMessage);
+                return;
+            }
+
+            ShareNative(share => share.AddFile(path, mimeType), report);
+        }
+
+        public static string GetShareFeedback(NativeShare.ShareResult result)
+        {
+            // NativeShare only confirms selection of a destination, not delivery or copying.
+            return result switch
+            {
+                NativeShare.ShareResult.Shared => "Share destination selected. Check there to confirm it was shared or copied.",
+                NativeShare.ShareResult.NotShared => "Sharing canceled or not completed.",
+                _ => "Sharing closed. Couldn't confirm whether the content was shared or copied."
+            };
+        }
+
+        private static void ShareNative(Action<NativeShare> prepare, Action<string> report)
+        {
+            if (Application.isEditor ||
+                (Application.platform != RuntimePlatform.Android && Application.platform != RuntimePlatform.IPhonePlayer))
+            {
+                report(ShareUnavailableMessage);
+                return;
+            }
+
             try
             {
-                new NativeShare().SetText(text).SetCallback((result, _) =>
-                {
-                    // NativeShare only confirms selection of a destination, not delivery or copying.
-                    report(result switch
-                    {
-                        NativeShare.ShareResult.Shared => "Share destination selected. Check there to confirm it was shared or copied.",
-                        NativeShare.ShareResult.NotShared => "Sharing canceled or not completed.",
-                        _ => "Sharing closed. Couldn't confirm whether the text was shared or copied."
-                    });
-                }).Share();
+                var share = new NativeShare();
+                prepare(share);
+                share.SetCallback((result, _) => report(GetShareFeedback(result))).Share();
             }
             catch (Exception exception)
             {
                 Debug.Log(ShareErrorMessage + " " + exception);
                 report(ShareErrorMessage);
             }
-#else
-            report(Copy(text, copiedMessage));
-#endif
         }
 
         public static string Copy(string text, string copiedMessage = CopiedMessage)

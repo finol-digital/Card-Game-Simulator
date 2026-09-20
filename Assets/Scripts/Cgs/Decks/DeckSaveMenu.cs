@@ -150,7 +150,7 @@ namespace Cgs.Decks
 #elif UNITY_ANDROID && !UNITY_EDITOR
             StartCoroutine(OpenPdf(pdfUri));
 #elif UNITY_IOS && !UNITY_EDITOR
-            new NativeShare().AddFile(pdfUri.AbsoluteUri).Share();
+            TextSharing.ShareFile(pdfUri.LocalPath, CardGameManager.Instance.Messenger.ShowStatus, "application/pdf");
 #else
             Application.OpenURL(pdfUri.AbsoluteUri);
 #endif
@@ -159,11 +159,17 @@ namespace Cgs.Decks
 #if UNITY_ANDROID && !UNITY_EDITOR
         public IEnumerator OpenPdf(Uri uri)
         {
-            var uwr = new UnityWebRequest( uri, UnityWebRequest.kHttpVerbGET );
+            using var uwr = new UnityWebRequest(uri, UnityWebRequest.kHttpVerbGET);
             var path = Path.Combine( Application.temporaryCachePath, "temp.pdf" );
             uwr.downloadHandler = new DownloadHandlerFile( path );
             yield return uwr.SendWebRequest();
-            new NativeShare().AddFile(path, "application/pdf").Share();
+            if (uwr.result != UnityWebRequest.Result.Success)
+            {
+                CardGameManager.Instance.Messenger.ShowStatus(TextSharing.FileReadErrorMessage);
+                yield break;
+            }
+
+            TextSharing.ShareFile(path, CardGameManager.Instance.Messenger.ShowStatus, "application/pdf");
         }
 #endif
 

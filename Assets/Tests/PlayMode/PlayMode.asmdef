@@ -10,7 +10,8 @@
         "unity.webp",
         "WebP.Editor",
         "Unity.Netcode.Runtime",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "NativeShare.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

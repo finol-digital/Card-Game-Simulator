@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.IO;
 using System.Reflection;
 using Cgs.Menu;
 using NUnit.Framework;
@@ -13,6 +14,50 @@ namespace Tests.PlayMode
 {
     public class TextSharingTests
     {
+        [TestCase(NativeShare.ShareResult.Shared,
+            "Share destination selected. Check there to confirm it was shared or copied.")]
+        [TestCase(NativeShare.ShareResult.NotShared, "Sharing canceled or not completed.")]
+        [TestCase(NativeShare.ShareResult.Unknown,
+            "Sharing closed. Couldn't confirm whether the content was shared or copied.")]
+        public void NativeShareResultsReportTheirOutcomeWithoutClaimingClipboardSuccess(
+            NativeShare.ShareResult result, string expectedMessage)
+        {
+            var feedback = TextSharing.GetShareFeedback(result);
+            Assert.AreEqual(expectedMessage, feedback);
+            Assert.AreNotEqual(TextSharing.CopiedMessage, feedback);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void MissingFileReportsFailureOnce(string path)
+        {
+            var calls = 0;
+            TextSharing.ShareFile(path, feedback =>
+            {
+                calls++;
+                Assert.AreEqual(TextSharing.FileMissingMessage, feedback);
+            });
+            Assert.AreEqual(1, calls);
+        }
+
+#if UNITY_EDITOR
+        [Test]
+        public void FileSharingInEditorDoesNotReportNativeShareSuccess()
+        {
+            var path = Path.GetTempFileName();
+            try
+            {
+                string feedback = null;
+                TextSharing.ShareFile(path, message => feedback = message, "text/plain");
+                Assert.AreEqual(TextSharing.ShareUnavailableMessage, feedback);
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+#endif
+
         private static string Copy(string text, Action<string> write, Func<string> read)
         {
             var method = typeof(TextSharing).GetMethod("Copy", BindingFlags.Static | BindingFlags.NonPublic);
