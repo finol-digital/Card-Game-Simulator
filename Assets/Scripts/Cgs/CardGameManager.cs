@@ -772,13 +772,7 @@ namespace Cgs
             if (Current.CgsGamesLink != null && Current.CgsGamesLink.IsWellFormedOriginalString())
             {
                 var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, Current.CgsGamesLink);
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-                var nativeShare = new NativeShare();
-                nativeShare.SetText(shareMessage).Share();
-#else
-                UniClipboard.SetText(shareMessage);
-                Messenger.Show(shareMessage);
-#endif
+                TextSharing.CopyOrShare(shareMessage, Messenger.ShowStatus);
             }
             else
                 ExportGame();

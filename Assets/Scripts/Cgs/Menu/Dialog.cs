@@ -10,6 +10,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Menu
 {
@@ -21,6 +22,9 @@ namespace Cgs.Menu
         [SerializeField] Button noButton;
         [SerializeField] Button yesButton;
         private bool _ignoreClose;
+        private string _shareText;
+        private int _messageVersion;
+        private bool _canCopy;
 
         protected struct Message : IEquatable<Message>
         {
@@ -28,6 +32,7 @@ namespace Cgs.Menu
             public UnityAction NoAction;
             public UnityAction YesAction;
             public bool Unskippable;
+            public bool CanCopy;
 
             public bool Equals(Message other)
             {
@@ -48,16 +53,7 @@ namespace Cgs.Menu
         {
             base.Start();
 
-#if UNITY_IOS || UNITY_ANDROID
-            copyButton.SetActive(false);
-            shareButton.SetActive(true);
-#elif UNITY_STANDALONE_OSX
-            copyButton.SetActive(false);
-            shareButton.SetActive(false);
-#else
-            copyButton.SetActive(true);
-            shareButton.SetActive(false);
-#endif
+            UpdateCopyShareButtons();
 
             _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
             _noAction = InputSystem.actions.FindAction(Tags.SubMenuNo);
@@ -102,6 +98,13 @@ namespace Cgs.Menu
             Prompt(text, null, unskippable);
         }
 
+        public void ShowStatus(string text)
+        {
+            // Native sharing may finish after this dialog has been destroyed.
+            if (this != null)
+                ShowMessage(new Message { Text = text });
+        }
+
         public void Prompt(string text, UnityAction yesAction, bool unskippable = false)
         {
             Ask(text, null, yesAction, unskippable);
@@ -110,7 +113,12 @@ namespace Cgs.Menu
         public void Ask(string text, UnityAction noAction, UnityAction yesAction, bool unskippable = false)
         {
             var message = new Message()
-                { Text = text, NoAction = noAction, YesAction = yesAction, Unskippable = unskippable };
+                { Text = text, NoAction = noAction, YesAction = yesAction, Unskippable = unskippable, CanCopy = true };
+            ShowMessage(message);
+        }
+
+        private void ShowMessage(Message message)
+        {
             if (gameObject.activeSelf)
             {
                 if (!MessageQueue.Contains(message))
@@ -130,7 +138,11 @@ namespace Cgs.Menu
 
         private void DisplayMessage(Message message)
         {
-            messageText.text = message.Text ?? string.Empty;
+            _messageVersion++;
+            _canCopy = message.CanCopy;
+            UpdateCopyShareButtons();
+            _shareText = message.Text ?? string.Empty;
+            messageText.text = _shareText;
             noButton.gameObject.SetActive(message.YesAction != null);
 
             yesButton.onClick.RemoveAllListeners();
@@ -151,11 +163,28 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void CopyShare()
         {
-            var shareText = messageText.text;
+            if (!_canCopy)
+                return;
+
+            var messageVersion = _messageVersion;
+            TextSharing.CopyOrShare(_shareText, feedback =>
+            {
+                if (this != null && gameObject.activeInHierarchy && messageVersion == _messageVersion)
+                    messageText.text = feedback + "\n\n" + _shareText;
+            });
+        }
+
+        private void UpdateCopyShareButtons()
+        {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            (new NativeShare()).SetText(shareText).Share();
+            copyButton.SetActive(false);
+            shareButton.SetActive(_canCopy);
+#elif UNITY_STANDALONE_OSX && !UNITY_EDITOR
+            copyButton.SetActive(false);
+            shareButton.SetActive(false);
 #else
-            UniClipboard.SetText(shareText);
+            copyButton.SetActive(_canCopy);
+            shareButton.SetActive(false);
 #endif
         }
 

@@ -296,12 +296,8 @@ namespace Cgs.Decks
             try
             {
                 var shareText = File.ReadAllText(_selectedFilePath);
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-                (new NativeShare()).SetText(shareText).Share();
-#else
-                UniClipboard.SetText(shareText);
-                CardGameManager.Instance.Messenger.Show(DeckSaveMenu.DeckCopiedMessage);
-#endif
+                TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowStatus,
+                    DeckSaveMenu.DeckCopiedMessage);
             }
             catch (Exception e)
             {

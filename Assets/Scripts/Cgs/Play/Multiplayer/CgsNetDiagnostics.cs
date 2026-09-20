@@ -16,6 +16,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -262,8 +263,10 @@ namespace Cgs.Play.Multiplayer
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 new NativeShare().AddFile(path, "text/plain").Share();
 #else
-                UniClipboard.SetText(report);
-                _status.text = "Trace copied\nto clipboard";
+                var feedback = TextSharing.Copy(report);
+                _status.text = feedback == TextSharing.CopiedMessage ? "Trace copied\nto clipboard" : "Copy not confirmed";
+                if (feedback != TextSharing.CopiedMessage)
+                    CardGameManager.Instance.Messenger.ShowStatus(feedback);
                 _nextStatusTime = Time.unscaledTime + 3;
 #endif
             }

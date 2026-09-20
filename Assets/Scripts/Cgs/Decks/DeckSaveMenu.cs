@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 #if UNITY_ANDROID && !UNITY_EDITOR
 using System.Collections;
 using UnityEngine.Networking;
@@ -179,12 +180,7 @@ namespace Cgs.Decks
         public void Share()
         {
             var shareText = textOutputArea.text;
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            (new NativeShare()).SetText(shareText).Share();
-#else
-            UniClipboard.SetText(shareText);
-            CardGameManager.Instance.Messenger.Show(DeckCopiedMessage);
-#endif
+            TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowStatus, DeckCopiedMessage);
         }
 
         [UsedImplicitly]
