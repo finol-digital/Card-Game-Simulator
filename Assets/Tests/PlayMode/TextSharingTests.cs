@@ -82,6 +82,18 @@ namespace Tests.PlayMode
             Assert.AreEqual(1, calls);
         }
 
+        [Test]
+        public void StatusCallbackIgnoresDestroyedDialog()
+        {
+            var dialogObject = new GameObject("Destroyed share dialog");
+            dialogObject.SetActive(false);
+            var dialog = dialogObject.AddComponent<Dialog>();
+            Action<string> report = dialog.ShowStatus;
+            UnityEngine.Object.DestroyImmediate(dialogObject);
+
+            Assert.DoesNotThrow(() => report(TextSharing.CopiedMessage));
+        }
+
 #if UNITY_EDITOR || UNITY_STANDALONE
         [Test]
         public void RepeatedDialogCopyPreservesMessageAndDoesNotQueueFeedback()

@@ -32,7 +32,7 @@ namespace Cgs.Menu
             public UnityAction NoAction;
             public UnityAction YesAction;
             public bool Unskippable;
-            public bool CanCopy;
+            public bool CanCopy { get; set; }
 
             public bool Equals(Message other)
             {
@@ -101,7 +101,7 @@ namespace Cgs.Menu
         public void ShowStatus(string text)
         {
             // Native sharing may finish after this dialog has been destroyed.
-            if (this != null)
+            if (this)
                 ShowMessage(new Message { Text = text });
         }
 
@@ -169,7 +169,7 @@ namespace Cgs.Menu
             var messageVersion = _messageVersion;
             TextSharing.CopyOrShare(_shareText, feedback =>
             {
-                if (this != null && gameObject.activeInHierarchy && messageVersion == _messageVersion)
+                if (this && gameObject.activeInHierarchy && messageVersion == _messageVersion)
                     messageText.text = feedback + "\n\n" + _shareText;
             });
         }
