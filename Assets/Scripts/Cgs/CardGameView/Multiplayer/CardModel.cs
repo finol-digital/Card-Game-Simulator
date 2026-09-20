@@ -187,8 +187,8 @@ namespace Cgs.CardGameView.Multiplayer
                 nameText.text = Value.Name;
         }
 
-        public GameObject nameLabel;
-        public Text nameText;
+        [SerializeField] GameObject nameLabel;
+        [SerializeField] Text nameText;
 
         private Image View => _view ??= GetComponent<Image>();
         private Image _view;
@@ -205,7 +205,7 @@ namespace Cgs.CardGameView.Multiplayer
             _isCardSharedNetworkVariable = new NetworkVariable<bool>();
         }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.ViewerZoom).performed += InputZoom;
         }
@@ -226,11 +226,11 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnStartPlayable()
         {
             if (PlayController.Instance != null &&
-                PlayController.Instance.playAreaCardZone.transform == transform.parent)
+                PlayController.Instance.PlayAreaCardZone.transform == transform.parent)
             {
                 PlayController.SetPlayAreaActions(this);
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
-                cardDropArea.isBlocker = true;
+                cardDropArea.IsBlocker = true;
                 cardDropArea.DropHandler = this;
 
                 var stackDropArea = gameObject.GetOrAddComponent<StackDropArea>();
@@ -529,7 +529,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (DropTarget == null && ParentCardZone == null && PlaceHolderCardZone == null &&
                 CgsNetManager.Instance != null && PlayController.Instance != null)
             {
-                PlaceHolderCardZone = PlayController.Instance.playAreaCardZone;
+                PlaceHolderCardZone = PlayController.Instance.PlayAreaCardZone;
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, transform.position);
             }
 
@@ -567,9 +567,9 @@ namespace Cgs.CardGameView.Multiplayer
 
             // Grid positions are local to the play area, so only cards in the play area can be compared to siblings
             if (PlaySettings.AutoStackCards && PlayController.Instance != null &&
-                PlayController.Instance.playAreaCardZone.transform == transform.parent)
+                PlayController.Instance.PlayAreaCardZone.transform == transform.parent)
             {
-                var playAreaCardZoneTransform = PlayController.Instance.playAreaCardZone.transform;
+                var playAreaCardZoneTransform = PlayController.Instance.PlayAreaCardZone.transform;
                 for (var i = 0; i < playAreaCardZoneTransform.childCount; i++)
                 {
                     var siblingTransform = playAreaCardZoneTransform.GetChild(i);
@@ -648,17 +648,17 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsStatic)
                 return;
 
-            if (DropTarget != null && DropTarget.isBlocker && DropTarget.gameObject != gameObject
+            if (DropTarget != null && DropTarget.IsBlocker && DropTarget.gameObject != gameObject
                 && ParentCardZone != null)
                 ParentToCanvas(targetPosition);
 
             // Check for card zones
-            if (PlayController.Instance != null && ParentCardZone == PlayController.Instance.playAreaCardZone &&
+            if (PlayController.Instance != null && ParentCardZone == PlayController.Instance.PlayAreaCardZone &&
                 PlaceHolderCardZone == null)
             {
                 foreach (var cardZone in PlayController.Instance.AllCardZones)
                 {
-                    if (cardZone == PlayController.Instance.playAreaCardZone)
+                    if (cardZone == PlayController.Instance.PlayAreaCardZone)
                         continue;
                     if (RectTransformUtility.RectangleContainsScreenPoint((RectTransform)cardZone.transform,
                             CurrentPointerEventData.position))
@@ -666,7 +666,7 @@ namespace Cgs.CardGameView.Multiplayer
                 }
             }
             else if (PlaceHolderCardZone != null
-                     && PlaceHolderCardZone.transform.parent == PlayController.Instance?.playAreaCardZone.transform
+                     && PlaceHolderCardZone.transform.parent == PlayController.Instance?.PlayAreaCardZone.transform
                      && !RectTransformUtility.RectangleContainsScreenPoint(
                          (RectTransform)PlaceHolderCardZone.transform,
                          CurrentPointerEventData.position))
@@ -726,7 +726,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return false;
 
             if (PlayController.Instance == null ||
-                PlayController.Instance.playAreaCardZone.transform != transform.parent)
+                PlayController.Instance.PlayAreaCardZone.transform != transform.parent)
                 return false;
 
             // For spawned cards, only the owner moves the card, and the move syncs through MoveCardToServer
@@ -780,7 +780,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            PlaceHolderCardZone = PlayController.Instance.playAreaCardZone;
+            PlaceHolderCardZone = PlayController.Instance.PlayAreaCardZone;
             if (!Vector2.zero.Equals(Position))
                 PlaceHolder.localPosition = Position;
         }
@@ -984,7 +984,7 @@ namespace Cgs.CardGameView.Multiplayer
             base.OnDestroy();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.ViewerZoom).performed -= InputZoom;
         }

@@ -18,7 +18,7 @@ namespace Cgs.CardGameView.Viewer
         private RectTransform _rectTransform;
         private Vector2 _dragOffset;
 
-        private void Start()
+        protected void Start()
         {
             _rectTransform = (RectTransform) transform.parent;
         }

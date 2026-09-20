@@ -16,7 +16,7 @@ namespace Cgs.UI
         private const float WindowsScrollDeltaPerTick = 120f;
 
 #if UNITY_WSA && !UNITY_EDITOR
-        private void Awake()
+        protected void Awake()
         {
             var inputModule = GetComponent<InputSystemUIInputModule>();
             inputModule.scrollDeltaPerTick /= WindowsScrollDeltaPerTick;

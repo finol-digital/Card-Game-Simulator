@@ -14,32 +14,32 @@ namespace Cgs.Cards
 {
     public class CardSelector : MonoBehaviour, IDragHandler, IEndDragHandler
     {
-        public SearchResults results;
-        public ScrollRect scrollRect;
+        [SerializeField] SearchResults results;
+        [SerializeField] ScrollRect scrollRect;
 
         private InputAction _moveAction;
         private InputAction _pageAction;
 
-        private bool IsBlocked => results.inputField.isFocused || CardGameManager.Instance.ModalCanvas != null;
+        private bool IsBlocked => results.InputField.isFocused || CardGameManager.Instance.ModalCanvas != null;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.CardsPagePrevious).performed += InputPagePrevious;
             InputSystem.actions.FindAction(Tags.CardsPageNext).performed += InputPageNext;
         }
 
-        private void Start()
+        protected void Start()
         {
-            CardViewer.Instance.buttonsPanel.gameObject.SetActive(true);
-            CardViewer.Instance.previousButton.onClick.AddListener(SelectLeft);
-            CardViewer.Instance.nextButton.onClick.AddListener(SelectRight);
+            CardViewer.Instance.ButtonsPanel.gameObject.SetActive(true);
+            CardViewer.Instance.PreviousButton.onClick.AddListener(SelectLeft);
+            CardViewer.Instance.NextButton.onClick.AddListener(SelectRight);
 
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (IsBlocked)
                 return;
@@ -126,7 +126,7 @@ namespace Cgs.Cards
         private void FocusScrollRectOn(int index)
         {
             var cardsPerRow = Mathf.Max(1, results.CardsPerRow);
-            var rowCount = Mathf.CeilToInt((float)results.layoutArea.childCount / cardsPerRow);
+            var rowCount = Mathf.CeilToInt((float)results.LayoutArea.childCount / cardsPerRow);
             var rowIndex = index / cardsPerRow;
             scrollRect.verticalNormalizedPosition = rowCount > 1 ? 1f - rowIndex / (rowCount - 1f) : 1f;
         }
@@ -160,7 +160,7 @@ namespace Cgs.Cards
             if (step == 0 || IsBlocked || EventSystem.current.alreadySelecting)
                 return;
 
-            var childCount = results.layoutArea.childCount;
+            var childCount = results.LayoutArea.childCount;
             if (childCount < 1)
             {
                 EventSystem.current.SetSelectedGameObject(null);
@@ -173,19 +173,19 @@ namespace Cgs.Cards
             var forward = step > 0;
             for (var i = forward ? 0 : childCount - 1; forward ? i < childCount : i >= 0; i += forward ? 1 : -1)
             {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
+                if (results.LayoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
                 i += step;
                 if ((pagesHorizontally && step > 0) || i >= childCount)
                 {
                     results.IncrementPage();
-                    childCount = results.layoutArea.childCount;
+                    childCount = results.LayoutArea.childCount;
                     i = 0;
                 }
                 else if ((pagesHorizontally && step < 0) || i < 0)
                 {
                     results.DecrementPage();
-                    childCount = results.layoutArea.childCount;
+                    childCount = results.LayoutArea.childCount;
                     i = childCount - 1;
                 }
 
@@ -195,12 +195,12 @@ namespace Cgs.Cards
                     return;
                 }
 
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                EventSystem.current.SetSelectedGameObject(results.LayoutArea.GetChild(i).gameObject);
                 FocusScrollRectOn(i);
                 return;
             }
 
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            EventSystem.current.SetSelectedGameObject(results.LayoutArea.GetChild(0).gameObject);
             FocusScrollRectOn(0);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
@@ -240,7 +240,7 @@ namespace Cgs.Cards
             results.IncrementPage();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.CardsPagePrevious).performed -= InputPagePrevious;
             InputSystem.actions.FindAction(Tags.CardsPageNext).performed -= InputPageNext;

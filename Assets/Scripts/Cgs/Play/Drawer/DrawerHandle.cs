@@ -10,9 +10,15 @@ namespace Cgs.Play.Drawer
 {
     public class DrawerHandle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        public CardDrawer cardDrawer;
+        [SerializeField] CardDrawer cardDrawer;
 
-        public float offsetHeight;
+        [SerializeField] float offsetHeight;
+
+        public CardDrawer CardDrawer
+        {
+            get => cardDrawer;
+            set => cardDrawer = value;
+        }
 
         private float _dragOffsetHeight;
 
@@ -20,7 +26,7 @@ namespace Cgs.Play.Drawer
         {
             var rectTransform = (RectTransform) transform;
             _dragOffsetHeight = eventData.position.y - rectTransform.position.y + (offsetHeight +
-                    cardDrawer.panelRectTransform.rect.height) *
+                    cardDrawer.PanelRectTransform.rect.height) *
                 CardGameManager.Instance.CardCanvas.transform.localScale.y;
         }
 
@@ -29,9 +35,9 @@ namespace Cgs.Play.Drawer
             var targetY = eventData.position.y - _dragOffsetHeight;
             var minY = CardDrawer.DockedPosition.y * CardGameManager.Instance.CardCanvas.transform.localScale.y;
             var y = Mathf.Clamp(targetY, minY, CardDrawer.ShownPosition.y);
-            cardDrawer.panelRectTransform.position = new Vector3(cardDrawer.panelRectTransform.position.x, y);
-            cardDrawer.downButton.interactable = Math.Abs(y - minY) > 0.1f;
-            cardDrawer.upButton.interactable = Math.Abs(y - CardDrawer.ShownPosition.y) > 0.1f;
+            cardDrawer.PanelRectTransform.position = new Vector3(cardDrawer.PanelRectTransform.position.x, y);
+            cardDrawer.DownButton.interactable = Math.Abs(y - minY) > 0.1f;
+            cardDrawer.UpButton.interactable = Math.Abs(y - CardDrawer.ShownPosition.y) > 0.1f;
         }
 
         public void OnEndDrag(PointerEventData eventData)

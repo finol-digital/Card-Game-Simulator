@@ -57,27 +57,27 @@ namespace Cgs.Menu
             set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
         }
 
-        public ScrollRect scrollRect;
-        public Dropdown framerateDropdown;
-        public Dropdown resolutionDropdown;
-        public Toggle screenOsControlToggle;
-        public Toggle screenAutoRotateToggle;
-        public Toggle screenPortraitToggle;
-        public Toggle screenLandscapeToggle;
+        [SerializeField] ScrollRect scrollRect;
+        [SerializeField] Dropdown framerateDropdown;
+        [SerializeField] Dropdown resolutionDropdown;
+        [SerializeField] Toggle screenOsControlToggle;
+        [SerializeField] Toggle screenAutoRotateToggle;
+        [SerializeField] Toggle screenPortraitToggle;
+        [SerializeField] Toggle screenLandscapeToggle;
 
         [FormerlySerializedAs("controllerLockToLandscapeToggle")]
-        public Toggle gamepadLockToLandscapeToggle;
+        [SerializeField] Toggle gamepadLockToLandscapeToggle;
 
-        public Toggle buttonTooltipsEnabledToggle;
-        public Toggle previewOnMouseOverToggle;
-        public Toggle hideReprintsToggle;
-        public Toggle developerModeToggle;
-        public List<Transform> orientationOptions;
+        [SerializeField] Toggle buttonTooltipsEnabledToggle;
+        [SerializeField] Toggle previewOnMouseOverToggle;
+        [SerializeField] Toggle hideReprintsToggle;
+        [SerializeField] Toggle developerModeToggle;
+        [SerializeField] List<Transform> orientationOptions;
 
         private InputAction _moveAction;
         private InputAction _pageAction;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputWebsite;
@@ -87,7 +87,7 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.SettingsDeveloperMode).performed += InputRedisplay;
         }
 
-        private void Start()
+        protected void Start()
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
@@ -96,7 +96,7 @@ namespace Cgs.Menu
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
@@ -260,7 +260,7 @@ namespace Cgs.Menu
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputWebsite;

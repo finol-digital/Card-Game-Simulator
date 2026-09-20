@@ -30,7 +30,7 @@ namespace Cgs.Play
         private const string MissingStackWarningMessage =
             "Ignoring move request since there is no card stack to move from.";
 
-        public Button moveButton;
+        [SerializeField] Button moveButton;
 
         private CardModel _selectedCardModel;
         private CardStack _selectedCardStack;
@@ -56,11 +56,11 @@ namespace Cgs.Play
                 if (parentCardZone == null)
                     return null;
 
-                if (parentCardZone == PlayController.Instance.playAreaCardZone)
+                if (parentCardZone == PlayController.Instance.PlayAreaCardZone)
                     return PlayController.Instance;
 
-                if (parentCardZone.transform.IsChildOf(PlayController.Instance.drawer.cardZonesRectTransform))
-                    return PlayController.Instance.drawer;
+                if (parentCardZone.transform.IsChildOf(PlayController.Instance.Drawer.CardZonesRectTransform))
+                    return PlayController.Instance.Drawer;
 
                 var stackViewer = parentCardZone.GetComponentInParent<StackViewer>();
                 if (stackViewer != null)
@@ -77,22 +77,22 @@ namespace Cgs.Play
         private InputAction _moveAction;
         private InputAction _pageAction;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        private void Start()
+        protected void Start()
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
-            var isMoveable = IsSourceAvailable && IsSelectedCardContainerAvailable && toggleGroup.AnyTogglesOn();
+            var isMoveable = IsSourceAvailable && IsSelectedCardContainerAvailable && ToggleGroup.AnyTogglesOn();
             if(moveButton.interactable != isMoveable)
                 moveButton.interactable = isMoveable;
 
@@ -103,7 +103,7 @@ namespace Cgs.Play
             if (Mathf.Abs(pageVertical) > 0)
             {
                 var delta = pageVertical * Time.deltaTime;
-                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
+                ScrollRect.verticalNormalizedPosition = Mathf.Clamp01(ScrollRect.verticalNormalizedPosition + delta);
             }
 
             if (!(_moveAction?.WasPressedThisFrame() ?? false))
@@ -147,11 +147,11 @@ namespace Cgs.Play
             Dictionary<ICardContainer, string> cardContainerOptions = new()
             {
                 { PlayController.Instance, "Play" },
-                { PlayController.Instance.drawer, "Hand" }
+                { PlayController.Instance.Drawer, "Hand" }
             };
 
             foreach (var cardZone in PlayController.Instance.AllCardZones)
-                if (cardZone != PlayController.Instance.playAreaCardZone)
+                if (cardZone != PlayController.Instance.PlayAreaCardZone)
                     cardContainerOptions.Add(cardZone,
                         string.IsNullOrEmpty(cardZone.Name) ? DefaultZoneName : cardZone.Name);
 
@@ -278,7 +278,7 @@ namespace Cgs.Play
             Menu.Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

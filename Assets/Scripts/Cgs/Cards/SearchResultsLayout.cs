@@ -9,9 +9,9 @@ namespace Cgs.Cards
 {
     public class SearchResultsLayout : MonoBehaviour
     {
-        public SearchResults searchResults;
+        [SerializeField] SearchResults searchResults;
 
-        private void OnRectTransformDimensionsChange()
+        protected void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;

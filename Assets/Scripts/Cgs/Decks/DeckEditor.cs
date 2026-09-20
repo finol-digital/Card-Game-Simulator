@@ -37,25 +37,27 @@ namespace Cgs.Decks
         public const int HorizontalLayoutContentBottomPadding = 85;
 
         [FormerlySerializedAs("cardZonePrefab")]
-        public GameObject cardZoneVerticalPrefab;
+        [SerializeField] GameObject cardZoneVerticalPrefab;
 
-        public GameObject cardZoneHorizontalPrefab;
-        public GameObject cardModelPrefab;
-        public GameObject deckLoadMenuPrefab;
-        public GameObject deckSaveMenuPrefab;
-        public RectTransform layoutContent;
-        public List<CardDropArea> dropZones;
-        public ScrollRect scrollRect;
+        [SerializeField] GameObject cardZoneHorizontalPrefab;
+        [SerializeField] GameObject cardModelPrefab;
+        [SerializeField] GameObject deckLoadMenuPrefab;
+        [SerializeField] GameObject deckSaveMenuPrefab;
+        [SerializeField] RectTransform layoutContent;
+        [SerializeField] List<CardDropArea> dropZones;
+        [SerializeField] ScrollRect scrollRect;
 
         // top/bottom edge areas that scroll the deck while dragging a card, for the vertical scrollbar layout
-        public List<GameObject> verticalScrollAreas;
+        [SerializeField] List<GameObject> verticalScrollAreas;
 
         // left/right edge areas that scroll the deck while dragging a card, for the horizontal scrollbar layout
-        public List<GameObject> horizontalScrollAreas;
+        [SerializeField] List<GameObject> horizontalScrollAreas;
 
-        public Text nameText;
-        public Text countText;
-        public SearchResults searchResults;
+        [SerializeField] Text nameText;
+        [SerializeField] Text countText;
+        [SerializeField] SearchResults searchResults;
+
+        public SearchResults SearchResults => searchResults;
 
         private static readonly Dictionary<int, int> ResolutionIndexToCardsPerColumn = new()
         {
@@ -128,12 +130,12 @@ namespace Cgs.Decks
         }
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
-                                  CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused;
+                                  CardGameManager.Instance.ModalCanvas != null || searchResults.InputField.isFocused;
 
         // false: horizontal card zones with a vertical scrollbar; true: vertical card zones with a horizontal scrollbar
         public bool IsHorizontalLayout { get; private set; }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             // CardViewer is already in the scene
             searchResults.DoubleClickAction = AddCardModel;
@@ -149,7 +151,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        private void Start()
+        protected void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             dropZones.ForEach(dropZone => dropZone.DropHandler = this);
@@ -158,7 +160,7 @@ namespace Cgs.Decks
                 ShowDeckLoadMenu();
         }
 
-        public void Reset()
+        protected void Reset()
         {
             ClearCards();
             Consolidate();
@@ -284,7 +286,7 @@ namespace Cgs.Decks
             var rectTransform = (RectTransform)cardZone.transform;
             rectTransform.sizeDelta = new Vector2(CardZoneWidth, rectTransform.sizeDelta.y);
             cardZone.Type = CardZoneType.Vertical;
-            cardZone.scrollRectContainer = scrollRect;
+            cardZone.ScrollRectContainer = scrollRect;
             cardZone.DoesImmediatelyRelease = true;
             cardZone.OnLayout = ConsolidateVertical;
             cardZone.OnAddCardActions.Add(OnAddCardModel);
@@ -301,7 +303,7 @@ namespace Cgs.Decks
             var rectTransform = (RectTransform)cardZone.transform;
             rectTransform.sizeDelta = new Vector2(layoutContent.sizeDelta.x, CardZoneHeight);
             cardZone.Type = CardZoneType.Horizontal;
-            cardZone.scrollRectContainer = scrollRect;
+            cardZone.ScrollRectContainer = scrollRect;
             cardZone.DoesImmediatelyRelease = true;
             cardZone.OnLayout = ConsolidateHorizontal;
             cardZone.OnAddCardActions.Add(OnAddCardModel);
@@ -603,7 +605,7 @@ namespace Cgs.Decks
             if (IsBlocked)
                 return;
 
-            searchResults.inputField.ActivateInputField();
+            searchResults.InputField.ActivateInputField();
         }
 
         private void InputCancel(InputAction.CallbackContext callbackContext)
@@ -631,7 +633,7 @@ namespace Cgs.Decks
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;

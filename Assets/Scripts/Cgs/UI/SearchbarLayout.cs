@@ -8,9 +8,9 @@ namespace Cgs.UI
 {
     public class SearchbarLayout : MonoBehaviour
     {
-        public RectTransform filterButton;
+        [SerializeField] RectTransform filterButton;
 
-        private void OnRectTransformDimensionsChange()
+        protected void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy || filterButton == null)
                 return;

@@ -15,11 +15,15 @@ namespace Cgs.UI
 
     public class SelectionPanel : MonoBehaviour
     {
-        public ToggleGroup toggleGroup;
-        public RectTransform selectionContent;
-        public RectTransform selectionTemplate;
-        public Text emptyText;
-        public ScrollRect scrollRect;
+        [SerializeField] ToggleGroup toggleGroup;
+        [SerializeField] RectTransform selectionContent;
+        [SerializeField] RectTransform selectionTemplate;
+        [SerializeField] Text emptyText;
+        [SerializeField] ScrollRect scrollRect;
+
+        protected ToggleGroup ToggleGroup => toggleGroup;
+
+        protected ScrollRect ScrollRect => scrollRect;
 
         protected virtual bool AllowSwitchOff => true;
 

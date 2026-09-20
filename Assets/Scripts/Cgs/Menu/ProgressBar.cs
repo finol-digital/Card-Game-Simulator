@@ -10,13 +10,13 @@ namespace Cgs.Menu
 {
     public class ProgressBar : Modal
     {
-        public Image progressBar;
-        public Text progressText;
+        [SerializeField] Image progressBar;
+        [SerializeField] Text progressText;
 
         private UnityCardGame _game;
         private IProgressible _progressible;
 
-        private void Update()
+        protected void Update()
         {
             if (_game != null)
             {

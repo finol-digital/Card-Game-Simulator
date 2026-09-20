@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -12,15 +13,15 @@ namespace Cgs.Menu
 {
     public class DecisionModal : Modal
     {
-        public Text label;
+        [SerializeField] Text label;
 
-        public Button button1;
-        public Text text1;
+        [SerializeField] Button button1;
+        [SerializeField] Text text1;
 
-        public Button button2;
-        public Text text2;
+        [SerializeField] Button button2;
+        [SerializeField] Text text2;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
@@ -28,7 +29,7 @@ namespace Cgs.Menu
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (!(MoveAction?.WasPressedThisFrame() ?? false))
                 return;
@@ -85,7 +86,7 @@ namespace Cgs.Menu
             Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputSelectNext;

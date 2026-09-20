@@ -254,7 +254,7 @@ namespace Cgs.CardGameView.Multiplayer
         private Graphic SelectableGraphic => _selectableGraphic ??= GetComponent<Graphic>();
         private Graphic _selectableGraphic;
 
-        private void Awake()
+        protected void Awake()
         {
             _containerNetworkVariable = new NetworkVariable<NetworkObjectReference>();
             _containerNetworkVariable.OnValueChanged += OnChangeContainer;
@@ -283,7 +283,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             CgsNetDiagnostics.Record("object-spawn", this);
             if (transform.parent == null)
-                ParentTo(Container == null ? PlayController.Instance.playAreaCardZone.transform : Container.transform);
+                ParentTo(Container == null ? PlayController.Instance.PlayAreaCardZone.transform : Container.transform);
 
             if (IsServer && !Vector2.zero.Equals(transform.localPosition))
             {
@@ -323,7 +323,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnChangeContainer(NetworkObjectReference oldValue, NetworkObjectReference newValue)
         {
             _container = newValue;
-            ParentTo(Container == null ? PlayController.Instance.playAreaCardZone.transform : Container.transform);
+            ParentTo(Container == null ? PlayController.Instance.PlayAreaCardZone.transform : Container.transform);
         }
 
         private void ParentTo(Transform containerTransform)
@@ -340,7 +340,7 @@ namespace Cgs.CardGameView.Multiplayer
             // Child classes may override
         }
 
-        private void Start()
+        protected void Start()
         {
             OnStartPlayable();
         }
@@ -350,7 +350,7 @@ namespace Cgs.CardGameView.Multiplayer
             // Child classes may override
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (PointerPositions.Count > 0 && !IsAnyPointerPressed)
             {

@@ -41,8 +41,8 @@ namespace Cgs.Play.Drawer
 
         private string PromptMessage => $"{DealDraw} hand of {Count} cards?";
 
-        public Text promptText;
-        public Text countText;
+        [SerializeField] Text promptText;
+        [SerializeField] Text countText;
 
         public int Count
         {
@@ -58,7 +58,7 @@ namespace Cgs.Play.Drawer
 
         private UnityAction _callback;
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed += InputSub;
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
@@ -74,7 +74,7 @@ namespace Cgs.Play.Drawer
         }
 
         // Poll for Vector2 inputs
-        private void Update()
+        protected void Update()
         {
             if (!(MoveAction?.WasPressedThisFrame() ?? false) && !(PageAction?.WasPressedThisFrame() ?? false))
                 return;
@@ -153,7 +153,7 @@ namespace Cgs.Play.Drawer
             Hide();
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputSub;
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;

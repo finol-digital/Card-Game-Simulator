@@ -33,16 +33,16 @@ namespace Cgs.Menu
         private static readonly Vector2 VersionTextLandscapeOffsetMin = new(400, 0);
         private static readonly Vector2 VersionTextLandscapeOffsetMax = new(700, 75);
 
-        public Image footerImage;
-        public Sprite footerSpritePortrait;
-        public Sprite footerSpriteLandscape;
-        public Text companyText;
-        public Text centerText;
-        public Text versionText;
+        [SerializeField] Image footerImage;
+        [SerializeField] Sprite footerSpritePortrait;
+        [SerializeField] Sprite footerSpriteLandscape;
+        [SerializeField] Text companyText;
+        [SerializeField] Text centerText;
+        [SerializeField] Text versionText;
 
         private IDisposable _anyButtonPressListener;
 
-        private void OnRectTransformDimensionsChange()
+        protected void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
@@ -90,7 +90,7 @@ namespace Cgs.Menu
             }
         }
 
-        private IEnumerator Start()
+        protected IEnumerator Start()
         {
 #if !UNITY_ANDROID && !UNITY_IOS
             centerText.text = TouchlessStartMessage;
@@ -120,7 +120,7 @@ namespace Cgs.Menu
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             _anyButtonPressListener?.Dispose();
         }

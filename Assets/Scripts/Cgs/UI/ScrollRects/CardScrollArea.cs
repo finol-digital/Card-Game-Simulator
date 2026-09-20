@@ -23,18 +23,18 @@ namespace Cgs.UI.ScrollRects
     {
         private const float ScrollSpeed = 1500;
 
-        public ScrollRect scrollRect;
-        public CardScrollDirection scrollDirection = CardScrollDirection.Left;
+        [SerializeField] ScrollRect scrollRect;
+        [SerializeField] CardScrollDirection scrollDirection = CardScrollDirection.Left;
 
         private CanvasGroup _canvasGroup;
         private bool _isScrolling;
 
-        private void Start()
+        protected void Start()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        private void Update()
+        protected void Update()
         {
             // Only active while a playable is being dragged,
             // so that presses on the edge pass through to playables underneath
