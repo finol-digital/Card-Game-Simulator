@@ -263,11 +263,16 @@ namespace Cgs.Play.Multiplayer
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 TextSharing.ShareFile(path, CardGameManager.Instance.Messenger.ShowStatus, "text/plain");
 #else
-                var feedback = TextSharing.Copy(report);
-                _status.text = feedback == TextSharing.CopiedMessage ? "Trace copied\nto clipboard" : "Copy not confirmed";
-                if (feedback != TextSharing.CopiedMessage)
-                    CardGameManager.Instance.Messenger.ShowStatus(feedback);
-                _nextStatusTime = Time.unscaledTime + 3;
+                TextSharing.CopyOrShare(report, feedback =>
+                {
+                    if (!this || !_status)
+                        return;
+
+                    _status.text = feedback == TextSharing.CopiedMessage ? "Trace copied\nto clipboard" : "Copy not confirmed";
+                    if (feedback != TextSharing.CopiedMessage)
+                        CardGameManager.Instance.Messenger.ShowStatus(feedback);
+                    _nextStatusTime = Time.unscaledTime + 3;
+                });
 #endif
             }
             catch (Exception exception)
