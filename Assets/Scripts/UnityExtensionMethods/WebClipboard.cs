@@ -13,6 +13,7 @@ namespace UnityExtensionMethods
 {
     internal static class WebClipboard
     {
+        private const string RequiresWebGlPlayerMessage = "Browser clipboard requires a WebGL player.";
         private static readonly Dictionary<int, Action<bool>> Pending = new();
         private static int _nextRequest;
 
@@ -30,7 +31,7 @@ namespace UnityExtensionMethods
 #if UNITY_WEBGL && !UNITY_EDITOR
                 CgsCopyToClipboard(text, requestId, Complete);
 #else
-                throw new PlatformNotSupportedException("Browser clipboard requires a WebGL player.");
+                throw new PlatformNotSupportedException(RequiresWebGlPlayerMessage);
 #endif
             }
             catch (Exception exception)
