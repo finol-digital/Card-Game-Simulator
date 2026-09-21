@@ -2,11 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#if UNITY_WEBGL && !UNITY_EDITOR
+#if UNITY_WEBGL || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
+using UnityEngine;
 
 namespace UnityExtensionMethods
 {
@@ -15,14 +16,28 @@ namespace UnityExtensionMethods
         private static readonly Dictionary<int, Action<bool>> Pending = new();
         private static int _nextRequest;
 
+#if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")]
         private static extern void CgsCopyToClipboard(string text, int requestId, Action<int, int> completed);
+#endif
 
         public static void Copy(string text, Action<bool> completed)
         {
             var requestId = ++_nextRequest;
             Pending.Add(requestId, completed);
-            CgsCopyToClipboard(text, requestId, Complete);
+            try
+            {
+#if UNITY_WEBGL && !UNITY_EDITOR
+                CgsCopyToClipboard(text, requestId, Complete);
+#else
+                throw new PlatformNotSupportedException("Browser clipboard requires a WebGL player.");
+#endif
+            }
+            catch (Exception exception)
+            {
+                Debug.Log(TextSharing.BrowserCopyErrorMessage + " " + exception);
+                Complete(requestId, 0);
+            }
         }
 
         [MonoPInvokeCallback(typeof(Action<int, int>))]

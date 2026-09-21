@@ -13,7 +13,7 @@ namespace UnityExtensionMethods
         public const string CopiedMessage = "Copied to clipboard.";
         public const string CopyErrorMessage = "Couldn't copy to the clipboard. Please try again.";
         public const string CopyUnconfirmedMessage = "Couldn't confirm the copy. Try pasting to check, or copy again.";
-        public const string BrowserCopyErrorMessage = "The browser couldn't copy the text. Allow clipboard access for this site and try again.";
+        public const string BrowserCopyErrorMessage = "The browser couldn't copy the text. Try again from an HTTPS page in a supported browser, and check clipboard permissions.";
         public const string EmptyMessage = "There is no text to copy or share.";
         public const string ShareErrorMessage = "Couldn't open sharing. Please try again.";
         public const string ShareUnavailableMessage = "Sharing is not available on this platform.";

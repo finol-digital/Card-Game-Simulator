@@ -42,6 +42,27 @@ namespace Tests.PlayMode
 
 #if UNITY_EDITOR
         [Test]
+        public void UnavailableBrowserPluginCompletesFailureAndClearsPendingRequest()
+        {
+            var bridge = typeof(TextSharing).Assembly.GetType("UnityExtensionMethods.WebClipboard");
+            var pending = (System.Collections.IDictionary)bridge.GetField("Pending",
+                BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+            var previousCount = pending.Count;
+            var calls = 0;
+            Action<bool> completed = succeeded =>
+            {
+                calls++;
+                Assert.IsFalse(succeeded);
+                Assert.AreEqual(previousCount, pending.Count, "Remove the request before notifying the caller.");
+            };
+
+            bridge.GetMethod("Copy").Invoke(null, new object[] { "text", completed });
+
+            Assert.AreEqual(1, calls);
+            Assert.AreEqual(previousCount, pending.Count);
+        }
+
+        [Test]
         public void FileSharingInEditorDoesNotReportNativeShareSuccess()
         {
             var path = Path.GetTempFileName();
@@ -140,6 +161,47 @@ namespace Tests.PlayMode
         }
 
 #if UNITY_EDITOR || UNITY_STANDALONE
+        [TestCase(true)]
+        [TestCase(false)]
+        public void QueuePreservesSameTextWithDifferentCopyEligibility(bool statusFirst)
+        {
+            var dialogObject = new GameObject("Queued copy eligibility");
+            try
+            {
+                dialogObject.SetActive(false);
+                var dialog = dialogObject.AddComponent<Dialog>();
+                SetField(dialog, "messageText", AddChild<UnityEngine.UI.Text>(dialogObject, "Message"));
+                SetField(dialog, "yesButton", AddChild<UnityEngine.UI.Button>(dialogObject, "Yes"));
+                SetField(dialog, "noButton", AddChild<UnityEngine.UI.Button>(dialogObject, "No"));
+                SetField(dialog, "copyButton", AddChild<UnityEngine.UI.Button>(dialogObject, "Copy").gameObject);
+                SetField(dialog, "shareButton", AddChild<UnityEngine.UI.Button>(dialogObject, "Share").gameObject);
+                dialog.Show("Current message");
+                var yesCalls = 0;
+                if (statusFirst)
+                    dialog.ShowStatus("Same text");
+                dialog.Prompt("Same text", () => yesCalls++);
+                if (!statusFirst)
+                    dialog.ShowStatus("Same text");
+                dialog.ShowStatus("Same text"); // Identical status messages should still deduplicate.
+
+                var canCopy = typeof(Dialog).GetField("_canCopy", BindingFlags.Instance | BindingFlags.NonPublic);
+                var yes = (UnityEngine.UI.Button)typeof(Dialog).GetField("yesButton",
+                    BindingFlags.Instance | BindingFlags.NonPublic).GetValue(dialog);
+                dialog.OkClose();
+                Assert.AreEqual(!statusFirst, canCopy.GetValue(dialog));
+                yes.onClick.Invoke();
+                Assert.IsTrue(dialogObject.activeSelf, "Both message kinds must survive deduplication.");
+                Assert.AreEqual(statusFirst, canCopy.GetValue(dialog));
+                yes.onClick.Invoke();
+                Assert.AreEqual(1, yesCalls, "The copyable prompt must retain its action.");
+                Assert.IsFalse(dialogObject.activeSelf, "Duplicate status messages must not leave another dialog.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(dialogObject);
+            }
+        }
+
         [Test]
         public void RepeatedDialogCopyPreservesMessageAndDoesNotQueueFeedback()
         {

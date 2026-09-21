@@ -12,7 +12,7 @@ const vm = require('node:vm');
 // Substitute only Emscripten's function-pointer macro; execute the actual plugin.
 const source = readFileSync(resolve(__dirname,
     '../Assets/Scripts/UnityExtensionMethods/WebClipboard.jslib'), 'utf8')
-    .replace("{{{ makeDynCall('vii', 'callback') }}}", 'callback');
+    .replace(/\{\{\{\s*makeDynCall\(\s*['"]vii['"]\s*,\s*['"]callback['"]\s*\)\s*\}\}\}/g, 'callback');
 
 function bridge(clipboard, secure = true) {
     const library = {};

@@ -36,7 +36,17 @@ namespace Cgs.Menu
 
             public bool Equals(Message other)
             {
-                return !string.IsNullOrEmpty(Text) && Text.Equals(other.Text);
+                return string.Equals(Text, other.Text, StringComparison.Ordinal) && CanCopy == other.CanCopy;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is Message other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(Text, CanCopy);
             }
         }
 
