@@ -772,13 +772,7 @@ namespace Cgs
             if (Current.CgsGamesLink != null && Current.CgsGamesLink.IsWellFormedOriginalString())
             {
                 var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, Current.CgsGamesLink);
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-                var nativeShare = new NativeShare();
-                nativeShare.SetText(shareMessage).Share();
-#else
-                UniClipboard.SetText(shareMessage);
-                Messenger.Show(shareMessage);
-#endif
+                TextSharing.CopyOrShare(shareMessage, Messenger.ShowStatus);
             }
             else
                 ExportGame();
@@ -837,7 +831,7 @@ namespace Cgs
             var tempCgsZipFilePath = Path.Combine( Application.temporaryCachePath, Current.Id + CgsZipExtension );
             Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, tempCgsZipFilePath));
 #elif UNITY_IOS && !UNITY_EDITOR
-            UnityNative.Sharing.UnityNativeSharing.Create().ShareScreenshotAndText("", targetZipFilePath, false, "", "");
+            TextSharing.ShareFile(targetZipFilePath, Instance.Messenger.ShowStatus, "application/zip");
 #else
             Application.OpenURL(exportGameZipUri.AbsoluteUri);
 #endif
@@ -846,10 +840,16 @@ namespace Cgs
 #if UNITY_ANDROID && !UNITY_EDITOR
         public IEnumerator OpenZip(Uri uri, string tempCgsZipFilePath)
         {
-            var uwr = new UnityWebRequest(uri, UnityWebRequest.kHttpVerbGET);
+            using var uwr = new UnityWebRequest(uri, UnityWebRequest.kHttpVerbGET);
             uwr.downloadHandler = new DownloadHandlerFile(tempCgsZipFilePath);
             yield return uwr.SendWebRequest();
-            new NativeShare().AddFile(tempCgsZipFilePath, "application/zip").Share();
+            if (uwr.result != UnityWebRequest.Result.Success)
+            {
+                Messenger.ShowStatus(TextSharing.FileReadErrorMessage);
+                yield break;
+            }
+
+            TextSharing.ShareFile(tempCgsZipFilePath, Messenger.ShowStatus, "application/zip");
         }
 #endif
 

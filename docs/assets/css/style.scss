@@ -3,6 +3,14 @@
 
 @import "{{ site.theme }}";
 html {background-color: #f2f2f2;}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+body > .outer {flex-shrink: 0;}
+#main_content_wrap {flex-grow: 1;}
 a {color: #10518E; text-decoration: underline; }
 .outer {min-width: max-content;}
 .inner {min-width: 480px;}

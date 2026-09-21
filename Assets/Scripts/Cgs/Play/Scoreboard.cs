@@ -135,12 +135,7 @@ namespace Cgs.Play
             try
             {
                 var shareText = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-                (new NativeShare()).SetText(shareText).Share();
-#else
-                UniClipboard.SetText(shareText);
-                CardGameManager.Instance.Messenger.Show(RoomIdIpCopiedMessage);
-#endif
+                TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowStatus, RoomIdIpCopiedMessage);
             }
             catch (Exception e)
             {
