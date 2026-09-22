@@ -142,15 +142,13 @@ namespace Cgs.Play.Multiplayer
 
         protected void Update()
         {
-            if (BrowserLanTransport.IsBrowser)
+            if (BrowserLanTransport.IsBrowser &&
+                CgsNetManager.Instance.BrowserTransport.TryReadDiscoveredRooms(out var rooms))
             {
-                if (CgsNetManager.Instance.BrowserTransport.TryReadDiscoveredRooms(out var rooms))
-                {
-                    DiscoveredServers.Clear();
-                    foreach (var room in rooms)
-                        DiscoveredServers[room.Key] = room.Value;
-                    _shouldRedisplay = true;
-                }
+                DiscoveredServers.Clear();
+                foreach (var room in rooms)
+                    DiscoveredServers[room.Key] = room.Value;
+                _shouldRedisplay = true;
             }
 
             _secondsSinceRefresh += Time.deltaTime;
