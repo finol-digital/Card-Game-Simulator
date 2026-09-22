@@ -426,7 +426,8 @@ namespace Cgs.Play.Multiplayer
         public void RequestSetCurrentDeck(NetworkObject deck)
         {
             // Drawing the last card can remove a stack before its dropdown refreshes.
-            if (deck == null || !deck.IsSpawned)
+            // A null reference remains valid for explicitly clearing the selection.
+            if (deck != null && !deck.IsSpawned)
                 return;
 
             Debug.Log("[CgsNet Player] Requesting set current deck...");

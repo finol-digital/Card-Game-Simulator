@@ -142,7 +142,7 @@ namespace Cgs.Play.Multiplayer
 
         protected void Update()
         {
-            if (BrowserLanTransport.IsBrowser &&
+            if (IsLanConnectionSource && BrowserLanTransport.IsBrowser &&
                 CgsNetManager.Instance.BrowserTransport.TryReadDiscoveredRooms(out var rooms))
             {
                 DiscoveredServers.Clear();
@@ -198,7 +198,10 @@ namespace Cgs.Play.Multiplayer
 
             _selectedServer = string.Empty;
             DiscoveredServers.Clear();
-            CgsNetManager.Instance.StartLanDiscovery(OnServerFound);
+            if (BrowserLanTransport.IsBrowser)
+                CgsNetManager.Instance.StartBrowserLanDiscovery();
+            else
+                CgsNetManager.Instance.StartNativeLanDiscovery(OnServerFound);
 
             Redisplay();
         }

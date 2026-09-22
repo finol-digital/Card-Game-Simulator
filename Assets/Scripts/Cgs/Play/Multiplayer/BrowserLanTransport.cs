@@ -15,7 +15,8 @@ namespace Cgs.Play.Multiplayer
     // It does not provide connections to other browsers or computers.
     public sealed class BrowserLanTransport : NetworkTransport
     {
-        private const string UnavailableMessage = "Local browser multiplayer is unavailable in this browser.";
+        private const string ConnectionFailureMessage = "Unable to start browser LAN {0}: {1}";
+        private const string MissingRoomMessage = "a room ID is required.";
         public static bool IsBrowser => Application.platform == RuntimePlatform.WebGLPlayer;
         public override ulong ServerClientId => 0;
         public override bool IsSupported => IsBrowser;
@@ -46,11 +47,21 @@ namespace Cgs.Play.Multiplayer
 
         private bool StartConnection(bool server)
         {
+            if (string.IsNullOrWhiteSpace(RoomId))
+                return ReportConnectionFailure(server, MissingRoomMessage);
 #if UNITY_WEBGL && !UNITY_EDITOR
-            if (!string.IsNullOrWhiteSpace(RoomId) && CgsBrowserLanStart(RoomId, ServerName ?? "", server ? 1 : 0) != 0)
+            if (CgsBrowserLanStart(RoomId, ServerName ?? "", server ? 1 : 0) != 0)
                 return true;
+            const string reason = "the browser bridge could not open the room. Check the room ID and browser support.";
+#else
+            const string reason = "this transport requires a Web player and cannot run in the Editor or a native player.";
 #endif
-            Debug.LogError($"{UnavailableMessage} Requested role: {(server ? "host" : "client")}.");
+            return ReportConnectionFailure(server, reason);
+        }
+
+        private static bool ReportConnectionFailure(bool server, string reason)
+        {
+            Debug.LogError(string.Format(ConnectionFailureMessage, server ? "host" : "client", reason));
             return false;
         }
 

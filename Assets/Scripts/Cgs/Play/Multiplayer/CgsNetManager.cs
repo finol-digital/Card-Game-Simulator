@@ -285,15 +285,16 @@ namespace Cgs.Play.Multiplayer
             return true;
         }
 
-        public void StartLanDiscovery(Action<string, DiscoveryResponseData> onServerFound)
+        // Browser discovery supplies snapshots through BrowserTransport.TryReadDiscoveredRooms.
+        public bool StartBrowserLanDiscovery()
         {
             StopLanDiscovery();
-            if (BrowserLanTransport.IsBrowser)
-            {
-                BrowserTransport.StartDiscovery();
-                return;
-            }
+            return BrowserTransport.StartDiscovery();
+        }
 
+        public void StartNativeLanDiscovery(Action<string, DiscoveryResponseData> onServerFound)
+        {
+            StopLanDiscovery();
             Discovery.OnServerFound = (sender, response) => onServerFound(sender.Address.ToString(), response);
             Discovery.StartClient();
         }
