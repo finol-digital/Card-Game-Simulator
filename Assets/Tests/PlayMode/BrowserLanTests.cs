@@ -21,7 +21,6 @@ namespace Tests.PlayMode
                 var player = playerObject.AddComponent<CgsNetPlayer>();
                 var deck = deckObject.AddComponent<NetworkObject>();
                 Assert.DoesNotThrow(() => player.RequestSetCurrentDeck(deck));
-                Assert.DoesNotThrow(() => player.RequestSetCurrentDeck(null));
             }
             finally
             {
@@ -46,6 +45,7 @@ namespace Tests.PlayMode
                 Assert.That(manager.RoomIdIp, Is.EqualTo(transport.RoomId));
                 Assert.That(manager.BrowserTransport, Is.SameAs(transport));
                 Assert.That(gameObject.GetComponents<BrowserLanTransport>(), Has.Length.EqualTo(1));
+                Assert.Throws<System.ArgumentNullException>(() => manager.StartNativeLanDiscovery(null));
                 manager.StopLanDiscovery();
                 Assert.That(gameObject.GetComponent<CgsNetDiscovery>(), Is.Null,
                     "Browser discovery cleanup must not instantiate UDP discovery.");

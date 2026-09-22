@@ -294,6 +294,9 @@ namespace Cgs.Play.Multiplayer
 
         public void StartNativeLanDiscovery(Action<string, DiscoveryResponseData> onServerFound)
         {
+            if (onServerFound == null)
+                throw new ArgumentNullException(nameof(onServerFound));
+
             StopLanDiscovery();
             Discovery.OnServerFound = (sender, response) => onServerFound(sender.Address.ToString(), response);
             Discovery.StartClient();
