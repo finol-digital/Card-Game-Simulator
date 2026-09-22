@@ -468,12 +468,13 @@ namespace Cgs.Play.Multiplayer
         [ServerRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
-            Quaternion rotation, bool isFaceup, bool autoStackCards, ServerRpcParams rpcParams = default)
+            Quaternion rotation, bool isFaceup, bool autoStackCards)
         {
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
+            // This owner-only RPC can only be requested by this player's OwnerClientId.
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
                 cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup,
-                rpcParams.Receive.SenderClientId, autoStackCards);
+                OwnerClientId, autoStackCards);
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
             _cardStacks.Add(cardStack.gameObject);
