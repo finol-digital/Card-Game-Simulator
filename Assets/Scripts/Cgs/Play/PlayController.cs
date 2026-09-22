@@ -589,8 +589,24 @@ namespace Cgs.Play
         }
 
         public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position,
-            Quaternion rotation, bool isFaceup, ulong? ownerClientId = null)
+            Quaternion rotation, bool isFaceup, ulong? ownerClientId = null, bool? autoStackCards = null)
         {
+            // Loading a deck does not produce a drop event. Resolve overlaps before spawning so
+            // the returned stack remains valid for drawing cards and multiplayer deck callbacks.
+            if ((autoStackCards ?? PlaySettings.AutoStackCards) && cards != null && cards.Count > 0)
+            {
+                foreach (var existingStack in AllCardStacks)
+                {
+                    if (existingStack.ToDelete || existingStack.transform.parent != playAreaCardZone.transform ||
+                        existingStack.Cards.Count == 0 || !OverlapsStack(existingStack, position, rotation))
+                        continue;
+
+                    foreach (var card in cards)
+                        existingStack.OwnerInsert(existingStack.Cards.Count, card.Id);
+                    return existingStack;
+                }
+            }
+
             var cardStack = Instantiate(cardStackPrefab, playAreaCardZone.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
             {
@@ -612,6 +628,34 @@ namespace Cgs.Play
                 cardStack.IsTopFaceup = true;
 
             return cardStack;
+        }
+
+        private static bool OverlapsStack(CardStack stack, Vector2 position, Quaternion rotation)
+        {
+            // Use game dimensions and logical poses: Start may not have sized a newly loaded
+            // stack yet, and its visible rotation may still be animating.
+            var halfSize = CardGameManager.PixelsPerInch * 0.5f *
+                           new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
+            var right = (Vector2)(rotation * Vector3.right);
+            var up = (Vector2)(rotation * Vector3.up);
+            var stackRight = (Vector2)(stack.Rotation * Vector3.right);
+            var stackUp = (Vector2)(stack.Rotation * Vector3.up);
+            var offset = stack.Position - position;
+
+            return OverlapsOnAxis(right, offset, halfSize, right, up, stackRight, stackUp) &&
+                   OverlapsOnAxis(up, offset, halfSize, right, up, stackRight, stackUp) &&
+                   OverlapsOnAxis(stackRight, offset, halfSize, right, up, stackRight, stackUp) &&
+                   OverlapsOnAxis(stackUp, offset, halfSize, right, up, stackRight, stackUp);
+        }
+
+        private static bool OverlapsOnAxis(Vector2 axis, Vector2 offset, Vector2 halfSize,
+            Vector2 right, Vector2 up, Vector2 stackRight, Vector2 stackUp)
+        {
+            var extent = halfSize.x * (Mathf.Abs(Vector2.Dot(axis, right)) +
+                                       Mathf.Abs(Vector2.Dot(axis, stackRight))) +
+                         halfSize.y * (Mathf.Abs(Vector2.Dot(axis, up)) +
+                                       Mathf.Abs(Vector2.Dot(axis, stackUp)));
+            return Mathf.Abs(Vector2.Dot(axis, offset)) < extent;
         }
 
         public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerSeat)

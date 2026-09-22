@@ -528,11 +528,19 @@ namespace Cgs.CardGameView.Multiplayer
         public void OwnerInsert(int index, string cardId)
         {
             Debug.Log($"CardStack: {name} insert {cardId} at {index} of {Cards.Count}");
+            var previousTopCard = TopCard;
             _cards.Insert(index, LookupCard(cardId));
             if (IsOnline)
                 _cardIds.Insert(index, cardId);
             else
+            {
+                if (IsTopFaceup && previousTopCard != TopCard)
+                {
+                    previousTopCard?.UnregisterDisplay(this);
+                    TopCard?.RegisterDisplay(this);
+                }
                 SyncView();
+            }
         }
 
         public void RequestRemoveAt(int index)
