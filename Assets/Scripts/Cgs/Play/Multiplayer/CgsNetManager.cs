@@ -57,18 +57,29 @@ namespace Cgs.Play.Multiplayer
 
         private CgsNetDiscovery _cgsNetDiscovery;
 
-        public BrowserLanTransport BrowserTransport => _browserTransport != null
-            ? _browserTransport
-            : _browserTransport = gameObject.GetOrAddComponent<BrowserLanTransport>();
+        public BrowserLanTransport BrowserTransport
+        {
+            get
+            {
+                if (_browserTransport == null)
+                    _browserTransport = gameObject.GetOrAddComponent<BrowserLanTransport>();
+                return _browserTransport;
+            }
+        }
 
         private BrowserLanTransport _browserTransport;
 
-        public string RoomIdIp => NetworkConfig.NetworkTransport is BrowserLanTransport browser
-            ? browser.RoomId
-            : "127.0.0.1".Equals(Transport.ConnectionData.Address,
-            StringComparison.Ordinal)
-            ? RoomId
-            : Transport.ConnectionData.Address;
+        public string RoomIdIp
+        {
+            get
+            {
+                if (NetworkConfig.NetworkTransport is BrowserLanTransport browser)
+                    return browser.RoomId;
+                return "127.0.0.1".Equals(Transport.ConnectionData.Address, StringComparison.Ordinal)
+                    ? RoomId
+                    : Transport.ConnectionData.Address;
+            }
+        }
 
         private string RoomId => PlayController.Instance != null && PlayController.Instance.Lobby != null &&
                                  !string.IsNullOrEmpty(CurrentLobby?.LobbyCode)

@@ -50,7 +50,7 @@ namespace Cgs.Play.Multiplayer
             if (!string.IsNullOrWhiteSpace(RoomId) && CgsBrowserLanStart(RoomId, ServerName ?? "", server ? 1 : 0) != 0)
                 return true;
 #endif
-            Debug.LogError(UnavailableMessage);
+            Debug.LogError($"{UnavailableMessage} Requested role: {(server ? "host" : "client")}.");
             return false;
         }
 
@@ -90,14 +90,18 @@ namespace Cgs.Play.Multiplayer
 #endif
         }
 
-        public Dictionary<string, DiscoveryResponseData> ReadDiscoveredRooms()
+        public bool TryReadDiscoveredRooms(out Dictionary<string, DiscoveryResponseData> rooms)
         {
+            rooms = null;
 #if UNITY_WEBGL && !UNITY_EDITOR
             var json = CgsBrowserLanRooms();
             if (!string.IsNullOrEmpty(json))
-                return JsonConvert.DeserializeObject<Dictionary<string, DiscoveryResponseData>>(json);
+            {
+                rooms = JsonConvert.DeserializeObject<Dictionary<string, DiscoveryResponseData>>(json);
+                return rooms != null;
+            }
 #endif
-            return null;
+            return false;
         }
 
         public void StopDiscovery()

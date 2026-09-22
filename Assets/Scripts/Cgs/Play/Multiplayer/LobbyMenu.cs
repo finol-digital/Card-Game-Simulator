@@ -144,8 +144,7 @@ namespace Cgs.Play.Multiplayer
         {
             if (BrowserLanTransport.IsBrowser)
             {
-                var rooms = CgsNetManager.Instance.BrowserTransport.ReadDiscoveredRooms();
-                if (rooms != null)
+                if (CgsNetManager.Instance.BrowserTransport.TryReadDiscoveredRooms(out var rooms))
                 {
                     DiscoveredServers.Clear();
                     foreach (var room in rooms)
