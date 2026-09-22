@@ -57,7 +57,15 @@ namespace Cgs.Play.Multiplayer
 
         private CgsNetDiscovery _cgsNetDiscovery;
 
-        public string RoomIdIp => "127.0.0.1".Equals(Transport.ConnectionData.Address,
+        public BrowserLanTransport BrowserTransport => _browserTransport != null
+            ? _browserTransport
+            : _browserTransport = gameObject.GetOrAddComponent<BrowserLanTransport>();
+
+        private BrowserLanTransport _browserTransport;
+
+        public string RoomIdIp => NetworkConfig.NetworkTransport is BrowserLanTransport browser
+            ? browser.RoomId
+            : "127.0.0.1".Equals(Transport.ConnectionData.Address,
             StringComparison.Ordinal)
             ? RoomId
             : Transport.ConnectionData.Address;
@@ -248,11 +256,67 @@ namespace Cgs.Play.Multiplayer
             return lobby;
         }
 
-        public void StartJoin(string address, ushort port = DefaultPort)
+        public bool StartLanHost()
         {
+            StopLanDiscovery();
+            if (BrowserLanTransport.IsBrowser)
+            {
+                NetworkConfig.NetworkTransport = BrowserTransport;
+                BrowserTransport.ServerName = CardGameManager.Current.Name;
+                return StartHost();
+            }
+
+            Transport = Transports.UnityTransport;
+            Transport.SetConnectionData("127.0.0.1", DefaultPort, "0.0.0.0");
+            if (!StartHost())
+                return false;
+            Discovery.StartServer();
+            return true;
+        }
+
+        public void StartLanDiscovery(Action<string, DiscoveryResponseData> onServerFound)
+        {
+            StopLanDiscovery();
+            if (BrowserLanTransport.IsBrowser)
+            {
+                BrowserTransport.StartDiscovery();
+                return;
+            }
+
+            Discovery.OnServerFound = (sender, response) => onServerFound(sender.Address.ToString(), response);
+            Discovery.StartClient();
+        }
+
+        public void RefreshLanDiscovery()
+        {
+            if (BrowserLanTransport.IsBrowser)
+                BrowserTransport.StartDiscovery();
+            else if (Discovery.IsRunning)
+                Discovery.ClientBroadcast(new DiscoveryBroadcastData());
+        }
+
+        public void StopLanDiscovery()
+        {
+            if (_browserTransport != null)
+                _browserTransport.StopDiscovery();
+            if (_cgsNetDiscovery != null && _cgsNetDiscovery.IsRunning)
+                _cgsNetDiscovery.StopDiscovery();
+        }
+
+        public bool StartJoin(string address, ushort port = DefaultPort)
+        {
+            if (string.IsNullOrWhiteSpace(address))
+                return false;
+            if (BrowserLanTransport.IsBrowser)
+            {
+                NetworkConfig.NetworkTransport = BrowserTransport;
+                BrowserTransport.RoomId = address.Trim();
+                return StartClient();
+            }
+
             Transport = Transports.UnityTransport;
             Transport.SetConnectionData(address, port);
-            StartClient();
+            return StartClient();
         }
 
         public void StartJoinLobby(string lobbyId, string password = "")
@@ -466,8 +530,7 @@ namespace Cgs.Play.Multiplayer
 
         public void Stop()
         {
-            if (Discovery.IsRunning)
-                Discovery.StopDiscovery();
+            StopLanDiscovery();
             Shutdown();
             CurrentLobby = null;
             StopAllCoroutines();

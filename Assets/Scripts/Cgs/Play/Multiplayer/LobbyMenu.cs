@@ -5,12 +5,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
 using JetBrains.Annotations;
-using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
@@ -36,8 +34,14 @@ namespace Cgs.Play.Multiplayer
         public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
 
-        public string RoomIdIpLabel => "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
-        public string RoomIdIpPlaceholder => "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
+        private const string ConnectionStartErrorMessage = "Unable to start the multiplayer connection.";
+        private const string BrowserConnectionStartErrorMessage =
+            "Unable to connect. For browser LAN, open this site in another tab of the same browser, host there, " +
+            "then select its room or enter its room ID here.";
+
+        private bool UsesIpAddress => _isLanConnectionSource && !BrowserLanTransport.IsBrowser;
+        public string RoomIdIpLabel => "Room " + (UsesIpAddress ? "IP" : "Id") + ":";
+        public string RoomIdIpPlaceholder => "Enter Room " + (UsesIpAddress ? "IP" : "Id") + "...";
 
         private const float SecondsPerRefresh = 5;
 
@@ -138,6 +142,18 @@ namespace Cgs.Play.Multiplayer
 
         protected void Update()
         {
+            if (BrowserLanTransport.IsBrowser)
+            {
+                var rooms = CgsNetManager.Instance.BrowserTransport.ReadDiscoveredRooms();
+                if (rooms != null)
+                {
+                    DiscoveredServers.Clear();
+                    foreach (var room in rooms)
+                        DiscoveredServers[room.Key] = room.Value;
+                    _shouldRedisplay = true;
+                }
+            }
+
             _secondsSinceRefresh += Time.deltaTime;
             if (_secondsSinceRefresh > SecondsPerRefresh)
                 Refresh();
@@ -184,11 +200,8 @@ namespace Cgs.Play.Multiplayer
             transform.SetAsLastSibling();
 
             _selectedServer = string.Empty;
-            if (CgsNetManager.Instance.Discovery.IsRunning)
-                CgsNetManager.Instance.Discovery.StopDiscovery();
             DiscoveredServers.Clear();
-            CgsNetManager.Instance.Discovery.StartClient();
-            CgsNetManager.Instance.Discovery.OnServerFound = OnServerFound;
+            CgsNetManager.Instance.StartLanDiscovery(OnServerFound);
 
             Redisplay();
         }
@@ -204,7 +217,7 @@ namespace Cgs.Play.Multiplayer
             }
             else if (IsLanConnectionSource)
             {
-                CgsNetManager.Instance.Discovery.ClientBroadcast(new DiscoveryBroadcastData());
+                CgsNetManager.Instance.RefreshLanDiscovery();
                 Debug.Log("LobbyMenu Refreshed Discovery");
             }
             else
@@ -272,10 +285,10 @@ namespace Cgs.Play.Multiplayer
             internetToggle.isOn = isInternetConnectionSource;
         }
 
-        private void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
+        private void OnServerFound(string sender, DiscoveryResponseData response)
         {
             Debug.Log($"OnServerFound {sender} {response}");
-            DiscoveredServers[sender.Address.ToString()] = response;
+            DiscoveredServers[sender] = response;
             _shouldRedisplay = true;
         }
 
@@ -353,11 +366,20 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Host()
         {
-            StartHost();
-            Hide();
+            if (StartHost())
+                Hide();
+            else
+                ShowConnectionStartError();
         }
 
-        private void StartHost()
+        private static void ShowConnectionStartError()
+        {
+            CardGameManager.Instance.Messenger.Show(BrowserLanTransport.IsBrowser
+                ? BrowserConnectionStartErrorMessage
+                : ConnectionStartErrorMessage);
+        }
+
+        private bool StartHost()
         {
             if (IsInternetConnectionSource)
             {
@@ -375,13 +397,9 @@ namespace Cgs.Play.Multiplayer
             }
             else
             {
-                CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.UnityTransport;
-                CgsNetManager.Instance.Transport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
-                NetworkManager.Singleton.StartHost();
-                if (CgsNetManager.Instance.Discovery.IsRunning)
-                    CgsNetManager.Instance.Discovery.StopDiscovery();
-                CgsNetManager.Instance.Discovery.StartServer();
+                return CgsNetManager.Instance.StartLanHost();
             }
+            return true;
         }
 
         private void InputSubmit(InputAction.CallbackContext callbackContext)
@@ -412,16 +430,19 @@ namespace Cgs.Play.Multiplayer
             {
                 if (DiscoveredServers.TryGetValue(_selectedServer, out var discoveryResponse))
                 {
-                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.UnityTransport;
-                    CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, discoveryResponse.Port,
-                        "0.0.0.0");
-                    NetworkManager.Singleton.StartClient();
+                    if (!CgsNetManager.Instance.StartJoin(_selectedServer, discoveryResponse.Port))
+                    {
+                        ShowConnectionStartError();
+                        return;
+                    }
                 }
                 else if (Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute))
                 {
-                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.UnityTransport;
-                    CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, 7777, "0.0.0.0");
-                    NetworkManager.Singleton.StartClient();
+                    if (!CgsNetManager.Instance.StartJoin(_selectedServer))
+                    {
+                        ShowConnectionStartError();
+                        return;
+                    }
                 }
                 else
                 {
@@ -436,8 +457,8 @@ namespace Cgs.Play.Multiplayer
 
         public void Hide()
         {
-            if (CgsNetManager.Instance.Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
-                CgsNetManager.Instance.Discovery.StopDiscovery();
+            if (!CgsNetManager.Instance.IsServer)
+                CgsNetManager.Instance.StopLanDiscovery();
 
             Menu.Hide();
         }
@@ -453,8 +474,8 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Close()
         {
-            if (CgsNetManager.Instance.Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
-                CgsNetManager.Instance.Discovery.StopDiscovery();
+            if (!CgsNetManager.Instance.IsServer)
+                CgsNetManager.Instance.StopLanDiscovery();
 
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
