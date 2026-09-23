@@ -16,6 +16,7 @@ a {color: #10518E; text-decoration: underline; }
 .inner {min-width: 480px;}
 .player-guide .outer, .player-guide .inner {min-width: 0;}
 .player-guide #main_content {overflow-wrap: anywhere;}
+.player-guide #main_content img {max-width: 100%; height: auto; box-sizing: border-box;}
 .player-guide table {display: block; max-width: 100%; overflow-x: auto;}
 #header_wrap {background: #432E16;}
 header img {border: 0; box-shadow: none;}

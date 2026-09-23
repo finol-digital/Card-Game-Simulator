@@ -6,6 +6,14 @@ HTML page and `/how-to-play.md`. Keep the homepage, README, and `docs/llms.txt`
 account summary consistent with the guide. The guide is public product help;
 this file contains internal maintenance and publishing notes.
 
+The README links directly to `docs/_includes/playing-guide.md` so GitHub displays
+the actual guide rather than a Jekyll include directive. Keep screenshot links
+relative as `../assets/img/how-to-play/...`: they resolve from that source file,
+the published `/how-to-play/` page, and the published `/how-to-play.md` version.
+Store screenshots in `docs/assets/img/how-to-play/` and check all three contexts
+when moving the guide or its images. The current screenshots were captured from
+the browser app, CGS 1.164.0, on 2026-09-22.
+
 ## Verify claims before changing the guide
 
 - Account-free Internet play: `CgsNetManager.SignInAnonymouslyAsync` and `LobbyMenu`.

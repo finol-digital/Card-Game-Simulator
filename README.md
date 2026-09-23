@@ -15,7 +15,7 @@ The CGS website is available through GitHub Pages in the `docs/` folder: https:/
 
 - [Play in your browser](https://cgs.gg/)
 - [How to play: first table, controls, and multiplayer](https://www.cardgamesimulator.com/how-to-play/)
-- [Player guide in plain Markdown](https://www.cardgamesimulator.com/how-to-play.md)
+- [Player guide in plain Markdown](docs/_includes/playing-guide.md)
 - [Wiki: game management, deck editing, and creating games](https://github.com/finol-digital/Card-Game-Simulator/wiki)
 
 Additional games are available from the CGS Games website: https://cgs.games

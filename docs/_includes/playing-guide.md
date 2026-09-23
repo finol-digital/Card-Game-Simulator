@@ -29,10 +29,25 @@ CGS is a virtual tabletop: you move cards, manage your hand, and follow your cho
 This practice session uses **Standard Playing Cards**, included with CGS. It teaches the tabletop controls; you can then use them for a card game whose rules you know.
 
 1. **Open CGS and select Standard Playing Cards.** On the main menu, use the game selector to choose it. Selecting a game chooses its cards and configuration; it does not join a multiplayer room.
+
+   [![CGS main menu with Standard Playing Cards selected and the Single-player and Multi-player buttons along the bottom.](../assets/img/how-to-play/main-menu.png)](../assets/img/how-to-play/main-menu.png)
+
+   *Check the selected game name at the bottom, then choose Single-player for this practice session.*
+
 2. **Choose Single-player** to start a local table. You should now see the play area and a deck-loading prompt.
 3. **Load the starting deck.** Accept the prompt to load **Standard 52-card Deck**. If you open the deck list instead, select a deck and load it. Wait for any required download to finish. A deck stack should appear on the table.
+
+   [![Prompt asking to load Standard 52-card Deck, with a red cancel button and a green confirmation checkmark.](../assets/img/how-to-play/load-deck.png)](../assets/img/how-to-play/load-deck.png)
+
+   *Choose the green checkmark, or press Enter, to load the deck.*
+
 4. **Put cards in your hand.** If a deal/draw prompt appears, set the number of cards and confirm. For practice, use two cards. Your hand is in the drawer at the bottom of the screen; open it to see your cards. Use **Deal X** to choose a hand size or **Draw 1** to draw one card from your play deck. On a keyboard, with no card selected or dialog open, the corresponding shortcuts are **0** and **1**.
 5. **Play a card.** Drag one card from your hand onto an empty part of the table. Select it and use **Flip** in its action panel to turn it over. The card stays on the table and its displayed face changes.
+
+   [![A selected four of clubs on the table, the deck stack at left, one card remaining in the bottom hand drawer, and the Flip action at right.](../assets/img/how-to-play/first-table.png)](../assets/img/how-to-play/first-table.png)
+
+   *After playing one of your two cards, one stays in your hand. Select the card on the table to show its actions, including Flip.*
+
 6. **Practice taking a card from the deck.** Start dragging from the stack immediately to pull its top card onto the table. To move the whole stack, press and hold it for about half a second **before** dragging.
 
 You have now loaded a deck, drawn a hand, and played a card. To play a full game, agree on its rules and starting hand size, then carry out those actions on the tabletop. For a discard pile, place cards where your group agrees it belongs; the **Delete** action removes a card rather than choosing a discard pile for you.
@@ -40,6 +55,10 @@ You have now loaded a deck, drawn a hand, and played a card. To play a full game
 ## Play online with friends
 
 Everyone should use compatible CGS app versions and the same card game and game content. The **game name/ID** identifies what you are playing; the **Room Id** identifies the host's session. They are different.
+
+[![Multiplayer lobby with Internet selected at the top, Room Id and optional Password fields near the bottom, and Host and Join buttons below.](../assets/img/how-to-play/internet-lobby.png)](../assets/img/how-to-play/internet-lobby.png)
+
+*Choose Multi-player from the main menu to open this lobby. The host chooses Host; friends enter the host's code in Room Id and choose Join. The room list will vary. Screenshots show CGS 1.164.0; select any screenshot to enlarge it.*
 
 ### Host a table
 
