@@ -1078,6 +1078,30 @@ jobs:
           SigningCertificate:  C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Card Game Simulator_StoreKey.pfx
         run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x64" /p:AppxPackageSigningEnabled=false
 #        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x64" /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="" /p:PackageCertificateKeyFile=$env:SigningCertificate
+      - name: Remove the .pfx
+        if: always()
+        shell: pwsh
+        env:
+          UwpProjectDirectory: C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator
+          SigningCertificate: Card Game Simulator_StoreKey.pfx
+        run: |
+          $certificatePath = Join-Path $env:UwpProjectDirectory $env:SigningCertificate
+          if (Test-Path -LiteralPath $certificatePath) {
+            Remove-Item -LiteralPath $certificatePath
+          }
+      - name: Copy .msixupload
+        working-directory: C:/Card-Game-Simulator.git
+        shell: pwsh
+        env:
+          APPX_PATH: ${{ format('build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+          upload_path: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+        run: Copy-Item ".\$env:APPX_PATH" -Destination ".\$env:upload_path"
+      - name: Upload .msixupload
+        uses: actions/upload-artifact@v7
+        with:
+          if-no-files-found: error
+          name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+          path: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Setup Microsoft Store Developer CLI
         uses: microsoft/setup-msstore-cli@v1
       - name: Configure Microsoft Store Developer CLI
@@ -1102,25 +1126,6 @@ jobs:
           msstore package "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Package.appxmanifest"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator"
-      - name: Remove the .pfx
-        working-directory: C:/Card-Game-Simulator.git
-        shell: pwsh
-        env:
-          UwpProjectDirectory: C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator
-          SigningCertificate: Card Game Simulator_StoreKey.pfx
-        run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
-      - name: Copy .msixupload
-        working-directory: C:/Card-Game-Simulator.git
-        shell: pwsh
-        env:
-          APPX_PATH: ${{ format('build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-          upload_path: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-        run: Copy-Item ".\$env:APPX_PATH" -Destination ".\$env:upload_path"
-      - name: Upload .msixupload
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-          path: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Update Microsoft Store Submission and Publish App Package
         if: github.event.action == 'published'
         shell: pwsh
