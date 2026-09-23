@@ -697,11 +697,15 @@ jobs:
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
+        env:
+          # The default ~/.cache/gem directory may be unwritable after the Unity build.
+          GEM_SPEC_CACHE: ${{ runner.temp }}/amazon-gem-specs
         with:
           ruby-version: 3.4
           bundler-cache: true
       - name: Upload to Amazon
         env:
+          GEM_SPEC_CACHE: ${{ runner.temp }}/amazon-gem-specs
           AMAZON_CLIENT_ID: ${{ secrets.AMAZON_CLIENT_ID }}
           AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.apk', github.workspace) }}
