@@ -1,4 +1,4 @@
 ## What's Changed
-* Only prompt to draw a hand if the hand is empty
-* Rename playerCount to playerSeat
-* Remap keyboard shortcuts
+* Add multiplayer diagnostics when Developer Mode is enabled
+* Fix browser LAN multiplayer between tabs
+* Fix overlapping decks not combining when loaded 
