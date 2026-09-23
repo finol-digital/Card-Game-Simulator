@@ -120,7 +120,11 @@ jobs:
         id: PR
         with:
           script: |
-            const commit_sha = context.payload.pull_request?.head.sha || context.sha;
+            if (context.payload.pull_request) {
+              core.setOutput('pr_found', context.payload.pull_request.state === 'open');
+              return;
+            }
+            const commit_sha = context.sha;
             const pullRequests = await github.paginate(
               github.rest.repos.listPullRequestsAssociatedWithCommit,
               { ...context.repo, commit_sha, per_page: 100 }
