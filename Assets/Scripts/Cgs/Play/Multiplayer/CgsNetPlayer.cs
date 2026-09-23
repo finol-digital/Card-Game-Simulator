@@ -420,7 +420,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
-                position, DefaultRotation, isFaceup);
+                position, DefaultRotation, isFaceup, PlaySettings.AutoStackCards);
         }
 
         public void RequestSetCurrentDeck(NetworkObject deck)
@@ -462,18 +462,19 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Requesting new card stack {stackName}...");
             CreateCardStackServerRpc(stackName, cards.Select(card => (CgsNetString) card.Id).ToArray(), false,
-                position, rotation, isFaceup);
+                position, rotation, isFaceup, PlaySettings.AutoStackCards);
         }
 
         [ServerRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
-            Quaternion rotation, bool isFaceup, ServerRpcParams rpcParams = default)
+            Quaternion rotation, bool isFaceup, bool autoStackCards)
         {
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
+            // This owner-only RPC can only be requested by this player's OwnerClientId.
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
                 cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup,
-                rpcParams.Receive.SenderClientId);
+                OwnerClientId, autoStackCards);
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
             _cardStacks.Add(cardStack.gameObject);
