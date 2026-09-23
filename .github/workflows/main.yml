@@ -40,6 +40,7 @@ jobs:
     permissions:
       checks: write
       contents: write
+      pull-requests: read
     outputs:
       isPr: ${{ steps.PR.outputs.pr_found }}
     timeout-minutes: 30
@@ -91,8 +92,16 @@ jobs:
         with:
           testMode: playmode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout Release Notes Branch
+        if: github.event.action == 'published'
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          path: Temp/release-notes
+          sparse-checkout: fastlane/metadata
       - name: Update Release Notes
         if: github.event.action == 'published'
+        working-directory: Temp/release-notes
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: |
@@ -102,14 +111,25 @@ jobs:
         if: github.event.action == 'published'
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
+          repository: Temp/release-notes
           branch: main
           file_pattern: fastlane/metadata
           commit_message: Update Release Notes (MINOR)
-      - uses: 8BitJonny/gh-get-current-pr@4.0.0
+      - name: Find Open Pull Request
+        uses: actions/github-script@v8
         id: PR
         with:
-          sha: ${{ github.event.pull_request.head.sha }}
-          filterOutClosed: true
+          script: |
+            if (context.payload.pull_request) {
+              core.setOutput('pr_found', context.payload.pull_request.state === 'open');
+              return;
+            }
+            const commit_sha = context.sha;
+            const pullRequests = await github.paginate(
+              github.rest.repos.listPullRequestsAssociatedWithCommit,
+              { ...context.repo, commit_sha, per_page: 100 }
+            );
+            core.setOutput('pr_found', pullRequests.some(pr => pr.state === 'open'));
 
   lint:
     name: Quality Check
@@ -143,7 +163,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
-        run: unity-editor -quit -batchmode -returnlicense -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD" -serial "$UNITY_SERIAL"
+        run: unity-editor -quit -batchmode -nographics -logFile /dev/stdout -returnlicense -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD" -serial "$UNITY_SERIAL"
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
@@ -219,7 +239,7 @@ jobs:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v2.0.0
         with:
-          tool-cache: true
+          preinstalled-runtimes: true
       - name: Cache Library
         uses: actions/cache@v6
         with:
@@ -311,7 +331,7 @@ jobs:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v2.0.0
         with:
-          tool-cache: true
+          preinstalled-runtimes: true
       - name: Build Unity Project
         id: buildStep
         uses: game-ci/unity-builder@main
@@ -635,7 +655,7 @@ jobs:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v2.0.0
         with:
-          tool-cache: true
+          preinstalled-runtimes: true
       - name: Cache Library
         uses: actions/cache@v6
         with:
@@ -681,11 +701,15 @@ jobs:
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
+        env:
+          # The default ~/.cache/gem directory may be unwritable after the Unity build.
+          GEM_SPEC_CACHE: ${{ runner.temp }}/amazon-gem-specs
         with:
           ruby-version: 3.4
           bundler-cache: true
       - name: Upload to Amazon
         env:
+          GEM_SPEC_CACHE: ${{ runner.temp }}/amazon-gem-specs
           AMAZON_CLIENT_ID: ${{ secrets.AMAZON_CLIENT_ID }}
           AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.apk', github.workspace) }}
