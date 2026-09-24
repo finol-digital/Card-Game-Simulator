@@ -116,7 +116,7 @@ jobs:
           file_pattern: fastlane/metadata
           commit_message: Update Release Notes (MINOR)
       - name: Find Open Pull Request
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         id: PR
         with:
           script: |
