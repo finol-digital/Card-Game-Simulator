@@ -17,6 +17,102 @@ namespace Tests.PlayMode
 {
     public class JsonParsingTests
     {
+        [TestCase(false)]
+        [TestCase(true)]
+        public void LoadCardsAndSets_PreserveOriginalsAndReprintsWhenEntriesOverlap(bool setsFirst)
+        {
+            var game = new UnityCardGame(null, "overlapping_cards_test_" + Guid.NewGuid())
+            {
+                CardNameIsUnique = true,
+                CardProperties = new List<PropertyDef> { new("rulesText", PropertyType.String) }
+            };
+            Directory.CreateDirectory(game.GameDirectoryPath);
+
+            try
+            {
+                var cards = new JArray
+                {
+                    new JObject { ["id"] = "original", ["name"] = "Shared Name", ["set"] = "DR1" },
+                    new JObject { ["id"] = "reprint", ["name"] = "Shared Name", ["set"] = "DR1" },
+                    new JObject { ["id"] = "unique", ["name"] = "Unique Name", ["set"] = "DR1" }
+                };
+                File.WriteAllText(game.CardsFilePath, cards.ToString(Formatting.None));
+                File.WriteAllText(game.SetsFilePath, new JArray
+                {
+                    new JObject { ["code"] = "DR1", ["name"] = "Card Pool", ["cards"] = cards.DeepClone() }
+                }.ToString(Formatting.None));
+
+                // Both source orders and repeated refreshes must retain the same visible originals.
+                for (var pass = 0; pass < 2; pass++)
+                {
+                    if (setsFirst)
+                        game.LoadSets();
+                    game.LoadCards(game.CardsFilePath, Set.DefaultCode);
+                    game.LoadSets();
+
+                    Assert.IsTrue(string.IsNullOrEmpty(game.Error), game.Error);
+                    Assert.AreEqual(3, game.Cards.Count);
+                    Assert.IsFalse(game.Cards["original"].IsReprint);
+                    Assert.IsTrue(game.Cards["reprint"].IsReprint);
+                    Assert.IsFalse(game.Cards["unique"].IsReprint);
+                }
+
+                // Duplicate entries may contain updated data; do not simply skip them.
+                cards[0]["rulesText"] = "Updated rules";
+                File.WriteAllText(game.CardsFilePath, cards.ToString(Formatting.None));
+                game.LoadCards(game.CardsFilePath, Set.DefaultCode);
+                Assert.AreEqual("Updated rules", game.Cards["original"].GetPropertyValueString("rulesText"));
+                Assert.IsFalse(game.Cards["original"].IsReprint);
+            }
+            finally
+            {
+                Directory.Delete(game.GameDirectoryPath, true);
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void LoadCards_PreservesMultipleSetPrintingsWhenReloaded(bool uniqueNames)
+        {
+            var game = new UnityCardGame(null, "multiple_set_reprints_test_" + Guid.NewGuid())
+            {
+                CardNameIsUnique = uniqueNames,
+                CardSetsInList = true,
+                CardProperties = new List<PropertyDef>()
+            };
+            Directory.CreateDirectory(game.GameDirectoryPath);
+
+            try
+            {
+                File.WriteAllText(game.CardsFilePath, new JArray
+                {
+                    new JObject
+                    {
+                        ["id"] = "multi_set", ["name"] = "Multiple Printings",
+                        ["set"] = new JArray("DR1", "DR2")
+                    }
+                }.ToString(Formatting.None));
+
+                for (var pass = 0; pass < 2; pass++)
+                {
+                    game.LoadCards(game.CardsFilePath, Set.DefaultCode);
+                    Assert.IsTrue(string.IsNullOrEmpty(game.Error), game.Error);
+                    Assert.IsFalse(game.Cards["multi_set"].IsReprint);
+                    Assert.AreEqual(uniqueNames ? 2 : 1, game.Cards.Count);
+                    if (uniqueNames)
+                    {
+                        Assert.AreEqual("DR1", game.Cards["multi_set"].SetCode);
+                        Assert.AreEqual("DR2", game.Cards["multi_set.DR2"].SetCode);
+                        Assert.IsTrue(game.Cards["multi_set.DR2"].IsReprint);
+                    }
+                }
+            }
+            finally
+            {
+                Directory.Delete(game.GameDirectoryPath, true);
+            }
+        }
+
         [Test]
         public void LoadCards_NormalizesJsonLineBreakTokensInStringProperties()
         {

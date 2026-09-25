@@ -946,6 +946,10 @@ namespace FinolDigital.Cgs.Json.Unity
                     if (!Sets.ContainsKey(set.Key))
                         LoadedSets[set.Key] = new Set(set.Key, set.Value);
                     var isReprint = CardNameIsUnique && CardNames.Contains(cardName);
+                    // Repeated entries for the same printing must not hide the original card.
+                    if (isReprint && LoadedCards.TryGetValue(cardId, out var existingCard)
+                                  && existingCard.Name == cardName && existingCard.SetCode == set.Key)
+                        isReprint = existingCard.IsReprint;
                     if (!isReprint)
                         CardNames.Add(cardName);
                     var cardDuplicateId = cardSets.Count > 1 && isReprint
