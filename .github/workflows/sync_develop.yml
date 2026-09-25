@@ -1,0 +1,58 @@
+name: Sync main into develop
+
+on:
+  push:
+    branches:
+      - main
+  # GITHUB_TOKEN commits (including release notes) do not trigger push workflows.
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-main-into-develop
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'finol-digital/Card-Game-Simulator' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Merge main into develop
+        uses: actions/github-script@v9
+        with:
+          script: |
+            try {
+              // Resolve branch tips when this runs, including after a queued run.
+              // The merge API preserves develop-only commits and never force-pushes.
+              const result = await github.rest.repos.merge({
+                ...context.repo,
+                base: 'develop',
+                head: 'main',
+                commit_message: 'Merge main into develop'
+              });
+              if (result.status === 204) {
+                core.info('develop already contains main; no changes needed.');
+              } else {
+                core.info(`Synced main into develop at ${result.data.sha}.`);
+              }
+            } catch (error) {
+              if (error.status === 409) {
+                core.setFailed(
+                  'Cannot merge main into develop automatically. Resolve the merge ' +
+                  'conflicts manually, push the resolution, and rerun this workflow.'
+                );
+              } else if (error.status === 403 || error.status === 422) {
+                core.setFailed(
+                  `GitHub rejected the sync (${error.status}): ${error.message}. ` +
+                  'Check Actions write permissions and develop branch protection; ' +
+                  'this workflow does not bypass protection rules.'
+                );
+              } else {
+                throw error;
+              }
+            }
