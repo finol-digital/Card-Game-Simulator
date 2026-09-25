@@ -20,6 +20,8 @@ namespace Tests.PlayMode
     public class JapaneseFontTests
     {
         private const string Japanese = "遊戯王カードゲーム";
+        private const string JapaneseGameName = "北斗の拳世紀末カードバトル伝説";
+        private const string JapaneseFontFamily = "Noto Sans JP";
 
         private const string OpenSansPath = "Assets/TextMesh Pro/Fonts/Open Sans/OpenSans-Regular.ttf";
         private const string OpenSansBoldPath = "Assets/TextMesh Pro/Fonts/Open Sans/OpenSans-Bold.ttf";
@@ -59,11 +61,18 @@ namespace Tests.PlayMode
             var importer = (TrueTypeFontImporter)AssetImporter.GetAtPath(fontPath);
             Assert.IsNotNull(importer, $"Could not load the font importer for {fontPath}.");
 
+            // References include the font in the build, but Unity only searches families in fontNames.
+            CollectionAssert.Contains(importer.fontNames, JapaneseFontFamily,
+                $"{fontPath} must name its Japanese fallback so Unity actually searches it.");
+            var font = AssetDatabase.LoadAssetAtPath<Font>(fontPath);
+            CollectionAssert.Contains(font.fontNames, JapaneseFontFamily,
+                $"{fontPath} must retain the Japanese fallback family in the imported runtime font.");
+
             var fallbacks = importer.fontReferences;
             Assert.IsNotNull(fallbacks, $"{fontPath} has no fallback fonts.");
 
             var coversJapanese = fallbacks.Any(fallback =>
-                fallback != null && Japanese.All(fallback.HasCharacter));
+                fallback != null && (Japanese + JapaneseGameName).All(fallback.HasCharacter));
             Assert.IsTrue(coversJapanese,
                 $"{fontPath} needs a fallback font covering Japanese, or WebGL renders it blank.");
         }
