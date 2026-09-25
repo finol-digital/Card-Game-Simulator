@@ -8,9 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Open Sans
   fontNames:
   - Open Sans
+  - Noto Sans JP
   fallbackFontReferences:
   - {fileID: 12800000, guid: 9620f61733f65c749a22b0e4f59b6615, type: 3}
   - {fileID: 12800000, guid: 2aa81dd343c445e69fd0523975d1b810, type: 3}
