@@ -44,11 +44,15 @@ This practice session uses **Standard Playing Cards**, included with CGS. It tea
 4. **Put cards in your hand.** If a deal/draw prompt appears, set the number of cards and confirm. For practice, use two cards. Your hand is in the drawer at the bottom of the screen; open it to see your cards. Use **Deal X** to choose a hand size or **Draw 1** to draw one card from your play deck. On a keyboard, with no card selected or dialog open, the corresponding shortcuts are **0** and **1**.
 5. **Play a card.** Drag one card from your hand onto an empty part of the table. Select it and use **Flip** in its action panel to turn it over. The card stays on the table and its displayed face changes.
 
-   [![A selected four of clubs on the table, the deck stack at left, one card remaining in the bottom hand drawer, and the Flip action at right.](../assets/img/how-to-play/first-table.png)](../assets/img/how-to-play/first-table.png)
+   [![A selected two of spades on the table, the deck stack at left, one card remaining in the bottom hand drawer, and the Flip tooltip below its button in the card action panel.](../assets/img/how-to-play/first-table.png)](../assets/img/how-to-play/first-table.png)
 
-   *After playing one of your two cards, one stays in your hand. Select the card on the table to show its actions, including Flip.*
+   *After playing one of your two cards, one stays in your hand. Select the card on the table to show its actions, including Flip. With tooltips enabled, hover over an action to see its shortcut and description below the button.*
 
 6. **Practice taking a card from the deck.** Start dragging from the stack immediately to pull its top card onto the table. To move the whole stack, press and hold it for about half a second **before** dragging.
+
+   [![The deck stack selected, with Move, Rotate, Shuffle, Flip, and View actions at right and the Shuffle Stack tooltip below its button.](../assets/img/how-to-play/stack-actions.png)](../assets/img/how-to-play/stack-actions.png)
+
+   *Select the deck to show its stack actions. Hover over Shuffle to see its tooltip; choose it and confirm when your game's rules call for shuffling.*
 
 You have now loaded a deck, drawn a hand, and played a card. To play a full game, agree on its rules and starting hand size, then carry out those actions on the tabletop. For a discard pile, place cards where your group agrees it belongs; the **Delete** action removes a card rather than choosing a discard pile for you.
 
@@ -58,7 +62,7 @@ Everyone should use compatible CGS app versions and the same card game and game 
 
 [![Multiplayer lobby with Internet selected at the top, Room Id and optional Password fields near the bottom, and Host and Join buttons below.](../assets/img/how-to-play/internet-lobby.png)](../assets/img/how-to-play/internet-lobby.png)
 
-*Choose Multi-player from the main menu to open this lobby. The host chooses Host; friends enter the host's code in Room Id and choose Join. The room list will vary. Screenshots show CGS 1.164.0; select any screenshot to enlarge it.*
+*Choose Multi-player from the main menu to open this lobby. The host chooses Host; friends enter the host's code in Room Id and choose Join. The room list will vary. Select any screenshot to enlarge it.*
 
 ### Host a table
 
