@@ -46,7 +46,7 @@ This practice session uses **Standard Playing Cards**, included with CGS. It tea
 
    [![A selected two of spades on the table, the deck stack at left, one card remaining in the bottom hand drawer, and the Flip tooltip below its button in the card action panel.](../assets/img/how-to-play/first-table.png)](../assets/img/how-to-play/first-table.png)
 
-   *After playing one of your two cards, one stays in your hand. Select the card on the table to show its actions, including Flip. With tooltips enabled, hover over an action to see its shortcut and description below the button.*
+   *After playing one of your two cards, one stays in your hand. Select the card on the table to show its actions, including Flip. With tooltips enabled, hover over an action to see its shortcut and description on one line below the button. Longer hints end with an ellipsis when space runs out.*
 
 6. **Practice taking a card from the deck.** Start dragging from the stack immediately to pull its top card onto the table. To move the whole stack, press and hold it for about half a second **before** dragging.
 

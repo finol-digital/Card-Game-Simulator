@@ -81,6 +81,7 @@ namespace Tests.PlayMode
             var panel = viewer.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == panelName);
             var preferredPositionX = panel.anchoredPosition.x;
             Assert.IsNotNull(panel.GetComponent<ActionPanelViewportFit>());
+            Assert.LessOrEqual(panel.rect.height, 900, "Single-line hints should allow a compact panel.");
             panel.gameObject.SetActive(true);
             viewer.SetActive(true);
             _container.SetActive(true);
@@ -113,6 +114,9 @@ namespace Tests.PlayMode
                         BindingFlags.Instance | BindingFlags.NonPublic).GetValue(tooltip);
                     Assert.IsNotNull(tipObject, $"{prefabName}: {button.name} must create its tooltip.");
                     var tipRect = (RectTransform)tipObject.transform;
+                    AssertSingleLine(tipObject);
+                    StringAssert.DoesNotContain("…", tipObject.GetComponentInChildren<UnityEngine.UI.Text>().text,
+                        "Standard action hints fit the panel and must not be truncated.");
                     var tipBounds = BoundsIn(viewport, tipRect);
                     Assert.GreaterOrEqual(tipBounds.xMin, viewport.rect.xMin - 0.1f, button.name);
                     Assert.LessOrEqual(tipBounds.xMax, viewport.rect.xMax + 0.1f, button.name);
@@ -129,6 +133,10 @@ namespace Tests.PlayMode
                             $"{button.name} tooltip {tipBounds} overlaps {other.name} {buttonBounds} at {size}.");
                     }
                     tooltip.OnPointerExit(null);
+                    yield return null;
+                    yield return null;
+                    StringAssert.DoesNotContain("…", tipObject.GetComponentInChildren<UnityEngine.UI.Text>().text,
+                        "A short shortcut must not be truncated due to fractional text widths.");
                 }
 
                 if (Mathf.Approximately(size.y, 1800))
@@ -138,6 +146,33 @@ namespace Tests.PlayMode
                         "Restore the preferred horizontal position when space returns.");
                 }
             }
+
+            var longTooltip = panel.GetComponentsInChildren<ToolTip>()[0];
+            var serialized = new SerializedObject(longTooltip);
+            serialized.FindProperty("tooltip").stringValue = string.Join(" ", Enumerable.Repeat(
+                "A long action description that must stay on one line", 10));
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            longTooltip.OnPointerEnter(null);
+            yield return null;
+            yield return null;
+            var longTipObject = (GameObject)typeof(ToolTip).GetField("_toolTipGameObject",
+                BindingFlags.Instance | BindingFlags.NonPublic).GetValue(longTooltip);
+            AssertSingleLine(longTipObject);
+            StringAssert.EndsWith("…", longTipObject.GetComponentInChildren<UnityEngine.UI.Text>().text);
+            Assert.Greater(((RectTransform)longTipObject.transform).rect.width, 500,
+                "Long hints should use the panel width before truncating.");
+            longTooltip.OnPointerExit(null);
+        }
+
+        private static void AssertSingleLine(GameObject tooltip)
+        {
+            var text = tooltip.GetComponentInChildren<UnityEngine.UI.Text>();
+            Assert.IsNotEmpty(text.text);
+            StringAssert.DoesNotContain("\n", text.text);
+            Assert.LessOrEqual(text.preferredWidth, text.rectTransform.rect.width + 0.1f,
+                "Truncated text must fit horizontally without clipping.");
+            Assert.LessOrEqual(((RectTransform)tooltip.transform).rect.height, 60,
+                "Hints must occupy only one line, including their shortcut.");
         }
 
         private static Rect BoundsIn(RectTransform viewport, RectTransform target)

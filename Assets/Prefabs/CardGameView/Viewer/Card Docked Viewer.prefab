@@ -1260,6 +1260,7 @@ MonoBehaviour:
   isBelow: 1
   inputActionId: 
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &5185175737990797866
 GameObject:
   m_ObjectHideFlags: 0
@@ -1427,6 +1428,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: 
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &5647522408749010871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1609,6 +1611,7 @@ MonoBehaviour:
   isBelow: 1
   inputActionId: 
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &6053420215141024644
 GameObject:
   m_ObjectHideFlags: 0
@@ -2005,6 +2008,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: 
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &6992161123948433846
 GameObject:
   m_ObjectHideFlags: 0
@@ -2815,6 +2819,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: 
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &9200179391098352637
 GameObject:
   m_ObjectHideFlags: 0
@@ -3440,7 +3445,7 @@ PrefabInstance:
     - target: {fileID: 2706642219885418223, guid: a9ff64913ad43c1428c7affb011349a2,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1250
+      value: 900
       objectReference: {fileID: 0}
     - target: {fileID: 2706642219885418223, guid: a9ff64913ad43c1428c7affb011349a2,
         type: 3}

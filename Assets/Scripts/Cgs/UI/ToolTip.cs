@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Globalization;
 using Cgs.Menu;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,6 +20,7 @@ namespace Cgs.UI
         [SerializeField] bool isBelow;
         [SerializeField] string inputActionId;
         [SerializeField] Transform parentTransform;
+        [SerializeField] RectTransform singleLineBounds;
 
         private GameObject ToolTipGameObject => _toolTipGameObject ??= Instantiate(tooltipPrefab,
             parentTransform == null ? transform : parentTransform);
@@ -35,6 +37,9 @@ namespace Cgs.UI
         private Text _toolTipText;
 
         private bool _isOver;
+        private readonly Vector3[] _boundsCorners = new Vector3[4];
+        private string _previousContent;
+        private float _previousWidth = -1;
 
         private string TooltipTextContent
         {
@@ -46,7 +51,11 @@ namespace Cgs.UI
                     return inputActionBinding;
                 var hasBinding = !string.IsNullOrEmpty(inputActionBinding);
                 if (hasBinding)
+                {
+                    if (singleLineBounds != null)
+                        return $"{inputActionBinding} — {tooltip}";
                     return isBelow ? $"{inputActionBinding}\n{tooltip}" : $"{tooltip}\n{inputActionBinding}";
+                }
                 return tooltip;
             }
         }
@@ -79,6 +88,20 @@ namespace Cgs.UI
             ToolTipCanvasGroup.interactable = false;
             ToolTipCanvasGroup.blocksRaycasts = false;
             ToolTipCanvasGroup.alpha = 0; // Initially invisible
+            if (singleLineBounds != null)
+            {
+                ToolTipGameObject.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().enabled = false;
+                ToolTipGameObject.GetComponent<UnityEngine.UI.ContentSizeFitter>().enabled = false;
+                ToolTipText.GetComponent<UnityEngine.UI.ContentSizeFitter>().enabled = false;
+                ToolTipText.horizontalOverflow = HorizontalWrapMode.Overflow;
+                ToolTipText.verticalOverflow = VerticalWrapMode.Truncate;
+                ToolTipText.resizeTextForBestFit = false;
+                var label = ToolTipText.rectTransform;
+                label.anchorMin = Vector2.zero;
+                label.anchorMax = Vector2.one;
+                label.offsetMin = new Vector2(8, 5);
+                label.offsetMax = new Vector2(-8, -5);
+            }
         }
 
         protected void Start()
@@ -109,14 +132,70 @@ namespace Cgs.UI
             }
 
             ToolTipCanvasGroup.alpha = 1;
-            ToolTipText.text = tooltipText;
+            if (singleLineBounds == null)
+                ToolTipText.text = tooltipText;
+            else
+                UpdateSingleLine(tooltipText);
 
             var offsetDirection = isBelow ? Vector2.down : Vector2.up;
             var offsetAmount = avoidOverlap ? 1.0f : 0.5f;
             var rectTransform = (RectTransform)ToolTipGameObject.transform;
             rectTransform.anchoredPosition = offsetDirection * (offsetAmount * rectTransform.sizeDelta.y)
                                              + ((RectTransform)ToolTipGameObject.transform.parent).anchoredPosition;
-            rectTransform.anchoredPosition = new Vector2(0, rectTransform.anchoredPosition.y);
+            var positionX = 0f;
+            if (singleLineBounds != null)
+            {
+                var parent = (RectTransform)rectTransform.parent;
+                var center = parent.InverseTransformPoint(singleLineBounds.TransformPoint(singleLineBounds.rect.center));
+                positionX = center.x - parent.rect.center.x;
+            }
+            rectTransform.anchoredPosition = new Vector2(positionX, rectTransform.anchoredPosition.y);
+        }
+
+        private void UpdateSingleLine(string content)
+        {
+            var rectTransform = (RectTransform)ToolTipGameObject.transform;
+            singleLineBounds.GetWorldCorners(_boundsCorners);
+            var parent = rectTransform.parent;
+            var availableWidth = Mathf.Max(0, parent.InverseTransformPoint(_boundsCorners[2]).x
+                                             - parent.InverseTransformPoint(_boundsCorners[0]).x - 24);
+            if (content == _previousContent && Mathf.Approximately(availableWidth, _previousWidth))
+                return;
+
+            _previousContent = content;
+            _previousWidth = availableWidth;
+            content = content.Replace('\r', ' ').Replace('\n', ' ');
+            var settings = ToolTipText.GetGenerationSettings(Vector2.zero);
+            var generator = ToolTipText.cachedTextGeneratorForLayout;
+            var pixelsPerUnit = ToolTipText.pixelsPerUnit;
+            var width = Mathf.Min(availableWidth, Mathf.Ceil(generator.GetPreferredWidth(content, settings) / pixelsPerUnit) + 16);
+            var height = Mathf.Ceil(generator.GetPreferredHeight("Ag", settings) / pixelsPerUnit) + 10;
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+            var textWidth = Mathf.Max(0, width - 16);
+            if (generator.GetPreferredWidth(content, settings) / pixelsPerUnit > textWidth)
+            {
+                // Search text elements so truncation preserves surrogate pairs and combining characters.
+                var elements = StringInfo.ParseCombiningCharacters(content);
+                var low = 0;
+                var high = elements.Length;
+                while (low < high)
+                {
+                    var middle = (low + high + 1) / 2;
+                    var end = middle < elements.Length ? elements[middle] : content.Length;
+                    var candidate = content.Substring(0, end) + "…";
+                    if (generator.GetPreferredWidth(candidate, settings) / pixelsPerUnit <= textWidth)
+                        low = middle;
+                    else
+                        high = middle - 1;
+                }
+                var length = low < elements.Length ? elements[low] : content.Length;
+                content = generator.GetPreferredWidth("…", settings) / pixelsPerUnit <= textWidth
+                    ? content.Substring(0, length) + "…"
+                    : string.Empty;
+            }
+            ToolTipText.text = content;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
