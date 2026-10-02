@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2827045463752803649}
   - component: {fileID: 7461908509186527663}
   - component: {fileID: 8585375216603731376}
+  - component: {fileID: 6707695910483192922}
   m_Layer: 5
   m_Name: Card Action Panel
   m_TagString: Untagged
@@ -43,7 +44,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 1100}
+  m_SizeDelta: {x: 600, y: 1250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8930918008955869280
 CanvasRenderer:
@@ -138,6 +139,20 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &6707695910483192922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2016667638914933442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa78bb978144462438e44023f42ab4d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ActionPanelViewportFit
+  topInset: 160
+  bottomInset: 20
 --- !u!1001 &2062445856770879976
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -238,6 +238,7 @@ GameObject:
   - component: {fileID: 5109119292963018100}
   - component: {fileID: 1998985133142810657}
   - component: {fileID: 257359499470085012}
+  - component: {fileID: 7262872674598383207}
   m_Layer: 5
   m_Name: Stack Action Panel
   m_TagString: Untagged
@@ -267,7 +268,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -160}
-  m_SizeDelta: {x: 600, y: 1100}
+  m_SizeDelta: {x: 600, y: 1250}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &5307592812954030539
 CanvasRenderer:
@@ -345,6 +346,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 1
+--- !u!114 &7262872674598383207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3718179242149436236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa78bb978144462438e44023f42ab4d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ActionPanelViewportFit
+  topInset: 160
+  bottomInset: 20
 --- !u!1 &4762042918788461496
 GameObject:
   m_ObjectHideFlags: 0
