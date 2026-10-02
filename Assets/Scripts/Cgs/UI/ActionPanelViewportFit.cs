@@ -37,7 +37,7 @@ namespace Cgs.UI
 
         private void LateUpdate()
         {
-            if (_viewport == null || _rectTransform.rect.height <= 0)
+            if (_viewport == null || _rectTransform.rect.height <= 0 || _rectTransform.rect.width <= 0)
                 return;
 
             var viewport = _viewport.rect;
@@ -49,16 +49,23 @@ namespace Cgs.UI
             _previousViewport = viewport;
             var availableHeight = Mathf.Max(0, viewport.height - topInset - bottomInset);
             var scale = Mathf.Min(1, availableHeight / _rectTransform.rect.height);
+            scale = Mathf.Min(scale, Mathf.Max(0, viewport.width) / _rectTransform.rect.width);
 
             // Scale the complete panel so the gaps and below-button tooltips stay together.
             _rectTransform.localScale = new Vector3(scale, scale, 1);
+            var width = _rectTransform.rect.width * scale;
             var height = _rectTransform.rect.height * scale;
+            var anchorX = viewport.xMin + viewport.width * Mathf.Lerp(
+                _rectTransform.anchorMin.x, _rectTransform.anchorMax.x, _rectTransform.pivot.x);
             var anchorY = viewport.yMin + viewport.height * Mathf.Lerp(
                 _rectTransform.anchorMin.y, _rectTransform.anchorMax.y, _rectTransform.pivot.y);
+            var minimumX = viewport.xMin + width * _rectTransform.pivot.x;
+            var maximumX = viewport.xMax - width * (1 - _rectTransform.pivot.x);
             var minimumY = viewport.yMin + bottomInset + height * _rectTransform.pivot.y;
             var maximumY = viewport.yMax - topInset - height * (1 - _rectTransform.pivot.y);
+            var positionX = Mathf.Clamp(anchorX + _preferredPosition.x, minimumX, maximumX);
             var positionY = Mathf.Clamp(anchorY + _preferredPosition.y, minimumY, maximumY);
-            _rectTransform.anchoredPosition = new Vector2(_preferredPosition.x, positionY - anchorY);
+            _rectTransform.anchoredPosition = new Vector2(positionX - anchorX, positionY - anchorY);
         }
     }
 }

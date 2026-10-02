@@ -79,20 +79,24 @@ namespace Tests.PlayMode
             var viewport = (RectTransform)viewer.transform;
             viewport.localScale = Vector3.one;
             var panel = viewer.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == panelName);
+            var preferredPositionX = panel.anchoredPosition.x;
             Assert.IsNotNull(panel.GetComponent<ActionPanelViewportFit>());
             panel.gameObject.SetActive(true);
             viewer.SetActive(true);
             _container.SetActive(true);
 
-            // Includes the review's reference height, a shorter ultrawide canvas, portrait,
+            // Includes the review's reference height, a shorter ultrawide canvas, narrow portrait,
             // and a return to the original size to catch cumulative scale/position drift.
             foreach (var size in new[] {new Vector2(3200, 1800), new Vector2(1920, 1080),
-                         new Vector2(2560, 820), new Vector2(1080, 1920), new Vector2(3200, 1800)})
+                         new Vector2(2560, 820), new Vector2(1080, 1920), new Vector2(800, 1920), new Vector2(480, 1920),
+                         new Vector2(320, 1920), new Vector2(1080, 1920), new Vector2(3200, 1800)})
             {
                 viewport.sizeDelta = size;
                 yield return null;
                 yield return null;
                 var panelBounds = BoundsIn(viewport, panel);
+                Assert.GreaterOrEqual(panelBounds.xMin, viewport.rect.xMin - 0.1f, $"{prefabName} at {size}");
+                Assert.LessOrEqual(panelBounds.xMax, viewport.rect.xMax + 0.1f, $"{prefabName} at {size}");
                 Assert.GreaterOrEqual(panelBounds.yMin, viewport.rect.yMin + 20 - 0.1f);
                 Assert.LessOrEqual(panelBounds.yMax, viewport.rect.yMax - 160 + 0.1f);
 
@@ -110,6 +114,8 @@ namespace Tests.PlayMode
                     Assert.IsNotNull(tipObject, $"{prefabName}: {button.name} must create its tooltip.");
                     var tipRect = (RectTransform)tipObject.transform;
                     var tipBounds = BoundsIn(viewport, tipRect);
+                    Assert.GreaterOrEqual(tipBounds.xMin, viewport.rect.xMin - 0.1f, button.name);
+                    Assert.LessOrEqual(tipBounds.xMax, viewport.rect.xMax + 0.1f, button.name);
                     Assert.GreaterOrEqual(tipBounds.yMin, viewport.rect.yMin - 0.1f, button.name);
                     Assert.LessOrEqual(tipBounds.yMax, viewport.rect.yMax + 0.1f, button.name);
                     foreach (var other in buttons)
@@ -126,7 +132,11 @@ namespace Tests.PlayMode
                 }
 
                 if (Mathf.Approximately(size.y, 1800))
+                {
                     Assert.AreEqual(Vector3.one, panel.localScale, "Restore full size when space returns.");
+                    Assert.AreEqual(preferredPositionX, panel.anchoredPosition.x, 0.1f,
+                        "Restore the preferred horizontal position when space returns.");
+                }
             }
         }
 
