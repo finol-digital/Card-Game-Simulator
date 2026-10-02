@@ -459,6 +459,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &1374545582827330
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,6 +627,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: Viewer/SelectNext
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &1391088035837496
 GameObject:
   m_ObjectHideFlags: 0
@@ -808,6 +810,7 @@ MonoBehaviour:
   isBelow: 1
   inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &1489887222482700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1433,6 +1436,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: Viewer/SelectPrevious
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &278163115200097408
 GameObject:
   m_ObjectHideFlags: 0
@@ -1635,6 +1639,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &780418392263964738
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,6 +1935,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: Viewer/SelectNext
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &1158087559228869626
 GameObject:
   m_ObjectHideFlags: 0
@@ -2616,6 +2622,7 @@ MonoBehaviour:
   isBelow: 1
   inputActionId: 
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &5520510946224163991
 GameObject:
   m_ObjectHideFlags: 0
@@ -3171,6 +3178,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &7509274334271859109
 GameObject:
   m_ObjectHideFlags: 0
@@ -3266,6 +3274,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &7601199571884906900
 GameObject:
   m_ObjectHideFlags: 0
@@ -3498,6 +3507,7 @@ MonoBehaviour:
   isBelow: 1
   inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1 &7845637863157837290
 GameObject:
   m_ObjectHideFlags: 0
@@ -4052,6 +4062,7 @@ MonoBehaviour:
   isBelow: 0
   inputActionId: Viewer/SelectPrevious
   parentTransform: {fileID: 0}
+  singleLineBounds: {fileID: 0}
 --- !u!1001 &950190529897883528
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6608,7 +6619,7 @@ PrefabInstance:
     - target: {fileID: 2706642219885418223, guid: a9ff64913ad43c1428c7affb011349a2,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 600
+      value: 900
       objectReference: {fileID: 0}
     - target: {fileID: 2706642219885418223, guid: a9ff64913ad43c1428c7affb011349a2,
         type: 3}
