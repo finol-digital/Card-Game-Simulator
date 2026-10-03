@@ -841,6 +841,11 @@ a:hover {
     padding: 12px 20px;
   }
 
+  .site-top nav {
+    align-self: flex-end;
+    justify-content: flex-end;
+  }
+
   .intro {
     padding: 30px 20px 22px;
   }
