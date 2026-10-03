@@ -2,72 +2,64 @@
 layout: home
 description: Create, share, and play card games with Card Game Simulator. No account or registration is required, including for online multiplayer.
 ---
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-left">
-      <img class="hero-logo-large" src="/assets/img/CGSLogo.png" alt="Card Game Simulator" />
-      <h1>Create, Share, and Play Card Games — Anywhere</h1>
-      <p class="lead">Design custom card games, play with friends online or locally, and publish your creations. CGS is a flexible tabletop sandbox for players and creators.</p>
-      <p><strong>No account or registration required, including for online multiplayer.</strong></p>
 
-      <p class="cta-row">
-        <a class="btn primary" href="https://cgs.gg/">Play Now — Web</a>
-        <a class="btn" href="/how-to-play/">How to play</a>
-      </p>
-
-      <div class="store-row">
-        <a href="https://apps.microsoft.com/detail/9n96n5s4w3j0"><img src="/assets/img/microsoft-store-badge.svg" alt="Microsoft Store" /></a>
-        <a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim"><img src="/assets/img/google-play-badge.png" alt="Google Play" /></a>
-        <a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?itsct=apps_box_badge&amp;itscg=30200"><img src="/assets/img/app-store-badge.svg" alt="App Store" /></a>
-        <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="/assets/img/mac-app-store-badge.svg" alt="Mac App Store" /></a>
-        <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/" title="Card Game Simulator on Steam">
-          <img src="/assets/img/steam_logo.png" alt="Card Game Simulator on Steam" />
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <div class="video-card">
-        <div class="video-wrapper">
-          <iframe src="https://www.youtube-nocookie.com/embed/PriDuaM6MEk" title="Card Game Simulator Demo Video" style="border: 0;" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-        </div>
-      </div>
-    </div>
+<section class="intro" aria-label="Welcome to CGS">
+  <div class="eyebrow">YOUR CARDS. YOUR RULES.</div>
+  <h1>One table.<br>So many ways to play.</h1>
+  <p>CGS is a virtual tabletop for the card games you love—and the ones you haven’t invented yet.</p>
+  <div class="actions">
+    <a class="main-action" href="https://cgs.gg/">Play in browser ↗</a>
+    <a class="secondary-action" href="https://cgs.games/">Browse games</a>
+  </div>
+  <div class="assurance">No account required to play.</div>
+  <a class="watch-jump" href="#cgs-demo-section"><span aria-hidden="true">▷</span> Watch the demo</a>
+</section>
+<div class="table-options" hidden role="group" aria-label="Explore tabletop possibilities">
+  <button type="button" data-deck="classic" aria-pressed="true">Classic cards</button>
+  <button type="button" data-deck="custom" aria-pressed="false">Custom creations</button>
+  <button type="button" data-deck="prototype" aria-pressed="false">Your next idea</button>
+</div>
+<section class="table-preview wood" aria-label="Illustrative tabletop possibilities">
+  <div class="table-copy" aria-live="polite" aria-atomic="true">
+    <div class="eyebrow" data-table-title>START WITH A FAMILIAR DECK</div>
+    <p data-table-copy>Shuffle, deal, and move cards around the table.</p>
+    <small>Tabletop illustration</small>
+  </div>
+  <div class="card-spread" aria-hidden="true">
+    <div class="card-back">CGS</div>
+    <div class="playing-card choice-card red">A<span>♥</span><small>A</small></div>
+    <div class="playing-card choice-card">K<span>♠</span><small>K</small></div>
+    <div class="playing-card choice-card red">Q<span>♦</span><small>Q</small></div>
   </div>
 </section>
-
-<section class="features">
-  <h2>Why CGS?</h2>
-  <ul class="feature-list">
-    <li><strong>Fast prototyping:</strong> Author cards with JSON or visual tools.</li>
-    <li><strong>Cross-platform:</strong> Windows, macOS, Linux, iOS, Android, Steam, and Web.</li>
-    <li><strong>Community-driven:</strong> Publish and discover games in the CGS ecosystem.</li>
-  </ul>
-
-  <div class="three-features">
-    <div class="feature">
-      <h3>Create</h3>
-      <p>Author games using the CGS spec or the UI — perfect for designers and hobbyists.</p>
+<div class="benefits">
+  <div><b>Play together</b><p>Online or locally.</p></div>
+  <div><b>Bring your own deck</b><p>Create and playtest.</p></div>
+  <div><b>Pass it on</b><p>Share your creation.</p></div>
+</div>
+<section class="video-section" id="cgs-demo-section" aria-labelledby="cgs-demo-heading">
+  <div class="video-copy">
+    <div class="eyebrow">GET A FEEL FOR THE TABLE</div>
+    <h2 id="cgs-demo-heading">See how CGS works.</h2>
+    <p>Watch the demo to see cards, decks, and the virtual tabletop in action.</p>
+    <a class="guide-link" href="{{ '/how-to-play/' | relative_url }}">Prefer a written walkthrough?<br>Read the how-to-play guide →</a>
+  </div>
+  <div class="video-media">
+    <div class="video-player" data-video-player>
+      <a class="video-poster" href="https://www.youtube.com/watch?v=PriDuaM6MEk" data-video-trigger>
+        <img src="{{ '/assets/img/how-to-play/first-table.png' | relative_url }}" width="1000" height="1200" alt="" loading="lazy">
+        <span class="poster-label">CGS DEMO VIDEO</span>
+        <span class="play-disc" aria-hidden="true">▶</span>
+        <span class="poster-bottom"><b>Watch the demo</b><small>CGS gameplay</small></span>
+      </a>
     </div>
-    <div class="feature">
-      <h3>Play</h3>
-      <p>Load a deck, move cards on the table, and follow your game's rules with friends. <a href="/how-to-play/">Learn the controls and how to host or join a game.</a></p>
-    </div>
-    <div class="feature">
-      <h3>Share</h3>
-      <p>Publish your game to <a href="https://cgs.games/">cgs.games</a>. Others can play, fork, and give feedback.</p>
-    </div>
+    <a class="video-fallback" href="https://www.youtube.com/watch?v=PriDuaM6MEk">Watch on YouTube ↗</a>
   </div>
 </section>
-
-<section class="community">
-  <h2>Join the community</h2>
-  <p>Find us on GitHub, Discord, Reddit, and more. Help shape the <a href="https://github.com/orgs/finol-digital/projects/1">roadmap</a> or ask for help.</p>
-  <p class="social-links">
-    <a href="/github" title="GitHub"><img src="/assets/img/GitHub.png" alt="GitHub" class="social-icon" /></a>
-    <a href="/discord" title="Discord"><img src="/assets/img/Discord.png" alt="Discord" class="social-icon" /></a>
-    <a href="/reddit" title="Reddit"><img src="/assets/img/reddit.png" alt="Reddit" class="social-icon" /></a>
-    <a href="/bluesky" title="Bluesky"><img src="/assets/img/Bluesky.png" alt="Bluesky" class="social-icon" /></a>
-    <a href="https://www.patreon.com/davidmfinol" title="Support CGS on Patreon"><img src="/assets/img/patreon-symbol.png" alt="Support CGS on Patreon" class="social-icon" /></a>
-  </p>
+<section class="final-invite">
+  <div>
+    <h2>Your next game starts here.</h2>
+    <p>Take a seat in your browser. No account required.</p>
+  </div>
+  <a class="main-action" href="https://cgs.gg/">Try CGS ↗</a>
 </section>

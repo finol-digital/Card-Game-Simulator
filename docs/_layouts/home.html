@@ -4,9 +4,8 @@
     <meta name="facebook-domain-verification" content="gi07f096jt2ukz5h2ozufgg3ytwsp2" />
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta property="og:image" content="https://www.cardgamesimulator.com/assets/img/CGSLogo.png">
-    <link rel="stylesheet" href="/assets/css/index.css" />
+    {% include site-styles.html %}
 {% seo %}
     {% if page.url == "/" %}
     <script type="application/ld+json">
@@ -64,81 +63,11 @@
     {% endif %}
   </head>
 
-  <body>
-
-    <!-- HEADER -->
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="/">
-          <img src="/assets/img/Logo.png" alt="Card Game Simulator logo" class="brand-logo" />
-          <span class="brand-text">Card Game Simulator</span>
-        </a>
-    
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" id="navToggle" aria-label="Toggle navigation" title="Toggle navigation">
-          <span class="hamburger"></span>
-        </button>
-    
-        <nav id="main-nav" class="main-nav" aria-label="Main navigation">
-          <ul class="nav-list">
-            <li class="nav-item"><a class="nav-link" href="/how-to-play/">How to play</a></li>
-            <li class="nav-item"><a class="nav-link" href="https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS">Create</a></li>
-            <li class="nav-item"><a class="nav-link" href="https://cgs.games/">Share</a></li>
-    
-            <li class="nav-item nav-dropdown">
-              <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-                Play <span aria-hidden="true">▾</span><span class="visually-hidden">menu</span>
-              </button>
-              <ul class="dropdown">
-                <li><a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim">Android</a></li>
-                <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1">iOS</a></li>
-                <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12">macOS</a></li>
-                <li><a href="https://apps.microsoft.com/detail/9n96n5s4w3j0">Windows</a></li>
-                <li><a href="https://github.com/finol-digital/Card-Game-Simulator/releases/latest/download/cgs-StandaloneLinux64.zip">Linux</a></li>
-                <li><a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/">Steam</a></li>
-                <li><a class="btn primary" href="https://cgs.gg/">Play Now — Web</a></li>
-              </ul>
-            </li>
-    
-          </ul>
-        </nav>
-      </div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main class="page">
+  <body class="cgs-site home-page">
+    {% include site-header.html %}
+    <main class="homepage" id="main-content" tabindex="-1">
       {{ content }}
     </main>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p><a href="/how-to-play/">How to play</a> · <a href="/about/">About</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a></p>
-      <p>&copy; Finol Digital LLC</p>
-    </div>
-  </footer>
-
-    <script>
-      (function () {
-        // Toggle mobile nav
-        var navToggle = document.getElementById('navToggle');
-        var mainNav = document.getElementById('main-nav');
-    
-        navToggle.addEventListener('click', function () {
-          var expanded = this.getAttribute('aria-expanded') === 'true';
-          this.setAttribute('aria-expanded', String(!expanded));
-          mainNav.classList.toggle('open');
-        });
-    
-        // Dropdown toggle for Play on small screens
-        document.querySelectorAll('.nav-dropdown .dropdown-toggle').forEach(function (btn) {
-          btn.addEventListener('click', function (e) {
-            // Prevent default to avoid form submission or navigation
-            e.preventDefault();
-            var expanded = this.getAttribute('aria-expanded') === 'true';
-            this.setAttribute('aria-expanded', String(!expanded));
-            this.parentElement.classList.toggle('open');
-          });
-        });
-      })();
-    </script>
+    {% include site-footer.html %}
   </body>
 </html>

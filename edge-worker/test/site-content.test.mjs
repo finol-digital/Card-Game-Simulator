@@ -46,8 +46,8 @@ test("homepage has agent-discoverable identity and metadata", async () => {
 test("static social pages retain a redirect and usable link without the Worker", async () => {
   const socialLayout = await readDocsFile("_layouts/social_link.html");
 
-  assert.match(socialLayout, /http-equiv="refresh" content="0; URL={{ page\.slink }}"/i);
-  assert.match(socialLayout, /<a href="{{ page\.slink }}">/);
+  assert.match(socialLayout, /http-equiv="refresh" content="0; URL={{ redirect_url \| escape }}"/i);
+  assert.match(socialLayout, /<a href="{{ redirect_url \| escape }}">/);
 });
 
 test("every published social link has matching path and subdomain redirects and a Worker route", async (t) => {
