@@ -7,11 +7,19 @@ sitemap: false
 <html lang="{{ site.lang | default: 'en-US' }}">
   <head>
     <meta charset="utf-8">
+    {% include site-styles.html %}
     <title>Privacy Policy | Card Game Simulator</title>
     <meta http-equiv="refresh" content="0; url={{ '/privacy/' | relative_url }}">
     <link rel="canonical" href="{{ '/privacy/' | absolute_url }}">
   </head>
-  <body>
-    <p>The privacy policy has moved. <a href="{{ '/privacy/' | relative_url }}">Read the Card Game Simulator Privacy Policy.</a></p>
+  <body class="cgs-site">
+    {% include site-header.html %}
+    <main class="document-page" id="main-content" tabindex="-1">
+      <div class="document-content">
+        <h1>Privacy policy</h1>
+        <p>The privacy policy has moved. <a href="{{ '/privacy/' | relative_url }}">Read the Card Game Simulator Privacy Policy.</a></p>
+      </div>
+    </main>
+    {% include site-footer.html %}
   </body>
 </html>

@@ -3,13 +3,21 @@
 
   <head>
     <meta charset='utf-8'>
+    {% include site-styles.html %}
     <title>Redirecting to {{ page.slink }}</title>
     <meta http-equiv="refresh" content="0; URL={{ page.slink }}">
     <link rel="canonical" href="{{ page.slink }}">
   </head>
 
-  <body>
-    <p>Continue to <a href="{{ page.slink }}">{{ page.slink }}</a> if you are not redirected automatically.</p>
+  <body class="cgs-site">
+    {% include site-header.html %}
+    <main class="document-page" id="main-content" tabindex="-1">
+      <div class="document-content">
+        <h1>Taking you there…</h1>
+        <p>Continue to <a href="{{ page.slink }}">{{ page.slink }}</a> if you are not redirected automatically.</p>
+      </div>
+    </main>
+    {% include site-footer.html %}
   </body>
 
 </html>
