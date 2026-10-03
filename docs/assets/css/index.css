@@ -836,9 +836,19 @@ a:hover {
 @media (max-width: 620px) {
   .header-inner {
     align-items: flex-start;
-    flex-direction: column;
     gap: 8px;
     padding: 12px 20px;
+  }
+
+  .brand img {
+    flex-shrink: 0;
+  }
+
+  .site-top nav {
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+    gap: 0;
   }
 
   .intro {
