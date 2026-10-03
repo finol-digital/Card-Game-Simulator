@@ -4,7 +4,7 @@
 
 CGS is a virtual tabletop: you move cards, manage your hand, and follow your chosen game's rules with the other players. A game may provide starting decks and a table setup, but CGS does not automatically enforce every game's rules or take turns for you.
 
-[Open CGS in your browser](https://cgs.gg/) · [Download an app version](/) · [Plain Markdown version](/how-to-play.md)
+[Open CGS in your browser](https://cgs.gg/) · [Plain Markdown version](/how-to-play.md)
 
 ## On this page
 
