@@ -1,4 +1,2 @@
 ## What's Changed
-* Add multiplayer diagnostics when Developer Mode is enabled
-* Fix browser LAN multiplayer between tabs
-* Fix overlapping decks not combining when loaded 
+* Keep action panels compact and tooltips readable
