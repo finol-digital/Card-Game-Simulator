@@ -30,13 +30,16 @@
         table.querySelector('[data-table-title]').textContent = scene.title;
         table.querySelector('[data-table-copy]').textContent = scene.copy;
         table.querySelectorAll('.choice-card').forEach((card, index) => {
+          const cardData = scene.cards[index];
+          if (!cardData) return;
           card.className = 'playing-card choice-card' +
             (kind === 'classic' ? (index === 1 ? '' : ' red') : ' ' + kind);
           const symbol = document.createElement('span');
-          symbol.textContent = scene.cards[index][1];
+          symbol.textContent = cardData[1];
           const label = document.createElement('small');
-          label.textContent = scene.cards[index][2];
-          card.replaceChildren(document.createTextNode(scene.cards[index][0]), symbol, label);
+          label.textContent = cardData[2];
+          card.textContent = '';
+          card.append(document.createTextNode(cardData[0]), symbol, label);
         });
         options.querySelectorAll('[data-deck]').forEach(option => {
           option.setAttribute('aria-pressed', String(option === button));
@@ -53,7 +56,6 @@
     const button = document.createElement('button');
     button.type = 'button';
     button.className = videoLink.className;
-    button.setAttribute('aria-label', videoLink.getAttribute('aria-label'));
     button.append(...videoLink.childNodes);
     videoLink.replaceWith(button);
 
@@ -63,7 +65,8 @@
       iframe.title = 'Card Game Simulator demo video';
       iframe.allow = 'encrypted-media; picture-in-picture; fullscreen';
       iframe.allowFullscreen = true;
-      videoPlayer.replaceChildren(iframe);
+      videoPlayer.textContent = '';
+      videoPlayer.appendChild(iframe);
       iframe.focus();
     }, { once: true });
   }

@@ -42,6 +42,12 @@ button, a {
 
 a {
   color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.brand, .site-top nav a, .platform-links a, .main-action,
+.secondary-action, .discord-link, .support-link, .video-poster {
   text-decoration: none;
 }
 

@@ -1,20 +1,38 @@
+{% assign redirect_url = page.slink | default: '' | strip %}
+{% assign redirect_scheme = redirect_url | downcase %}
+{% assign http_prefix = redirect_scheme | slice: 0, 7 %}
+{% assign https_prefix = redirect_scheme | slice: 0, 8 %}
+{% assign safe_redirect = false %}
+{% if http_prefix == 'http://' or https_prefix == 'https://' %}
+  {% assign safe_redirect = true %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
 
   <head>
     <meta charset='utf-8'>
     {% include site-styles.html %}
-    <title>Redirecting to {{ page.slink }}</title>
-    <meta http-equiv="refresh" content="0; URL={{ page.slink }}">
-    <link rel="canonical" href="{{ page.slink }}">
+    {% if safe_redirect %}
+      <title>Redirecting to {{ redirect_url | escape }}</title>
+      <meta http-equiv="refresh" content="0; URL={{ redirect_url | escape }}">
+      <link rel="canonical" href="{{ redirect_url | escape }}">
+    {% else %}
+      <title>Link unavailable | Card Game Simulator</title>
+      <meta name="robots" content="noindex">
+    {% endif %}
   </head>
 
   <body class="cgs-site">
     {% include site-header.html %}
     <main class="document-page" id="main-content" tabindex="-1">
       <div class="document-content">
-        <h1>Taking you there…</h1>
-        <p>Continue to <a href="{{ page.slink }}">{{ page.slink }}</a> if you are not redirected automatically.</p>
+        {% if safe_redirect %}
+          <h1>Taking you there…</h1>
+          <p>Continue to <a href="{{ redirect_url | escape }}">{{ redirect_url | escape }}</a> if you are not redirected automatically.</p>
+        {% else %}
+          <h1>This link is unavailable.</h1>
+          <p><a href="{{ '/' | relative_url }}">Return to Card Game Simulator</a> to find games, help, and community links.</p>
+        {% endif %}
       </div>
     </main>
     {% include site-footer.html %}

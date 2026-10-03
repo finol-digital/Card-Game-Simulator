@@ -31,6 +31,8 @@ Card Game Simulator (CGS) is a Unity-based digital platform for playing card gam
 - `docs/CNAME` defines the custom domain, `docs/_config.yml` configures Jekyll, and `docs/_layouts/` contains website templates. Preserve the domain and existing public routes unless the user requests a change; account for existing links when changing page URLs.
 - Keep website URLs and Jekyll asset links relative to the published site, not to the repository root. Do not link public pages to internal development guides.
 - Validate website and Worker changes with `npm --prefix edge-worker test`. These source and HTTP-behavior tests do not replace a Jekyll build or a browser check of changed pages. For website layout changes, inspect the rendered pages in a local Jekyll preview before publishing.
+- For website release PRs, run Google Chrome Lighthouse on the local Jekyll preview in mobile and desktop modes. Compare performance, accessibility, best practices, and SEO with `main` under the same settings; investigate meaningful regressions and keep scores of 90 or higher where the baseline meets that threshold. Review individual accessibility findings even when the category scores 100. Keep reports in ignored `Temp/` or `Logs/` directories.
+- Check the public report at `https://is-agentic.com/scan/www.cardgamesimulator.com` and its scan date; request a rescan when it is stale. Preserve crawler access, server-rendered content, structured data, `llms.txt`, Markdown responses, recoverable 404s, and HTTP redirects. A public scan evaluates the deployed site, so it cannot verify an unmerged local redesign; recheck after an authorized deployment and do not deploy just to obtain a score.
 - GitHub Pages and the Worker are separate deployment concerns. Do not assume the Worker in `edge-worker/` is deployed merely because its source or route configuration exists. Follow `edge-worker/README.md` for an explicitly requested deployment; run `npm --prefix edge-worker run verify:deployed` afterward to check the live behavior.
 
 ## Build/Test Commands
@@ -118,7 +120,7 @@ All pull requests must follow these rules exactly:
 - Second user-facing change
 ```
 
-5. **Monitor**: After creating a pull request, monitor its status checks (e.g. `gh pr checks <number> --watch`) until they all pass. If any check fails (unit tests, SonarQube Quality Gate, security checks, etc.), investigate the failure, fix the underlying issues, and push the fixes to the PR branch. Repeat until all checks pass.
+5. **Monitor**: After creating a pull request, monitor its status checks (e.g. `gh pr checks <number> --watch`) until they all pass. Also check review comments, verify each finding against the current code, and address valid issues. If any check fails (unit tests, SonarQube Quality Gate, security checks, etc.), investigate the failure, fix the underlying issues, and push the fixes to the PR branch. Repeat until all checks pass and no valid review findings remain unaddressed.
 6. **Protected files**: Never modify files in the `.github` folder. If fixing a failing check would require changing anything in `.github` (workflows, actions configuration, etc.), stop and notify the maintainer instead of making the change.
 
 ## Resources

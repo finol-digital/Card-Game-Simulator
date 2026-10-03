@@ -46,7 +46,7 @@ description: Create, share, and play card games with Card Game Simulator. No acc
   </div>
   <div class="video-media">
     <div class="video-player" data-video-player>
-      <a class="video-poster" href="https://www.youtube.com/watch?v=PriDuaM6MEk" data-video-trigger aria-label="Watch the Card Game Simulator demo">
+      <a class="video-poster" href="https://www.youtube.com/watch?v=PriDuaM6MEk" data-video-trigger>
         <img src="{{ '/assets/img/how-to-play/first-table.png' | relative_url }}" width="1000" height="1200" alt="" loading="lazy">
         <span class="poster-label">CGS DEMO VIDEO</span>
         <span class="play-disc" aria-hidden="true">▶</span>
