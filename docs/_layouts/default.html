@@ -13,7 +13,11 @@
     {% include site-header.html %}
     <main class="document-page" id="main-content" tabindex="-1">
       <article class="document-content">
-        {{ content }}
+        {% if page.body_class == 'player-guide' %}
+          {{ content | replace: '<img ', '<img loading="lazy" ' }}
+        {% else %}
+          {{ content }}
+        {% endif %}
       </article>
     </main>
     {% include site-footer.html %}
