@@ -647,7 +647,7 @@ p {
   min-height: 44px;
 }
 
-a: hover {
+a:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
