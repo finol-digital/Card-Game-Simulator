@@ -2971,6 +2971,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3134429150104765410, guid: bf590ed4001f322499090c085dd18971,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value:
+      objectReference: {fileID: 292914518}
+    - target: {fileID: 3134429150104765410, guid: bf590ed4001f322499090c085dd18971,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value:
+      objectReference: {fileID: 292914518}
+    - target: {fileID: 3134429150104765410, guid: bf590ed4001f322499090c085dd18971,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.CardGameView.Viewer.CardViewer, Cgs
+      objectReference: {fileID: 0}
     - target: {fileID: 3641659087378191088, guid: bf590ed4001f322499090c085dd18971,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
