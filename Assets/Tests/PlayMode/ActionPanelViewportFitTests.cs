@@ -100,6 +100,16 @@ namespace Tests.PlayMode
                 Assert.LessOrEqual(panelBounds.xMax, viewport.rect.xMax + 0.1f, $"{prefabName} at {size}");
                 Assert.GreaterOrEqual(panelBounds.yMin, viewport.rect.yMin + 20 - 0.1f);
                 Assert.LessOrEqual(panelBounds.yMax, viewport.rect.yMax - 160 + 0.1f);
+                if (panelName == "Card Action Panel")
+                {
+                    foreach (var viewerMode in viewer.GetComponentsInChildren<RectTransform>(true)
+                                 .Where(t => t.name is "Minimal" or "Expanded"))
+                    {
+                        var viewerBounds = BoundsIn(viewport, viewerMode);
+                        Assert.AreEqual(viewerBounds.yMin - 20, panelBounds.yMax, 0.1f,
+                            $"{prefabName} {viewerMode.name} must leave a small gap above the actions at {size}.");
+                    }
+                }
 
                 var buttons = panel.GetComponentsInChildren<UnityEngine.UI.Button>();
                 Assert.AreEqual(5, buttons.Length);
