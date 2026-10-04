@@ -11,11 +11,14 @@ namespace Cgs.UI
     {
         [SerializeField, Min(0)] float topInset = 160;
         [SerializeField, Min(0)] float bottomInset = 20;
+        [SerializeField] bool fitBelowAnchor;
+        [SerializeField, Min(0)] float anchorGap = 20;
 
         private RectTransform _rectTransform;
         private RectTransform _viewport;
         private Vector2 _preferredPosition;
         private Rect _previousViewport;
+        private float _previousTopEdge;
         private bool _layoutDirty = true;
 
         private void Awake()
@@ -41,13 +44,20 @@ namespace Cgs.UI
                 return;
 
             var viewport = _viewport.rect;
+            var anchorY = viewport.yMin + viewport.height * Mathf.Lerp(
+                _rectTransform.anchorMin.y, _rectTransform.anchorMax.y, _rectTransform.pivot.y);
+            // Card action panels share their vertical anchor with the viewer's lower edge.
+            var topEdge = fitBelowAnchor
+                ? Mathf.Min(viewport.yMax - topInset, anchorY - anchorGap)
+                : viewport.yMax - topInset;
             // Fixed-anchor children need not change dimensions when their canvas resizes.
-            if (!_layoutDirty && viewport == _previousViewport)
+            if (!_layoutDirty && viewport == _previousViewport && Mathf.Approximately(topEdge, _previousTopEdge))
                 return;
 
             _layoutDirty = false;
             _previousViewport = viewport;
-            var availableHeight = Mathf.Max(0, viewport.height - topInset - bottomInset);
+            _previousTopEdge = topEdge;
+            var availableHeight = Mathf.Max(0, topEdge - viewport.yMin - bottomInset);
             var scale = Mathf.Min(1, availableHeight / _rectTransform.rect.height);
             scale = Mathf.Min(scale, Mathf.Max(0, viewport.width) / _rectTransform.rect.width);
 
@@ -57,14 +67,14 @@ namespace Cgs.UI
             var height = _rectTransform.rect.height * scale;
             var anchorX = viewport.xMin + viewport.width * Mathf.Lerp(
                 _rectTransform.anchorMin.x, _rectTransform.anchorMax.x, _rectTransform.pivot.x);
-            var anchorY = viewport.yMin + viewport.height * Mathf.Lerp(
-                _rectTransform.anchorMin.y, _rectTransform.anchorMax.y, _rectTransform.pivot.y);
             var minimumX = viewport.xMin + width * _rectTransform.pivot.x;
             var maximumX = viewport.xMax - width * (1 - _rectTransform.pivot.x);
             var minimumY = viewport.yMin + bottomInset + height * _rectTransform.pivot.y;
-            var maximumY = viewport.yMax - topInset - height * (1 - _rectTransform.pivot.y);
+            var maximumY = topEdge - height * (1 - _rectTransform.pivot.y);
             var positionX = Mathf.Clamp(anchorX + _preferredPosition.x, minimumX, maximumX);
-            var positionY = Mathf.Clamp(anchorY + _preferredPosition.y, minimumY, maximumY);
+            var positionY = fitBelowAnchor
+                ? maximumY
+                : Mathf.Clamp(anchorY + _preferredPosition.y, minimumY, maximumY);
             _rectTransform.anchoredPosition = new Vector2(positionX - anchorX, positionY - anchorY);
         }
     }

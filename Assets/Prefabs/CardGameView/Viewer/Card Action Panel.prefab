@@ -153,6 +153,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Cgs::Cgs.UI.ActionPanelViewportFit
   topInset: 160
   bottomInset: 20
+  fitBelowAnchor: 1
+  anchorGap: 20
 --- !u!1001 &2062445856770879976
 PrefabInstance:
   m_ObjectHideFlags: 0
