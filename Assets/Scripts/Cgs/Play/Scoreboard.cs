@@ -42,6 +42,10 @@ namespace Cgs.Play
 
         public InputField PointsInputField => pointsInputField;
 
+        private bool? _labelsOnline;
+        private string _roomName;
+        private string _roomId;
+
         private static bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline;
 
         private bool IsPointsOutOfSync => IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
@@ -145,18 +149,30 @@ namespace Cgs.Play
             }
         }
 
-        private void Refresh()
+        private void RefreshRoomLabels(bool online, string roomName, string roomId)
         {
-            if (IsOnline)
+            if (_labelsOnline == online && _roomName == roomName && _roomId == roomId)
+                return;
+            _labelsOnline = online;
+            _roomName = roomName;
+            _roomId = roomId;
+            if (online)
             {
-                Cgs.Localization.LocalizedUiText.SetLiteral(roomNameText, CardGameManager.Current.Name);
-                Cgs.Localization.LocalizedUiText.SetLiteral(roomIdIpText, CgsNetManager.Instance.RoomIdIp);
+                LocalizedUiText.SetLiteral(roomNameText, roomName);
+                LocalizedUiText.SetLiteral(roomIdIpText, roomId);
             }
             else
             {
-                Cgs.Localization.LocalizedUiText.Set(roomNameText, new Cgs.Localization.UiMessage("common.offline", Offline));
-                Cgs.Localization.LocalizedUiText.Set(roomIdIpText, new Cgs.Localization.UiMessage("common.offline", Offline));
+                LocalizedUiText.Set(roomNameText, new UiMessage("common.offline", Offline));
+                LocalizedUiText.Set(roomIdIpText, new UiMessage("common.offline", Offline));
             }
+        }
+
+        private void Refresh()
+        {
+            var online = IsOnline;
+            RefreshRoomLabels(online, online ? CardGameManager.Current.Name : null,
+                online ? CgsNetManager.Instance.RoomIdIp : null);
 
             var scores = GameObject.FindGameObjectsWithTag("Player")
                 .Select(player => player.GetComponent<CgsNetPlayer>()).Select(cgsNetPlayer =>
