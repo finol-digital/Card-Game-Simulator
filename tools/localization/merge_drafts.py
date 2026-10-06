@@ -10,19 +10,23 @@ from catalog import (CatalogError, catalog_header, load_json, manifest_codes, no
                      require, serialize, source_hash, validate_source, validate_translation)
 
 
+def validate_merge_catalog(catalog, code, source):
+    # Empty catalogs are allowed here: this is the missing-entry preparation tool.
+    probe = deepcopy(catalog)
+    if probe.get("entries") == {}:
+        probe["entries"] = {"temporary.entry": {}}
+    catalog_header(probe, code)
+    unknown = catalog["entries"].keys() - source["entries"].keys()
+    require(not unknown, f"unknown keys require explicit migration: {', '.join(sorted(unknown))}")
+
+
 def merge(source, existing, draft):
     validate_source(source)
     require(isinstance(existing, dict) and isinstance(draft, dict), "catalogs must be objects")
     code = existing.get("locale")
     require(code != "en" and nonempty(code), "only translation catalogs can be merged")
-    # Empty catalogs are allowed here: this is the missing-entry preparation tool.
     for catalog in (existing, draft):
-        probe = deepcopy(catalog)
-        if probe.get("entries") == {}:
-            probe["entries"] = {"temporary.entry": {}}
-        catalog_header(probe, code)
-        unknown = catalog["entries"].keys() - source["entries"].keys()
-        require(not unknown, f"unknown keys require explicit migration: {', '.join(sorted(unknown))}")
+        validate_merge_catalog(catalog, code, source)
     result = deepcopy(existing)
     for key, english in sorted(source["entries"].items()):
         current = result["entries"].get(key)
@@ -32,14 +36,14 @@ def merge(source, existing, draft):
         if isinstance(current, dict) and nonempty(current.get("text")):
             if current.get("sourceHash") != source_hash(english):
                 current["status"] = "needs-review"
-            validate_translation(key, current, english)
+            validate_translation(current, english)
             continue
         candidate = draft["entries"].get(key)
         if candidate is None:
             continue
         require(isinstance(candidate, dict) and candidate.get("status") == "machine",
                 f"{key}: generated drafts must have machine status")
-        validate_translation(key, candidate, english)
+        validate_translation(candidate, english)
         result["entries"][key] = deepcopy(candidate)
     result["entries"] = dict(sorted(result["entries"].items()))
     return result

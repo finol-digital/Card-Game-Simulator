@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from catalog import CatalogError, load_json, manifest_codes, serialize, source_hash, validate_catalogs
+from catalog import CatalogError, load_json, manifest_codes, serialize, source_hash, tags, validate_catalogs
 from merge_drafts import merge
 
 
@@ -99,6 +99,17 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual([], errors)
         self.assertEqual(1, len(warnings))
         self.assertEqual(old_hash, self.translation["entries"]["cards.count"]["sourceHash"])
+
+    def test_rich_text_attributes_and_self_closing_tags_are_preserved(self):
+        parsed = tags('<color=#ff0000><b>Cards</b></color><sprite name="card"/><br>')
+        self.assertEqual(1, parsed[("", "color", "=#ff0000")])
+        self.assertEqual(1, parsed[("/", "color", "")])
+        self.assertEqual(1, parsed[("", "sprite", 'name="card"/')])
+        self.assertEqual(1, parsed[("", "br", "")])
+
+    def test_long_unterminated_tag_does_not_hide_following_valid_tags(self):
+        parsed = tags("<" + "a" * 100000 + "<b>Cards</b>")
+        self.assertEqual({("", "b", ""): 1, ("/", "b", ""): 1}, parsed)
 
     def test_review_metadata_rejected(self):
         original = deepcopy(self.translation)

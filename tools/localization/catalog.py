@@ -12,7 +12,9 @@ KEY = re.compile(r"[a-z][a-z0-9]*(?:\.[a-z][a-z0-9]*)+\Z")
 CODE = re.compile(r"[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*\Z")
 ARGUMENT = re.compile(r"[a-z][A-Za-z0-9]*\Z")
 HASH = re.compile(r"[a-f0-9]{64}\Z")
-TAG = re.compile(r"<(/?)([a-zA-Z][a-zA-Z0-9-]*)([^<>]*)>")
+TAG = re.compile(r"<([^<>]*)>")
+TAG_NAME = re.compile(r"/?[a-zA-Z][a-zA-Z0-9-]*")
+PROVENANCE_DATE_ERROR = "provenance date must be YYYY-MM-DD"
 RICH_TAGS = {"b", "i", "u", "s", "color", "size", "material", "quad", "alpha", "align",
              "allcaps", "cspace", "font", "font-weight", "indent", "line-height", "line-indent",
              "link", "lowercase", "margin", "mark", "mspace", "nobr", "noparse", "rotate",
@@ -37,7 +39,7 @@ def _unique_object(pairs):
 def load_json(path):
     try:
         return json.loads(Path(path).read_text(encoding="utf-8"), object_pairs_hook=_unique_object)
-    except (OSError, UnicodeError, ValueError) as error:
+    except (OSError, ValueError) as error:
         raise CatalogError(f"{path}: {error}") from error
 
 
@@ -122,12 +124,16 @@ def tags(text):
     stack = []
     result = Counter()
     for match in TAG.finditer(text):
-        closing, name, attributes = match.groups()
-        name = name.lower()
+        content = match[1]
+        name_match = TAG_NAME.match(content)
+        if name_match is None:
+            continue
+        closing = "/" if content.startswith("/") else ""
+        name = name_match[0].lstrip("/").lower()
         # Instructions can contain literal angle brackets such as <Quantity>.
         if name not in RICH_TAGS:
             continue
-        attributes = attributes.strip()
+        attributes = content[name_match.end():].strip()
         result[(closing, name, attributes)] += 1
         if closing:
             require(stack and stack.pop() == name, f"unbalanced rich-text tag: {match[0]}")
@@ -168,7 +174,7 @@ def validate_source(source):
             raise CatalogError(f"en / {key}: {error}") from error
 
 
-def validate_translation(key, entry, source):
+def validate_translation(entry, source):
     fields(entry, ("text", "status", "sourceHash", "provenance"))
     require(nonempty(entry["text"]), "text must be non-empty")
     require(isinstance(entry["status"], str) and entry["status"] in STATUSES, "invalid review status")
@@ -176,12 +182,12 @@ def validate_translation(key, entry, source):
     provenance = entry["provenance"]
     fields(provenance, ("method", "date"), ("note",))
     require(nonempty(provenance["method"]), "provenance method must be non-empty")
-    require(isinstance(provenance["date"], str), "provenance date must be YYYY-MM-DD")
+    require(isinstance(provenance["date"], str), PROVENANCE_DATE_ERROR)
     try:
         parsed = date.fromisoformat(provenance["date"])
-        require(parsed.isoformat() == provenance["date"], "provenance date must be YYYY-MM-DD")
+        require(parsed.isoformat() == provenance["date"], PROVENANCE_DATE_ERROR)
     except ValueError as error:
-        raise CatalogError("provenance date must be YYYY-MM-DD") from error
+        raise CatalogError(PROVENANCE_DATE_ERROR) from error
     require("note" not in provenance or nonempty(provenance["note"]), "provenance note must be non-empty")
     if source["smart"]:
         require(placeholders(entry["text"]) == set(source["arguments"]), "named arguments differ from English")
@@ -221,7 +227,7 @@ def validate_catalogs(directory):
             try:
                 require(key in entries, "unknown key (retirement requires explicit migration)")
                 require(key in translations, "missing translation")
-                stale = validate_translation(key, translations[key], entries[key])
+                stale = validate_translation(translations[key], entries[key])
                 statuses[translations[key]["status"]] += 1
                 valid += 1
                 if stale:

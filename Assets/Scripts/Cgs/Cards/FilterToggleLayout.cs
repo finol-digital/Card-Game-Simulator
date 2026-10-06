@@ -56,9 +56,8 @@ namespace Cgs.Cards
         {
             if (_labels == null)
                 return;
-            foreach (var label in _labels)
-                if (label != null)
-                    label.UnregisterDirtyVerticesCallback(MarkDirty);
+            foreach (var label in _labels.Where(label => label != null))
+                label.UnregisterDirtyVerticesCallback(MarkDirty);
         }
     }
 }

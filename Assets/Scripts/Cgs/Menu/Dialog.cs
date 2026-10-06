@@ -124,13 +124,6 @@ namespace Cgs.Menu
                 ShowMessage(new Message { Text = text.English, Localized = text });
         }
 
-        public void Prompt(UiMessage text, UnityAction yesAction, bool unskippable = false)
-            => Ask(text, null, yesAction, unskippable);
-
-        public void Ask(UiMessage text, UnityAction noAction, UnityAction yesAction, bool unskippable = false)
-            => ShowMessage(new Message { Text = text.English, Localized = text, NoAction = noAction,
-                YesAction = yesAction, Unskippable = unskippable, CanCopy = true });
-
         public void ShowStatus(string text)
         {
             // Native sharing may finish after this dialog has been destroyed.
@@ -154,12 +147,19 @@ namespace Cgs.Menu
             Ask(text, null, yesAction, unskippable);
         }
 
+        public void Prompt(UiMessage text, UnityAction yesAction, bool unskippable = false)
+            => Ask(text, null, yesAction, unskippable);
+
         public void Ask(string text, UnityAction noAction, UnityAction yesAction, bool unskippable = false)
         {
             var message = new Message()
                 { Text = text, NoAction = noAction, YesAction = yesAction, Unskippable = unskippable, CanCopy = true };
             ShowMessage(message);
         }
+
+        public void Ask(UiMessage text, UnityAction noAction, UnityAction yesAction, bool unskippable = false)
+            => ShowMessage(new Message { Text = text.English, Localized = text, NoAction = noAction,
+                YesAction = yesAction, Unskippable = unskippable, CanCopy = true });
 
         private void ShowMessage(Message message)
         {

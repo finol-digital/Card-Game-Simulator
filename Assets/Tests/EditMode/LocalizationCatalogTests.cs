@@ -64,6 +64,18 @@ namespace Tests.EditMode
         }
 
         [Test]
+        public void ReimportUnusedLocale_DoesNotEnableUnshippedLanguage()
+        {
+            var path = AssetDatabase.FindAssets("t:Locale", new[] { "Assets/Localization/Locales" })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Single(assetPath => AssetDatabase.LoadAssetAtPath<UnityEngine.Localization.Locale>(assetPath)
+                    .Identifier.Code == "af-ZA");
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+            Assert.IsFalse(LocalizationEditorSettings.GetLocales().Any(locale => locale.Identifier.Code == "af-ZA"));
+            CatalogImporter.ValidateGenerated();
+        }
+
+        [Test]
         public void StaleContentBuildPolicy_IsRejectedBeforeBuild()
         {
             var settings = UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings;

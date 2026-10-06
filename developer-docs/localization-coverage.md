@@ -171,6 +171,16 @@ Do not mark the remaining OpenSpec validation tasks complete solely because the
 catalogs or source-level checks pass. The release PR does not replace these checks;
 merging and deployment require separate authorization.
 
+Release follow-up:
+
+- Release CI exposed Unity Localization re-registering unused locale assets on a
+  fresh import. A postprocessor now applies the shipped manifest after the package
+  importer; a regression test reimports an unused locale and verifies it stays
+  unavailable. This preserves the unused assets without shipping their languages.
+- The release quality review also prompted a linear rich-text tag scanner and
+  focused validator/merger and C# cleanup. Catalog tooling now has 22 regression
+  tests, including long malformed tag input and rich-text attribute preservation.
+
 Remaining acceptance checks:
 
 - **4.3:** initial gamepad focus, pointer opening/wheel scrolling, reopening and
