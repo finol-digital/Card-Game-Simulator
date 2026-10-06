@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: Localization Settings
   m_EditorClassIdentifier: 
   m_StartupSelectors:
-  - rid: 4517455699848986823
-  - rid: 4517455699848986824
-  - rid: 4517455699848986825
+  - rid: 7133309421012649524
   m_AvailableLocales:
     rid: 4517455699848986826
   m_AssetDatabase:
@@ -33,20 +31,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 4517455699848986823
-      type: {class: CommandLineLocaleSelector, ns: UnityEngine.Localization.Settings,
-        asm: Unity.Localization}
-      data:
-        m_CommandLineArgument: -language=
-    - rid: 4517455699848986824
-      type: {class: SystemLocaleSelector, ns: UnityEngine.Localization.Settings, asm: Unity.Localization}
-      data: 
-    - rid: 4517455699848986825
-      type: {class: SpecificLocaleSelector, ns: UnityEngine.Localization.Settings,
-        asm: Unity.Localization}
-      data:
-        m_LocaleId:
-          m_Code: en
     - rid: 4517455699848986826
       type: {class: LocalesProvider, ns: UnityEngine.Localization.Settings, asm: Unity.Localization}
       data: 
@@ -61,7 +45,7 @@ MonoBehaviour:
         m_CustomTablePostprocessor:
           rid: -2
         m_AsynchronousBehaviour: 0
-        m_UseFallback: 0
+        m_UseFallback: 1
     - rid: 4517455699848986828
       type: {class: LocalizedStringDatabase, ns: UnityEngine.Localization.Settings,
         asm: Unity.Localization}
@@ -73,9 +57,9 @@ MonoBehaviour:
         m_CustomTablePostprocessor:
           rid: -2
         m_AsynchronousBehaviour: 0
-        m_UseFallback: 0
+        m_UseFallback: 1
         m_MissingTranslationState: 1
-        m_NoTranslationFoundMessage: No translation found for '{key}' in {table.TableCollectionName}
+        m_NoTranslationFoundMessage: 
         m_SmartFormat:
           rid: 4517455699848986829
     - rid: 4517455699848986829
@@ -226,3 +210,39 @@ MonoBehaviour:
         - default
         - d
         - 
+    - rid: 7133309421012649524
+      type: {class: CgsLocaleSelector, ns: Cgs.Localization, asm: Cgs.Localization}
+      data:
+        languages:
+        - code: en
+          nativeName: English
+          aliases: []
+        - code: es
+          nativeName: "Espa\xF1ol"
+          aliases: []
+        - code: zh-Hans
+          nativeName: "\u7B80\u4F53\u4E2D\u6587"
+          aliases:
+          - zh-CN
+          - zh-SG
+        - code: pt-BR
+          nativeName: "Portugu\xEAs (Brasil)"
+          aliases: []
+        - code: ko
+          nativeName: "\uD55C\uAD6D\uC5B4"
+          aliases: []
+        - code: fr
+          nativeName: "Fran\xE7ais"
+          aliases: []
+        - code: de
+          nativeName: Deutsch
+          aliases: []
+        - code: ja
+          nativeName: "\u65E5\u672C\u8A9E"
+          aliases: []
+        - code: it
+          nativeName: Italiano
+          aliases: []
+        - code: ru
+          nativeName: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439"
+          aliases: []

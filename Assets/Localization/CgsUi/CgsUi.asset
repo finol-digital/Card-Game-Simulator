@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be51871efa6c3e4eae1703925c8f5ac, type: 3}
+  m_Name: CgsUi
+  m_EditorClassIdentifier: Unity.Localization.Editor::UnityEditor.Localization.StringTableCollection
+  m_SharedTableData: {fileID: 11400000, guid: 512800adc6944244785d38e1836fdff1, type: 2}
+  m_Tables:
+  - {fileID: 11400000, guid: a3a3bde709cd4bc4cb65d784220ab921, type: 2}
+  - {fileID: 11400000, guid: 59b8ff8da5c081e41ac5c8dd27c634cf, type: 2}
+  - {fileID: 11400000, guid: d9f81573d9401f8409bb1be0c67db6c4, type: 2}
+  - {fileID: 11400000, guid: 66c6f41ea83274f42ad34f98c52a5f83, type: 2}
+  - {fileID: 11400000, guid: ea0da56003f0cf24abde692a5eb86d65, type: 2}
+  - {fileID: 11400000, guid: c129b7d9ab1d6f34badbf25fca268ff5, type: 2}
+  - {fileID: 11400000, guid: f3e31b68d2ca9eb4c9bc02e087da1593, type: 2}
+  - {fileID: 11400000, guid: b3699b1b9b491a244b277fe8f3d1467a, type: 2}
+  - {fileID: 11400000, guid: 9030b5c2cfb25d544b069f329d2587c6, type: 2}
+  - {fileID: 11400000, guid: d52a4b5cfaec1834c88ff499edab152f, type: 2}
+  m_Extensions: []
+  m_Group: String Table
+  references:
+    version: 2
+    RefIds: []
