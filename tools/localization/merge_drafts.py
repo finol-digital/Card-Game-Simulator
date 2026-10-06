@@ -7,7 +7,8 @@ from pathlib import Path
 import tempfile
 
 from catalog import (CatalogError, catalog_header, load_json, manifest_codes, nonempty,
-                     require, serialize, source_hash, validate_source, validate_translation)
+                     require, serialize, source_hash, validate_source, validate_translation,
+                     validate_translation_metadata)
 
 
 def validate_merge_catalog(catalog, code, source):
@@ -35,8 +36,10 @@ def merge(source, existing, draft):
             require(isinstance(current.get("text"), str), f"{key}: text must be a string")
         if isinstance(current, dict) and nonempty(current.get("text")):
             if current.get("sourceHash") != source_hash(english):
+                validate_translation_metadata(current)
                 current["status"] = "needs-review"
-            validate_translation(current, english)
+            else:
+                validate_translation(current, english)
             continue
         candidate = draft["entries"].get(key)
         if candidate is None:
