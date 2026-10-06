@@ -1,5 +1,17 @@
 # Translating CGS
 
+> **Review stack availability:** PR #558 supplies the English catalog, manifest,
+> and Python tools. Run `python -m unittest discover -s tools/localization` to
+> exercise the tools on their self-contained fixtures. The default catalog
+> validator intentionally reports missing translations until language packs
+> #561–#563 land; do not treat a partial stack as release-ready or suppress these
+> errors. The `es.json` example becomes available in #561. Unity importer and
+> font commands require the foundations and font assets in #559–#560, all
+> language packs, and the collections/Addressables registration in #564.
+> UI authoring (including tooltips and the language dropdown) additionally
+> requires the menu integration in #565. The Unity steps below describe that
+> assembled feature, not commands available at the first review layer.
+
 CGS stores its interface translations in `translations/`. You can correct wording
 without Unity. Card names, game definitions, deck text, URLs, chat and player names
 are supplied content and must not be translated by this system.

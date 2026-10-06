@@ -160,6 +160,28 @@ class CatalogTests(unittest.TestCase):
         empty = {"schemaVersion": 1, "locale": "es", "entries": {}}
         self.assertEqual(self.translation, merge(self.source, empty, self.translation))
 
+    def test_structurally_stale_wording_is_preserved_but_release_validation_fails(self):
+        original = deepcopy(self.translation)
+        for text, arguments in (("<b>{amount}</b> cards", {"amount": "Card count."}),
+                                ("<i>{count}</i> cards", {"count": "Card count."})):
+            with self.subTest(text=text):
+                self.source["entries"]["cards.count"].update(text=text, arguments=arguments)
+                self.translation = merge(self.source, original, original)
+                expected = deepcopy(original)
+                expected["entries"]["cards.count"]["status"] = "needs-review"
+                self.assertEqual(expected, self.translation)
+                self.assertTrue(self.validate()[0])
+                self.assertEqual(expected, merge(self.source, self.translation, original))
+
+    def test_stale_translation_still_requires_valid_metadata(self):
+        self.source["entries"]["cards.count"]["context"] += " Changed."
+        for field, value in (("status", "invalid"), ("sourceHash", "bad"), ("provenance", {})):
+            with self.subTest(field=field):
+                existing = deepcopy(self.translation)
+                existing["entries"]["cards.count"][field] = value
+                with self.assertRaises(CatalogError):
+                    merge(self.source, existing, self.translation)
+
     def test_invalid_draft_does_not_mutate_inputs(self):
         empty = {"schemaVersion": 1, "locale": "es", "entries": {}}
         self.translation["entries"]["cards.count"]["text"] = "{wrong}"
