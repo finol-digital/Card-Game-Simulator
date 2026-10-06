@@ -26,6 +26,36 @@ namespace Tests.EditMode
         }
 
         [Test]
+        public void LanguageRow_BindsMixedFontsForCaptionAndInactiveItems()
+        {
+            var row = new UnityEngine.GameObject("Language Dropdown");
+            row.SetActive(false);
+            try
+            {
+                foreach (var name in new[] { "Label", "Caption", "Inactive item" })
+                {
+                    var child = new UnityEngine.GameObject(name, typeof(UnityEngine.RectTransform),
+                        typeof(UnityEngine.UI.Text));
+                    child.transform.SetParent(row.transform);
+                    child.SetActive(name != "Inactive item");
+                }
+                var bind = typeof(AuthoredUiBinder).GetMethod("BindLanguageFonts",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                bind.Invoke(null, new object[] { row });
+                bind.Invoke(null, new object[] { row });
+                var texts = row.GetComponentsInChildren<UnityEngine.UI.Text>(true);
+                Assert.AreEqual(3, texts.Length);
+                foreach (var text in texts)
+                {
+                    var fonts = text.GetComponents<Cgs.Localization.LocalizedUiFont>();
+                    Assert.AreEqual(1, fonts.Length, text.name);
+                    Assert.AreEqual("mixed", new SerializedObject(fonts[0]).FindProperty("key").stringValue);
+                }
+            }
+            finally { UnityEngine.Object.DestroyImmediate(row); }
+        }
+
+        [Test]
         public void BundledFonts_CoverCatalogsAndEveryNativeName()
         {
             FontCatalogBuilder.ValidateGlyphs();
