@@ -75,6 +75,48 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator ScoreboardLabels_ReuseBindingsAndTrackConnectionAndLocale()
+        {
+            var owner = new GameObject("Scoreboard test");
+            owner.SetActive(false);
+            var scoreboard = owner.AddComponent<Cgs.Play.Scoreboard>();
+            var name = _object.GetComponent<Text>();
+            var idObject = new GameObject("Room ID", typeof(RectTransform), typeof(Text));
+            idObject.transform.SetParent(_object.transform);
+            var id = idObject.GetComponent<Text>();
+            var flags = BindingFlags.NonPublic | BindingFlags.Instance;
+            typeof(Cgs.Play.Scoreboard).GetField("roomNameText", flags).SetValue(scoreboard, name);
+            typeof(Cgs.Play.Scoreboard).GetField("roomIdIpText", flags).SetValue(scoreboard, id);
+            var refresh = typeof(Cgs.Play.Scoreboard).GetMethod("RefreshRoomLabels", flags);
+            var bindingField = typeof(LocalizedUiText).GetField("_binding", flags);
+            try
+            {
+                refresh.Invoke(scoreboard, new object[] { false, null, null });
+                var presenter = name.GetComponent<LocalizedUiText>();
+                var binding = bindingField.GetValue(presenter);
+                Assert.IsNotNull(binding);
+                for (var frame = 0; frame < 10; frame++)
+                    refresh.Invoke(scoreboard, new object[] { false, null, null });
+                Assert.AreSame(binding, bindingField.GetValue(presenter));
+                CgsLocalization.SelectLanguage("es");
+                yield return Until(() => name.text != Cgs.Play.Scoreboard.Offline);
+                Assert.AreEqual(name.text, id.text);
+                refresh.Invoke(scoreboard, new object[] { true, "Player room 日本語", "12345" });
+                Assert.AreEqual("Player room 日本語", name.text);
+                Assert.AreEqual("12345", id.text);
+                Assert.IsNull(bindingField.GetValue(presenter));
+                refresh.Invoke(scoreboard, new object[] { true, "Renamed room", "67890" });
+                Assert.AreEqual("Renamed room", name.text);
+                Assert.AreEqual("67890", id.text);
+                refresh.Invoke(scoreboard, new object[] { false, null, null });
+                CgsLocalization.SelectLanguage("en");
+                yield return Until(() => name.text == Cgs.Play.Scoreboard.Offline);
+                Assert.AreEqual(name.text, id.text);
+            }
+            finally { Object.DestroyImmediate(owner); }
+        }
+
+        [UnityTest]
         public IEnumerator VisibleAndReusedText_TracksLocaleAndArguments()
         {
             var text = _object.GetComponent<Text>();
