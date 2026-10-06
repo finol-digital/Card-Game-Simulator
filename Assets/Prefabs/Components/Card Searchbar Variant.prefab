@@ -149,12 +149,10 @@ MonoBehaviour:
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
   tooltip: Filter
-  localizationKey: common.filter
   avoidOverlap: 0
   isBelow: 0
   inputActionId: Cards/Filter
   parentTransform: {fileID: 0}
-  singleLineBounds: {fileID: 0}
 --- !u!1 &7847617374993802598
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,14 +363,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2483332906243068070}
-    - targetCorrespondingSourceObject: {fileID: 4881178930520895749, guid: f4698c1a75d36a640afc1bea8b676ff4,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8773560613202579917}
-    - targetCorrespondingSourceObject: {fileID: 4881816519672613729, guid: f4698c1a75d36a640afc1bea8b676ff4,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8866117627252976146}
   m_SourcePrefab: {fileID: 100100000, guid: f4698c1a75d36a640afc1bea8b676ff4, type: 3}
 --- !u!224 &7858367718469537993 stripped
 RectTransform:
@@ -380,44 +370,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3290804565749412098}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7932240904189016675 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4881816519672613729, guid: f4698c1a75d36a640afc1bea8b676ff4,
-    type: 3}
-  m_PrefabInstance: {fileID: 3290804565749412098}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8866117627252976146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7932240904189016675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!1 &7932570885073633287 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4881178930520895749, guid: f4698c1a75d36a640afc1bea8b676ff4,
-    type: 3}
-  m_PrefabInstance: {fileID: 3290804565749412098}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8773560613202579917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7932570885073633287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
 --- !u!1 &7932753221892692163 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4881203083407124929, guid: f4698c1a75d36a640afc1bea8b676ff4,

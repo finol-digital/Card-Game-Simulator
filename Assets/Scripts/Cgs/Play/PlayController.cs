@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -383,8 +382,7 @@ namespace Cgs.Play
         private void StartDecks()
         {
             if (CardGameManager.Current.GameStartDecks.Count > 0)
-                CardGameManager.Instance.Messenger.Ask(UiMessage.With("play.load.decks", LoadStartDecksAsk,
-                    ("names", string.Join(", ", CardGameManager.Current.GameStartDecks.Select(deck => $"'{deck.Name}'")))), ShowDeckMenu, StartLoadStartDecks);
+                CardGameManager.Instance.Messenger.Ask(LoadStartDecksAsk, ShowDeckMenu, StartLoadStartDecks);
             else
                 ShowDeckMenu();
         }
@@ -432,7 +430,7 @@ namespace Cgs.Play
                 catch (Exception e)
                 {
                     Debug.LogError(DeckLoadMenu.DeckLoadErrorMessage + e);
-                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.deck.load", DeckLoadMenu.DeckLoadErrorMessage + e.Message, ("detail", e.Message)));
+                    CardGameManager.Instance.Messenger.Show(DeckLoadMenu.DeckLoadErrorMessage + e.Message);
                 }
             }
         }
@@ -669,7 +667,7 @@ namespace Cgs.Play
             var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerSeat);
 
             var deckPlayCardsAsk = BuildAskForDeckPlayCards(decksToCardsToPlay);
-            if (deckPlayCardsAsk != null)
+            if (!string.IsNullOrEmpty(deckPlayCardsAsk))
                 CardGameManager.Instance.Messenger.Ask(deckPlayCardsAsk, PromptForHand,
                     () => MoveToPlay(decksToCardsToPlay));
             else
@@ -719,10 +717,10 @@ namespace Cgs.Play
             return cardsToPlay;
         }
 
-        private static UiMessage BuildAskForDeckPlayCards(
+        private static string BuildAskForDeckPlayCards(
             Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> deckToCardsToPlay)
         {
-            var names = new List<string>();
+            StringBuilder text = null;
 
             foreach (var deckPlayCard in deckToCardsToPlay)
             {
@@ -731,13 +729,16 @@ namespace Cgs.Play
                     var cards = cardStackToPlay.Key.Cards;
                     foreach (var cardToPlay in cardStackToPlay.Value)
                     {
-                        names.Add("'" + cards[cardToPlay].Name + "'");
+                        if (text == null)
+                            text = new StringBuilder("Play '" + cards[cardToPlay].Name + "'");
+                        else
+                            text.Append(" and '" + cards[cardToPlay].Name + "'");
                     }
                 }
             }
 
-            return names.Count == 0 ? null : UiMessage.With("play.start.cards",
-                "Play " + string.Join(" and ", names) + "?", ("names", string.Join(", ", names)));
+            text?.Append("?");
+            return text?.ToString();
         }
 
         private void MoveToPlay(Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> deckToCardsToPlay)
@@ -1143,13 +1144,13 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void PromptBackToMainMenu()
         {
-            CardGameManager.Instance.Messenger.Prompt(new UiMessage("play.back", MainMenuPrompt), BackToMainMenu);
+            CardGameManager.Instance.Messenger.Prompt(MainMenuPrompt, BackToMainMenu);
         }
 
         [UsedImplicitly]
         public void PromptRestart()
         {
-            CardGameManager.Instance.Messenger.Prompt(new UiMessage("play.restart", RestartPrompt), Restart);
+            CardGameManager.Instance.Messenger.Prompt(RestartPrompt, Restart);
         }
 
         [UsedImplicitly]

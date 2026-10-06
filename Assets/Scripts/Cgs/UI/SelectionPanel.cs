@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using System;
-using Cgs.Localization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -73,7 +71,7 @@ namespace Cgs.UI
         }
 
         protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select,
-            TKey current, Func<TValue, UiMessage> label = null)
+            TKey current)
         {
             if (toggleGroup != null)
                 toggleGroup.allowSwitchOff = true;
@@ -89,11 +87,7 @@ namespace Cgs.UI
                 var toggle = Instantiate(selectionTemplate.gameObject, selectionContent).GetOrAddComponent<Toggle>();
                 toggle.gameObject.SetActive(true);
                 toggle.transform.localScale = Vector3.one;
-                var text = toggle.GetComponentsInChildren<Text>().Last();
-                if (label == null)
-                    LocalizedUiText.SetLiteral(text, option.Value.ToString());
-                else
-                    LocalizedUiText.Set(text, label(option.Value));
+                toggle.GetComponentsInChildren<Text>().Last().text = option.Value.ToString();
                 toggle.interactable = true;
                 toggle.isOn = option.Key.Equals(current);
                 toggle.onValueChanged.AddListener(_ => select(toggle, option.Key));

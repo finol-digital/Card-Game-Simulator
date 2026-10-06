@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -177,7 +176,7 @@ namespace Cgs.Cards
                 var newTransform = Instantiate(cardPropertyTemplate.gameObject, scrollRectContent)
                     .transform;
                 newTransform.gameObject.SetActive(true);
-                Cgs.Localization.LocalizedUiText.SetLiteral(newTransform.GetComponentInChildren<Text>(), propertyDef.Display);
+                newTransform.GetComponentInChildren<Text>().text = propertyDef.Display;
                 _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
             }
 
@@ -233,7 +232,7 @@ namespace Cgs.Cards
                 var newTransform = Instantiate(cardPropertyTemplate.gameObject, scrollRectContent)
                     .transform;
                 newTransform.gameObject.SetActive(true);
-                Cgs.Localization.LocalizedUiText.SetLiteral(newTransform.GetComponentInChildren<Text>(), propertyDef.Display);
+                newTransform.GetComponentInChildren<Text>().text = propertyDef.Display;
                 _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
                 _inputFields.Last().text = unityCard.GetPropertyValueString(propertyDef.Name);
             }
@@ -252,8 +251,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void DownloadCardImageFromWeb()
         {
-            Downloader.Show(new UiMessage("images.download.card", DownloadCardImage),
-                new UiMessage("images.download.card.url", DownloadCardImagePrompt), DownloadCardImageFromWeb);
+            Downloader.Show(DownloadCardImage, DownloadCardImagePrompt, DownloadCardImageFromWeb);
         }
 
         private IEnumerator DownloadCardImageFromWeb(string url)
@@ -275,20 +273,20 @@ namespace Cgs.Cards
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
+            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportCardImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
+            NativeGallery.GetImageFromGallery(ImportCardImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportCardImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
             var paths =
- StandaloneFileBrowser.OpenFilePanel(CgsLocalization.Text(new UiMessage("files.select.card", SelectCardImageFilePrompt)), string.Empty, string.Empty, false);
+ StandaloneFileBrowser.OpenFilePanel(SelectCardImageFilePrompt, string.Empty, string.Empty, false);
             if (paths.Length > 0)
                 ImportCardImageFromFile(paths[0]);
             else
                 Debug.LogWarning(ImportImageWarningMessage);
 #else
-            StandaloneFileBrowser.OpenFilePanelAsync(CgsLocalization.Text(new UiMessage("files.select.card", SelectCardImageFilePrompt)), string.Empty, string.Empty, false,
+            StandaloneFileBrowser.OpenFilePanelAsync(SelectCardImageFilePrompt, string.Empty, string.Empty, false,
                 paths => { ImportCardImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
@@ -348,7 +346,7 @@ namespace Cgs.Cards
         {
             if (CardImageUri != null && !CardImageUri.AbsoluteUri.EndsWith(CardGameManager.Current.CardImageFileType))
                 CardGameManager.Instance.Messenger.Show(
-                    UiMessage.With("images.type.warning", "WARNING!: Image file type does not match " + CardGameManager.Current.CardImageFileType, ("extension", CardGameManager.Current.CardImageFileType)), true);
+                    "WARNING!: Image file type does not match " + CardGameManager.Current.CardImageFileType, true);
 
             StartCoroutine(SaveCard());
         }
@@ -395,7 +393,7 @@ namespace Cgs.Cards
             {
                 var sizeWarningMessage = string.Format(ImageQueueService.SizeWarningMessage, card.Name, card.Id);
                 Debug.LogWarning(sizeWarningMessage);
-                CardGameManager.Instance.Messenger.Show(UiMessage.With("images.size.warning", sizeWarningMessage, ("name", card.Name), ("id", card.Id)), true);
+                CardGameManager.Instance.Messenger.Show(sizeWarningMessage, true);
             }
 
             CardGameManager.Current.Add(card);

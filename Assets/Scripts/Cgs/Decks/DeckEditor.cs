@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -419,7 +418,7 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void PromptForClear()
         {
-            CardGameManager.Instance.Messenger.Prompt(new UiMessage("decks.new", NewDeckPrompt), Clear);
+            CardGameManager.Instance.Messenger.Prompt(NewDeckPrompt, Clear);
         }
 
         [UsedImplicitly]
@@ -433,7 +432,7 @@ namespace Cgs.Decks
         {
             newName ??= string.Empty;
             newName = UnityFileMethods.GetSafeFileName(newName);
-            Cgs.Localization.LocalizedUiText.SetLiteral(nameText, newName + (HasChanged ? ChangeIndicator : string.Empty));
+            nameText.text = newName + (HasChanged ? ChangeIndicator : string.Empty);
             return newName;
         }
 
@@ -443,8 +442,8 @@ namespace Cgs.Decks
             var deckName = Deck.DefaultName;
             if (SavedDeck != null)
                 deckName = SavedDeck.Name;
-            Cgs.Localization.LocalizedUiText.SetLiteral(nameText, deckName + (HasChanged ? ChangeIndicator : string.Empty));
-            Cgs.Localization.LocalizedUiText.SetNumber(countText, CurrentDeck.Cards.Count);
+            nameText.text = deckName + (HasChanged ? ChangeIndicator : string.Empty);
+            countText.text = CurrentDeck.Cards.Count.ToString();
         }
 
         private void InputLoad(InputAction.CallbackContext callbackContext)
@@ -622,7 +621,7 @@ namespace Cgs.Decks
         {
             if (HasChanged)
             {
-                CardGameManager.Instance.Messenger.Ask(new UiMessage("decks.unsaved", SaveChangesPrompt), BackToMainMenu, ShowDeckSaveMenu);
+                CardGameManager.Instance.Messenger.Ask(SaveChangesPrompt, BackToMainMenu, ShowDeckSaveMenu);
                 return;
             }
 

@@ -839,18 +839,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5252496900136371521}
-    - targetCorrespondingSourceObject: {fileID: 4881178930520895749, guid: f4698c1a75d36a640afc1bea8b676ff4,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8698974391353779051}
-    - targetCorrespondingSourceObject: {fileID: 4881178930520895749, guid: f4698c1a75d36a640afc1bea8b676ff4,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2358161986104247041}
-    - targetCorrespondingSourceObject: {fileID: 4881816519672613729, guid: f4698c1a75d36a640afc1bea8b676ff4,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2121516433495429897}
   m_SourcePrefab: {fileID: 100100000, guid: f4698c1a75d36a640afc1bea8b676ff4, type: 3}
 --- !u!114 &6699655156933817983 stripped
 MonoBehaviour:
@@ -862,18 +850,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6700159024889526179 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4768883952711561113, guid: f4698c1a75d36a640afc1bea8b676ff4,
-    type: 3}
-  m_PrefabInstance: {fileID: 2221899223664957498}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6730818700310849855}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6730701961064215035 stripped
@@ -897,91 +873,10 @@ MonoBehaviour:
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
   tooltip: Number of faces on each dice when they are created.
-  localizationKey: help.dice.faces
   avoidOverlap: 1
   isBelow: 1
   inputActionId: 
   parentTransform: {fileID: 0}
-  singleLineBounds: {fileID: 0}
---- !u!1 &6730818700310849855 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4881178930520895749, guid: f4698c1a75d36a640afc1bea8b676ff4,
-    type: 3}
-  m_PrefabInstance: {fileID: 2221899223664957498}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8698974391353779051
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6730818700310849855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!114 &2358161986104247041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6730818700310849855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: help.dice.faces
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6700159024889526179}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Number of faces on each dice when they are created.
-  references:
-    version: 2
-    RefIds: []
---- !u!1 &6731324328714720091 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4881816519672613729, guid: f4698c1a75d36a640afc1bea8b676ff4,
-    type: 3}
-  m_PrefabInstance: {fileID: 2221899223664957498}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2121516433495429897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6731324328714720091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
 --- !u!224 &6804951194838514161 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4658356562677211595, guid: f4698c1a75d36a640afc1bea8b676ff4,
@@ -1040,11 +935,6 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Automatically stack cards when they overlap.
-      objectReference: {fileID: 0}
-    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      propertyPath: localizationKey
-      value: help.auto.stack
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413316, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -1159,88 +1049,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6275662588313137203}
-    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6298995798678293974}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
---- !u!114 &2845870565645177637 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 212072498232861229, guid: 941097a8539264a49b1d8dce6757b667,
-    type: 3}
-  m_PrefabInstance: {fileID: 2706662155436552456}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3204668858125907461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &3204668858125907461 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-    type: 3}
-  m_PrefabInstance: {fileID: 2706662155436552456}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6275662588313137203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3204668858125907461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!114 &6298995798678293974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3204668858125907461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: common.auto.stack.cards
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2845870565645177637}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Auto Stack Cards
-  references:
-    version: 2
-    RefIds: []
 --- !u!114 &5180863685511622026 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
@@ -1316,11 +1126,6 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Double-click on a Stack to open the Stack Viewer.
-      objectReference: {fileID: 0}
-    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      propertyPath: localizationKey
-      value: help.stack.view
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413316, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -1435,88 +1240,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8061884202351874942}
-    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7417249201447767610}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
---- !u!1 &2383404390856629230 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-    type: 3}
-  m_PrefabInstance: {fileID: 2946820979093773539}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8061884202351874942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2383404390856629230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!114 &7417249201447767610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2383404390856629230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: common.double.click.to.view.stacks
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3032146035217612494}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Double-Click to View Stacks
-  references:
-    version: 2
-    RefIds: []
---- !u!114 &3032146035217612494 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 212072498232861229, guid: 941097a8539264a49b1d8dce6757b667,
-    type: 3}
-  m_PrefabInstance: {fileID: 2946820979093773539}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2383404390856629230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5371924504633163873 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
@@ -1557,11 +1282,6 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: SubMenu/Menu
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.view.rulebook
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -1717,88 +1437,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2286078887274990587, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 708632727366242756}
-    - targetCorrespondingSourceObject: {fileID: 2286078887274990587, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2047701209206980999}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30c175fe170c9e0459ee166821450a03, type: 3}
---- !u!114 &5832437588481144730 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1494664878241574619, guid: 30c175fe170c9e0459ee166821450a03,
-    type: 3}
-  m_PrefabInstance: {fileID: 4922125277105658177}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6626816498307519162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &6626816498307519162 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2286078887274990587, guid: 30c175fe170c9e0459ee166821450a03,
-    type: 3}
-  m_PrefabInstance: {fileID: 4922125277105658177}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &708632727366242756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6626816498307519162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!114 &2047701209206980999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6626816498307519162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: common.rulebook
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5832437588481144730}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Rulebook
-  references:
-    version: 2
-    RefIds: []
 --- !u!224 &7190487691602351902 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2848342772243254879, guid: 30c175fe170c9e0459ee166821450a03,
@@ -1938,11 +1578,6 @@ PrefabInstance:
       propertyPath: tooltip
       value: When viewing stacks, how much do the cards overlap?
       objectReference: {fileID: 0}
-    - target: {fileID: 4619015876120339027, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
-        type: 3}
-      propertyPath: localizationKey
-      value: help.stack.overlap
-      objectReference: {fileID: 0}
     - target: {fileID: 5521458717891117766, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
         type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -2001,51 +1636,15 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3136035023647765547, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3822359094346600274}
-    - targetCorrespondingSourceObject: {fileID: 5562111979582292474, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 173668932566753280}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21fc8463a1fb6dd4da2e8833b8d50172, type: 3}
---- !u!1 &350394236626540854 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5562111979582292474, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
-    type: 3}
-  m_PrefabInstance: {fileID: 5326719131218254028}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &173668932566753280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 350394236626540854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df97f095505e8f544880a375e95850b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedDropdown
-  options:
-  - index: 0
-    key: common.no.overlap
-    english: No Overlap
-  - index: 1
-    key: common.small.overlap
-    english: Small Overlap
-  - index: 2
-    key: common.high.overlap
-    english: High Overlap
 --- !u!114 &381794008858941962 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5521458717891117766, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
     type: 3}
   m_PrefabInstance: {fileID: 5326719131218254028}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 350394236626540854}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d0b652f32a2cc243917e4028fa0f046, type: 3}
@@ -2057,65 +1656,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5326719131218254028}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7091236398404988135 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3136035023647765547, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
-    type: 3}
-  m_PrefabInstance: {fileID: 5326719131218254028}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3822359094346600274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7091236398404988135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: common.stack.viewer.overlap
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7597278475910859207}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Stack Viewer Overlap
-  references:
-    version: 2
-    RefIds: []
---- !u!114 &7597278475910859207 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2342639636643959051, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
-    type: 3}
-  m_PrefabInstance: {fileID: 5326719131218254028}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7091236398404988135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &6231670846540099553
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2178,11 +1718,6 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Show Actions Menu on Select
-      objectReference: {fileID: 0}
-    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.show.actions.menu.on.select
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413316, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -2297,15 +1832,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1114376235284659197}
-    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3068874183171221113}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
 --- !u!114 &3752212551069594467 stripped
 MonoBehaviour:
@@ -2325,78 +1852,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6231670846540099553}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6091744455271026124 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 212072498232861229, guid: 941097a8539264a49b1d8dce6757b667,
-    type: 3}
-  m_PrefabInstance: {fileID: 6231670846540099553}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6885419049509857516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &6885419049509857516 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-    type: 3}
-  m_PrefabInstance: {fileID: 6231670846540099553}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1114376235284659197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6885419049509857516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!114 &3068874183171221113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6885419049509857516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: common.show.actions.menu
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6091744455271026124}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Show Actions Menu
-  references:
-    version: 2
-    RefIds: []
 --- !u!1001 &7085882062979089826
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2523,15 +1978,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 66792000574508518, guid: cb34354267e822c41877c9c04f71e643,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1854889683497827042}
-    - targetCorrespondingSourceObject: {fileID: 66792000574508518, guid: cb34354267e822c41877c9c04f71e643,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4943816267265058330}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb34354267e822c41877c9c04f71e643, type: 3}
 --- !u!224 &2274571324220418371 stripped
 RectTransform:
@@ -2539,78 +1986,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7085882062979089826}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7114375461546395716 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 66792000574508518, guid: cb34354267e822c41877c9c04f71e643,
-    type: 3}
-  m_PrefabInstance: {fileID: 7085882062979089826}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1854889683497827042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7114375461546395716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.bold
---- !u!114 &4943816267265058330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7114375461546395716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: common.play.settings
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7619109403717152100}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Play Settings
-  references:
-    version: 2
-    RefIds: []
---- !u!114 &7619109403717152100 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 858674133167794374, guid: cb34354267e822c41877c9c04f71e643,
-    type: 3}
-  m_PrefabInstance: {fileID: 7085882062979089826}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7114375461546395716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7409557966330323594
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2762,11 +2137,6 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: Player/Option
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.launch.native.cgs.app
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -2932,15 +2302,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2286078887274990587, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4115471268994372931}
-    - targetCorrespondingSourceObject: {fileID: 2286078887274990587, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7779411561140954448}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30c175fe170c9e0459ee166821450a03, type: 3}
 --- !u!224 &5482379275272839251 stripped
 RectTransform:
@@ -2948,78 +2310,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7751269240535363084}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8370998654152893943 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2286078887274990587, guid: 30c175fe170c9e0459ee166821450a03,
-    type: 3}
-  m_PrefabInstance: {fileID: 7751269240535363084}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4115471268994372931
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8370998654152893943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!114 &7779411561140954448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8370998654152893943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: common.native
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 9163725213824893143}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Native
-  references:
-    version: 2
-    RefIds: []
---- !u!114 &9163725213824893143 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1494664878241574619, guid: 30c175fe170c9e0459ee166821450a03,
-    type: 3}
-  m_PrefabInstance: {fileID: 7751269240535363084}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8370998654152893943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8750810712129032746
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3146,88 +2436,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7755028453825778640, guid: eb9a84c1b0b6d25479b907acb118cde9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3576094824075479569}
-    - targetCorrespondingSourceObject: {fileID: 7755028453825778640, guid: eb9a84c1b0b6d25479b907acb118cde9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 335971873621973025}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb9a84c1b0b6d25479b907acb118cde9, type: 3}
---- !u!1 &1364162637439910394 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7755028453825778640, guid: eb9a84c1b0b6d25479b907acb118cde9,
-    type: 3}
-  m_PrefabInstance: {fileID: 8750810712129032746}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3576094824075479569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364162637439910394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!114 &335971873621973025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364162637439910394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: play.die.faces
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1867216878022943962}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Die Face #
-  references:
-    version: 2
-    RefIds: []
---- !u!114 &1867216878022943962 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
-    type: 3}
-  m_PrefabInstance: {fileID: 8750810712129032746}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364162637439910394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &8054066608286425341 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1636166841839465175, guid: eb9a84c1b0b6d25479b907acb118cde9,
@@ -3291,11 +2501,6 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Double-click on a Die to roll it.
-      objectReference: {fileID: 0}
-    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      propertyPath: localizationKey
-      value: help.die.roll
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413316, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -3410,15 +2615,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4738404089385883023}
-    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3805581091855991744}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
 --- !u!114 &2137331466185853897 stripped
 MonoBehaviour:
@@ -3438,78 +2635,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 9205513037244012363}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8518056143241089094 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667,
-    type: 3}
-  m_PrefabInstance: {fileID: 9205513037244012363}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4738404089385883023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8518056143241089094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
---- !u!114 &3805581091855991744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8518056143241089094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: CgsUi
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: common.double.click.to.roll.dice
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 9021241692793386342}
-        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  english: Double-Click to Roll Dice
-  references:
-    version: 2
-    RefIds: []
---- !u!114 &9021241692793386342 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 212072498232861229, guid: 941097a8539264a49b1d8dce6757b667,
-    type: 3}
-  m_PrefabInstance: {fileID: 9205513037244012363}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8518056143241089094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &9206017064312345635
 PrefabInstance:
   m_ObjectHideFlags: 0

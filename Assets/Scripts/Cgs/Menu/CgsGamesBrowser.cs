@@ -136,9 +136,7 @@ namespace Cgs.Menu
             else if (!filteredGameOptions.ContainsKey(_selectedGameId))
                 _selectedGameId = filteredGameOptions.Keys.OrderBy(key => key).First();
 
-            Rebuild(filteredGameOptions, SelectGame, _selectedGameId, game => Cgs.Localization.UiMessage.With(
-                "games.browser.credit", game.ToString(), ("gameName", game.Name),
-                ("copyright", game.Copyright), ("author", game.Username)));
+            Rebuild(filteredGameOptions, SelectGame, _selectedGameId);
         }
 
         [UsedImplicitly]

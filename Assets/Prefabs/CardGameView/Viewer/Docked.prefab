@@ -163,12 +163,10 @@ MonoBehaviour:
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
   tooltip: <
-  localizationKey: 
   avoidOverlap: 0
   isBelow: 0
   inputActionId: Viewer/SelectPrevious
   parentTransform: {fileID: 0}
-  singleLineBounds: {fileID: 0}
 --- !u!1 &1447138297242777401
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +178,6 @@ GameObject:
   - component: {fileID: 3034400152134299523}
   - component: {fileID: 4059047807627704181}
   - component: {fileID: 7203598228804095655}
-  - component: {fileID: 2931981337087787555}
   m_Layer: 5
   m_Name: Right Arrow
   m_TagString: Untagged
@@ -249,19 +246,6 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: '>'
---- !u!114 &2931981337087787555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1447138297242777401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
 --- !u!1 &2608260849992559053
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +257,6 @@ GameObject:
   - component: {fileID: 6786778424530232475}
   - component: {fileID: 6653777756157640411}
   - component: {fileID: 1727487528784176793}
-  - component: {fileID: 5502754271179904444}
   m_Layer: 5
   m_Name: LeftArrow
   m_TagString: Untagged
@@ -342,19 +325,6 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: <
---- !u!114 &5502754271179904444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2608260849992559053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
 --- !u!1 &5261174020204845843
 GameObject:
   m_ObjectHideFlags: 0
@@ -634,12 +604,10 @@ MonoBehaviour:
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
   tooltip: '>'
-  localizationKey: 
   avoidOverlap: 0
   isBelow: 0
   inputActionId: Viewer/SelectNext
   parentTransform: {fileID: 0}
-  singleLineBounds: {fileID: 0}
 --- !u!1 &6976825450709368626
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,12 +862,10 @@ MonoBehaviour:
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
   tooltip: Zoom
-  localizationKey: common.zoom
   avoidOverlap: 0
   isBelow: 0
   inputActionId: 
   parentTransform: {fileID: 0}
-  singleLineBounds: {fileID: 0}
 --- !u!1 &8000954524817187713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1146,12 +1112,10 @@ MonoBehaviour:
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
   tooltip: Zoom
-  localizationKey: common.zoom
   avoidOverlap: 0
   isBelow: 0
   inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
-  singleLineBounds: {fileID: 0}
 --- !u!1001 &348770098624737699
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1293,31 +1257,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1273857021481749583, guid: e885b7dcac6cff447a150d9f185e8af7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 574580592757453543}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e885b7dcac6cff447a150d9f185e8af7, type: 3}
---- !u!1 &1547745928264334828 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1273857021481749583, guid: e885b7dcac6cff447a150d9f185e8af7,
-    type: 3}
-  m_PrefabInstance: {fileID: 348770098624737699}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &574580592757453543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1547745928264334828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
 --- !u!224 &7182897373361390096 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7456223291527984051, guid: e885b7dcac6cff447a150d9f185e8af7,
@@ -1594,31 +1535,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1273857021481749583, guid: e885b7dcac6cff447a150d9f185e8af7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1494615597176690350}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e885b7dcac6cff447a150d9f185e8af7, type: 3}
---- !u!1 &3635450146276731082 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1273857021481749583, guid: e885b7dcac6cff447a150d9f185e8af7,
-    type: 3}
-  m_PrefabInstance: {fileID: 2584521462848808069}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1494615597176690350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3635450146276731082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
 --- !u!224 &4947137152853808950 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7456223291527984051, guid: e885b7dcac6cff447a150d9f185e8af7,
@@ -1761,31 +1679,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1273857021481749583, guid: e885b7dcac6cff447a150d9f185e8af7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4964031368408627695}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e885b7dcac6cff447a150d9f185e8af7, type: 3}
---- !u!1 &4083890822777817856 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1273857021481749583, guid: e885b7dcac6cff447a150d9f185e8af7,
-    type: 3}
-  m_PrefabInstance: {fileID: 2954716664730011471}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4964031368408627695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4083890822777817856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
 --- !u!224 &5654428430312944892 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7456223291527984051, guid: e885b7dcac6cff447a150d9f185e8af7,
@@ -1814,11 +1709,6 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: Viewer/More
-      objectReference: {fileID: 0}
-    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.more
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -1853,7 +1743,7 @@ PrefabInstance:
     - target: {fileID: 7317508625745834899, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_Sprite
-      value: 
+      value:
       objectReference: {fileID: 21300000, guid: e44ce94aa96860b4da8b6c4c8ab46e33,
         type: 3}
     - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
@@ -1874,7 +1764,7 @@ PrefabInstance:
     - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
+      value:
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}

@@ -971,6 +971,8 @@ MonoBehaviour:
     type: 3}
   setImportMenuPrefab: {fileID: 2398510357189043983, guid: 9bc39dcd2680bde4fab89ce05e86ddfb,
     type: 3}
+  cardViewerPrefab: {fileID: 1205983077926924, guid: 04f1873b7f6a8324887109e8e76da3d7,
+    type: 3}
   bannerImage: {fileID: 1782536896}
   editButtons:
   - {fileID: 2140515673}
@@ -1050,11 +1052,6 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: Cards/PagePrevious
-      objectReference: {fileID: 0}
-    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.previous
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -1421,11 +1418,6 @@ PrefabInstance:
       propertyPath: inputActionId
       value: Player/Cancel
       objectReference: {fileID: 0}
-    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.main.menu
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1622,10 +1614,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1272889842}
-    - targetCorrespondingSourceObject: {fileID: 7755028453825778640, guid: eb9a84c1b0b6d25479b907acb118cde9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1272889843}
   m_SourcePrefab: {fileID: 100100000, guid: eb9a84c1b0b6d25479b907acb118cde9, type: 3}
 --- !u!114 &1272889839 stripped
 MonoBehaviour:
@@ -1665,19 +1653,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!114 &1272889843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272889840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular
 --- !u!1 &1299719830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1785,11 +1760,6 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: Cards/PageNext
-      objectReference: {fileID: 0}
-    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.next
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -2189,11 +2159,6 @@ PrefabInstance:
       propertyPath: inputActionId
       value: Player/Delete
       objectReference: {fileID: 0}
-    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.delete
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2411,11 +2376,6 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: Cards/Edit
-      objectReference: {fileID: 0}
-    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.edit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3014,12 +2974,12 @@ PrefabInstance:
     - target: {fileID: 3134429150104765410, guid: bf590ed4001f322499090c085dd18971,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
+      value:
       objectReference: {fileID: 292914518}
     - target: {fileID: 3134429150104765410, guid: bf590ed4001f322499090c085dd18971,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
+      value:
       objectReference: {fileID: 292914518}
     - target: {fileID: 3134429150104765410, guid: bf590ed4001f322499090c085dd18971,
         type: 3}
@@ -3356,11 +3316,6 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: Cards/New
-      objectReference: {fileID: 0}
-    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: localizationKey
-      value: common.new
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

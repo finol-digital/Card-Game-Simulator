@@ -2,14 +2,9 @@
     "name": "EditMode",
     "rootNamespace": "",
     "references": [
-        "Cgs.Localization",
-        "Unity.Localization",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "UnityExtensionMethods",
-        "Cgs.Editor",
-        "Unity.Localization.Editor",
-        "Unity.Addressables.Editor"
+        "UnityExtensionMethods"
     ],
     "includePlatforms": [
         "Editor"

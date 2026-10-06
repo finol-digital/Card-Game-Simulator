@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using Cgs.Localization;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -48,27 +47,19 @@ namespace Cgs.Menu
         {
             base.Show();
 
-            LocalizedUiText.SetLiteral(label, prompt);
+            label.text = prompt;
 
             var (button1Text, button1Action) = option1;
             button1.onClick.RemoveAllListeners();
             button1.onClick.AddListener(button1Action);
             button1.onClick.AddListener(Hide);
-            LocalizedUiText.SetLiteral(text1, button1Text);
+            text1.text = button1Text;
 
             var (button2Text, button2Action) = option2;
             button2.onClick.RemoveAllListeners();
             button2.onClick.AddListener(button2Action);
             button2.onClick.AddListener(Hide);
-            LocalizedUiText.SetLiteral(text2, button2Text);
-        }
-
-        public void Show(UiMessage prompt, Tuple<UiMessage, UnityAction> option1, Tuple<UiMessage, UnityAction> option2)
-        {
-            Show(prompt.English, Tuple.Create(option1.Item1.English, option1.Item2), Tuple.Create(option2.Item1.English, option2.Item2));
-            LocalizedUiText.Set(label, prompt);
-            LocalizedUiText.Set(text1, option1.Item1);
-            LocalizedUiText.Set(text2, option2.Item1);
+            text2.text = button2Text;
         }
 
         private void InputSelectPrevious(InputAction.CallbackContext callbackContext)

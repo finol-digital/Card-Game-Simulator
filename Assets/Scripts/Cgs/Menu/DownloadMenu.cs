@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections;
-using Cgs.Localization;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -42,20 +41,12 @@ namespace Cgs.Menu
         {
             Show();
 
-            LocalizedUiText.SetLiteral(labelText, label);
-            LocalizedUiText.SetLiteral((Text)urlInputField.placeholder, prompt);
+            labelText.text = label;
+            ((Text)urlInputField.placeholder).text = prompt;
             _downloadCoroutine = downloadCoroutine;
 
             if (!showGamesButton)
                 gamesButton.gameObject.SetActive(false);
-        }
-
-        public void Show(UiMessage label, UiMessage prompt, DownloadCoroutineDelegate downloadCoroutine,
-            bool showGamesButton = false)
-        {
-            Show(label.English, prompt.English, downloadCoroutine, showGamesButton);
-            LocalizedUiText.Set(labelText, label);
-            LocalizedUiText.Set((Text)urlInputField.placeholder, prompt);
         }
 
         private void InputMenu(InputAction.CallbackContext callbackContext)
@@ -116,7 +107,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void PromptForClear()
         {
-            CardGameManager.Instance.Messenger.Prompt(new UiMessage("downloads.clear", ClearPrompt), Clear);
+            CardGameManager.Instance.Messenger.Prompt(ClearPrompt, Clear);
         }
 
         private void Clear()

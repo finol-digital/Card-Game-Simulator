@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.Localization;
 using System.IO;
 using Cgs.UI;
 using JetBrains.Annotations;
@@ -205,15 +204,14 @@ namespace Cgs.Menu
 #if UNITY_WEBGL
             ShowDownloader();
 #else
-            ImportModal.Show(new UiMessage("games.import.choice", ImportGamePrompt),
-                new Tuple<UiMessage, UnityAction>(new UiMessage("games.import.web", DownloadFromWeb), ShowDownloader),
-                new Tuple<UiMessage, UnityAction>(new UiMessage("games.import.file", LoadFromFile), ShowFileLoader));
+            ImportModal.Show(ImportGamePrompt, new Tuple<string, UnityAction>(DownloadFromWeb, ShowDownloader),
+                new Tuple<string, UnityAction>(LoadFromFile, ShowFileLoader));
 #endif
         }
 
         private void ShowDownloader()
         {
-            Downloader.Show(new UiMessage("games.download", DownloadLabel), new UiMessage("games.download.url", DownloadPrompt), CardGameManager.Instance.GetCardGame, true);
+            Downloader.Show(DownloadLabel, DownloadPrompt, CardGameManager.Instance.GetCardGame, true);
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -230,7 +228,7 @@ namespace Cgs.Menu
 #else
             FileBrowser.ShowLoadDialog((paths) => CardGameManager.Instance.ImportCardGame(paths[0]),
                 () => { }, FileBrowser.PickMode.Files, false, null, null,
-                CgsLocalization.Text(new UiMessage("files.select.zip", SelectZipFilePrompt)));
+                SelectZipFilePrompt);
 #endif
         }
 
@@ -285,7 +283,7 @@ namespace Cgs.Menu
                     CardGameManager.Instance.UpdateCardGame(CardGameManager.Current));
             }
             else
-                CardGameManager.Instance.Messenger.Show(UiMessage.With("games.sync.unavailable", NoSyncMessage, ("gameName", CardGameManager.Current.Name)));
+                CardGameManager.Instance.Messenger.Show(NoSyncMessage);
 
             Hide();
         }

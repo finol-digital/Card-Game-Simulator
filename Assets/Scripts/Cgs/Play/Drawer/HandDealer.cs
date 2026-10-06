@@ -15,26 +15,29 @@ namespace Cgs.Play.Drawer
 {
     public class HandDealer : Modal
     {
-        private static bool ShouldDeal
+        private static string DealDraw
         {
             get
             {
+                string result;
                 switch (CardGameManager.Current.DeckSharePreference)
                 {
                     case SharePreference.Ask:
                         var localPlayer = CgsNetManager.Instance.LocalPlayer;
-                        return localPlayer != null && localPlayer.IsDeckShared;
+                        result = localPlayer != null && localPlayer.IsDeckShared ? "Deal" : "Draw";
+                        break;
                     case SharePreference.Share:
-                        return true;
+                        result = "Deal";
+                        break;
                     case SharePreference.Individual:
                     default:
-                        return false;
+                        result = "Draw";
+                        break;
                 }
 
+                return result;
             }
         }
-
-        private static string DealDraw => ShouldDeal ? "Deal" : "Draw";
 
         private string PromptMessage => $"{DealDraw} hand of {Count} cards?";
 
@@ -88,10 +91,8 @@ namespace Cgs.Play.Drawer
 
         private void RefreshText()
         {
-            Cgs.Localization.LocalizedUiText.Set(promptText, Cgs.Localization.UiMessage.With(
-                ShouldDeal ? "play.hand.deal" : "play.hand.draw", PromptMessage, ("count", Count)));
-            Cgs.Localization.LocalizedUiText.Set(countText, Cgs.Localization.UiMessage.With(
-                "common.count", Count.ToString(), ("count", Count)));
+            promptText.text = PromptMessage;
+            countText.text = Count.ToString();
         }
 
         public void Show(UnityAction callback)

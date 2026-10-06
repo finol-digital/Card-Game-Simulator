@@ -11,11 +11,7 @@
         "WebP.Editor",
         "Unity.Netcode.Runtime",
         "Unity.TextMeshPro",
-        "NativeShare.Runtime",
-        "Cgs.Localization",
-        "Unity.Localization",
-        "Unity.ResourceManager",
-        "Unity.InputSystem"
+        "NativeShare.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

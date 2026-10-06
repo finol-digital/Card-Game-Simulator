@@ -2,8 +2,6 @@
     "name": "Cgs",
     "rootNamespace": "",
     "references": [
-        "Cgs.Localization",
-        "Unity.Localization",
         "GUID:a145925718f93ac4380e53283d16d5a9",
         "GUID:ab425aab4b86fce43a60190dfdddb1ad",
         "GUID:e0cd26848372d4e5c891c569017e11f1",

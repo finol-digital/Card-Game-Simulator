@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.Localization;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -16,7 +15,6 @@ namespace Cgs.CardGameView.Multiplayer
     public class Counter : CgsNetPlayable, ICounterDropHandler
     {
         public override string DeletePrompt => "Delete counter?";
-        protected override UiMessage LocalizedDeletePrompt => new UiMessage("play.delete.counter", DeletePrompt);
 
         protected override bool CanClientRequestOwnedObject => true;
 
@@ -115,7 +113,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 logoTransform.gameObject.SetActive(false);
                 valueText.gameObject.SetActive(true);
-                Cgs.Localization.LocalizedUiText.SetNumber(valueText, newValue);
+                valueText.text = newValue.ToString();
             }
         }
 

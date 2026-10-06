@@ -233,7 +233,7 @@ namespace Cgs.CardGameView.Multiplayer
             _countLabel = countLabelGameObject.GetComponent<Text>();
             _countLabel.alignment = TextAnchor.MiddleRight;
             _countLabel.raycastTarget = false;
-            Cgs.Localization.LocalizedUiText.SetNumber(_countLabel, 0);
+            _countLabel.text = "0";
         }
 
         private bool _isCountDirty = true;
@@ -257,7 +257,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardCount != _countLabelCardCount)
             {
                 _countLabelCardCount = cardCount;
-                Cgs.Localization.LocalizedUiText.SetNumber(_countLabel, cardCount);
+                _countLabel.text = cardCount.ToString();
             }
 
             // Cards in this zone are ordered by sibling index, which is synced across the network,

@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections;
-using Cgs.Localization;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,7 +19,6 @@ namespace Cgs.Menu
         public const string TouchlessStartMessage = "Press Any Key";
 
         public static string VersionMessage => $"VERSION {Application.version}";
-        public static UiMessage LocalizedVersion => UiMessage.With("title.version", VersionMessage, ("version", Application.version));
 
         private const int CenterTextFontSizePortrait = 30;
         private const int CenterTextFontSizeLandscape = 40;
@@ -95,11 +93,9 @@ namespace Cgs.Menu
         protected IEnumerator Start()
         {
 #if !UNITY_ANDROID && !UNITY_IOS
-            LocalizedUiText.Set(centerText, new UiMessage("title.start.keyboard", TouchlessStartMessage));
-#else
-            LocalizedUiText.Set(centerText, new UiMessage("title.start.touch", "TAP ANYWHERE TO START"));
+            centerText.text = TouchlessStartMessage;
 #endif
-            LocalizedUiText.Set(versionText, LocalizedVersion);
+            versionText.text = VersionMessage;
 
             yield return null;
 

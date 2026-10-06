@@ -253,12 +253,10 @@ MonoBehaviour:
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
   tooltip: Select
-  localizationKey: common.select
   avoidOverlap: 0
   isBelow: 0
   inputActionId: 
   parentTransform: {fileID: 8800322834627000201}
-  singleLineBounds: {fileID: 0}
 --- !u!1 &5235115289016548999
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,7 +268,6 @@ GameObject:
   - component: {fileID: 5235115289016548998}
   - component: {fileID: 5235115289016548992}
   - component: {fileID: 5235115289016548993}
-  - component: {fileID: 7744956716779334258}
   m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
@@ -339,16 +336,3 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
---- !u!114 &7744956716779334258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5235115289016548999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
-  key: body.regular

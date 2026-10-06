@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using Cgs.Localization;
 using System.Collections.Generic;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
@@ -126,13 +125,13 @@ namespace Cgs.Cards
         {
             if (CardGameManager.Current.IsUploaded)
             {
-                CardGameManager.Instance.Messenger.Show(new UiMessage("cards.cannot.edit", CannotEditCardsMessage));
+                CardGameManager.Instance.Messenger.Show(CannotEditCardsMessage);
                 return;
             }
 
-            NewCardSetModal.Show(new UiMessage("cards.new.choice", NewCardSetDecisionPrompt),
-                new Tuple<UiMessage, UnityAction>(new UiMessage("cards.single", SingleCard), ShowCardEditorMenu),
-                new Tuple<UiMessage, UnityAction>(new UiMessage("cards.set.of.cards", SetOfCards), ShowSetImportMenu));
+            NewCardSetModal.Show(NewCardSetDecisionPrompt,
+                new Tuple<string, UnityAction>(SingleCard, ShowCardEditorMenu),
+                new Tuple<string, UnityAction>(SetOfCards, ShowSetImportMenu));
         }
 
         private void InputEditCard(InputAction.CallbackContext context)
@@ -165,7 +164,7 @@ namespace Cgs.Cards
         {
             if (CardGameManager.Current.IsUploaded)
             {
-                CardGameManager.Instance.Messenger.Show(new UiMessage("cards.cannot.edit", CannotEditCardsMessage));
+                CardGameManager.Instance.Messenger.Show(CannotEditCardsMessage);
                 return;
             }
 

@@ -145,7 +145,8 @@ namespace Cgs.CardGameView.Viewer
             if (IsBlocked)
                 return;
 
-            DisplayValue(SelectedPlayable);
+            foreach (var valueText in valueTexts)
+                valueText.text = SelectedPlayable.ViewValue;
 
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
@@ -280,30 +281,8 @@ namespace Cgs.CardGameView.Viewer
         {
             preview.alpha = 1;
 
-            DisplayValue(playable);
-        }
-
-        private CgsNetPlayable _displayedPlayable;
-        private string _displayedValue;
-
-        private void DisplayValue(CgsNetPlayable playable)
-        {
-            var value = playable.ViewValue;
-            if (_displayedPlayable == playable && _displayedValue == value)
-                return;
-            _displayedPlayable = playable;
-            _displayedValue = value;
-            var message = playable switch
-            {
-                Counter counter => Cgs.Localization.UiMessage.With("play.counter.value", value, ("value", counter.Value)),
-                Die die => Cgs.Localization.UiMessage.With("play.die.value", value, ("value", die.Value), ("max", die.Max)),
-                _ => null
-            };
             foreach (var valueText in valueTexts)
-                if (message == null)
-                    Cgs.Localization.LocalizedUiText.SetLiteral(valueText, value);
-                else
-                    Cgs.Localization.LocalizedUiText.Set(valueText, message);
+                valueText.text = playable.ViewValue;
         }
 
         public void HidePreview()
