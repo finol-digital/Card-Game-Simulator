@@ -8,6 +8,7 @@ using System.IO;
 using System.Security.Cryptography;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Menu;
+using Cgs.Localization;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -111,8 +112,9 @@ namespace Cgs.Play.Multiplayer
                     role = "Host";
                 else if (_manager.IsConnectedClient)
                     role = "Client";
-                _status.text = $"NET TRACE  {role} " +
-                               $"{_manager.LocalClientId}\n{_entries.Count}/{MaxEntries} events";
+                LocalizedUiText.Set(_status, UiMessage.With("diagnostics.status." + role.ToLowerInvariant(),
+                    $"NET TRACE  {role} {_manager.LocalClientId}\n{_entries.Count}/{MaxEntries} events",
+                    ("id", _manager.LocalClientId.ToString()), ("count", _entries.Count), ("total", MaxEntries)));
             }
 
             if (Touchscreen.current != null)
@@ -261,16 +263,20 @@ namespace Cgs.Play.Multiplayer
                 var path = Path.Combine(Application.temporaryCachePath, "cgs-network-trace.txt");
                 File.WriteAllText(path, report);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-                TextSharing.ShareFile(path, CardGameManager.Instance.Messenger.ShowStatus, "text/plain");
+                TextSharing.ShareFile(path, CardGameManager.Instance.Messenger.ShowSharingStatus, "text/plain");
 #else
                 TextSharing.CopyOrShare(report, feedback =>
                 {
                     if (!this || !_status)
                         return;
 
-                    _status.text = feedback == TextSharing.CopiedMessage ? "Trace copied\nto clipboard" : "Copy not confirmed";
+                    var message = SharingMessages.FromFeedback(feedback);
+                    if (message != null)
+                        LocalizedUiText.Set(_status, message);
+                    else
+                        LocalizedUiText.SetLiteral(_status, feedback);
                     if (feedback != TextSharing.CopiedMessage)
-                        CardGameManager.Instance.Messenger.ShowStatus(feedback);
+                        CardGameManager.Instance.Messenger.ShowSharingStatus(feedback);
                     _nextStatusTime = Time.unscaledTime + 3;
                 });
 #endif
@@ -308,28 +314,29 @@ namespace Cgs.Play.Multiplayer
             layout.spacing = 6;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = layout.childForceExpandHeight = true;
-            _status = AddText(panel.transform, "NET TRACE");
-            AddButton(panel.transform, "Mark / snapshot", Snapshot);
-            AddButton(panel.transform, "Export trace", Export);
-            AddButton(panel.transform, "Clear trace", StartCapture);
+            _status = AddText(panel.transform, new UiMessage("diagnostics.title", "NET TRACE"));
+            AddButton(panel.transform, new UiMessage("diagnostics.mark", "Mark / snapshot"), Snapshot);
+            AddButton(panel.transform, new UiMessage("diagnostics.export", "Export trace"), Export);
+            AddButton(panel.transform, new UiMessage("diagnostics.clear", "Clear trace"), StartCapture);
         }
 
-        private static Text AddText(Transform parent, string value)
+        private static Text AddText(Transform parent, UiMessage value)
         {
-            var label = new GameObject(value, typeof(RectTransform), typeof(Text)).GetComponent<Text>();
+            var label = new GameObject(value.Key, typeof(RectTransform), typeof(Text)).GetComponent<Text>();
             label.transform.SetParent(parent, false);
             label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             label.fontSize = 16;
-            label.text = value;
+            label.gameObject.AddComponent<LocalizedUiFont>();
+            LocalizedUiText.Set(label, value);
             label.alignment = TextAnchor.MiddleCenter;
             label.color = Color.white;
             label.raycastTarget = false;
             return label;
         }
 
-        private static void AddButton(Transform parent, string label, UnityAction action)
+        private static void AddButton(Transform parent, UiMessage label, UnityAction action)
         {
-            var button = new GameObject(label, typeof(RectTransform), typeof(Image), typeof(Button));
+            var button = new GameObject(label.Key, typeof(RectTransform), typeof(Image), typeof(Button));
             button.transform.SetParent(parent, false);
             button.GetComponent<Image>().color = new Color(0.15f, 0.22f, 0.3f);
             button.GetComponent<Button>().onClick.AddListener(action);

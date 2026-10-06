@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Linq;
 using Cgs.CardGameView.Multiplayer;
@@ -135,19 +136,27 @@ namespace Cgs.Play
             try
             {
                 var shareText = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
-                TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowStatus, RoomIdIpCopiedMessage);
+                TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowSharingStatus, RoomIdIpCopiedMessage);
             }
             catch (Exception e)
             {
                 Debug.LogError(RoomIdIpErrorMessage + e.Message);
-                CardGameManager.Instance.Messenger.Show(RoomIdIpErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.room.copy", RoomIdIpErrorMessage + e.Message, ("detail", e.Message)));
             }
         }
 
         private void Refresh()
         {
-            roomNameText.text = IsOnline ? CardGameManager.Current.Name : Offline;
-            roomIdIpText.text = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
+            if (IsOnline)
+            {
+                Cgs.Localization.LocalizedUiText.SetLiteral(roomNameText, CardGameManager.Current.Name);
+                Cgs.Localization.LocalizedUiText.SetLiteral(roomIdIpText, CgsNetManager.Instance.RoomIdIp);
+            }
+            else
+            {
+                Cgs.Localization.LocalizedUiText.Set(roomNameText, new Cgs.Localization.UiMessage("common.offline", Offline));
+                Cgs.Localization.LocalizedUiText.Set(roomIdIpText, new Cgs.Localization.UiMessage("common.offline", Offline));
+            }
 
             var scores = GameObject.FindGameObjectsWithTag("Player")
                 .Select(player => player.GetComponent<CgsNetPlayer>()).Select(cgsNetPlayer =>
@@ -160,13 +169,13 @@ namespace Cgs.Play
             {
                 var entry = Instantiate(scoreTemplate.gameObject, scoreContent).GetComponent<ScoreTemplate>();
                 entry.gameObject.SetActive(true);
-                entry.NameText.text = playerName;
-                entry.PointsText.text = points.ToString();
-                entry.HandCountText.text = string.IsNullOrEmpty(handCount)
+                Cgs.Localization.LocalizedUiText.SetLiteral(entry.NameText, playerName);
+                Cgs.Localization.LocalizedUiText.SetNumber(entry.PointsText, points);
+                Cgs.Localization.LocalizedUiText.SetLiteral(entry.HandCountText, string.IsNullOrEmpty(handCount)
                     ? PlayController.Instance.Drawer
                         .GetCardZoneTransform(CgsNetManager.Instance.LocalPlayer.CurrentHand)
                         .GetComponentsInChildren<CardModel>().Length.ToString()
-                    : handCount;
+                    : handCount);
             }
         }
 

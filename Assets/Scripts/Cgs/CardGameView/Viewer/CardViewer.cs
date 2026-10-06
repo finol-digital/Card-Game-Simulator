@@ -187,9 +187,9 @@ namespace Cgs.CardGameView.Viewer
                 card.RegisterDisplay(this);
                 preview.alpha = 1;
                 foreach (var previewName in previewNameText)
-                    previewName.text = card.Name;
+                    Cgs.Localization.LocalizedUiText.SetLiteral(previewName, card.Name);
                 foreach (var previewId in previewIdText)
-                    previewId.text = card.Id;
+                    Cgs.Localization.LocalizedUiText.SetLiteral(previewId, card.Id);
             }
         }
 
@@ -588,25 +588,27 @@ namespace Cgs.CardGameView.Viewer
             if (SelectedCardModel == null || !IsVisible)
             {
                 foreach (var nameText in nameTexts)
-                    nameText.text = string.Empty;
+                    Cgs.Localization.LocalizedUiText.SetLiteral(nameText, string.Empty);
                 foreach (var uniqueIdText in uniqueIdTexts)
-                    uniqueIdText.text = string.Empty;
-                idText.text = string.Empty;
-                setText.text = string.Empty;
+                    Cgs.Localization.LocalizedUiText.SetLiteral(uniqueIdText, string.Empty);
+                Cgs.Localization.LocalizedUiText.SetLiteral(idText, string.Empty);
+                Cgs.Localization.LocalizedUiText.SetLiteral(setText, string.Empty);
                 ResetPropertyValueText();
                 return;
             }
 
             foreach (var nameText in nameTexts)
-                nameText.text = SelectedCardModel.Value.Name;
+                Cgs.Localization.LocalizedUiText.SetLiteral(nameText, SelectedCardModel.Value.Name);
             foreach (var uniqueIdText in uniqueIdTexts)
-                uniqueIdText.text = SelectedCardModel.Id;
-            idText.text = IdLabel + Delimiter + SelectedCardModel.Id;
-            setText.text = SetLabel + Delimiter
-                                    + (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode,
+                Cgs.Localization.LocalizedUiText.SetLiteral(uniqueIdText, SelectedCardModel.Id);
+            Cgs.Localization.LocalizedUiText.Set(idText, Cgs.Localization.UiMessage.With("cards.id",
+                IdLabel + Delimiter + SelectedCardModel.Id, ("cardId", SelectedCardModel.Id)));
+            var setName = CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode,
                                         out var currentSet)
                                         ? currentSet.ToString()
-                                        : SelectedCardModel.Value.SetCode);
+                                        : SelectedCardModel.Value.SetCode;
+            Cgs.Localization.LocalizedUiText.Set(setText, Cgs.Localization.UiMessage.With("cards.set",
+                SetLabel + Delimiter + setName, ("setName", setName)));
             foreach (var propertyText in PropertyTexts)
                 Destroy(propertyText.gameObject);
             PropertyTexts.Clear();
@@ -615,12 +617,12 @@ namespace Cgs.CardGameView.Viewer
                 var newPropertyText = Instantiate(propertyTextTemplate.gameObject, maximalScrollRect.content)
                     .GetComponent<Text>();
                 newPropertyText.gameObject.SetActive(true);
-                newPropertyText.text = PropertyOptions[i].text + Delimiter
+                Cgs.Localization.LocalizedUiText.SetLiteral(newPropertyText, PropertyOptions[i].text + Delimiter
                                                                + (DisplayNameLookup.TryGetValue(PropertyOptions[i].text,
                                                                    out var propertyName)
                                                                    ? SelectedCardModel.Value.GetPropertyValueString(
                                                                        propertyName)
-                                                                   : string.Empty);
+                                                                   : string.Empty));
                 PropertyTexts.Add(newPropertyText);
             }
 
@@ -633,7 +635,7 @@ namespace Cgs.CardGameView.Viewer
             if (SelectedCardModel == null || !IsVisible)
             {
                 foreach (var propertyValueText in propertyValueTexts)
-                    propertyValueText.text = string.Empty;
+                    Cgs.Localization.LocalizedUiText.SetLiteral(propertyValueText, string.Empty);
                 return;
             }
 
@@ -646,7 +648,7 @@ namespace Cgs.CardGameView.Viewer
                 newContentTextValue = currentSet.ToString();
 
             foreach (var propertyValueText in propertyValueTexts)
-                propertyValueText.text = newContentTextValue;
+                Cgs.Localization.LocalizedUiText.SetLiteral(propertyValueText, newContentTextValue);
         }
 
         public void HidePreview()

@@ -1,0 +1,781 @@
+{
+  "auditDate": "2026-10-05",
+  "description": "Literal-key runtime sites. State-selected key families, adapters and justified literal exclusions are documented in localization-coverage.md.",
+  "entries": [
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 300,
+      "key": "errors.file.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 308,
+      "key": "errors.zip.invalid"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 319,
+      "key": "games.overwrite"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 337,
+      "key": "errors.file.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 354,
+      "key": "errors.file.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 370,
+      "key": "errors.game.load"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 384,
+      "key": "errors.import"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 567,
+      "key": "games.url.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 610,
+      "key": "errors.game.download"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 645,
+      "key": "errors.game.download"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 665,
+      "key": "games.cards.loading"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 672,
+      "key": "games.cards.loaded"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 708,
+      "key": "errors.game.select"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 750,
+      "key": "games.load.corrupt"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 816,
+      "key": "errors.game.export"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 822,
+      "key": "errors.game.export"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 828,
+      "key": "errors.game.export"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 860,
+      "key": "games.delete.confirm"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameManager.cs",
+      "line": 862,
+      "key": "games.delete.warning"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardDeletionManager.cs",
+      "line": 57,
+      "key": "cards.delete.unnamed"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardDeletionManager.cs",
+      "line": 58,
+      "key": "cards.delete.named"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardEditorMenu.cs",
+      "line": 255,
+      "key": "images.download.card"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardEditorMenu.cs",
+      "line": 256,
+      "key": "images.download.card.url"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardEditorMenu.cs",
+      "line": 278,
+      "key": "files.web.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardEditorMenu.cs",
+      "line": 280,
+      "key": "images.import"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardEditorMenu.cs",
+      "line": 285,
+      "key": "files.select.card"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardEditorMenu.cs",
+      "line": 291,
+      "key": "files.select.card"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardEditorMenu.cs",
+      "line": 351,
+      "key": "images.type.warning"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardEditorMenu.cs",
+      "line": 398,
+      "key": "images.size.warning"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardSearchMenu.cs",
+      "line": 208,
+      "key": "input.property"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardSearchMenu.cs",
+      "line": 248,
+      "key": "common.true"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardSearchMenu.cs",
+      "line": 259,
+      "key": "common.false"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardSearchMenu.cs",
+      "line": 452,
+      "key": "cards.filters.clear"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardsExplorer.cs",
+      "line": 129,
+      "key": "cards.cannot.edit"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardsExplorer.cs",
+      "line": 133,
+      "key": "cards.new.choice"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardsExplorer.cs",
+      "line": 134,
+      "key": "cards.single"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardsExplorer.cs",
+      "line": 135,
+      "key": "cards.set.of.cards"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/CardsExplorer.cs",
+      "line": 168,
+      "key": "cards.cannot.edit"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SearchResults.cs",
+      "line": 199,
+      "key": "cards.page"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 64,
+      "key": "errors.folder.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 88,
+      "key": "sets.images.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 143,
+      "key": "files.web.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 146,
+      "key": "files.uwp.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 149,
+      "key": "files.select.folder"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 180,
+      "key": "errors.folder.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 193,
+      "key": "sets.import.progress"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 218,
+      "key": "errors.card.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 228,
+      "key": "images.size.warning"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 237,
+      "key": "errors.card.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Cards/SetImportMenu.cs",
+      "line": 250,
+      "key": "errors.import"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckEditor.cs",
+      "line": 422,
+      "key": "decks.new"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckEditor.cs",
+      "line": 625,
+      "key": "decks.unsaved"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 136,
+      "key": "decks.instructions.dec"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 139,
+      "key": "decks.instructions.code"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 142,
+      "key": "decks.instructions.code"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 145,
+      "key": "decks.instructions.ydk"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 149,
+      "key": "decks.instructions.txt"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 235,
+      "key": "decks.delete"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 306,
+      "key": "errors.deck.load"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 324,
+      "key": "errors.deck.load"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 372,
+      "key": "decks.clear"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckLoadMenu.cs",
+      "line": 432,
+      "key": "decks.overwrite"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckSaveMenu.cs",
+      "line": 114,
+      "key": "errors.deck.print"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckSaveMenu.cs",
+      "line": 120,
+      "key": "errors.pdf.open"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckSaveMenu.cs",
+      "line": 136,
+      "key": "errors.check.path"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckSaveMenu.cs",
+      "line": 142,
+      "key": "errors.check.path"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckSaveMenu.cs",
+      "line": 148,
+      "key": "errors.check.path"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Decks/DeckSaveMenu.cs",
+      "line": 215,
+      "key": "decks.overwrite"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Localization/LocalizedUiText.cs",
+      "line": 26,
+      "key": "common.count"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 144,
+      "key": "errors.folder.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 297,
+      "key": "images.download.banner"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 298,
+      "key": "images.download.banner.url"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 312,
+      "key": "files.web.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 314,
+      "key": "images.import"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 319,
+      "key": "files.select.banner"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 325,
+      "key": "files.select.banner"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 370,
+      "key": "images.download.back"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 371,
+      "key": "images.download.back.url"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 385,
+      "key": "files.web.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 387,
+      "key": "images.import"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 392,
+      "key": "files.select.back"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 398,
+      "key": "files.select.back"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 443,
+      "key": "images.download.playmat"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 444,
+      "key": "images.download.playmat.url"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 458,
+      "key": "files.web.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 460,
+      "key": "images.import"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 465,
+      "key": "files.select.playmat"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 471,
+      "key": "files.select.playmat"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 620,
+      "key": "files.web.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 623,
+      "key": "files.uwp.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 626,
+      "key": "files.select.folder"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/CardGameEditorMenu.cs",
+      "line": 650,
+      "key": "errors.back.missing"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/DownloadMenu.cs",
+      "line": 119,
+      "key": "downloads.clear"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/GamesManagementMenu.cs",
+      "line": 208,
+      "key": "games.import.choice"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/GamesManagementMenu.cs",
+      "line": 209,
+      "key": "games.import.web"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/GamesManagementMenu.cs",
+      "line": 210,
+      "key": "games.import.file"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/GamesManagementMenu.cs",
+      "line": 216,
+      "key": "games.download"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/GamesManagementMenu.cs",
+      "line": 216,
+      "key": "games.download.url"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/GamesManagementMenu.cs",
+      "line": 233,
+      "key": "files.select.zip"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/GamesManagementMenu.cs",
+      "line": 288,
+      "key": "games.sync.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/MainMenu.cs",
+      "line": 437,
+      "key": "prompt.quit"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/TitleScreen.cs",
+      "line": 23,
+      "key": "title.version"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/TitleScreen.cs",
+      "line": 98,
+      "key": "title.start.keyboard"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Menu/TitleScreen.cs",
+      "line": 100,
+      "key": "title.start.touch"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlayController.cs",
+      "line": 386,
+      "key": "play.load.decks"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlayController.cs",
+      "line": 435,
+      "key": "errors.deck.load"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlayController.cs",
+      "line": 739,
+      "key": "play.start.cards"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlayController.cs",
+      "line": 1146,
+      "key": "play.back"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlayController.cs",
+      "line": 1152,
+      "key": "play.restart"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlayHelpMenu.cs",
+      "line": 60,
+      "key": "help.mobile"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlayHelpMenu.cs",
+      "line": 61,
+      "key": "help.desktop"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlaySettingsMenu.cs",
+      "line": 95,
+      "key": "play.no.autoupdate"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/PlaySettingsMenu.cs",
+      "line": 105,
+      "key": "play.no.rules"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Scoreboard.cs",
+      "line": 144,
+      "key": "errors.room.copy"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Scoreboard.cs",
+      "line": 157,
+      "key": "common.offline"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Scoreboard.cs",
+      "line": 158,
+      "key": "common.offline"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Drawer/CardDrawer.cs",
+      "line": 460,
+      "key": "play.drawer.remove"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetDiagnostics.cs",
+      "line": 115,
+      "key": "diagnostics.status."
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetDiagnostics.cs",
+      "line": 317,
+      "key": "diagnostics.title"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetDiagnostics.cs",
+      "line": 318,
+      "key": "diagnostics.mark"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetDiagnostics.cs",
+      "line": 319,
+      "key": "diagnostics.export"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetDiagnostics.cs",
+      "line": 320,
+      "key": "diagnostics.clear"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 146,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 158,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 181,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 350,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 363,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 376,
+      "key": "network.server.invalid"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 419,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 432,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 445,
+      "key": "network.server.invalid"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetManager.cs",
+      "line": 482,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetPlayer.cs",
+      "line": 290,
+      "key": "network.game.unavailable"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetPlayer.cs",
+      "line": 365,
+      "key": "network.share.deck"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/CgsNetPlayer.cs",
+      "line": 945,
+      "key": "network.share.deck"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/LobbyMenu.cs",
+      "line": 138,
+      "key": "errors.connection"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/LobbyMenu.cs",
+      "line": 389,
+      "key": "network.game.zip.warning"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/LobbyMenu.cs",
+      "line": 393,
+      "key": "network.password.invalid"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/Play/Multiplayer/LobbyMenu.cs",
+      "line": 451,
+      "key": "network.server.invalid"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/CardModel.cs",
+      "line": 32,
+      "key": "play.delete.card"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/CardModel.cs",
+      "line": 401,
+      "key": "play.card.drop.error"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/CardStack.cs",
+      "line": 65,
+      "key": "play.delete.named"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/CardStack.cs",
+      "line": 348,
+      "key": "play.stack.shuffled"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/CardStack.cs",
+      "line": 350,
+      "key": "play.stack.saved"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/CardStack.cs",
+      "line": 626,
+      "key": "play.stack.shuffle"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/CardStack.cs",
+      "line": 678,
+      "key": "play.stack.save"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/CgsNetPlayable.cs",
+      "line": 45,
+      "key": "play.delete"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/Counter.cs",
+      "line": 19,
+      "key": "play.delete.counter"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/DiceZone.cs",
+      "line": 58,
+      "key": "play.dice.none"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/DiceZone.cs",
+      "line": 62,
+      "key": "play.dice.roll"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Multiplayer/Die.cs",
+      "line": 19,
+      "key": "play.delete.die"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Viewer/CardViewer.cs",
+      "line": 604,
+      "key": "cards.id"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Viewer/CardViewer.cs",
+      "line": 610,
+      "key": "cards.set"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Viewer/PlayableViewer.cs",
+      "line": 298,
+      "key": "play.counter.value"
+    },
+    {
+      "source": "Assets/Scripts/Cgs/CardGameView/Viewer/PlayableViewer.cs",
+      "line": 299,
+      "key": "play.die.value"
+    }
+  ]
+}
