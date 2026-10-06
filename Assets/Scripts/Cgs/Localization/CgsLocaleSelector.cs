@@ -99,7 +99,10 @@ namespace Cgs.Localization
             if (string.IsNullOrWhiteSpace(code))
                 return null;
 
-            var candidate = code.Replace('_', '-');
+            // A singleton begins an extension or private-use sequence, not a script.
+            var subtags = code.Replace('_', '-').Split('-');
+            var extension = Array.FindIndex(subtags, 1, subtag => subtag.Length == 1);
+            var candidate = string.Join("-", extension < 0 ? subtags : subtags.Take(extension));
             while (!string.IsNullOrEmpty(candidate))
             {
                 var exact = ExactCode(candidate);
