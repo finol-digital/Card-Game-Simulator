@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -142,8 +143,7 @@ namespace Cgs.Play.Multiplayer
                 if (signInTask.IsFaulted)
                 {
                     Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                    CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
-                                                            signInTask.Exception?.Message);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
                     yield break;
                 }
             }
@@ -155,8 +155,7 @@ namespace Cgs.Play.Multiplayer
             if (serverRelayUtilityTask.IsFaulted)
             {
                 Debug.LogError(GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
-                                                        serverRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message, ("detail", serverRelayUtilityTask.Exception?.Message)));
                 yield break;
             }
 
@@ -179,8 +178,7 @@ namespace Cgs.Play.Multiplayer
             if (createLobbyUtilityTask.IsFaulted)
             {
                 Debug.LogError(GenericConnectionErrorMessage + createLobbyUtilityTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
-                                                        createLobbyUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + createLobbyUtilityTask.Exception?.Message, ("detail", createLobbyUtilityTask.Exception?.Message)));
                 yield break;
             }
 
@@ -349,8 +347,7 @@ namespace Cgs.Play.Multiplayer
                 if (signInTask.IsFaulted)
                 {
                     Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                    CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
-                                                            signInTask.Exception?.Message);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
                     yield break;
                 }
             }
@@ -363,7 +360,7 @@ namespace Cgs.Play.Multiplayer
             {
                 Debug.LogError(GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
                 CardGameManager.Instance.Messenger.Show(
-                    GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
+                    UiMessage.With("errors.connection", GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message, ("detail", joinLobbyTask.Exception?.Message)));
                 yield break;
             }
 
@@ -376,7 +373,7 @@ namespace Cgs.Play.Multiplayer
             else
             {
                 Debug.LogError(LobbyMenu.InvalidServerErrorMessage);
-                CardGameManager.Instance.Messenger.Show(LobbyMenu.InvalidServerErrorMessage);
+                CardGameManager.Instance.Messenger.Show(new UiMessage("network.server.invalid", LobbyMenu.InvalidServerErrorMessage));
             }
         }
 
@@ -419,8 +416,7 @@ namespace Cgs.Play.Multiplayer
                 if (signInTask.IsFaulted)
                 {
                     Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                    CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
-                                                            signInTask.Exception?.Message);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
                     yield break;
                 }
             }
@@ -433,7 +429,7 @@ namespace Cgs.Play.Multiplayer
             {
                 Debug.LogError(GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
                 CardGameManager.Instance.Messenger.Show(
-                    GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
+                    UiMessage.With("errors.connection", GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message, ("detail", joinLobbyTask.Exception?.Message)));
                 yield break;
             }
 
@@ -446,7 +442,7 @@ namespace Cgs.Play.Multiplayer
             else
             {
                 Debug.LogError(LobbyMenu.InvalidServerErrorMessage);
-                CardGameManager.Instance.Messenger.Show(LobbyMenu.InvalidServerErrorMessage);
+                CardGameManager.Instance.Messenger.Show(new UiMessage("network.server.invalid", LobbyMenu.InvalidServerErrorMessage));
             }
         }
 
@@ -483,8 +479,7 @@ namespace Cgs.Play.Multiplayer
             if (clientRelayUtilityTask.IsFaulted)
             {
                 Debug.LogError(GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
-                                                        clientRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message, ("detail", clientRelayUtilityTask.Exception?.Message)));
                 yield break;
             }
 

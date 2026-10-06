@@ -47,7 +47,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             if (sumLabel != null)
-                sumLabel.text = diceSum.ToString();
+                Cgs.Localization.LocalizedUiText.SetNumber(sumLabel, diceSum);
         }
 
         [UsedImplicitly]
@@ -55,11 +55,12 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (DiceInZone.Count < 1)
             {
-                CardGameManager.Instance.Messenger.Show(NoDiceMessage);
+                CardGameManager.Instance.Messenger.Show(new Cgs.Localization.UiMessage("play.dice.none", NoDiceMessage));
                 return;
             }
 
-            CardGameManager.Instance.Messenger.Prompt(string.Format(RollXDicePrompt, DiceInZone.Count),
+            CardGameManager.Instance.Messenger.Prompt(Cgs.Localization.UiMessage.With("play.dice.roll",
+                    string.Format(RollXDicePrompt, DiceInZone.Count), ("count", DiceInZone.Count)),
                 () =>
                 {
                     foreach (var die in DiceInZone)

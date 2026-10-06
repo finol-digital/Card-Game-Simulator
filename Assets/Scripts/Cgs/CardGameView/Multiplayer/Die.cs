@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
@@ -15,6 +16,7 @@ namespace Cgs.CardGameView.Multiplayer
     public class Die : CgsNetPlayable
     {
         public override string DeletePrompt => "Delete die?";
+        protected override UiMessage LocalizedDeletePrompt => new UiMessage("play.delete.die", DeletePrompt);
 
         protected override bool CanClientRequestOwnedObject => true;
 
@@ -185,7 +187,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnChangeValue(int oldValue, int newValue)
         {
             _value = newValue;
-            valueText.text = newValue.ToString();
+            Cgs.Localization.LocalizedUiText.SetNumber(valueText, newValue);
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
