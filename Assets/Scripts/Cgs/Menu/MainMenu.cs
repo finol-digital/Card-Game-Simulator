@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using PrimeTween;
@@ -89,12 +90,12 @@ namespace Cgs.Menu
         private void SetCopyright()
         {
             var copyright = CardGameManager.Current.Copyright;
-            copyrightText.text = string.IsNullOrWhiteSpace(copyright) ? FinolDigitalLlc : copyright;
+            Cgs.Localization.LocalizedUiText.SetLiteral(copyrightText, string.IsNullOrWhiteSpace(copyright) ? FinolDigitalLlc : copyright);
         }
 
         protected void Start()
         {
-            versionText.text = TitleScreen.VersionMessage;
+            Cgs.Localization.LocalizedUiText.Set(versionText, TitleScreen.LocalizedVersion);
 
 #if UNITY_WEBGL
             fullscreenButton.gameObject.SetActive(true);
@@ -107,7 +108,13 @@ namespace Cgs.Menu
 #endif
 
             if (!HasSeenWelcome)
-                CardGameManager.Instance.Messenger.Ask(WelcomeMessage, DeclineWelcomeMessage, AcceptWelcomeMessage,
+                CardGameManager.Instance.Messenger.Ask(new UiMessage(
+#if UNITY_ANDROID || UNITY_IOS
+                    "welcome.mobile",
+#else
+                    "welcome.desktop",
+#endif
+                    WelcomeMessage), DeclineWelcomeMessage, AcceptWelcomeMessage,
                     true);
 
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
@@ -180,7 +187,7 @@ namespace Cgs.Menu
 
         private void ResetGameSelectionCarousel()
         {
-            currentGameNameText.text = CardGameManager.Current.Name;
+            Cgs.Localization.LocalizedUiText.SetLiteral(currentGameNameText, CardGameManager.Current.Name);
             currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             currentCardImage.sprite = CardGameManager.Current.CardBackImageSprite;
             previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
@@ -427,7 +434,7 @@ namespace Cgs.Menu
 #if UNITY_ANDROID
             Quit();
 #else
-            CardGameManager.Instance.Messenger.Prompt(QuitPrompt, Quit);
+            CardGameManager.Instance.Messenger.Prompt(new UiMessage("prompt.quit", QuitPrompt), Quit);
 #endif
         }
 

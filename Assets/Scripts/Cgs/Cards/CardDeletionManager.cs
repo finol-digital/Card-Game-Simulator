@@ -53,7 +53,10 @@ namespace Cgs.Cards
 
             var cardName = string.IsNullOrEmpty(toDelete.Name) ? "this card" : $"'{toDelete.Name}'";
             var prompt = DeletePrompt.Replace("{}", cardName);
-            CardGameManager.Instance.Messenger.Prompt(prompt, Delete);
+            var message = string.IsNullOrEmpty(toDelete.Name)
+                ? new Cgs.Localization.UiMessage("cards.delete.unnamed", prompt)
+                : Cgs.Localization.UiMessage.With("cards.delete.named", prompt, ("cardName", cardName));
+            CardGameManager.Instance.Messenger.Prompt(message, Delete);
         }
 
         private void Delete()
