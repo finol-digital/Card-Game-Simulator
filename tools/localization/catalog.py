@@ -174,7 +174,7 @@ def validate_source(source):
             raise CatalogError(f"en / {key}: {error}") from error
 
 
-def validate_translation(entry, source):
+def validate_translation_metadata(entry):
     fields(entry, ("text", "status", "sourceHash", "provenance"))
     require(nonempty(entry["text"]), "text must be non-empty")
     require(isinstance(entry["status"], str) and entry["status"] in STATUSES, "invalid review status")
@@ -189,6 +189,10 @@ def validate_translation(entry, source):
     except ValueError as error:
         raise CatalogError(PROVENANCE_DATE_ERROR) from error
     require("note" not in provenance or nonempty(provenance["note"]), "provenance note must be non-empty")
+
+
+def validate_translation(entry, source):
+    validate_translation_metadata(entry)
     if source["smart"]:
         require(placeholders(entry["text"]) == set(source["arguments"]), "named arguments differ from English")
     require(tags(entry["text"]) == tags(source["text"]), "rich-text tags differ from English")

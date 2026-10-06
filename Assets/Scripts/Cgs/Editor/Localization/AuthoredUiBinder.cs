@@ -37,6 +37,7 @@ namespace Cgs.Editor.Localization
                 .OrderBy(path => path.EndsWith(".unity") ? 1 : 0)
                 .ThenBy(path => AssetDatabase.GetDependencies(path, true).Length).ToArray();
             var index = 0;
+            Directory.CreateDirectory("Logs");
             File.WriteAllText("Logs/localization-bind-progress.txt", "Starting\n");
             void Next()
             {
@@ -275,6 +276,13 @@ namespace Cgs.Editor.Localization
             PrefabUtility.RecordPrefabInstancePropertyModifications(binding);
         }
 
+        private static void BindLanguageFonts(GameObject row)
+        {
+            foreach (var text in row.GetComponentsInChildren<Component>(true)
+                .Where(component => component is Text || component is TMP_Text))
+                BindFont(text);
+        }
+
         public static void AddLanguageSetting()
         {
             var scene = SceneManager.GetSceneByPath("Assets/Scenes/Settings.unity");
@@ -292,6 +300,7 @@ namespace Cgs.Editor.Localization
                     var existingLabel = existingDropdown.transform.parent.GetComponentsInChildren<Text>(true)
                         .Single(text => !text.transform.IsChildOf(existingDropdown.transform));
                     BindText(existingLabel, "settings.language", "Language");
+                    BindLanguageFonts(existingDropdown.transform.parent.gameObject);
                     EditorSceneManager.SaveScene(scene);
                     return;
                 }
@@ -310,6 +319,7 @@ namespace Cgs.Editor.Localization
                 var label = languageRow.GetComponentsInChildren<Text>(true).Single(text => !text.transform.IsChildOf(dropdown.transform));
                 label.text = "Language";
                 BindText(label, "settings.language", "Language");
+                BindLanguageFonts(languageRow);
                 serialized.FindProperty("languageDropdown").objectReferenceValue = dropdown;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
                 PrefabUtility.RecordPrefabInstancePropertyModifications(dropdown);
