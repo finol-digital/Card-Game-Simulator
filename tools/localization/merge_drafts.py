@@ -25,8 +25,8 @@ def merge(source, existing, draft):
     require(isinstance(existing, dict) and isinstance(draft, dict), "catalogs must be objects")
     code = existing.get("locale")
     require(code != "en" and nonempty(code), "only translation catalogs can be merged")
-    for catalog in (existing, draft):
-        validate_merge_catalog(catalog, code, source)
+    validate_merge_catalog(existing, code, source)
+    validate_merge_catalog(draft, code, source)
     result = deepcopy(existing)
     for key, english in sorted(source["entries"].items()):
         current = result["entries"].get(key)
