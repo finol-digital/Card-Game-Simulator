@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using Cgs.Localization;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
@@ -25,10 +26,16 @@ namespace Cgs.Menu
         private string _shareText;
         private int _messageVersion;
         private bool _canCopy;
+        private LocalizedMessageBinding _localizedMessage;
+        private UiMessage _displayedMessage;
+        private UiMessage _feedbackMessage;
+        private LocalizedMessageBinding _localizedFeedback;
+        private string _feedback;
 
         protected struct Message : IEquatable<Message>
         {
             public string Text;
+            public UiMessage Localized;
             public UnityAction NoAction;
             public UnityAction YesAction;
             public bool Unskippable;
@@ -36,7 +43,8 @@ namespace Cgs.Menu
 
             public bool Equals(Message other)
             {
-                return string.Equals(Text, other.Text, StringComparison.Ordinal) && CanCopy == other.CanCopy;
+                return string.Equals(Text, other.Text, StringComparison.Ordinal) && CanCopy == other.CanCopy
+                    && Localized?.Key == other.Localized?.Key;
             }
 
             public override bool Equals(object obj)
@@ -108,11 +116,37 @@ namespace Cgs.Menu
             Prompt(text, null, unskippable);
         }
 
+        public void Show(UiMessage text, bool unskippable = false) => Prompt(text, null, unskippable);
+
+        public void ShowStatus(UiMessage text)
+        {
+            if (this)
+                ShowMessage(new Message { Text = text.English, Localized = text });
+        }
+
+        public void Prompt(UiMessage text, UnityAction yesAction, bool unskippable = false)
+            => Ask(text, null, yesAction, unskippable);
+
+        public void Ask(UiMessage text, UnityAction noAction, UnityAction yesAction, bool unskippable = false)
+            => ShowMessage(new Message { Text = text.English, Localized = text, NoAction = noAction,
+                YesAction = yesAction, Unskippable = unskippable, CanCopy = true });
+
         public void ShowStatus(string text)
         {
             // Native sharing may finish after this dialog has been destroyed.
             if (this)
                 ShowMessage(new Message { Text = text });
+        }
+
+        public void ShowSharingStatus(string feedback)
+        {
+            if (!this)
+                return;
+            var message = SharingMessages.FromFeedback(feedback);
+            if (message == null)
+                ShowStatus(feedback);
+            else
+                ShowStatus(message);
         }
 
         public void Prompt(string text, UnityAction yesAction, bool unskippable = false)
@@ -149,10 +183,16 @@ namespace Cgs.Menu
         private void DisplayMessage(Message message)
         {
             _messageVersion++;
+            _localizedFeedback?.Dispose();
+            _localizedFeedback = null;
+            _feedbackMessage = null;
+            _feedback = null;
             _canCopy = message.CanCopy;
             UpdateCopyShareButtons();
             _shareText = message.Text ?? string.Empty;
-            messageText.text = _shareText;
+            LocalizedUiText.SetLiteral(messageText, _shareText);
+            _displayedMessage = message.Localized;
+            BindMessage();
             noButton.gameObject.SetActive(message.YesAction != null);
 
             yesButton.onClick.RemoveAllListeners();
@@ -170,6 +210,35 @@ namespace Cgs.Menu
             _isNewMessage = true;
         }
 
+        protected void OnEnable()
+        {
+            BindMessage();
+            BindFeedback();
+        }
+
+        private void BindMessage()
+        {
+            _localizedMessage?.Dispose();
+            _localizedMessage = _displayedMessage == null ? null : new LocalizedMessageBinding(_displayedMessage, value =>
+            {
+                _shareText = value;
+                RenderMessage();
+            });
+        }
+
+        private void RenderMessage()
+            => messageText.text = string.IsNullOrEmpty(_feedback) ? _shareText : _feedback + "\n\n" + _shareText;
+
+        private void BindFeedback()
+        {
+            _localizedFeedback?.Dispose();
+            _localizedFeedback = _feedbackMessage == null ? null : new LocalizedMessageBinding(_feedbackMessage, value =>
+            {
+                _feedback = value;
+                RenderMessage();
+            });
+        }
+
         [UsedImplicitly]
         public void CopyShare()
         {
@@ -180,7 +249,12 @@ namespace Cgs.Menu
             TextSharing.CopyOrShare(_shareText, feedback =>
             {
                 if (this && gameObject.activeInHierarchy && messageVersion == _messageVersion)
-                    messageText.text = feedback + "\n\n" + _shareText;
+                {
+                    _feedback = feedback;
+                    _feedbackMessage = SharingMessages.FromFeedback(feedback);
+                    BindFeedback();
+                    RenderMessage();
+                }
             });
         }
 
@@ -196,6 +270,14 @@ namespace Cgs.Menu
             copyButton.SetActive(_canCopy);
             shareButton.SetActive(false);
 #endif
+        }
+
+        protected void OnDisable()
+        {
+            _localizedMessage?.Dispose();
+            _localizedMessage = null;
+            _localizedFeedback?.Dispose();
+            _localizedFeedback = null;
         }
 
         [UsedImplicitly]

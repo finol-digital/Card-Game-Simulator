@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,6 +62,7 @@ namespace Cgs.CardGameView.Multiplayer
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string SavePrompt => $"Save {deckLabel.text}?";
         public override string DeletePrompt => $"Delete {deckLabel.text}?";
+        protected override UiMessage LocalizedDeletePrompt => UiMessage.With("play.delete.named", DeletePrompt, ("name", deckLabel.text));
 
         private bool IsDraggingCard => HoldTime < DragHoldTime && PointerPositions.Count == 1 &&
                                        CurrentPointerEventData != null &&
@@ -150,6 +152,7 @@ namespace Cgs.CardGameView.Multiplayer
         private NetworkList<CgsNetString> _cardIds;
 
         private NetworkVariable<CgsNetString> _actionText;
+        private string _presentedAction;
         private NetworkVariable<float> _actionTime;
 
         public bool IsDeckShared
@@ -299,8 +302,8 @@ namespace Cgs.CardGameView.Multiplayer
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
             if (!IsOwner)
-                deckLabel.text = Name;
-            countLabel.text = Cards.Count.ToString();
+                Cgs.Localization.LocalizedUiText.SetLiteral(deckLabel, Name);
+            Cgs.Localization.LocalizedUiText.SetNumber(countLabel, Cards.Count);
 
             topCard.sprite = CardBackImageSprite;
             if (IsTopFaceup)
@@ -335,7 +338,18 @@ namespace Cgs.CardGameView.Multiplayer
             if (actionLabel.gameObject.activeSelf != isAction)
             {
                 actionLabel.gameObject.SetActive(isAction);
-                actionLabel.text = _actionText.Value;
+            }
+            string action = _actionText.Value;
+            if (isAction && _presentedAction != action)
+            {
+                _presentedAction = action;
+                // These existing network tokens remain unchanged on the wire.
+                if (action == ShuffleText)
+                    LocalizedUiText.Set(actionLabel, new UiMessage("play.stack.shuffled", action));
+                else if (action == SaveText)
+                    LocalizedUiText.Set(actionLabel, new UiMessage("play.stack.saved", action));
+                else
+                    LocalizedUiText.SetLiteral(actionLabel, action);
             }
 
             if (isAction && (!IsOnline || !CgsNetManager.Instance.IsConnectedClient || IsServer))
@@ -421,7 +435,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeName(CgsNetString oldName, CgsNetString newName)
         {
-            deckLabel.text = newName;
+            Cgs.Localization.LocalizedUiText.SetLiteral(deckLabel, newName);
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -484,7 +498,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void SyncView()
         {
-            countLabel.text = Cards.Count.ToString();
+            Cgs.Localization.LocalizedUiText.SetNumber(countLabel, Cards.Count);
             if (Viewer != null)
                 Viewer.Sync(this);
         }
@@ -609,7 +623,7 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void PromptShuffle()
         {
-            CardGameManager.Instance.Messenger.Prompt(ShufflePrompt, Shuffle);
+            CardGameManager.Instance.Messenger.Prompt(UiMessage.With("play.stack.shuffle", ShufflePrompt, ("name", deckLabel.text)), Shuffle);
         }
 
         private void Shuffle()
@@ -661,7 +675,7 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void PromptSave()
         {
-            CardGameManager.Instance.Messenger.Prompt(SavePrompt, Save);
+            CardGameManager.Instance.Messenger.Prompt(UiMessage.With("play.stack.save", SavePrompt, ("name", deckLabel.text)), Save);
         }
 
         private void Save()

@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,6 +49,7 @@ namespace Cgs.Cards
 
         public float ProgressPercentage { get; private set; }
         public string ProgressStatus { get; private set; }
+        public UiMessage LocalizedProgressStatus { get; private set; }
 
         private string SetName => FileBrowserHelpers.GetFilename(_setFolderPath);
 
@@ -59,14 +61,14 @@ namespace Cgs.Cards
                 if (!FileBrowserHelpers.DirectoryExists(value))
                 {
                     Debug.LogWarning(ImportFolderWarningMessage + value);
-                    CardGameManager.Instance.Messenger.Show(ImportFolderWarningMessage + value);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.folder.missing", ImportFolderWarningMessage + value, ("detail", value)));
                     return;
                 }
 
                 _setFolderPath = value;
 
                 Debug.Log("Import Set Folder Path set: " + _setFolderPath);
-                setNameText.text = SetName;
+                Cgs.Localization.LocalizedUiText.SetLiteral(setNameText, SetName);
                 var cardNames = FileBrowserHelpers.GetEntriesInDirectory(_setFolderPath, true)
                     .Where(fileSystemEntry =>
                         !fileSystemEntry.IsDirectory && !string.IsNullOrEmpty(fileSystemEntry.Extension)
@@ -80,7 +82,11 @@ namespace Cgs.Cards
                                 StringComparison.Ordinal) - 1)];
                         return current + fileName + "\n";
                     });
-                cardNamesText.text = !string.IsNullOrWhiteSpace(cardNames) ? cardNames : SetImportMissingWarningMessage;
+                if (!string.IsNullOrWhiteSpace(cardNames))
+                    LocalizedUiText.SetLiteral(cardNamesText, cardNames);
+                else
+                    LocalizedUiText.Set(cardNamesText, UiMessage.With("sets.images.missing", SetImportMissingWarningMessage,
+                        ("extension", CardGameManager.Current.CardImageFileType)));
                 ValidateImportButton();
             }
         }
@@ -134,13 +140,13 @@ namespace Cgs.Cards
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
 #elif ENABLE_WINMD_SUPPORT
             Debug.LogWarning(UwpWarningMessage);
-            CardGameManager.Instance.Messenger.Show(UwpWarningMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage("files.uwp.unavailable", UwpWarningMessage));
 #else
             FileBrowser.ShowLoadDialog((paths) => { SetFolderPath = paths[0]; }, () => { },
-                FileBrowser.PickMode.Folders, false, null, null, SelectFolderPrompt);
+                FileBrowser.PickMode.Folders, false, null, null, CgsLocalization.Text(new UiMessage("files.select.folder", SelectFolderPrompt)));
 #endif
         }
 
@@ -171,7 +177,7 @@ namespace Cgs.Cards
             if (!importButton.interactable)
             {
                 Debug.LogError("ImportSet::invalid: " + SetFolderPath);
-                CardGameManager.Instance.Messenger.Show("ImportSet::invalid: " + SetFolderPath);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.folder.missing", "ImportSet::invalid: " + SetFolderPath, ("detail", SetFolderPath)));
                 yield break;
             }
 
@@ -184,6 +190,7 @@ namespace Cgs.Cards
 
             CardGameManager.Instance.Progress.Show(this);
             ProgressStatus = ImportStatus;
+            LocalizedProgressStatus = UiMessage.With("sets.import.progress", ImportStatus, ("setName", SetName));
 
             var cardPathsToImport = FileBrowserHelpers.GetEntriesInDirectory(_setFolderPath, true)
                 .Where(fileSystemEntry => !fileSystemEntry.IsDirectory &&
@@ -208,7 +215,7 @@ namespace Cgs.Cards
                     if (!File.Exists(card.ImageFilePath))
                     {
                         Debug.LogWarning(ImportCardFailedWarningMessage + card.Name);
-                        CardGameManager.Instance.Messenger.Show(ImportCardFailedWarningMessage + card.Name);
+                        CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.card.missing", ImportCardFailedWarningMessage + card.Name, ("detail", card.Name)));
                     }
                     else
                     {
@@ -218,7 +225,7 @@ namespace Cgs.Cards
                             var sizeWarningMessage =
                                 string.Format(ImageQueueService.SizeWarningMessage, card.Name, card.Id);
                             Debug.LogWarning(sizeWarningMessage);
-                            CardGameManager.Instance.Messenger.Show(sizeWarningMessage, true);
+                            CardGameManager.Instance.Messenger.Show(UiMessage.With("images.size.warning", sizeWarningMessage, ("name", card.Name), ("id", card.Id)), true);
                         }
 
                         CardGameManager.Current.Add(card, false);
@@ -227,7 +234,7 @@ namespace Cgs.Cards
                 catch
                 {
                     Debug.LogWarning(ImportCardFailedWarningMessage + cardPathsToImport[i]);
-                    CardGameManager.Instance.Messenger.Show(ImportCardFailedWarningMessage + cardPathsToImport[i]);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.card.missing", ImportCardFailedWarningMessage + cardPathsToImport[i], ("detail", cardPathsToImport[i])));
                 }
 
                 yield return null;
@@ -240,7 +247,7 @@ namespace Cgs.Cards
             catch (Exception e)
             {
                 Debug.LogError(ImportErrorMessage + e);
-                CardGameManager.Instance.Messenger.Show(ImportErrorMessage + e);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.import", ImportErrorMessage + e, ("detail", e)));
             }
 
             CardGameManager.Instance.Progress.Hide();

@@ -1,0 +1,13 @@
+{
+    "name": "Cgs.Localization",
+    "rootNamespace": "Cgs.Localization",
+    "references": ["Unity.Localization", "Unity.ResourceManager", "Unity.Addressables", "Unity.ugui", "Unity.TextMeshPro"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

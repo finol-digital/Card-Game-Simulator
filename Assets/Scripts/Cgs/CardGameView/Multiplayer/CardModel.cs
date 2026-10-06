@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace Cgs.CardGameView.Multiplayer
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
         public override string DeletePrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
+        protected override UiMessage LocalizedDeletePrompt => UiMessage.With("play.delete.card", DeletePrompt, ("name", gameObject.name));
 
         protected override bool CanClientRequestOwnedObject => true;
 
@@ -184,7 +186,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             nameLabel.SetActive(value);
             if (value)
-                nameText.text = Value.Name;
+                Cgs.Localization.LocalizedUiText.SetLiteral(nameText, Value.Name);
         }
 
         [SerializeField] GameObject nameLabel;
@@ -396,7 +398,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (CgsNetManager.Instance == null || PlayController.Instance == null)
             {
                 Debug.LogError(DropErrorMessage);
-                CardGameManager.Instance.Messenger.Show(DropErrorMessage);
+                CardGameManager.Instance.Messenger.Show(new UiMessage("play.card.drop.error", DropErrorMessage));
                 return;
             }
 
@@ -968,7 +970,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void PromptDelete()
         {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
+            CardGameManager.Instance.Messenger.Prompt(LocalizedDeletePrompt, RequestDelete);
         }
 
         public override void OnDestroy()

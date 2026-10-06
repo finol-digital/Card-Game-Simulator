@@ -210,7 +210,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1273857021481749583, guid: e885b7dcac6cff447a150d9f185e8af7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8517871518031644911}
   m_SourcePrefab: {fileID: 100100000, guid: e885b7dcac6cff447a150d9f185e8af7, type: 3}
 --- !u!114 &3911916203129339941 stripped
 MonoBehaviour:
@@ -218,12 +222,31 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 3234596435937503562}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4417536884247504133}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4417536884247504133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1273857021481749583, guid: e885b7dcac6cff447a150d9f185e8af7,
+    type: 3}
+  m_PrefabInstance: {fileID: 3234596435937503562}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8517871518031644911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4417536884247504133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
+  key: body.regular
 --- !u!224 &5447750013340375801 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7456223291527984051, guid: e885b7dcac6cff447a150d9f185e8af7,
@@ -620,6 +643,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
+      propertyPath: localizationKey
+      value: common.copy
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
       propertyPath: parentTransform
       value: 
       objectReference: {fileID: 6706554455810260423}
@@ -854,6 +882,11 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: SubMenu/CopyShare
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: localizationKey
+      value: common.share
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}

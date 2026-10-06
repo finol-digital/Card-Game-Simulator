@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -286,7 +287,7 @@ namespace Cgs.Play.Multiplayer
                 if (!Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.Absolute))
                 {
                     Debug.LogError(GameSelectionErrorMessage);
-                    CardGameManager.Instance.Messenger.Show();
+                    CardGameManager.Instance.Messenger.Show(new UiMessage("network.game.unavailable", GameSelectionErrorMessage));
                     return;
                 }
 
@@ -361,7 +362,7 @@ namespace Cgs.Play.Multiplayer
                     break;
                 case SharePreference.Ask:
                 default:
-                    CardGameManager.Instance.Messenger.Ask(ShareDeckRequest,
+                    CardGameManager.Instance.Messenger.Ask(new UiMessage("network.share.deck", ShareDeckRequest),
                         PlayController.Instance.ShowDeckMenu, RequestSharedDeck);
                     break;
             }
@@ -941,7 +942,7 @@ namespace Cgs.Play.Multiplayer
                     break;
                 case SharePreference.Ask:
                 default:
-                    CardGameManager.Instance.Messenger.Ask(ShareDeckRequest,
+                    CardGameManager.Instance.Messenger.Ask(new UiMessage("network.share.deck", ShareDeckRequest),
                         PlayController.Instance.ShowDeckMenu, RequestSharedDeck);
                     break;
             }
