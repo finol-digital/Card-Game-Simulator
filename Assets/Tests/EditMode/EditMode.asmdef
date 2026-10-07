@@ -2,6 +2,7 @@
     "name": "EditMode",
     "rootNamespace": "",
     "references": [
+        "Cgs",
         "Cgs.Localization",
         "Unity.Localization",
         "UnityEngine.TestRunner",
