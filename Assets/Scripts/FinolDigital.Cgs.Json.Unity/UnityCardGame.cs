@@ -425,9 +425,10 @@ namespace FinolDigital.Cgs.Json.Unity
                                         AllCardsUrlPageCountStartIndex) /
                                        (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount -
                                         AllCardsUrlPageCountStartIndex);
+                    var pageCount = page - AllCardsUrlPageCountStartIndex + 1;
                     SetDownloadStatus(GameDownloadStage.Cards,
-                        $"Downloading: Cards: {page,5} / {AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount}",
-                        page, AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount);
+                        $"Downloading: Cards: {pageCount,5} / {AllCardsUrlPageCount}",
+                        pageCount, AllCardsUrlPageCount);
                     var cardsUrl = AllCardsUrl.OriginalString;
                     if (AllCardsUrlPageCount > 1 && string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
                         cardsUrl += AllCardsUrlPageIdentifier + page;
