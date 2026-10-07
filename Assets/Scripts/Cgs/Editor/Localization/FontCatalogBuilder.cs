@@ -114,8 +114,12 @@ namespace Cgs.Editor.Localization
                 CatalogImporter.ValidateLocalAsset(table);
                 foreach (var key in new[] { "body.regular", "body.bold", "heading.regular", "heading.bold", "mixed" })
                 {
-                    var font = AssetDatabase.LoadAssetAtPath<Font>(AssetDatabase.GUIDToAssetPath(table.GetEntry(key).Guid));
-                    var tmp = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(AssetDatabase.GUIDToAssetPath(table.GetEntry("tmp." + key).Guid));
+                    var fontEntry = table.GetEntry(key);
+                    var tmpEntry = table.GetEntry("tmp." + key);
+                    if (fontEntry == null || tmpEntry == null)
+                        throw new System.InvalidOperationException("Invalid saved font assets: " + locale.Identifier.Code + "/" + key);
+                    var font = AssetDatabase.LoadAssetAtPath<Font>(AssetDatabase.GUIDToAssetPath(fontEntry.Guid));
+                    var tmp = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(AssetDatabase.GUIDToAssetPath(tmpEntry.Guid));
                     if (font == null || tmp == null || tmp.sourceFontFile != font || tmp.material == null
                         || !AssetDatabase.Contains(tmp.material) || tmp.atlasTextures.Any(texture => !AssetDatabase.Contains(texture))
                         || !tmp.isMultiAtlasTexturesEnabled)
