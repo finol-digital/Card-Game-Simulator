@@ -150,15 +150,7 @@ namespace Cgs.Editor.Localization
                     }
                     else if (target.GetComponentInParent<Dropdown>(true) == null)
                     {
-                        var binding = target.GetComponent<CgsLocalizeStringEvent>();
-                        Component text = target.GetComponent<Text>();
-                        text ??= target.GetComponent<TMP_Text>();
-                        if (binding == null || binding.StringReference.TableEntryReference.Key != key
-                            || binding.OnUpdateString.GetPersistentEventCount() != 1
-                            || binding.OnUpdateString.GetPersistentTarget(0) != text
-                            || binding.OnUpdateString.GetPersistentMethodName(0) != "set_text"
-                            || binding.OnUpdateString.GetPersistentListenerState(0) != UnityEventCallState.EditorAndRuntime)
-                            throw new InvalidOperationException("Invalid persistent text binding: " + path + " / " + row["path"]);
+                        ValidateTextBinding(target, path, row);
                     }
                 }
             }
@@ -175,6 +167,21 @@ namespace Cgs.Editor.Localization
                 scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
             try { Validate(scene.GetRootGameObjects()); }
             finally { if (!wasOpen) EditorSceneManager.CloseScene(scene, true); }
+        }
+
+        private static void ValidateTextBinding(Transform target, string path, JToken row)
+        {
+            var binding = target.GetComponent<CgsLocalizeStringEvent>();
+            Component text = target.GetComponent<Text>();
+            text ??= target.GetComponent<TMP_Text>();
+            if (binding == null || binding.StringReference.TableEntryReference.Key != (string)row["key"]
+                || binding.StringReference.TableReference.TableCollectionName != CgsLocalization.TableName
+                || new SerializedObject(binding).FindProperty("english").stringValue != (string)row["text"]
+                || binding.OnUpdateString.GetPersistentEventCount() != 1
+                || binding.OnUpdateString.GetPersistentTarget(0) != text
+                || binding.OnUpdateString.GetPersistentMethodName(0) != "set_text"
+                || binding.OnUpdateString.GetPersistentListenerState(0) != UnityEventCallState.EditorAndRuntime)
+                throw new InvalidOperationException("Invalid persistent text binding: " + path + " / " + row["path"]);
         }
 
         private static void Bind(GameObject[] roots, JToken[] rows)
