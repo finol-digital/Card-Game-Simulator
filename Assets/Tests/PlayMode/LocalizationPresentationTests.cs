@@ -194,6 +194,73 @@ namespace Tests.PlayMode
         private static void SetDialogField(Cgs.Menu.Dialog dialog, string field, object value)
             => typeof(Cgs.Menu.Dialog).GetField(field, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(dialog, value);
 
+        [UnityTest]
+        public IEnumerator Dialog_SameKeyAndFallbackPreservesDifferentArguments()
+        {
+            var owner = new GameObject("Dialog queue regression");
+            owner.SetActive(false);
+            var dialog = owner.AddComponent<LocalizationTestDialog>();
+            var text = AddDialogChild<Text>(owner, "Message");
+            SetDialogField(dialog, "messageText", text);
+            SetDialogField(dialog, "yesButton", AddDialogChild<Button>(owner, "Yes"));
+            SetDialogField(dialog, "noButton", AddDialogChild<Button>(owner, "No"));
+            SetDialogField(dialog, "copyButton", AddDialogChild<Button>(owner, "Copy").gameObject);
+            SetDialogField(dialog, "shareButton", AddDialogChild<Button>(owner, "Share").gameObject);
+            try
+            {
+                CgsLocalization.SelectLanguage("en");
+                dialog.Show(new UiMessage("settings.language", "Language"));
+                var first = UiMessage.With("cards.page", "Page", ("page", 1), ("total", 3));
+                var second = UiMessage.With("cards.page", "Page", ("page", 2), ("total", 3));
+                dialog.Show(first);
+                dialog.Show(first);
+                dialog.Show(second);
+                dialog.OkClose();
+                yield return Until(() => text.text == "1 / 3");
+                dialog.OkClose();
+                yield return Until(() => text.text == "2 / 3");
+                Assert.IsTrue(owner.activeSelf);
+                dialog.OkClose();
+                Assert.IsFalse(owner.activeSelf, "The same message instance should still be deduplicated.");
+            }
+            finally { Object.DestroyImmediate(owner); }
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(5)]
+        public void CardDownload_CountsPagesRelativeToConfiguredStart(int start)
+        {
+            var id = "localization_download_" + System.Guid.NewGuid().ToString("N");
+            var game = new FinolDigital.Cgs.Json.Unity.UnityCardGame(null, id)
+            {
+                Name = id,
+                AllCardsUrl = new System.Uri("https://example.invalid/cards"),
+                AllCardsUrlPageCountStartIndex = start,
+                AllCardsUrlPageCount = 3
+            };
+            var directory = game.GameDirectoryPath;
+            System.IO.Directory.CreateDirectory(directory);
+            System.IO.File.WriteAllText(game.GameFilePath, "{}");
+            try
+            {
+                var download = game.Download();
+                var counts = new System.Collections.Generic.List<int>();
+                // Advance the outer iterator only: nested download iterators never execute network requests.
+                while (download.MoveNext())
+                {
+                    if (game.DownloadStage != FinolDigital.Cgs.Json.Unity.GameDownloadStage.Cards)
+                        continue;
+                    counts.Add(game.DownloadItemCount);
+                    Assert.AreEqual(3, game.DownloadItemTotal);
+                    StringAssert.Contains($"{counts.Count,5} / 3", game.DownloadStatus);
+                }
+                CollectionAssert.AreEqual(new[] { 1, 2, 3 }, counts);
+                Assert.IsTrue(game.HasDownloaded);
+            }
+            finally { System.IO.Directory.Delete(directory, true); }
+        }
+
         [Test]
         public void SettingsLanguage_MissingLocaleFallsBackWithoutNotifying()
         {
