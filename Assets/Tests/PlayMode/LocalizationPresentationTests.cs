@@ -241,7 +241,13 @@ namespace Tests.PlayMode
             };
             var directory = game.GameDirectoryPath;
             System.IO.Directory.CreateDirectory(directory);
-            System.IO.File.WriteAllText(game.GameFilePath, "{}");
+            System.IO.File.WriteAllText(game.GameFilePath, new Newtonsoft.Json.Linq.JObject
+            {
+                ["name"] = id,
+                ["allCardsUrl"] = game.AllCardsUrl.AbsoluteUri,
+                ["allCardsUrlPageCountStartIndex"] = start,
+                ["allCardsUrlPageCount"] = 3
+            }.ToString());
             try
             {
                 var download = game.Download();
@@ -255,6 +261,7 @@ namespace Tests.PlayMode
                     Assert.AreEqual(3, game.DownloadItemTotal);
                     StringAssert.Contains($"{counts.Count,5} / 3", game.DownloadStatus);
                 }
+                Assert.IsTrue(game.HasReadProperties, game.Error);
                 CollectionAssert.AreEqual(new[] { 1, 2, 3 }, counts);
                 Assert.IsTrue(game.HasDownloaded);
             }
