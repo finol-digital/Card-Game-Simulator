@@ -171,6 +171,66 @@ namespace Tests.EditMode
             }
         }
 
+        [TestCase("CgsUi", "Language", true)]
+        [TestCase("WrongTable", "Language", false)]
+        [TestCase("CgsUi", "Wrong fallback", false)]
+        public void AuthoredTextValidation_ChecksTableAndFallback(string table, string english, bool valid)
+        {
+            var root = new UnityEngine.GameObject("Text validation", typeof(UnityEngine.RectTransform));
+            root.SetActive(false);
+            try
+            {
+                var text = root.AddComponent<UnityEngine.UI.Text>();
+                AuthoredUiBinder.BindText(text, "settings.language", english);
+                var binding = root.GetComponent<Cgs.Localization.CgsLocalizeStringEvent>();
+                binding.StringReference.TableReference = table;
+                var row = new Newtonsoft.Json.Linq.JObject
+                {
+                    ["path"] = root.name, ["key"] = "settings.language", ["text"] = "Language"
+                };
+                var validate = typeof(AuthoredUiBinder).GetMethod("ValidateTextBinding",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                var arguments = new object[] { root.transform, "test asset", row };
+                if (valid)
+                    Assert.DoesNotThrow(() => validate.Invoke(null, arguments));
+                else
+                {
+                    var error = Assert.Throws<System.Reflection.TargetInvocationException>(() => validate.Invoke(null, arguments));
+                    Assert.IsInstanceOf<InvalidOperationException>(error.InnerException);
+                    StringAssert.Contains("test asset / " + root.name, error.InnerException.Message);
+                }
+            }
+            finally { UnityEngine.Object.DestroyImmediate(root); }
+        }
+
+        [Test]
+        public void AuthoredTooltip_BindsMenuIntegrationField()
+        {
+            var root = new UnityEngine.GameObject("Tooltip binding");
+            root.SetActive(false);
+            try
+            {
+                var tooltip = root.AddComponent<Cgs.UI.ToolTip>();
+                var serialized = new SerializedObject(tooltip);
+                Assert.IsNotNull(serialized.FindProperty("localizationKey"));
+                serialized.FindProperty("tooltip").stringValue = "Language";
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                var row = new Newtonsoft.Json.Linq.JObject
+                {
+                    ["path"] = root.name, ["property"] = "tooltip",
+                    ["key"] = "settings.language", ["text"] = "Language"
+                };
+                var bind = typeof(AuthoredUiBinder).GetMethod("Bind",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                Assert.DoesNotThrow(() => bind.Invoke(null,
+                    new object[] { new[] { root }, new Newtonsoft.Json.Linq.JToken[] { row } }));
+                serialized.Update();
+                Assert.AreEqual("settings.language", serialized.FindProperty("localizationKey").stringValue);
+                Assert.AreEqual("Language", serialized.FindProperty("tooltip").stringValue);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(root); }
+        }
+
         [TestCase("body.regular")]
         [TestCase("tmp.body.regular")]
         public void MissingFontEntry_IdentifiesLocaleAndKey(string key)
