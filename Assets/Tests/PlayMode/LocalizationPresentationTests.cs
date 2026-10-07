@@ -26,6 +26,12 @@ namespace Tests.PlayMode
         protected override void LateUpdate() { }
     }
 
+    public class LocalizationTestSettings : LocalizationSettings
+    {
+        public Locale SelectedForTest;
+        public override Locale GetSelectedLocale() => SelectedForTest;
+    }
+
     public class LocalizationPresentationTests
     {
         private Locale _original;
@@ -187,6 +193,46 @@ namespace Tests.PlayMode
 
         private static void SetDialogField(Cgs.Menu.Dialog dialog, string field, object value)
             => typeof(Cgs.Menu.Dialog).GetField(field, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(dialog, value);
+
+        [Test]
+        public void SettingsLanguage_MissingLocaleFallsBackWithoutNotifying()
+        {
+            var owner = new GameObject("Settings locale regression");
+            owner.SetActive(false);
+            var settings = owner.AddComponent<Cgs.Menu.Settings>();
+            var dropdownObject = new GameObject("Language", typeof(RectTransform), typeof(Dropdown));
+            dropdownObject.transform.SetParent(owner.transform);
+            var dropdown = dropdownObject.GetComponent<Dropdown>();
+            var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            typeof(Cgs.Menu.Settings).GetField("languageDropdown", flags).SetValue(settings, dropdown);
+            var refresh = typeof(Cgs.Menu.Settings).GetMethod("RefreshLanguage", flags);
+            var originalSettings = LocalizationSettings.Instance;
+            var selectedLocale = LocalizationSettings.AvailableLocales.Locales.Single(locale => locale.Identifier.Code == "es");
+            var stub = ScriptableObject.CreateInstance<LocalizationTestSettings>();
+            var notifications = 0;
+            dropdown.onValueChanged.AddListener(_ => notifications++);
+            try
+            {
+                LocalizationSettings.Instance = stub;
+                Assert.DoesNotThrow(() => refresh.Invoke(settings, null));
+                Assert.AreEqual(CgsLocalization.Languages.Count, dropdown.options.Count);
+                Assert.AreEqual(0, dropdown.value);
+                Assert.AreEqual(CgsLocalization.Languages[0].NativeName, dropdown.options[0].text);
+                stub.SelectedForTest = selectedLocale;
+                refresh.Invoke(settings, null);
+                Assert.AreEqual("es", CgsLocalization.Languages[dropdown.value].Code);
+                stub.SelectedForTest = null;
+                Assert.DoesNotThrow(() => refresh.Invoke(settings, null));
+                Assert.AreEqual(0, dropdown.value);
+                Assert.AreEqual(0, notifications);
+            }
+            finally
+            {
+                LocalizationSettings.Instance = originalSettings;
+                Object.DestroyImmediate(owner);
+                Object.DestroyImmediate(stub);
+            }
+        }
 
         [UnityTest]
         public IEnumerator SettingsLanguage_FirstRowRefreshDoesNotNotifyOrChangeOtherPreferences()
