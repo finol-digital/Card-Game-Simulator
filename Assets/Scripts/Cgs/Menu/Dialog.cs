@@ -44,7 +44,7 @@ namespace Cgs.Menu
             public bool Equals(Message other)
             {
                 return string.Equals(Text, other.Text, StringComparison.Ordinal) && CanCopy == other.CanCopy
-                    && Localized?.Key == other.Localized?.Key;
+                    && ReferenceEquals(Localized, other.Localized);
             }
 
             public override bool Equals(object obj)
@@ -54,7 +54,7 @@ namespace Cgs.Menu
 
             public override int GetHashCode()
             {
-                return HashCode.Combine(Text, CanCopy);
+                return HashCode.Combine(Text, CanCopy, Localized);
             }
         }
 
