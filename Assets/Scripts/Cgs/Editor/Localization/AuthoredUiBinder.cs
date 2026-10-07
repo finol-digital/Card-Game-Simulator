@@ -98,8 +98,19 @@ namespace Cgs.Editor.Localization
         {
             var split = path.IndexOf('/');
             var rootName = split < 0 ? path : path.Substring(0, split);
-            var root = roots.Single(item => item.name == rootName).transform;
+            var matches = roots.Where(item => item.name == rootName).Take(2).ToArray();
+            if (matches.Length != 1)
+                throw new InvalidOperationException("Missing or ambiguous authored UI root: " + path);
+            var root = matches[0].transform;
             return split < 0 ? root : root.Find(path.Substring(split + 1));
+        }
+
+        private static Cgs.UI.ToolTip GetTooltip(Transform target, string path)
+        {
+            var tooltip = target.GetComponent<Cgs.UI.ToolTip>();
+            if (tooltip == null)
+                throw new InvalidOperationException("Missing tooltip component: " + path);
+            return tooltip;
         }
 
         public static void ValidateAsset(string path)
@@ -116,7 +127,7 @@ namespace Cgs.Editor.Localization
                         throw new InvalidOperationException("Missing target: " + path + " / " + row["path"]);
                     if (property == "tooltip")
                     {
-                        var serialized = new SerializedObject(target.GetComponent<Cgs.UI.ToolTip>());
+                        var serialized = new SerializedObject(GetTooltip(target, (string)row["path"]));
                         if (serialized.FindProperty("localizationKey").stringValue != key)
                             throw new InvalidOperationException("Missing tooltip binding: " + row["path"]);
                     }
@@ -189,7 +200,7 @@ namespace Cgs.Editor.Localization
                 var property = (string)row["property"];
                 if (property == "tooltip")
                 {
-                    var tooltip = target.GetComponent<Cgs.UI.ToolTip>();
+                    var tooltip = GetTooltip(target, (string)row["path"]);
                     var serialized = new SerializedObject(tooltip);
                     if (serialized.FindProperty("tooltip").stringValue != english)
                         throw new InvalidOperationException("Tooltip source changed: " + row["path"]);
