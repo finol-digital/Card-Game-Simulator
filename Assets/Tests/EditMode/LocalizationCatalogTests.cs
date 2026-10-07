@@ -55,6 +55,93 @@ namespace Tests.EditMode
             finally { UnityEngine.Object.DestroyImmediate(row); }
         }
 
+        [TestCase("text", false)]
+        [TestCase("options.0", false)]
+        [TestCase("options.-1", true)]
+        [TestCase("options.1", true)]
+        [TestCase("options.invalid", true)]
+        public void AuthoredBinding_InvalidTargetIdentifiesRow(string property, bool addDropdown)
+        {
+            var root = new UnityEngine.GameObject("Binding test");
+            root.SetActive(false);
+            try
+            {
+                if (addDropdown)
+                    root.AddComponent<UnityEngine.UI.Dropdown>().options.Add(
+                        new UnityEngine.UI.Dropdown.OptionData("Original"));
+                var row = new Newtonsoft.Json.Linq.JObject
+                {
+                    ["path"] = root.name, ["property"] = property,
+                    ["key"] = "settings.language", ["text"] = "Original"
+                };
+                var bind = typeof(AuthoredUiBinder).GetMethod("Bind",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                var error = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+                    bind.Invoke(null, new object[] { new[] { root }, new Newtonsoft.Json.Linq.JToken[] { row } }));
+                Assert.IsInstanceOf<InvalidOperationException>(error.InnerException);
+                StringAssert.Contains(root.name, error.InnerException.Message);
+                Assert.IsNull(root.GetComponent<Cgs.Localization.LocalizedDropdown>());
+            }
+            finally { UnityEngine.Object.DestroyImmediate(root); }
+        }
+
+        [Test]
+        public void AuthoredBinding_ValidOptionStillChecksSourceAndBinds()
+        {
+            var root = new UnityEngine.GameObject("Binding test");
+            root.SetActive(false);
+            try
+            {
+                root.AddComponent<UnityEngine.UI.Dropdown>().options.Add(
+                    new UnityEngine.UI.Dropdown.OptionData("Original"));
+                var row = new Newtonsoft.Json.Linq.JObject
+                {
+                    ["path"] = root.name, ["property"] = "options.0",
+                    ["key"] = "settings.language", ["text"] = "Changed"
+                };
+                var bind = typeof(AuthoredUiBinder).GetMethod("Bind",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                var arguments = new object[] { new[] { root }, new Newtonsoft.Json.Linq.JToken[] { row } };
+                var error = Assert.Throws<System.Reflection.TargetInvocationException>(() => bind.Invoke(null, arguments));
+                Assert.IsInstanceOf<InvalidOperationException>(error.InnerException);
+                StringAssert.Contains("Dropdown source changed", error.InnerException.Message);
+                row["text"] = "Original";
+                bind.Invoke(null, arguments);
+                var adapter = root.GetComponent<Cgs.Localization.LocalizedDropdown>();
+                Assert.IsNotNull(adapter);
+                var options = new SerializedObject(adapter).FindProperty("options");
+                Assert.AreEqual(1, options.arraySize);
+                Assert.AreEqual("settings.language", options.GetArrayElementAtIndex(0).FindPropertyRelative("key").stringValue);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(root); }
+        }
+
+        [Test]
+        public void Import_UnsupportedLocaleWithoutAddressableEntryDoesNotBlockValidation()
+        {
+            var locale = AssetDatabase.FindAssets("t:Locale", new[] { "Assets/Localization/Locales" })
+                .Select(guid => AssetDatabase.LoadAssetAtPath<UnityEngine.Localization.Locale>(AssetDatabase.GUIDToAssetPath(guid)))
+                .Single(item => item.Identifier.Code == "af-ZA");
+            var settings = UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings;
+            var guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(locale));
+            Assert.IsNull(settings.FindAssetEntry(guid));
+            try
+            {
+                LocalizationEditorSettings.AddLocale(locale);
+                Assert.Contains(locale, LocalizationEditorSettings.GetLocales());
+                settings.RemoveAssetEntry(guid, false);
+                Assert.IsNull(settings.FindAssetEntry(guid));
+                CatalogImporter.Import();
+                Assert.IsFalse(LocalizationEditorSettings.GetLocales().Contains(locale));
+                CatalogImporter.ValidateGenerated();
+            }
+            finally
+            {
+                LocalizationEditorSettings.RemoveLocale(locale);
+                AssetDatabase.SaveAssets();
+            }
+        }
+
         [Test]
         public void BundledFonts_CoverCatalogsAndEveryNativeName()
         {
