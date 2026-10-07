@@ -180,13 +180,18 @@ namespace Tests.EditMode
                 .GetAssetTableCollection("CgsFonts").GetTable(locale.Identifier);
             var entry = table.GetEntry(key);
             Assert.IsNotNull(entry);
+            var snapshot = EditorJsonUtility.ToJson(table);
             try
             {
                 Assert.IsTrue(table.RemoveEntry(key));
                 var error = Assert.Throws<InvalidOperationException>(FontCatalogBuilder.ValidateGlyphs);
                 StringAssert.Contains("Invalid saved font assets: " + locale.Identifier.Code + "/body.regular", error.Message);
             }
-            finally { table[entry.KeyId] = entry; }
+            finally
+            {
+                EditorJsonUtility.FromJsonOverwrite(snapshot, table);
+                table.OnAfterDeserialize();
+            }
         }
 
         [Test]
