@@ -198,8 +198,10 @@ namespace Cgs.Editor.Localization
                 }
                 else if (property.StartsWith("options.", StringComparison.Ordinal))
                 {
-                    var index = int.Parse(property.Substring("options.".Length));
                     var dropdown = target.GetComponent<Dropdown>();
+                    if (!int.TryParse(property.Substring("options.".Length), out var index)
+                        || dropdown == null || index < 0 || index >= dropdown.options.Count)
+                        throw new InvalidOperationException("Invalid dropdown option: " + row["path"]);
                     if (dropdown.options[index].text != english)
                         throw new InvalidOperationException("Dropdown source changed: " + row["path"]);
                     var adapter = target.GetComponent<LocalizedDropdown>() ?? target.gameObject.AddComponent<LocalizedDropdown>();
@@ -225,6 +227,8 @@ namespace Cgs.Editor.Localization
                         continue;
                     var legacy = target.GetComponent<Text>();
                     var tmp = target.GetComponent<TMP_Text>();
+                    if (legacy == null && tmp == null)
+                        throw new InvalidOperationException("Missing text component: " + row["path"]);
                     var current = legacy != null ? legacy.text : tmp.text;
                     var existing = target.GetComponent<LocalizeStringEvent>();
                     if (existing == null && current != english)
