@@ -187,7 +187,8 @@ namespace Cgs.Menu
             var languages = CgsLocalization.Languages;
             var options = new List<Dropdown.OptionData>();
             var selected = 0;
-            var code = UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale.Identifier.Code;
+            var locale = UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale;
+            var code = locale != null ? locale.Identifier.Code : null;
             for (var index = 0; index < languages.Count; index++)
             {
                 options.Add(new Dropdown.OptionData(languages[index].NativeName));
