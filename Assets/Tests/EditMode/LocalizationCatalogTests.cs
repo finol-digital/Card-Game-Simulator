@@ -55,6 +55,7 @@ namespace Tests.EditMode
             finally { UnityEngine.Object.DestroyImmediate(row); }
         }
 
+        [TestCase("tooltip", false)]
         [TestCase("text", false)]
         [TestCase("options.0", false)]
         [TestCase("options.-1", true)]
@@ -140,6 +141,52 @@ namespace Tests.EditMode
                 LocalizationEditorSettings.RemoveLocale(locale);
                 AssetDatabase.SaveAssets();
             }
+        }
+
+        [TestCase(0)]
+        [TestCase(2)]
+        public void AuthoredBinding_MissingOrAmbiguousRootIdentifiesFullPath(int count)
+        {
+            var roots = Enumerable.Range(0, count).Select(_ => new UnityEngine.GameObject("Root")).ToArray();
+            try
+            {
+                foreach (var root in roots)
+                    root.SetActive(false);
+                var row = new Newtonsoft.Json.Linq.JObject
+                {
+                    ["path"] = "Root/Child", ["property"] = "text",
+                    ["key"] = "settings.language", ["text"] = "Language"
+                };
+                var bind = typeof(AuthoredUiBinder).GetMethod("Bind",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                var error = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+                    bind.Invoke(null, new object[] { roots, new Newtonsoft.Json.Linq.JToken[] { row } }));
+                Assert.IsInstanceOf<InvalidOperationException>(error.InnerException);
+                StringAssert.Contains("Root/Child", error.InnerException.Message);
+            }
+            finally
+            {
+                foreach (var root in roots)
+                    UnityEngine.Object.DestroyImmediate(root);
+            }
+        }
+
+        [TestCase("body.regular")]
+        [TestCase("tmp.body.regular")]
+        public void MissingFontEntry_IdentifiesLocaleAndKey(string key)
+        {
+            var locale = LocalizationEditorSettings.GetLocales().First();
+            var table = (UnityEngine.Localization.Tables.AssetTable)LocalizationEditorSettings
+                .GetAssetTableCollection("CgsFonts").GetTable(locale.Identifier);
+            var entry = table.GetEntry(key);
+            Assert.IsNotNull(entry);
+            try
+            {
+                Assert.IsTrue(table.RemoveEntry(key));
+                var error = Assert.Throws<InvalidOperationException>(FontCatalogBuilder.ValidateGlyphs);
+                StringAssert.Contains("Invalid saved font assets: " + locale.Identifier.Code + "/body.regular", error.Message);
+            }
+            finally { table[entry.KeyId] = entry; }
         }
 
         [Test]
