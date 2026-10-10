@@ -19,6 +19,11 @@ using Object = UnityEngine.Object;
 
 namespace FinolDigital.Cgs.Json.Unity
 {
+    public enum GameDownloadStage
+    {
+        None, Specification, Banner, CardBack, CardBacks, Playmat, Boards, Decks, DeckProgress, Sets, Cards, Complete
+    }
+
     public delegate void LoadJTokenDelegate(JToken jToken, string defaultValue);
 
     public delegate IEnumerator CardGameCoroutineDelegate(UnityCardGame cardGame);
@@ -101,6 +106,18 @@ namespace FinolDigital.Cgs.Json.Unity
         }
 
         private string _downloadStatus = "N / A";
+
+        [JsonIgnore] public GameDownloadStage DownloadStage { get; private set; }
+        [JsonIgnore] public int DownloadItemCount { get; private set; }
+        [JsonIgnore] public int DownloadItemTotal { get; private set; }
+
+        private void SetDownloadStatus(GameDownloadStage stage, string diagnostic, int count = 0, int total = 0)
+        {
+            DownloadStage = stage;
+            DownloadItemCount = count;
+            DownloadItemTotal = total;
+            DownloadStatus = diagnostic;
+        }
 
         public bool HasDownloaded { get; private set; }
         public bool IsLoading { get; private set; }
@@ -264,7 +281,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
             // We should always first get the cgs.json file and read it before doing anything else
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: Card Game Specification...";
+            SetDownloadStatus(GameDownloadStage.Specification, "Downloading: Card Game Specification...");
             if (AutoUpdateUrl != null && AutoUpdateUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(AutoUpdateUrl.AbsoluteUri, GameFilePath);
             ReadProperties();
@@ -277,12 +294,12 @@ namespace FinolDigital.Cgs.Json.Unity
             }
 
             DownloadProgress = 1f / (8f + DeckUrls.Count + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: Banner";
+            SetDownloadStatus(GameDownloadStage.Banner, "Downloading: Banner");
             if (BannerImageUrl != null && BannerImageUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(BannerImageUrl.AbsoluteUri, BannerImageFilePath);
 
             DownloadProgress = 2f / (8f + DeckUrls.Count + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: CardBack";
+            SetDownloadStatus(GameDownloadStage.CardBack, "Downloading: CardBack");
             if (CardBackImageUrl != null && CardBackImageUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(CardBackImageUrl.AbsoluteUri, CardBackImageFilePath);
 
@@ -292,7 +309,8 @@ namespace FinolDigital.Cgs.Json.Unity
                 cardBack++;
                 DownloadProgress = (2f + cardBack) /
                                    (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
-                DownloadStatus = $"Downloading: CardBacks: {cardBack,5} / {CardBackFaceImageUrls.Count}";
+                SetDownloadStatus(GameDownloadStage.CardBacks,
+                    $"Downloading: CardBacks: {cardBack,5} / {CardBackFaceImageUrls.Count}", cardBack, CardBackFaceImageUrls.Count);
 
                 if (string.IsNullOrEmpty(cardBackFaceImageUrl.Id))
                 {
@@ -310,13 +328,13 @@ namespace FinolDigital.Cgs.Json.Unity
 
             DownloadProgress = (3f + CardBackFaceImageUrls.Count) /
                                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: PlayMat";
+            SetDownloadStatus(GameDownloadStage.Playmat, "Downloading: PlayMat");
             if (PlayMatImageUrl != null && PlayMatImageUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(PlayMatImageUrl.AbsoluteUri, PlayMatImageFilePath);
 
             DownloadProgress = (4f + CardBackFaceImageUrls.Count) /
                                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: Boards";
+            SetDownloadStatus(GameDownloadStage.Boards, "Downloading: Boards");
             foreach (var gameBoardUrl in GameBoardUrls.Where(gameBoardUrl =>
                          !string.IsNullOrEmpty(gameBoardUrl.Id) &&
                          gameBoardUrl.Url.IsAbsoluteUri))
@@ -325,7 +343,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
             DownloadProgress = (5f + CardBackFaceImageUrls.Count) /
                                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: Decks";
+            SetDownloadStatus(GameDownloadStage.Decks, "Downloading: Decks");
             string deckRequestBody = null;
             if (!string.IsNullOrEmpty(AllDecksUrlPostBodyContent))
                 deckRequestBody = "{" + AllDecksUrlPostBodyContent + "}";
@@ -366,7 +384,8 @@ namespace FinolDigital.Cgs.Json.Unity
                 deck++;
                 DownloadProgress = (5f + CardBackFaceImageUrls.Count + deck) /
                                    (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
-                DownloadStatus = $"Downloading: Decks: {deck,5} / {DeckUrls.Count}";
+                SetDownloadStatus(GameDownloadStage.DeckProgress,
+                    $"Downloading: Decks: {deck,5} / {DeckUrls.Count}", deck, DeckUrls.Count);
 
                 if (string.IsNullOrEmpty(deckUrl.Name) || !deckUrl.IsAvailable)
                 {
@@ -386,7 +405,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
             DownloadProgress = (6f + CardBackFaceImageUrls.Count + DeckUrls.Count) /
                                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: AllSets.json";
+            SetDownloadStatus(GameDownloadStage.Sets, "Downloading: AllSets.json");
             var setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityFileMethods.ZipExtension : string.Empty);
             if (AllSetsUrl != null && AllSetsUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(AllSetsUrl.AbsoluteUri, setsFilePath);
@@ -406,8 +425,10 @@ namespace FinolDigital.Cgs.Json.Unity
                                         AllCardsUrlPageCountStartIndex) /
                                        (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount -
                                         AllCardsUrlPageCountStartIndex);
-                    DownloadStatus =
-                        $"Downloading: Cards: {page,5} / {AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount}";
+                    var pageCount = page - AllCardsUrlPageCountStartIndex + 1;
+                    SetDownloadStatus(GameDownloadStage.Cards,
+                        $"Downloading: Cards: {pageCount,5} / {AllCardsUrlPageCount}",
+                        pageCount, AllCardsUrlPageCount);
                     var cardsUrl = AllCardsUrl.OriginalString;
                     if (AllCardsUrlPageCount > 1 && string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
                         cardsUrl += AllCardsUrlPageIdentifier + page;
@@ -451,7 +472,7 @@ namespace FinolDigital.Cgs.Json.Unity
             }
 
             IsDownloading = false;
-            DownloadStatus = "Complete!";
+            SetDownloadStatus(GameDownloadStage.Complete, "Complete!");
             HasDownloaded = true;
             HasLoaded = false;
         }

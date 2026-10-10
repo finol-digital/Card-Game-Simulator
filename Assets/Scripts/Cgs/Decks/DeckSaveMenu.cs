@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.IO;
 using Cgs.Menu;
@@ -110,13 +111,13 @@ namespace Cgs.Decks
             catch (Exception e)
             {
                 Debug.LogError(DeckPrintErrorMessage + e.Message + e.StackTrace);
-                CardGameManager.Instance.Messenger.Show(DeckPrintErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.deck.print", DeckPrintErrorMessage + e.Message, ("detail", e.Message)));
             }
 
             if (pdfUri == null || !pdfUri.IsAbsoluteUri)
             {
                 Debug.LogError(DeckPrintOpenErrorMessage);
-                CardGameManager.Instance.Messenger.Show(DeckPrintOpenErrorMessage);
+                CardGameManager.Instance.Messenger.Show(new UiMessage("errors.pdf.open", DeckPrintOpenErrorMessage));
                 return;
             }
 
@@ -132,25 +133,25 @@ namespace Cgs.Decks
                         if (!success)
                         {
                             Debug.LogError(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
-                            CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
+                            CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.check.path", DeckPrintOpenPathErrorMessage + pdfUri.LocalPath, ("detail", pdfUri.LocalPath)));
                         }
                     }
                     else
                     {
                         Debug.LogError(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
-                        CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
+                        CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.check.path", DeckPrintOpenPathErrorMessage + pdfUri.LocalPath, ("detail", pdfUri.LocalPath)));
                     }
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e.Message + e.StackTrace);
-                    CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.check.path", DeckPrintOpenPathErrorMessage + pdfUri.LocalPath, ("detail", pdfUri.LocalPath)));
                 }
             }, false);
 #elif UNITY_ANDROID && !UNITY_EDITOR
             StartCoroutine(OpenPdf(pdfUri));
 #elif UNITY_IOS && !UNITY_EDITOR
-            TextSharing.ShareFile(pdfUri.LocalPath, CardGameManager.Instance.Messenger.ShowStatus, "application/pdf");
+            TextSharing.ShareFile(pdfUri.LocalPath, CardGameManager.Instance.Messenger.ShowSharingStatus, "application/pdf");
 #else
             Application.OpenURL(pdfUri.AbsoluteUri);
 #endif
@@ -165,11 +166,11 @@ namespace Cgs.Decks
             yield return uwr.SendWebRequest();
             if (uwr.result != UnityWebRequest.Result.Success)
             {
-                CardGameManager.Instance.Messenger.ShowStatus(TextSharing.FileReadErrorMessage);
+                CardGameManager.Instance.Messenger.ShowSharingStatus(TextSharing.FileReadErrorMessage);
                 yield break;
             }
 
-            TextSharing.ShareFile(path, CardGameManager.Instance.Messenger.ShowStatus, "application/pdf");
+            TextSharing.ShareFile(path, CardGameManager.Instance.Messenger.ShowSharingStatus, "application/pdf");
         }
 #endif
 
@@ -186,7 +187,7 @@ namespace Cgs.Decks
         public void Share()
         {
             var shareText = textOutputArea.text;
-            TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowStatus, DeckCopiedMessage);
+            TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowSharingStatus, DeckCopiedMessage);
         }
 
         [UsedImplicitly]
@@ -211,7 +212,7 @@ namespace Cgs.Decks
             var filePathFinder = new UnityDeck(CardGameManager.Current, nameInputField.text,
                 CardGameManager.Current.DeckFileType);
             if (!_doesAutoOverwrite && File.Exists(filePathFinder.FilePath))
-                CardGameManager.Instance.Messenger.Prompt(OverWriteDeckPrompt, SaveToFile);
+                CardGameManager.Instance.Messenger.Prompt(new UiMessage("decks.overwrite", OverWriteDeckPrompt), SaveToFile);
             else
                 SaveToFile();
 

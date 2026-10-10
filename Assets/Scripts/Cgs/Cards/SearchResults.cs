@@ -129,7 +129,8 @@ namespace Cgs.Cards
         private void ResetPlaceholderText()
         {
             if (inputField != null && inputField.placeholder is Text text)
-                text.text = InputPrompt;
+                Cgs.Localization.LocalizedUiText.Set(text, Cgs.Localization.UiMessage.With(
+                    "cards.search.placeholder", InputPrompt, ("gameName", CardGameManager.Current.Name)));
         }
 
         [UsedImplicitly]
@@ -195,7 +196,9 @@ namespace Cgs.Cards
                 cardModel.DefaultAction = DoubleClickAction ?? CardViewer.Instance.MaximizeOn;
             }
 
-            countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);
+            Cgs.Localization.LocalizedUiText.Set(countText, Cgs.Localization.UiMessage.With("cards.page",
+                (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1),
+                ("page", CurrentPageIndex + 1), ("total", TotalPageCount + 1)));
 
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 1;

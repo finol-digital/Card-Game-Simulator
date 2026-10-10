@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Cgs.Localization;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -58,6 +59,7 @@ namespace Cgs.Menu
         }
 
         [SerializeField] ScrollRect scrollRect;
+        [SerializeField] Dropdown languageDropdown;
         [SerializeField] Dropdown framerateDropdown;
         [SerializeField] Dropdown resolutionDropdown;
         [SerializeField] Toggle screenOsControlToggle;
@@ -79,6 +81,11 @@ namespace Cgs.Menu
 
         protected void OnEnable()
         {
+            CgsLocalization.Changed += RefreshLanguage;
+            CgsLocalization.Initialize();
+            if (languageDropdown != null)
+                languageDropdown.onValueChanged.AddListener(SetLanguage);
+            RefreshLanguage();
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputWebsite;
             InputSystem.actions.FindAction(Tags.SettingsToolTips).performed += InputRedisplay;
@@ -112,7 +119,8 @@ namespace Cgs.Menu
                 return;
             if (EventSystem.current.currentSelectedGameObject == null
                 && !Vector2.zero.Equals(_moveAction.ReadValue<Vector2>()))
-                EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
+                EventSystem.current.SetSelectedGameObject(languageDropdown != null && languageDropdown.interactable
+                    ? languageDropdown.gameObject : framerateDropdown.gameObject);
         }
 
         private void InputRedisplay(InputAction.CallbackContext callbackContext)
@@ -128,6 +136,7 @@ namespace Cgs.Menu
 
         private void Redisplay()
         {
+            RefreshLanguage();
             framerateDropdown.value = FrameRateManager.FrameRateIndex;
             resolutionDropdown.value = ResolutionManager.ResolutionIndex;
 
@@ -159,6 +168,36 @@ namespace Cgs.Menu
             foreach (var option in orientationOptions)
                 option.gameObject.SetActive(false);
 #endif
+        }
+
+        [UsedImplicitly]
+        public void SetLanguage(int index)
+        {
+            if (index >= 0 && index < CgsLocalization.Languages.Count)
+                CgsLocalization.SelectLanguage(CgsLocalization.Languages[index].Code);
+        }
+
+        private void RefreshLanguage()
+        {
+            if (languageDropdown == null)
+                return;
+            languageDropdown.interactable = CgsLocalization.IsReady;
+            if (!CgsLocalization.IsReady)
+                return;
+            var languages = CgsLocalization.Languages;
+            var options = new List<Dropdown.OptionData>();
+            var selected = 0;
+            var locale = UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale;
+            var code = locale != null ? locale.Identifier.Code : null;
+            for (var index = 0; index < languages.Count; index++)
+            {
+                options.Add(new Dropdown.OptionData(languages[index].NativeName));
+                if (languages[index].Code == code)
+                    selected = index;
+            }
+            languageDropdown.options = options;
+            languageDropdown.SetValueWithoutNotify(selected);
+            languageDropdown.RefreshShownValue();
         }
 
         [UsedImplicitly]
@@ -262,6 +301,9 @@ namespace Cgs.Menu
 
         protected void OnDisable()
         {
+            CgsLocalization.Changed -= RefreshLanguage;
+            if (languageDropdown != null)
+                languageDropdown.onValueChanged.RemoveListener(SetLanguage);
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputWebsite;
             InputSystem.actions.FindAction(Tags.SettingsToolTips).performed -= InputRedisplay;
