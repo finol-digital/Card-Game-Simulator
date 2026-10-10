@@ -41,6 +41,7 @@ namespace Cgs.Localization
             _requestedLocale = null;
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
         {
             if (_started)

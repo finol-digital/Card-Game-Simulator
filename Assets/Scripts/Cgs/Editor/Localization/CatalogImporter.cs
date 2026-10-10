@@ -348,4 +348,13 @@ namespace Cgs.Editor.Localization
         }
     }
 
+    public sealed class LocalizationBuildValidation : IPreprocessBuildWithReport
+    {
+        public int callbackOrder => 0;
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            CatalogImporter.ValidateGenerated();
+            FontCatalogBuilder.ValidateGlyphs();
+        }
+    }
 }
