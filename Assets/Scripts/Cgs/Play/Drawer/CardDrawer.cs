@@ -452,12 +452,13 @@ namespace Cgs.Play.Drawer
 
         public void SyncHand(int handIndex, CgsNetString[] cardIds)
         {
-            _countTexts[handIndex].text = cardIds.Length.ToString();
+            Cgs.Localization.LocalizedUiText.SetNumber(_countTexts[handIndex], cardIds.Length);
         }
 
         private void PromptRemoveTab(int tabIndex)
         {
-            CardGameManager.Instance.Messenger.Prompt(RemoveDrawerPrompt(tabIndex), () => RemoveTab(tabIndex));
+            CardGameManager.Instance.Messenger.Prompt(Cgs.Localization.UiMessage.With("play.drawer.remove",
+                RemoveDrawerPrompt(tabIndex), ("number", tabIndex)), () => RemoveTab(tabIndex));
         }
 
         private void RemoveTab(int tabIndex)
