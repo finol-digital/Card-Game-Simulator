@@ -30,6 +30,8 @@ To build and run the project, you just need to clone the repo and run it in Unit
 
 ## Contributing
 
+Help improve CGS interface translations using the [translation guide](developer-docs/translating.md). Wording corrections need only a JSON editor and Python; Unity is used for importing and testing.
+
 If you'd like to help out with the project, either join our [Discord](http://discord.cardgamesimulator.com/) or email <david@finoldigital.com>
 
 ## License
