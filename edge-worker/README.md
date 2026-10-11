@@ -6,6 +6,14 @@ It provides permanent HTTP redirects for `/bluesky`, `/bsky`, `/create`, `/disco
 
 Every social path also has a matching subdomain, such as `discord.cardgamesimulator.com`. Both forms use the same destination map. Subdomains ignore incoming paths and query strings and always issue a 301 to the configured destination, including `play` → `https://cgs.gg/` and `x` → `https://x.com/cardgamesim`.
 
+Social paths accept an optional trailing slash (`/bsky` and `/bsky/`) and discard query strings. GET and HEAD both return HTTP 301 with a `Location` header and no HTML body. Child paths such as `/bsky/profile` are not shortcuts.
+
+## Verification
+
+Run `npm --prefix edge-worker test` for source and request-handler regression tests. Run `npm --prefix edge-worker run verify:deployed` for public GET/HEAD redirects, HTML and Markdown negotiation, parsed JSON-LD contact and postal address details, every sitemap route, published JSON/text resources (including Jekyll text permalinks), and recoverable Markdown 404s. The verifier reports all failures and exits unsuccessfully if any check fails; new route behavior will fail against an older deployment until the Worker is released.
+
+External social destinations are intentional. If an audit flags an off-domain destination even though GET and HEAD return a correct HTTP 301, preserve the destination and review the audit evidence rather than replacing a working shortcut. The GitHub Pages refresh fallback is used only when the Worker is absent; removing it cannot turn a Pages response into an HTTP redirect.
+
 ## Deploy
 
 1. Add `cardgamesimulator.com` to the Finol Digital Cloudflare account and proxy `www.cardgamesimulator.com` to the existing GitHub Pages origin (`finol-digital.github.io`). Keep the GitHub Pages custom-domain configuration in place.

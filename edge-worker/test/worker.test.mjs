@@ -92,6 +92,19 @@ test("legacy privacy URL permanently redirects to the canonical trust page", asy
   });
 });
 
+test("shortcut normalization does not redirect child paths or lookalike paths", async () => {
+  for (const path of ["/bsky/profile", "/facebook-login", "/facebook//", "/BSKY/"]) {
+    await withMockFetch(async (request) => {
+      assert.equal(new URL(request.url).pathname, path);
+      return new Response("origin", { status: 404 });
+    }, async () => {
+      const response = await worker.fetch(new Request(`https://www.cardgamesimulator.com${path}`));
+      assert.equal(response.status, 404);
+      assert.equal(response.headers.get("Location"), null);
+    });
+  }
+});
+
 test("social subdomain matching requires the exact configured hostname", async () => {
   for (const hostname of ["unknown.cardgamesimulator.com", "x.cardgamesimulator.com.example.org", "nested.x.cardgamesimulator.com"]) {
     await withMockFetch(async () => new Response("origin"), async () => {

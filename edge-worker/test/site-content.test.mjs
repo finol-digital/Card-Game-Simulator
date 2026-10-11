@@ -50,6 +50,29 @@ test("static social pages retain a redirect and usable link without the Worker",
   assert.match(socialLayout, /<a href="{{ redirect_url \| escape }}">/);
 });
 
+test("Organization JSON-LD has a complete mailing address and support contact", async () => {
+  const layout = await readDocsFile("_layouts/home.html");
+  const scripts = [...layout.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  const nodes = scripts.flatMap(match => JSON.parse(match[1])["@graph"]);
+  const organization = nodes.find(node => node["@type"] === "Organization");
+  assert.ok(organization);
+  assert.deepEqual(organization.address, {
+    "@type": "PostalAddress",
+    streetAddress: "10601 Clarence Dr, Suite 250",
+    addressLocality: "Frisco",
+    addressRegion: "TX",
+    postalCode: "75033",
+    addressCountry: "US"
+  });
+  assert.equal(organization.contactPoint["@type"], "ContactPoint");
+  assert.equal(organization.contactPoint.contactType, "customer support");
+  assert.equal(organization.contactPoint.email, "david@finoldigital.com");
+  const contact = await readDocsFile("contact.md");
+  for (const value of [organization.address.streetAddress, "Frisco, TX 75033", "United States"]) {
+    assert.ok(contact.includes(value), `Contact page must publish ${value}`);
+  }
+});
+
 test("every published social link has matching path and subdomain redirects and a Worker route", async (t) => {
   t.mock.method(globalThis, "fetch", async () => assert.fail("social redirects must not fetch the origin"));
   const config = await readFile(path.resolve(testDirectory, "../wrangler.toml"), "utf8");
@@ -64,12 +87,16 @@ test("every published social link has matching path and subdomain redirects and 
     for (const scheme of ["http", "https"]) {
       for (const url of [
         `${scheme}://www.cardgamesimulator.com/${shortcut}?ignored=yes`,
+        `${scheme}://www.cardgamesimulator.com/${shortcut}/?ignored=yes`,
         `${scheme}://${hostname}/`,
         `${scheme}://${hostname}/play?ignored=yes`
       ]) {
-        const response = await worker.fetch(new Request(url));
-        assert.equal(response.status, 301, url);
-        assert.equal(response.headers.get("Location"), target, url);
+        for (const method of ["GET", "HEAD"]) {
+          const response = await worker.fetch(new Request(url, { method }));
+          assert.equal(response.status, 301, `${method} ${url}`);
+          assert.equal(response.headers.get("Location"), target, url);
+          assert.equal(await response.text(), "", "HTTP redirects must not depend on an HTML stub");
+        }
       }
     }
   }
