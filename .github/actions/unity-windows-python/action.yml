@@ -1,0 +1,40 @@
+name: Prepare Windows Unity with Python
+description: Add the catalog validator's Python runtime to the Windows Unity container.
+inputs:
+  unity-version:
+    description: Unity Editor version used by the build.
+    required: true
+  module:
+    description: GameCI Windows image module.
+    required: true
+outputs:
+  image:
+    description: Local Docker image containing Unity and Python.
+    value: ${{ steps.image.outputs.image }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+        architecture: x64
+    - name: Prepare and verify the build container
+      id: image
+      shell: pwsh
+      env:
+        CGS_UNITY_VERSION: ${{ inputs.unity-version }}
+        CGS_UNITY_MODULE: ${{ inputs.module }}
+        CGS_ACTION_PATH: ${{ github.action_path }}
+      run: |
+        $ErrorActionPreference = 'Stop'
+        $context = Join-Path $env:RUNNER_TEMP 'unity-windows-python'
+        New-Item -ItemType Directory -Path $context -Force | Out-Null
+        Copy-Item -LiteralPath $env:pythonLocation -Destination (Join-Path $context 'python') -Recurse
+        Copy-Item -LiteralPath (Join-Path $env:CGS_ACTION_PATH 'Dockerfile') -Destination $context
+        $baseImage = "unityci/editor:windows-$env:CGS_UNITY_VERSION-$env:CGS_UNITY_MODULE-3"
+        $image = "cgs-unity-python:$env:CGS_UNITY_MODULE"
+        docker build --build-arg "BASE_IMAGE=$baseImage" --tag $image $context
+        if ($LASTEXITCODE -ne 0) { throw 'Could not prepare the Unity/Python image.' }
+        docker run --rm --entrypoint C:/Python/python.exe --volume "${env:GITHUB_WORKSPACE}:C:/github/workspace" $image C:/github/workspace/tools/localization/validate.py --directory C:/github/workspace/translations
+        if ($LASTEXITCODE -ne 0) { throw 'Catalog validation failed inside the Windows container.' }
+        "image=$image" >> $env:GITHUB_OUTPUT
