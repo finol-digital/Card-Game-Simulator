@@ -255,6 +255,39 @@ namespace Tests.EditMode
         }
 
         [Test]
+        public void LanguagePicker_UsesSmallSharedFaceWithoutPreloadingFullChineseForOtherLocales()
+        {
+            var collection = LocalizationEditorSettings.GetAssetTableCollection("CgsFonts");
+            var pickerPath = "Assets/Fonts/Noto Sans CJK/CGSLanguagePicker-Regular.otf";
+            var chinesePath = "Assets/Fonts/Noto Sans CJK/NotoSansCJKsc-Regular.otf";
+            var pickerGuid = AssetDatabase.AssetPathToGUID(pickerPath);
+            var chineseGuid = AssetDatabase.AssetPathToGUID(chinesePath);
+            Assert.Less(new FileInfo(pickerPath).Length, new FileInfo(chinesePath).Length / 10);
+            foreach (var table in collection.AssetTables)
+            {
+                Assert.AreEqual(table.LocaleIdentifier.Code == "zh-Hans" ? chineseGuid : pickerGuid,
+                    table.GetEntry("mixed").Guid, table.LocaleIdentifier.Code);
+                var tmpPath = AssetDatabase.GUIDToAssetPath(table.GetEntry("tmp.mixed").Guid);
+                if (table.LocaleIdentifier.Code != "zh-Hans")
+                {
+                    CollectionAssert.DoesNotContain(AssetDatabase.GetDependencies(tmpPath), chinesePath);
+                    Assert.IsFalse(table.Values.Any(entry => entry.Guid == chineseGuid), table.LocaleIdentifier.Code);
+                }
+                else
+                {
+                    Assert.AreEqual(table.GetEntry("body.regular").Guid, table.GetEntry("mixed").Guid);
+                    Assert.AreEqual(table.GetEntry("tmp.body.regular").Guid, table.GetEntry("tmp.mixed").Guid);
+                }
+            }
+            var settings = UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings;
+            var chineseEntry = settings.FindAssetEntry(chineseGuid);
+            Assert.AreNotSame(settings.FindAssetEntry(pickerGuid).parentGroup, chineseEntry.parentGroup);
+            CollectionAssert.AreEquivalent(new[] { "Locale-zh-Hans" }, chineseEntry.labels);
+            Assert.AreEqual(chineseGuid, ((UnityEngine.Localization.Tables.AssetTable)collection.GetTable("zh-Hans"))
+                .GetEntry("body.regular").Guid);
+        }
+
+        [Test]
         public void BundledFonts_CoverCatalogsAndEveryNativeName()
         {
             FontCatalogBuilder.ValidateGlyphs();
