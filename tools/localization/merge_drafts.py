@@ -21,6 +21,14 @@ def validate_merge_catalog(catalog, code, source):
     require(not unknown, f"unknown keys require explicit migration: {', '.join(sorted(unknown))}")
 
 
+def validate_preserved_translation(entry, english):
+    if entry.get("sourceHash") != source_hash(english):
+        validate_translation_metadata(entry)
+        entry["status"] = "needs-review"
+    else:
+        validate_translation(entry, english)
+
+
 def merge(source, existing, draft):
     validate_source(source)
     require(isinstance(existing, dict) and isinstance(draft, dict), "catalogs must be objects")
@@ -35,11 +43,7 @@ def merge(source, existing, draft):
         if current is not None:
             require(isinstance(current.get("text"), str), f"{key}: text must be a string")
         if isinstance(current, dict) and nonempty(current.get("text")):
-            if current.get("sourceHash") != source_hash(english):
-                validate_translation_metadata(current)
-                current["status"] = "needs-review"
-            else:
-                validate_translation(current, english)
+            validate_preserved_translation(current, english)
             continue
         candidate = draft["entries"].get(key)
         if candidate is None:
