@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db626ad063b13545924a9839ac5fa83, type: 3}
+  m_Name: CgsFonts
+  m_EditorClassIdentifier: Unity.Localization.Editor::UnityEditor.Localization.AssetTableCollection
+  m_SharedTableData: {fileID: 11400000, guid: 71a40b8e32b13ff49b4e7b5cc405c161, type: 2}
+  m_Tables:
+  - {fileID: 11400000, guid: 65c60dd0982ee2c47b0777e29d30d6a6, type: 2}
+  - {fileID: 11400000, guid: f16dfd152de059d43bd9aae50d2e1c33, type: 2}
+  - {fileID: 11400000, guid: 5ff2f66ed0f4b96449375f979f477c06, type: 2}
+  - {fileID: 11400000, guid: 33a3ce93b3e2c074ab2391568cb5b794, type: 2}
+  - {fileID: 11400000, guid: 7063960aaf256064b8cca784decce985, type: 2}
+  - {fileID: 11400000, guid: 7e74a01ff3ec93f4e80ff369efbe11a1, type: 2}
+  - {fileID: 11400000, guid: ce8a2001ed45b5a4a98c6a4df4f3ceca, type: 2}
+  - {fileID: 11400000, guid: 6936dcb05d49b6343a773a743f5a94e0, type: 2}
+  - {fileID: 11400000, guid: 1a1b9041c9eae0b41afe7e4aa0767dba, type: 2}
+  - {fileID: 11400000, guid: bc3980ef6b1baeb469f79ded1783c1ee, type: 2}
+  m_Extensions: []
+  m_Group: Asset Table
+  references:
+    version: 2
+    RefIds: []
