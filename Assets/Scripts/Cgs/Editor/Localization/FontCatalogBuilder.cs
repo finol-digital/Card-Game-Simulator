@@ -44,7 +44,9 @@ namespace Cgs.Editor.Localization
             foreach (var locale in locales)
             foreach (var pair in sources)
             {
-                var path = pair.Key == "mixed" && locale.Identifier.Code != "zh-Hans" ? Picker : locale.Identifier.Code switch
+                var path = pair.Key == "mixed"
+                    ? (locale.Identifier.Code == "zh-Hans" ? Chinese : Picker)
+                    : locale.Identifier.Code switch
                 {
                     "zh-Hans" => Chinese,
                     "ko" => Korean,
@@ -108,6 +110,9 @@ namespace Cgs.Editor.Localization
             foreach (var locale in LocalizationEditorSettings.GetLocales())
             {
                 var catalog = JObject.Parse(File.ReadAllText(Path.Combine(CatalogImporter.CatalogDirectory, locale.Identifier.Code + ".json")));
+                var languageLabel = (string)catalog["entries"]?["settings.language"]?["text"];
+                if (string.IsNullOrEmpty(languageLabel))
+                    throw new System.InvalidOperationException("Missing settings.language text: " + locale.Identifier.Code);
                 var characters = string.Join("", ((JObject)catalog["entries"]).Properties().Select(entry => (string)entry.Value["text"]));
                 var table = (AssetTable)collection.GetTable(locale.Identifier);
                 if (table == null || !LocalizationEditorSettings.GetPreloadTableFlag(table))
@@ -132,7 +137,7 @@ namespace Cgs.Editor.Localization
                     CatalogImporter.ValidateLocalAsset(tmp);
                     if (FontEngine.LoadFontFace(font, 40) != FontEngineError.Success)
                         throw new System.InvalidOperationException("Could not read bundled font: " + font.name);
-                    var missing = (key == "mixed" ? nativeNames + (string)catalog["entries"]["settings.language"]["text"] : characters).Distinct()
+                    var missing = (key == "mixed" ? nativeNames + languageLabel : characters).Distinct()
                         .Where(character => !char.IsControl(character)
                             && !FontEngine.TryGetGlyphWithUnicodeValue(character, GlyphLoadFlags.LOAD_NO_SCALE, out _)).ToArray();
                     if (missing.Length > 0)
