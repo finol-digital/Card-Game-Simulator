@@ -254,6 +254,31 @@ namespace Tests.EditMode
             }
         }
 
+        [TestCase("entry")]
+        [TestCase("text")]
+        [TestCase("empty")]
+        public void FontValidation_MissingLanguageLabelIdentifiesLocaleAndKey(string missing)
+        {
+            var path = Path.Combine(CatalogImporter.CatalogDirectory, "en.json");
+            var original = File.ReadAllBytes(path);
+            try
+            {
+                var catalog = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(path));
+                var entries = (Newtonsoft.Json.Linq.JObject)catalog["entries"];
+                if (missing == "entry")
+                    entries.Remove("settings.language");
+                else if (missing == "text")
+                    ((Newtonsoft.Json.Linq.JObject)entries["settings.language"]).Remove("text");
+                else
+                    entries["settings.language"]["text"] = "";
+                File.WriteAllText(path, catalog.ToString());
+                var error = Assert.Throws<InvalidOperationException>(() => FontCatalogBuilder.ValidateGlyphs());
+                StringAssert.Contains("settings.language", error.Message);
+                StringAssert.Contains("en", error.Message);
+            }
+            finally { File.WriteAllBytes(path, original); }
+        }
+
         [Test]
         public void LanguagePicker_UsesSmallSharedFaceWithoutPreloadingFullChineseForOtherLocales()
         {
