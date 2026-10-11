@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -140,12 +141,12 @@ namespace Cgs.Menu
                 if (!FileBrowserHelpers.DirectoryExists(value))
                 {
                     Debug.LogWarning(ImportFolderWarningMessage + value);
-                    CardGameManager.Instance.Messenger.Show(ImportFolderWarningMessage + value);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.folder.missing", ImportFolderWarningMessage + value, ("detail", value)));
                     return;
                 }
 
                 _backsFolderPath = value;
-                backsFolderText.text = _backsFolderPath;
+                Cgs.Localization.LocalizedUiText.SetLiteral(backsFolderText, _backsFolderPath);
             }
         }
 
@@ -293,7 +294,8 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void DownloadBannerImageFromWeb()
         {
-            Downloader.Show(DownloadBannerImage, DownloadBannerImagePrompt, DownloadBannerImageFromWeb);
+            Downloader.Show(new UiMessage("images.download.banner", DownloadBannerImage),
+                new UiMessage("images.download.banner.url", DownloadBannerImagePrompt), DownloadBannerImageFromWeb);
         }
 
         private IEnumerator DownloadBannerImageFromWeb(string url)
@@ -307,20 +309,20 @@ namespace Cgs.Menu
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, ImportImage);
+            NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
 #elif ENABLE_WINMD_SUPPORT
             ImportBannerImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
             var paths =
- StandaloneFileBrowser.OpenFilePanel(SelectBannerImageFilePrompt, string.Empty, string.Empty, false);
+ StandaloneFileBrowser.OpenFilePanel(CgsLocalization.Text(new UiMessage("files.select.banner", SelectBannerImageFilePrompt)), string.Empty, string.Empty, false);
             if (paths.Length > 0)
                 ImportBannerImageFromFile(paths[0]);
             else
                 Debug.LogWarning(ImportImageWarningMessage);
 #else
-            StandaloneFileBrowser.OpenFilePanelAsync(SelectBannerImageFilePrompt, string.Empty, string.Empty, false,
+            StandaloneFileBrowser.OpenFilePanelAsync(CgsLocalization.Text(new UiMessage("files.select.banner", SelectBannerImageFilePrompt)), string.Empty, string.Empty, false,
                 paths => { ImportBannerImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
@@ -365,7 +367,8 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void DownloadCardBackImageFromWeb()
         {
-            Downloader.Show(DownloadCardBackImage, DownloadCardBackImagePrompt, DownloadCardBackImageFromWeb);
+            Downloader.Show(new UiMessage("images.download.back", DownloadCardBackImage),
+                new UiMessage("images.download.back.url", DownloadCardBackImagePrompt), DownloadCardBackImageFromWeb);
         }
 
         private IEnumerator DownloadCardBackImageFromWeb(string url)
@@ -379,20 +382,20 @@ namespace Cgs.Menu
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
+            NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
 #elif ENABLE_WINMD_SUPPORT
             ImportCardBackImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
             var paths =
- StandaloneFileBrowser.OpenFilePanel(SelectCardBackImageFilePrompt, string.Empty, string.Empty, false);
+ StandaloneFileBrowser.OpenFilePanel(CgsLocalization.Text(new UiMessage("files.select.back", SelectCardBackImageFilePrompt)), string.Empty, string.Empty, false);
             if (paths.Length > 0)
                 ImportCardBackImageFromFile(paths[0]);
             else
                 Debug.LogWarning(ImportImageWarningMessage);
 #else
-            StandaloneFileBrowser.OpenFilePanelAsync(SelectCardBackImageFilePrompt, string.Empty, string.Empty, false,
+            StandaloneFileBrowser.OpenFilePanelAsync(CgsLocalization.Text(new UiMessage("files.select.back", SelectCardBackImageFilePrompt)), string.Empty, string.Empty, false,
                 paths => { ImportCardBackImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
@@ -437,7 +440,8 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void DownloadPlayMatImageFromWeb()
         {
-            Downloader.Show(DownloadPlayMatImage, DownloadPlayMatImagePrompt, DownloadPlayMatImageFromWeb);
+            Downloader.Show(new UiMessage("images.download.playmat", DownloadPlayMatImage),
+                new UiMessage("images.download.playmat.url", DownloadPlayMatImagePrompt), DownloadPlayMatImageFromWeb);
         }
 
         private IEnumerator DownloadPlayMatImageFromWeb(string url)
@@ -451,20 +455,20 @@ namespace Cgs.Menu
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, ImportImage);
+            NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
 #elif ENABLE_WINMD_SUPPORT
             ImportPlayMatImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
             var paths =
- StandaloneFileBrowser.OpenFilePanel(SelectPlayMatImageFilePrompt, string.Empty, string.Empty, false);
+ StandaloneFileBrowser.OpenFilePanel(CgsLocalization.Text(new UiMessage("files.select.playmat", SelectPlayMatImageFilePrompt)), string.Empty, string.Empty, false);
             if (paths.Length > 0)
                 ImportPlayMatImageFromFile(paths[0]);
             else
                 Debug.LogWarning(ImportImageWarningMessage);
 #else
-            StandaloneFileBrowser.OpenFilePanelAsync(SelectPlayMatImageFilePrompt, string.Empty, string.Empty, false,
+            StandaloneFileBrowser.OpenFilePanelAsync(CgsLocalization.Text(new UiMessage("files.select.playmat", SelectPlayMatImageFilePrompt)), string.Empty, string.Empty, false,
                 paths => { ImportPlayMatImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
@@ -613,13 +617,13 @@ namespace Cgs.Menu
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
 #elif ENABLE_WINMD_SUPPORT
             Debug.LogWarning(UwpWarningMessage);
-            CardGameManager.Instance.Messenger.Show(UwpWarningMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage("files.uwp.unavailable", UwpWarningMessage));
 #else
             FileBrowser.ShowLoadDialog((paths) => { BacksFolderPath = paths[0]; }, () => { },
-                FileBrowser.PickMode.Folders, false, null, null, SelectFolderPrompt);
+                FileBrowser.PickMode.Folders, false, null, null, CgsLocalization.Text(new UiMessage("files.select.folder", SelectFolderPrompt)));
 #endif
         }
 
@@ -643,7 +647,7 @@ namespace Cgs.Menu
                 catch
                 {
                     Debug.LogWarning(ImportBackFailedWarningMessage + backsToImport[i].Name);
-                    CardGameManager.Instance.Messenger.Show(ImportBackFailedWarningMessage + backsToImport[i].Name);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.back.missing", ImportBackFailedWarningMessage + backsToImport[i].Name, ("detail", backsToImport[i].Name)));
                 }
             }
         }

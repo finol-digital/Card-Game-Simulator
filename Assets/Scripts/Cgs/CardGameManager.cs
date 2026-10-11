@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -296,7 +297,7 @@ namespace Cgs
             {
                 var errorMessage = string.Format(FileNotFoundErrorMessage, zipFilePath);
                 Debug.LogError(errorMessage);
-                Messenger.Show(errorMessage);
+                Messenger.Show(UiMessage.With("errors.file.missing", errorMessage, ("detail", zipFilePath)));
                 return;
             }
 
@@ -304,7 +305,7 @@ namespace Cgs
             {
                 var errorMessage = string.Format(InvalidCgsZipFileErrorMessage, zipFilePath);
                 Debug.LogError(errorMessage);
-                Messenger.Show(errorMessage);
+                Messenger.Show(UiMessage.With("errors.zip.invalid", errorMessage, ("detail", zipFilePath)));
                 return;
             }
 
@@ -315,7 +316,7 @@ namespace Cgs
             var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
             if (Directory.Exists(targetGameDirectory))
             {
-                Messenger.Ask(OverwriteGamePrompt, () => { },
+                Messenger.Ask(new UiMessage("games.overwrite", OverwriteGamePrompt), () => { },
                     () => ForceImportCardGame(zipFilePath));
                 return;
             }
@@ -333,7 +334,7 @@ namespace Cgs
             {
                 var errorMessage = string.Format(FileNotFoundErrorMessage, zipFilePath);
                 Debug.LogError(errorMessage);
-                Messenger.Show(errorMessage);
+                Messenger.Show(UiMessage.With("errors.file.missing", errorMessage, ("detail", zipFilePath)));
                 return;
             }
 
@@ -350,7 +351,7 @@ namespace Cgs
                     {
                         var errorMessage = string.Format(FileNotFoundErrorMessage, importGameDirectory);
                         Debug.LogError(errorMessage);
-                        Messenger.Show(errorMessage);
+                        Messenger.Show(UiMessage.With("errors.file.missing", errorMessage, ("detail", importGameDirectory)));
                         return;
                     }
                 }
@@ -366,7 +367,7 @@ namespace Cgs
                 if (!string.IsNullOrEmpty(newCardGame.Error))
                 {
                     Debug.LogError(LoadErrorMessage + newCardGame.Error);
-                    Messenger.Show(LoadErrorMessage + newCardGame.Error);
+                    Messenger.Show(UiMessage.With("errors.game.load", LoadErrorMessage + newCardGame.Error, ("detail", newCardGame.Error)));
                 }
                 else
                 {
@@ -380,7 +381,7 @@ namespace Cgs
             catch (Exception e)
             {
                 Debug.LogError(ImportFailureErrorMessage + e);
-                Messenger.Show(ImportFailureErrorMessage + e);
+                Messenger.Show(UiMessage.With("errors.import", ImportFailureErrorMessage + e, ("detail", e)));
             }
         }
 
@@ -563,7 +564,7 @@ namespace Cgs
             if (string.IsNullOrEmpty(gameUrl))
             {
                 Debug.LogError("ERROR: GetCardGame has gameUrl missing!");
-                Messenger.Show("ERROR: GetCardGame has gameUrl missing!");
+                Messenger.Show(new UiMessage("games.url.missing", "Cannot download the game: its URL is missing."));
                 yield break;
             }
 
@@ -606,7 +607,7 @@ namespace Cgs
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
                 Debug.LogError(DownloadErrorMessage + cardGame.Error);
-                Messenger.Show(DownloadErrorMessage + cardGame.Error);
+                Messenger.Show(UiMessage.With("errors.game.download", DownloadErrorMessage + cardGame.Error, ("detail", cardGame.Error)));
 
                 if (!Directory.Exists(cardGame.GameDirectoryPath))
                     yield break;
@@ -641,7 +642,7 @@ namespace Cgs
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
                 Debug.LogError(DownloadErrorMessage + cardGame.Error);
-                Messenger.Show(DownloadErrorMessage + cardGame.Error);
+                Messenger.Show(UiMessage.With("errors.game.download", DownloadErrorMessage + cardGame.Error, ("detail", cardGame.Error)));
                 cardGame.ClearError();
             }
 
@@ -661,14 +662,14 @@ namespace Cgs
                 cardGame.LoadCards(page);
                 if (page == cardGame.AllCardsUrlPageCountStartIndex &&
                     cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
-                    Messenger.Show(string.Format(CardsLoadingMessage, cardGame.Name));
+                    Messenger.Show(UiMessage.With("games.cards.loading", string.Format(CardsLoadingMessage, cardGame.Name), ("gameName", cardGame.Name)));
                 yield return null;
             }
 
             if (!string.IsNullOrEmpty(cardGame.Error))
                 Debug.LogError(LoadErrorMessage + cardGame.Error);
             else if (cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
-                Messenger.Show(string.Format(CardsLoadedMessage, cardGame.Name));
+                Messenger.Show(UiMessage.With("games.cards.loaded", string.Format(CardsLoadedMessage, cardGame.Name), ("gameName", cardGame.Name)));
         }
 
 #pragma warning disable S2325
@@ -704,7 +705,7 @@ namespace Cgs
             if (string.IsNullOrEmpty(gameId) || !AllCardGames.TryGetValue(gameId, out var game))
             {
                 Debug.LogError(SelectionErrorMessage + gameId);
-                Messenger.Show(SelectionErrorMessage + gameId);
+                Messenger.Show(UiMessage.With("errors.game.select", SelectionErrorMessage + gameId, ("detail", gameId)));
                 return;
             }
 
@@ -746,7 +747,7 @@ namespace Cgs
                 if (UnityCardGame.UnityInvalid == Current || Current == CardGame.Invalid)
                     return;
                 Debug.LogError(LoadErrorMessage + Current.Error);
-                Messenger.Ask(LoadErrorPrompt, IgnoreCurrentErroredGame, Delete);
+                Messenger.Ask(new UiMessage("games.load.corrupt", LoadErrorPrompt), IgnoreCurrentErroredGame, Delete);
                 return;
             }
 
@@ -772,7 +773,7 @@ namespace Cgs
             if (Current.CgsGamesLink != null && Current.CgsGamesLink.IsWellFormedOriginalString())
             {
                 var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, Current.CgsGamesLink);
-                TextSharing.CopyOrShare(shareMessage, Messenger.ShowStatus);
+                TextSharing.CopyOrShare(shareMessage, Messenger.ShowSharingStatus);
             }
             else
                 ExportGame();
@@ -812,26 +813,26 @@ namespace Cgs
                         if (!success)
                         {
                             Debug.LogError(ExportGameErrorMessage + exportGameZipUri.LocalPath);
-                            CardGameManager.Instance.Messenger.Show(ExportGameErrorMessage + exportGameZipUri.LocalPath);
+                            CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.game.export", ExportGameErrorMessage + exportGameZipUri.LocalPath, ("path", exportGameZipUri.LocalPath)));
                         }
                     }
                     else
                     {
                         Debug.LogError(ExportGameErrorMessage + exportGameZipUri.LocalPath);
-                        CardGameManager.Instance.Messenger.Show(ExportGameErrorMessage + exportGameZipUri.LocalPath);
+                        CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.game.export", ExportGameErrorMessage + exportGameZipUri.LocalPath, ("path", exportGameZipUri.LocalPath)));
                     }
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e.Message + e.StackTrace);
-                    CardGameManager.Instance.Messenger.Show(ExportGameErrorMessage + exportGameZipUri.LocalPath);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.game.export", ExportGameErrorMessage + exportGameZipUri.LocalPath, ("path", exportGameZipUri.LocalPath)));
                 }
             }, false);
 #elif UNITY_ANDROID && !UNITY_EDITOR
             var tempCgsZipFilePath = Path.Combine( Application.temporaryCachePath, Current.Id + CgsZipExtension );
             Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, tempCgsZipFilePath));
 #elif UNITY_IOS && !UNITY_EDITOR
-            TextSharing.ShareFile(targetZipFilePath, Instance.Messenger.ShowStatus, "application/zip");
+            TextSharing.ShareFile(targetZipFilePath, Instance.Messenger.ShowSharingStatus, "application/zip");
 #else
             Application.OpenURL(exportGameZipUri.AbsoluteUri);
 #endif
@@ -845,20 +846,20 @@ namespace Cgs
             yield return uwr.SendWebRequest();
             if (uwr.result != UnityWebRequest.Result.Success)
             {
-                Messenger.ShowStatus(TextSharing.FileReadErrorMessage);
+                Messenger.ShowSharingStatus(TextSharing.FileReadErrorMessage);
                 yield break;
             }
 
-            TextSharing.ShareFile(tempCgsZipFilePath, Messenger.ShowStatus, "application/zip");
+            TextSharing.ShareFile(tempCgsZipFilePath, Messenger.ShowSharingStatus, "application/zip");
         }
 #endif
 
         public void PromptDelete()
         {
             if (AllCardGames.Count > 1)
-                Messenger.Prompt(DeletePrompt, Delete);
+                Messenger.Prompt(new UiMessage("games.delete.confirm", DeletePrompt), Delete);
             else
-                Messenger.Show(DeleteWarningMessage);
+                Messenger.Show(new UiMessage("games.delete.warning", DeleteWarningMessage));
         }
 
         private void Delete()
