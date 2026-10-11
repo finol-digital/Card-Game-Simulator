@@ -294,6 +294,11 @@ PrefabInstance:
       propertyPath: inputActionId
       value: Player/Cancel
       objectReference: {fileID: 0}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: localizationKey
+      value: common.main.menu
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1108,6 +1113,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8905567562428405640, guid: eade682f70a946e4e872f29bf2904091,
         type: 3}
+      propertyPath: localizationKey
+      value: common.lock.zoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 8905567562428405640, guid: eade682f70a946e4e872f29bf2904091,
+        type: 3}
       propertyPath: parentTransform
       value: 
       objectReference: {fileID: 1049031280}
@@ -1506,6 +1516,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8905567562428405640, guid: eade682f70a946e4e872f29bf2904091,
         type: 3}
+      propertyPath: localizationKey
+      value: common.lock.rotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 8905567562428405640, guid: eade682f70a946e4e872f29bf2904091,
+        type: 3}
       propertyPath: parentTransform
       value: 
       objectReference: {fileID: 1202829356}
@@ -1826,6 +1841,11 @@ PrefabInstance:
       propertyPath: avoidOverlap
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: localizationKey
+      value: common.reset.zoom
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2047,6 +2067,11 @@ PrefabInstance:
         type: 3}
       propertyPath: avoidOverlap
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: localizationKey
+      value: common.reset.rotation
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -3133,6 +3158,11 @@ PrefabInstance:
       propertyPath: inputActionId
       value: PlayGame/Help
       objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: localizationKey
+      value: common.help
+      objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: m_Enabled
@@ -3306,7 +3336,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2286078887274990587, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2059094903}
   m_SourcePrefab: {fileID: 100100000, guid: 30c175fe170c9e0459ee166821450a03, type: 3}
 --- !u!224 &2059094901 stripped
 RectTransform:
@@ -3314,6 +3348,25 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2059094900}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2059094902 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2286078887274990587, guid: 30c175fe170c9e0459ee166821450a03,
+    type: 3}
+  m_PrefabInstance: {fileID: 2059094900}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2059094903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059094902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
+  key: body.regular
 --- !u!1 &2115504268
 GameObject:
   m_ObjectHideFlags: 0

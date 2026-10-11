@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -91,7 +92,7 @@ namespace Cgs.Play
                 Application.OpenURL(Tags.NativeUri +
                                     UnityWebRequest.EscapeURL(CardGameManager.Current.AutoUpdateUrl.OriginalString));
             else
-                CardGameManager.Instance.Messenger.Show(NoAutoupdateErrorMessage);
+                CardGameManager.Instance.Messenger.Show(new UiMessage("play.no.autoupdate", NoAutoupdateErrorMessage));
         }
 
         [UsedImplicitly]
@@ -101,7 +102,7 @@ namespace Cgs.Play
                 CardGameManager.Current.RulesUrl.IsWellFormedOriginalString())
                 Application.OpenURL(CardGameManager.Current.RulesUrl.OriginalString);
             else
-                CardGameManager.Instance.Messenger.Show(NoRulesErrorMessage);
+                CardGameManager.Instance.Messenger.Show(new UiMessage("play.no.rules", NoRulesErrorMessage));
         }
 
         [UsedImplicitly]

@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Viewer;
@@ -41,6 +42,7 @@ namespace Cgs.CardGameView.Multiplayer
         IMaterialModifier
     {
         public virtual string DeletePrompt => "Delete?";
+        protected virtual UiMessage LocalizedDeletePrompt => new UiMessage("play.delete", DeletePrompt);
 
         private static readonly Vector2 OutlineHighlightDistance = new(15, 15);
         private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
@@ -952,7 +954,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public virtual void PromptDelete()
         {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
+            CardGameManager.Instance.Messenger.Prompt(LocalizedDeletePrompt, RequestDelete);
         }
 
         public void RequestDelete()

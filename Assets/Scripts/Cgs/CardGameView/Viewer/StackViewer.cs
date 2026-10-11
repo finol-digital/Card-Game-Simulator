@@ -107,7 +107,7 @@ namespace Cgs.CardGameView.Viewer
         public void Sync(CardStack stack)
         {
             _cardStack = stack;
-            nameLabel.text = _cardStack.Name;
+            Cgs.Localization.LocalizedUiText.SetLiteral(nameLabel, _cardStack.Name);
 
             contentCardZone.transform.DestroyAllChildren();
             var cards = _cardStack.Cards.Reverse().ToList();
@@ -120,7 +120,7 @@ namespace Cgs.CardGameView.Viewer
                 cardModelIndex--;
             }
 
-            countLabel.text = _cardStack.Cards.Count.ToString();
+            Cgs.Localization.LocalizedUiText.SetNumber(countLabel, _cardStack.Cards.Count);
         }
 
         public void Sync(int handIndex, CardZone cardZone, Text nameText, Text countText)
@@ -157,7 +157,7 @@ namespace Cgs.CardGameView.Viewer
             cardModel.DefaultAction = CardActionPanel.Flip;
 
             var cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
-            countLabel.text = cardModels.Length.ToString();
+            Cgs.Localization.LocalizedUiText.SetNumber(countLabel, cardModels.Length);
 
             if (CgsNetManager.Instance.IsOnline && _handIndex != null)
                 CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int)_handIndex,
@@ -177,7 +177,7 @@ namespace Cgs.CardGameView.Viewer
         private void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
         {
             var cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
-            countLabel.text = cardModels.Length.ToString();
+            Cgs.Localization.LocalizedUiText.SetNumber(countLabel, cardModels.Length);
 
             if (CgsNetManager.Instance.IsOnline && _handIndex != null)
                 CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int)_handIndex,
