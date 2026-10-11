@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Globalization;
+using Cgs.Localization;
 using Cgs.Menu;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,6 +17,7 @@ namespace Cgs.UI
     {
         [SerializeField] GameObject tooltipPrefab;
         [SerializeField] string tooltip = "";
+        [SerializeField] string localizationKey;
         [SerializeField] bool avoidOverlap;
         [SerializeField] bool isBelow;
         [SerializeField] string inputActionId;
@@ -39,7 +41,12 @@ namespace Cgs.UI
         private bool _isOver;
         private readonly Vector3[] _boundsCorners = new Vector3[4];
         private string _previousContent;
+        private string _localizedTooltip;
+        private LocalizedMessageBinding _localization;
         private float _previousWidth = -1;
+        private Font _previousFont;
+        private int _previousFontSize;
+        private FontStyle _previousFontStyle;
 
         private string TooltipTextContent
         {
@@ -50,13 +57,14 @@ namespace Cgs.UI
                     || (EventSystem.current.currentSelectedGameObject != gameObject && !_isOver))
                     return inputActionBinding;
                 var hasBinding = !string.IsNullOrEmpty(inputActionBinding);
+                var description = _localizedTooltip ?? tooltip;
                 if (hasBinding)
                 {
                     if (singleLineBounds != null)
-                        return $"{inputActionBinding} — {tooltip}";
-                    return isBelow ? $"{inputActionBinding}\n{tooltip}" : $"{tooltip}\n{inputActionBinding}";
+                        return $"{inputActionBinding} — {description}";
+                    return isBelow ? $"{inputActionBinding}\n{description}" : $"{description}\n{inputActionBinding}";
                 }
-                return tooltip;
+                return description;
             }
         }
 
@@ -102,6 +110,21 @@ namespace Cgs.UI
                 label.offsetMin = new Vector2(8, 5);
                 label.offsetMax = new Vector2(-8, -5);
             }
+        }
+
+        protected void OnEnable()
+        {
+            if (!string.IsNullOrEmpty(localizationKey))
+                _localization = new LocalizedMessageBinding(new UiMessage(localizationKey, tooltip),
+                    value => _localizedTooltip = value);
+        }
+
+        protected void OnDisable()
+        {
+            _localization?.Dispose();
+            _localization = null;
+            _localizedTooltip = null;
+            _isOver = false;
         }
 
         protected void Start()
@@ -159,11 +182,16 @@ namespace Cgs.UI
             var parent = rectTransform.parent;
             var availableWidth = Mathf.Max(0, parent.InverseTransformPoint(_boundsCorners[2]).x
                                              - parent.InverseTransformPoint(_boundsCorners[0]).x - 24);
-            if (content == _previousContent && Mathf.Approximately(availableWidth, _previousWidth))
+            if (content == _previousContent && Mathf.Approximately(availableWidth, _previousWidth)
+                && ToolTipText.font == _previousFont && ToolTipText.fontSize == _previousFontSize
+                && ToolTipText.fontStyle == _previousFontStyle)
                 return;
 
             _previousContent = content;
             _previousWidth = availableWidth;
+            _previousFont = ToolTipText.font;
+            _previousFontSize = ToolTipText.fontSize;
+            _previousFontStyle = ToolTipText.fontStyle;
             content = content.Replace('\r', ' ').Replace('\n', ' ');
             var settings = ToolTipText.GetGenerationSettings(Vector2.zero);
             var generator = ToolTipText.cachedTextGeneratorForLayout;

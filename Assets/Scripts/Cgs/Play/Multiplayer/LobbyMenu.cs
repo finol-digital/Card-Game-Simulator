@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -60,8 +61,9 @@ namespace Cgs.Play.Multiplayer
             set
             {
                 _isLanConnectionSource = value;
-                roomIdIpLabel.text = RoomIdIpLabel;
-                ((Text)roomIdIpInputField.placeholder).text = RoomIdIpPlaceholder;
+                LocalizedUiText.Set(roomIdIpLabel, new UiMessage(UsesIpAddress ? "network.room.ip" : "network.room.id", RoomIdIpLabel));
+                LocalizedUiText.Set((Text)roomIdIpInputField.placeholder, new UiMessage(
+                    UsesIpAddress ? "network.room.ip.placeholder" : "network.room.id.placeholder", RoomIdIpPlaceholder));
             }
         }
 
@@ -133,8 +135,7 @@ namespace Cgs.Play.Multiplayer
             if (signInTask.IsFaulted)
             {
                 Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
-                                                        signInTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
             }
 
             Refresh();
@@ -374,9 +375,9 @@ namespace Cgs.Play.Multiplayer
 
         private static void ShowConnectionStartError()
         {
-            CardGameManager.Instance.Messenger.Show(BrowserLanTransport.IsBrowser
-                ? BrowserConnectionStartErrorMessage
-                : ConnectionStartErrorMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage(BrowserLanTransport.IsBrowser
+                ? "network.browser.start.failed" : "network.connection.failed", BrowserLanTransport.IsBrowser
+                ? BrowserConnectionStartErrorMessage : ConnectionStartErrorMessage));
         }
 
         private bool StartHost()
@@ -385,11 +386,11 @@ namespace Cgs.Play.Multiplayer
             {
                 if (CardGameManager.Current.AutoUpdateUrl == null ||
                     !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
-                    CardGameManager.Instance.Messenger.Show(ShareWarningMessage);
+                    CardGameManager.Instance.Messenger.Show(new UiMessage("network.game.zip.warning", ShareWarningMessage));
                 if (!string.IsNullOrEmpty(_password) && _password.Length is < 8 or > 64)
                 {
                     Debug.LogWarning(InvalidPasswordWarningMessage);
-                    CardGameManager.Instance.Messenger.Show(InvalidPasswordWarningMessage, true);
+                    CardGameManager.Instance.Messenger.Show(new UiMessage("network.password.invalid", InvalidPasswordWarningMessage), true);
                     _password = string.Empty;
                 }
 
@@ -447,7 +448,7 @@ namespace Cgs.Play.Multiplayer
                 else
                 {
                     Debug.LogError(InvalidServerErrorMessage);
-                    CardGameManager.Instance.Messenger.Show(InvalidServerErrorMessage);
+                    CardGameManager.Instance.Messenger.Show(new UiMessage("network.server.invalid", InvalidServerErrorMessage));
                     return;
                 }
             }

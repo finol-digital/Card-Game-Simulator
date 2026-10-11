@@ -19,7 +19,7 @@ async function verifyRedirect(path, target) {
   assert.equal(response.headers.get("location"), target, `${path} must have the expected Location header`);
 }
 
-for (const [path, target] of [
+await Promise.all([
   ["/bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
   ["/bsky", "https://bsky.app/profile/cardgamesim.bsky.social"],
   ["/create", "https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS"],
@@ -33,18 +33,16 @@ for (const [path, target] of [
   ["/twitter", "https://twitter.com/cardgamesim"],
   ["/wiki", "https://github.com/finol-digital/Card-Game-Simulator/wiki"],
   ["/x", "https://x.com/cardgamesim"]
-]) {
-  await verifyRedirect(path, target);
-  await verifyRedirect(`${path}?ignored=yes`, target);
+].flatMap(([path, target]) => {
   const hostname = `${path.slice(1)}.cardgamesimulator.com`;
-  for (const shortcutUrl of [
+  return [
+    path,
+    `${path}?ignored=yes`,
     `https://${hostname}/`,
     `https://${hostname}/ignored/path?ignored=yes`,
     `http://${hostname}/ignored/path?ignored=yes`
-  ]) {
-    await verifyRedirect(shortcutUrl, target);
-  }
-}
+  ].map(shortcutUrl => verifyRedirect(shortcutUrl, target));
+}));
 
 await verifyRedirect("/PRIVACY.html", "https://www.cardgamesimulator.com/privacy/");
 
@@ -65,10 +63,10 @@ assert.match(html, /property="og:type"/i);
 assert.match(html, /"@type": "Organization"/);
 assert.match(html, /"@type": "SoftwareApplication"/);
 
-for (const path of ["/how-to-play/", "/how-to-play.md", "/about/", "/contact/", "/privacy/", "/llms.txt", "/sitemap.xml"]) {
+await Promise.all(["/how-to-play/", "/how-to-play.md", "/about/", "/contact/", "/privacy/", "/llms.txt", "/sitemap.xml"].map(async path => {
   const response = await fetchResponse(path);
   assert.equal(response.status, 200, `${path} must return 200`);
-}
+}));
 
 const missing = await fetchResponse("/agent-audit-path-that-does-not-exist", {
   headers: { Accept: "text/markdown" }

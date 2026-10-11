@@ -12,6 +12,8 @@ on:
       - 'Assets/**'
       - 'Packages/**'
       - 'ProjectSettings/**'
+      - '.github/workflows/main.yml'
+      - '.github/actions/unity-windows-python/**'
   pull_request:
     types:
       - opened
@@ -21,6 +23,8 @@ on:
       - 'Assets/**'
       - 'Packages/**'
       - 'ProjectSettings/**'
+      - '.github/workflows/main.yml'
+      - '.github/actions/unity-windows-python/**'
   release:
     types:
       - published
@@ -853,6 +857,12 @@ jobs:
           restore-keys: |
             Library-buildWindows-${{ matrix.targetPlatform }}-
             Library-buildWindows-
+      - name: Prepare Unity container with Python
+        id: unityPython
+        uses: ./.github/actions/unity-windows-python
+        with:
+          unity-version: ${{ env.UNITY_VERSION }}
+          module: windows-il2cpp
       - name: Build Unity Project
         id: buildStep
         timeout-minutes: 45
@@ -864,6 +874,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
+          customImage: ${{ steps.unityPython.outputs.image }}
       - name: Upload Build
         uses: actions/upload-artifact@v7
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && contains(matrix.targetPlatform, 'StandaloneWindows'))
@@ -959,6 +970,12 @@ jobs:
           path: Library
           key: Library-WSAPlayer-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-WSAPlayer
+      - name: Prepare Unity container with Python
+        id: unityPython
+        uses: ./.github/actions/unity-windows-python
+        with:
+          unity-version: ${{ env.UNITY_VERSION }}
+          module: universal-windows-platform
       - name: Build Unity Project
         id: build
         timeout-minutes: 45
@@ -970,6 +987,7 @@ jobs:
         with:
           targetPlatform: WSAPlayer
           buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
+          customImage: ${{ steps.unityPython.outputs.image }}
       - name: Upload Build
         uses: actions/upload-artifact@v7
         with:

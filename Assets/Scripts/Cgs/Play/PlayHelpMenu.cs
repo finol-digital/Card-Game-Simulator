@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cgs.Localization;
 using Cgs.Menu;
 using Cgs.UI.ScrollRects;
 using JetBrains.Annotations;
@@ -55,7 +56,12 @@ namespace Cgs.Play
         public override void Show()
         {
             base.Show();
-            helpText.text = Application.isMobilePlatform ? MobileHelpText : DesktopHelpText;
+            LocalizedUiText.Set(helpText, Application.isMobilePlatform
+                ? new UiMessage("help.mobile", MobileHelpText)
+                : UiMessage.With("help.desktop", DesktopHelpText,
+                    ("move", GetBindingDisplayString(Tags.PlayerMove)),
+                    ("page", GetBindingDisplayString(Tags.PlayerPage)),
+                    ("toggle", GetBindingDisplayString(Tags.PlayGameToggleZoomRotation))));
             SyncToggles();
         }
 

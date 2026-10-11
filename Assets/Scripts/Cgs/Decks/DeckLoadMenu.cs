@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -132,20 +133,20 @@ namespace Cgs.Decks
             switch (CardGameManager.Current.DeckFileType)
             {
                 case DeckFileType.Dec:
-                    instructionsText.text = DecInstructions;
+                    LocalizedUiText.Set(instructionsText, new UiMessage("decks.instructions.dec", DecInstructions));
                     break;
                 case DeckFileType.Hsd:
-                    instructionsText.text = HsdInstructions;
+                    LocalizedUiText.Set(instructionsText, new UiMessage("decks.instructions.code", HsdInstructions));
                     break;
                 case DeckFileType.Lor:
-                    instructionsText.text = LorInstructions;
+                    LocalizedUiText.Set(instructionsText, new UiMessage("decks.instructions.code", LorInstructions));
                     break;
                 case DeckFileType.Ydk:
-                    instructionsText.text = YdkInstructions;
+                    LocalizedUiText.Set(instructionsText, new UiMessage("decks.instructions.ydk", YdkInstructions));
                     break;
                 case DeckFileType.Txt:
                 default:
-                    instructionsText.text = TxtInstructions;
+                    LocalizedUiText.Set(instructionsText, new UiMessage("decks.instructions.txt", TxtInstructions));
                     break;
             }
 
@@ -231,7 +232,7 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void PromptForDeleteFile()
         {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, DeleteFile);
+            CardGameManager.Instance.Messenger.Prompt(new UiMessage("decks.delete", DeletePrompt), DeleteFile);
         }
 
         [UsedImplicitly]
@@ -296,13 +297,13 @@ namespace Cgs.Decks
             try
             {
                 var shareText = File.ReadAllText(_selectedFilePath);
-                TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowStatus,
+                TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowSharingStatus,
                     DeckSaveMenu.DeckCopiedMessage);
             }
             catch (Exception e)
             {
                 Debug.LogError(DeckLoadErrorMessage + e);
-                CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.deck.load", DeckLoadErrorMessage + e.Message, ("detail", e.Message)));
             }
         }
 
@@ -320,7 +321,7 @@ namespace Cgs.Decks
             catch (Exception e)
             {
                 Debug.LogError(DeckLoadErrorMessage + e);
-                CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.deck.load", DeckLoadErrorMessage + e.Message, ("detail", e.Message)));
             }
         }
 
@@ -368,7 +369,7 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void PromptForClear()
         {
-            CardGameManager.Instance.Messenger.Prompt(ClearPrompt, Clear);
+            CardGameManager.Instance.Messenger.Prompt(new UiMessage("decks.clear", ClearPrompt), Clear);
         }
 
         private void Clear()
@@ -428,7 +429,7 @@ namespace Cgs.Decks
         private IEnumerator WaitToPromptOverwrite()
         {
             yield return null;
-            CardGameManager.Instance.Messenger.Ask(DeckSaveMenu.OverWriteDeckPrompt, null, DoSave);
+            CardGameManager.Instance.Messenger.Ask(new UiMessage("decks.overwrite", DeckSaveMenu.OverWriteDeckPrompt), null, DoSave);
         }
 
         private void DoSave()
