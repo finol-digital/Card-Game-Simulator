@@ -8,7 +8,7 @@ python -m unittest discover -s tools/localization -p 'test_*.py'
 python tools/localization/merge_drafts.py es path/to/es-draft.json
 ```
 
-These tools use only the Python standard library. Validation never writes files.
+The catalog validation and merging tools use only the Python standard library. Validation never writes files.
 Draft merging validates before writing, uses atomic replacement, and changes only
 the requested locale. It can prepare an incomplete catalog; validation still
 rejects missing entries before release. The Unity importer and full contributor
@@ -111,3 +111,22 @@ translation, even an edited machine draft whose review flag has not changed.
 It retains metadata and flags stale sources without replacing their hashes.
 Unknown keys require an explicit retirement migration; neither tool silently
 deletes them. Catalog additions must be reconciled across every shipped language.
+
+## Language-picker font
+
+The optional font-generation tool uses pinned FontTools, installed separately:
+
+```sh
+python -m pip install -r tools/localization/requirements-fonts.txt
+python tools/localization/subset_picker_font.py
+python tools/localization/subset_picker_font.py --check
+```
+
+Use the complete language-catalog stack. Regenerate after changing native language names or the settings.language label, then run **CGS > Localization >
+Build Font Tables** and **Validate Generated Tables** in Unity. The generator
+checks source identity and preserves required outlines, metrics, layout features,
+and license metadata. It renames the derivative font. Unity glyph coverage is also checked by LocalizationCatalogTests and player-build validation. Full regional fonts remain
+available offline; the subset reduces non-Chinese startup loading, not total
+offline download size. Font tables and Addressables groups must be regenerated
+together so the full Chinese face is no longer a shared-bundle dependency.
+
