@@ -14,7 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Localization-Assets-Chinese (Simplified) (zh-Hans)
   m_GUID: 669b59f1bb2d50c49b91b29d00153066
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 89082cd6bcb99794aa5b6c7bd5b550ad
+    m_Address: NotoSansCJKsc-Regular
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-Hans
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4a25f6e3b028a84abde5dbe354e3758
+    m_Address: NotoSansCJKsc-Regular SDF
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-Hans
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 764ee85167e0d87449ff11a6b1757512, type: 2}
   m_SchemaSet:

@@ -27,6 +27,34 @@ MonoBehaviour:
     - Locale-pt-BR
     - Locale-ru
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d231d2dd02d2d1458d3f09d2e9e34b3
+    m_Address: CGSLanguagePicker-Regular SDF
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de
+    - Locale-en
+    - Locale-es
+    - Locale-fr
+    - Locale-it
+    - Locale-ja
+    - Locale-ko
+    - Locale-pt-BR
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4e10f2bcb74e8344abeb765dbc5c93ba
+    m_Address: CGSLanguagePicker-Regular
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de
+    - Locale-en
+    - Locale-es
+    - Locale-fr
+    - Locale-it
+    - Locale-ja
+    - Locale-ko
+    - Locale-pt-BR
+    - Locale-ru
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 512800adc6944244785d38e1836fdff1
     m_Address: Assets/Localization/CgsUi/CgsUi Shared Data.asset
     m_ReadOnly: 1
@@ -48,21 +76,6 @@ MonoBehaviour:
     m_Address: Assets/Localization/Fonts/CgsFonts Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 89082cd6bcb99794aa5b6c7bd5b550ad
-    m_Address: NotoSansCJKsc-Regular
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-de
-    - Locale-en
-    - Locale-es
-    - Locale-fr
-    - Locale-it
-    - Locale-ja
-    - Locale-ko
-    - Locale-pt-BR
-    - Locale-ru
-    - Locale-zh-Hans
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9109c0cfac983d14b827f2ef98337eab
     m_Address: OpenSans-Bold SDF
@@ -87,21 +100,6 @@ MonoBehaviour:
     - Locale-it
     - Locale-pt-BR
     - Locale-ru
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a4a25f6e3b028a84abde5dbe354e3758
-    m_Address: NotoSansCJKsc-Regular SDF
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-de
-    - Locale-en
-    - Locale-es
-    - Locale-fr
-    - Locale-it
-    - Locale-ja
-    - Locale-ko
-    - Locale-pt-BR
-    - Locale-ru
-    - Locale-zh-Hans
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bda5b794b4dd9d749b752a92c6e14681
     m_Address: Exo2-Regular
