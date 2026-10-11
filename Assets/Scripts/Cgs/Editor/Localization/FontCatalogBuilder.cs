@@ -22,6 +22,7 @@ namespace Cgs.Editor.Localization
         private const string DirectoryPath = "Assets/Localization/Fonts";
         private const string Japanese = "Assets/Fonts/Noto Sans JP/NotoSansJP-Regular.otf";
         private const string Chinese = "Assets/Fonts/Noto Sans CJK/NotoSansCJKsc-Regular.otf";
+        private const string Picker = "Assets/Fonts/Noto Sans CJK/CGSLanguagePicker-Regular.otf";
         private const string Korean = "Assets/Fonts/Noto Sans CJK/NotoSansCJKkr-Regular.otf";
 
         [MenuItem("CGS/Localization/Build Font Tables")]
@@ -38,12 +39,12 @@ namespace Cgs.Editor.Localization
                 ["body.bold"] = "Assets/TextMesh Pro/Fonts/Open Sans/OpenSans-Bold.ttf",
                 ["heading.regular"] = "Assets/TextMesh Pro/Fonts/Exo_2/Exo2-Regular.ttf",
                 ["heading.bold"] = "Assets/TextMesh Pro/Fonts/Exo_2/Exo2-Bold.ttf",
-                ["mixed"] = Chinese
+                ["mixed"] = Picker
             };
             foreach (var locale in locales)
             foreach (var pair in sources)
             {
-                var path = pair.Key == "mixed" ? Chinese : locale.Identifier.Code switch
+                var path = pair.Key == "mixed" && locale.Identifier.Code != "zh-Hans" ? Picker : locale.Identifier.Code switch
                 {
                     "zh-Hans" => Chinese,
                     "ko" => Korean,
@@ -124,11 +125,14 @@ namespace Cgs.Editor.Localization
                         || !AssetDatabase.Contains(tmp.material) || tmp.atlasTextures.Any(texture => !AssetDatabase.Contains(texture))
                         || !tmp.isMultiAtlasTexturesEnabled)
                         throw new System.InvalidOperationException("Invalid saved font assets: " + locale.Identifier.Code + "/" + key);
+                    if (key == "mixed" && AssetDatabase.GetAssetPath(font)
+                        != (locale.Identifier.Code == "zh-Hans" ? Chinese : Picker))
+                        throw new System.InvalidOperationException("Language picker must use its locale-specific bundled face: " + locale.Identifier.Code);
                     CatalogImporter.ValidateLocalAsset(font);
                     CatalogImporter.ValidateLocalAsset(tmp);
                     if (FontEngine.LoadFontFace(font, 40) != FontEngineError.Success)
                         throw new System.InvalidOperationException("Could not read bundled font: " + font.name);
-                    var missing = (key == "mixed" ? nativeNames : characters).Distinct()
+                    var missing = (key == "mixed" ? nativeNames + (string)catalog["entries"]["settings.language"]["text"] : characters).Distinct()
                         .Where(character => !char.IsControl(character)
                             && !FontEngine.TryGetGlyphWithUnicodeValue(character, GlyphLoadFlags.LOAD_NO_SCALE, out _)).ToArray();
                     if (missing.Length > 0)
