@@ -111,9 +111,11 @@ function markdownResponse(body, status = 200) {
 /** Routes redirects and negotiated Markdown requests, otherwise preserving the Pages origin. */
 async function handleRequest(request) {
   const url = new URL(request.url);
+  // Accept a single trailing slash on known shortcuts without matching child paths.
+  const socialPath = url.pathname.endsWith("/") ? url.pathname.slice(0, -1) : url.pathname;
   // A shortcut subdomain always points to its fixed destination, regardless of path/query.
   const redirectTarget = SOCIAL_HOST_REDIRECTS.get(url.hostname)
-    || SOCIAL_REDIRECTS.get(url.pathname) || SITE_REDIRECTS.get(url.pathname);
+    || SOCIAL_REDIRECTS.get(socialPath) || SITE_REDIRECTS.get(url.pathname);
 
   if (redirectTarget) {
     return Response.redirect(redirectTarget, 301);
