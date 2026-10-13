@@ -108,6 +108,19 @@ function markdownResponse(body, status = 200) {
   });
 }
 
+/** Loads the homepage Markdown source while preserving HEAD and error-response semantics. */
+async function markdownHomepage(request, url) {
+  const markdownUrl = new URL("/llms.txt", url);
+  // Fetch the complete source without the client's range or representation validators.
+  const markdown = await fetch(new Request(markdownUrl, { method: "GET" }));
+
+  if (markdown.status === 200) {
+    return markdownResponse(request.method === "HEAD" ? null : markdown.body);
+  }
+
+  return withVary(request.method === "HEAD" ? new Response(null, markdown) : markdown);
+}
+
 /** Routes redirects and negotiated Markdown requests, otherwise preserving the Pages origin. */
 async function handleRequest(request) {
   const url = new URL(request.url);
@@ -125,15 +138,7 @@ async function handleRequest(request) {
   const isHomepage = url.pathname === "/" || url.pathname === "/index.html";
 
   if (isHomepage && wantsMarkdown && (request.method === "GET" || request.method === "HEAD")) {
-    const markdownUrl = new URL("/llms.txt", url);
-    // Fetch the complete source without the client's range or representation validators.
-    const markdown = await fetch(new Request(markdownUrl, { method: "GET" }));
-
-    if (markdown.status === 200) {
-      return markdownResponse(request.method === "HEAD" ? null : markdown.body);
-    }
-
-    return withVary(request.method === "HEAD" ? new Response(null, markdown) : markdown);
+    return markdownHomepage(request, url);
   }
 
   const originResponse = await fetch(request);
