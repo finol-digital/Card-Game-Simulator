@@ -220,22 +220,22 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648647
   - m_Id: 18158575624
-    m_Localized: Mazo
+    m_Localized: Baraja
     m_Metadata:
       m_Items:
       - rid: 7133309421012648648
   - m_Id: 18158575625
-    m_Localized: Editor de mazos
+    m_Localized: Editor de barajas
     m_Metadata:
       m_Items:
       - rid: 7133309421012648649
   - m_Id: 18158575626
-    m_Localized: Nombre del mazo
+    m_Localized: Nombre de la baraja
     m_Metadata:
       m_Items:
       - rid: 7133309421012648650
   - m_Id: 18158575627
-    m_Localized: Mazos
+    m_Localized: Barajas
     m_Metadata:
       m_Items:
       - rid: 7133309421012648651
@@ -295,7 +295,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648662
   - m_Id: 18162769921
-    m_Localized: Editar mazo
+    m_Localized: Editar baraja
     m_Metadata:
       m_Items:
       - rid: 7133309421012648663
@@ -315,7 +315,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648666
   - m_Id: 18162769925
-    m_Localized: Introduce el nombre del mazo...
+    m_Localized: Introduce el nombre de la baraja...
     m_Metadata:
       m_Items:
       - rid: 7133309421012648667
@@ -525,7 +525,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648708
   - m_Id: 18171158530
-    m_Localized: Ver mazos
+    m_Localized: Ver barajas
     m_Metadata:
       m_Items:
       - rid: 7133309421012648709
@@ -535,7 +535,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648710
   - m_Id: 18171158532
-    m_Localized: Cargar mazo
+    m_Localized: Cargar baraja
     m_Metadata:
       m_Items:
       - rid: 7133309421012648711
@@ -610,7 +610,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648725
   - m_Id: 18175352835
-    m_Localized: No hay mazos guardados
+    m_Localized: No hay barajas guardadas
     m_Metadata:
       m_Items:
       - rid: 7133309421012648726
@@ -775,12 +775,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648758
   - m_Id: 18183741444
-    m_Localized: Guardar como mazo
+    m_Localized: Guardar como baraja
     m_Metadata:
       m_Items:
       - rid: 7133309421012648759
   - m_Id: 18183741445
-    m_Localized: Guardar mazo
+    m_Localized: Guardar baraja
     m_Metadata:
       m_Items:
       - rid: 7133309421012648760
@@ -998,7 +998,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648802
   - m_Id: 18196324356
-    m_Localized: Editar mazos.
+    m_Localized: Editar barajas.
     m_Metadata:
       m_Items:
       - rid: 7133309421012648803
@@ -1197,22 +1197,22 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649717
   - m_Id: 6646168694785
-    m_Localized: "\xBFBorrar el texto del mazo?"
+    m_Localized: "\xBFBorrar el texto de la baraja?"
     m_Metadata:
       m_Items:
       - rid: 7133309421012649718
   - m_Id: 6646168694786
-    m_Localized: "\xBFSeguro que quieres eliminar este mazo?"
+    m_Localized: "\xBFSeguro que quieres eliminar esta baraja?"
     m_Metadata:
       m_Items:
       - rid: 7133309421012649719
   - m_Id: 6646168694787
-    m_Localized: "\xBFVaciar el editor y crear un mazo nuevo llamado Untitled?"
+    m_Localized: "\xBFVaciar el editor y crear una baraja nueva llamada Untitled?"
     m_Metadata:
       m_Items:
       - rid: 7133309421012649720
   - m_Id: 6646168694788
-    m_Localized: "Ya existe un mazo con ese nombre. \xBFSobrescribirlo?"
+    m_Localized: "Ya existe una baraja con ese nombre. \xBFSobrescribirla?"
     m_Metadata:
       m_Items:
       - rid: 7133309421012649721
@@ -1258,7 +1258,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649729
   - m_Id: 6646181277700
-    m_Localized: "\xBFQuieres compartir el mazo del anfitri\xF3n?"
+    m_Localized: "\xBFQuieres compartir la baraja del anfitri\xF3n?"
     m_Metadata:
       m_Items:
       - rid: 7133309421012649730
@@ -1352,12 +1352,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421595918353
   - m_Id: 9352606265350
-    m_Localized: 'Descargando: mazos'
+    m_Localized: 'Descargando: barajas'
     m_Metadata:
       m_Items:
       - rid: 7133309421595918354
   - m_Id: 9352606265351
-    m_Localized: 'Descargando mazos: {count} / {total}'
+    m_Localized: 'Descargando barajas: {count} / {total}'
     m_Metadata:
       m_Items:
       - rid: 7133309421012648608
@@ -1451,19 +1451,19 @@ MonoBehaviour:
       - rid: 7133309421012648608
       - rid: 7133309421595918925
   - m_Id: 14296197509123
-    m_Localized: 'Error al cargar el mazo: {detail}'
+    m_Localized: 'Error al cargar la baraja: {detail}'
     m_Metadata:
       m_Items:
       - rid: 7133309421012648608
       - rid: 7133309421595918926
   - m_Id: 14296197509124
-    m_Localized: 'Error al crear el PDF del mazo: {detail}'
+    m_Localized: 'Error al crear el PDF de la baraja: {detail}'
     m_Metadata:
       m_Items:
       - rid: 7133309421012648608
       - rid: 7133309421595918927
   - m_Id: 14296197509125
-    m_Localized: 'Error al guardar el mazo: {detail}'
+    m_Localized: 'Error al guardar la baraja: {detail}'
     m_Metadata:
       m_Items:
       - rid: 7133309421012648608
@@ -1521,7 +1521,7 @@ MonoBehaviour:
       - rid: 7133309421012648608
       - rid: 7133309421595918937
   - m_Id: 14296201703430
-    m_Localized: "\xA1No se pudo abrir el PDF del mazo!"
+    m_Localized: "\xA1No se pudo abrir el PDF de la baraja!"
     m_Metadata:
       m_Items:
       - rid: 7133309421595918938
@@ -1592,8 +1592,8 @@ MonoBehaviour:
       - rid: 7133309421012648608
       - rid: 7133309421595918950
   - m_Id: 14296205897739
-    m_Localized: "Al eliminar este juego tambi\xE9n se eliminar\xE1n sus mazos guardados.
-      \xBFEliminarlo?"
+    m_Localized: "Al eliminar este juego tambi\xE9n se eliminar\xE1n sus barajas
+      guardadas. \xBFEliminarlo?"
     m_Metadata:
       m_Items:
       - rid: 7133309421595918951
@@ -1625,7 +1625,7 @@ MonoBehaviour:
       - rid: 7133309421595918956
   - m_Id: 14296205897745
     m_Localized: "\xA1Error al cargar el juego! Puede estar da\xF1ado. \xBFEliminarlo
-      y sus mazos guardados?"
+      y sus barajas guardadas?"
     m_Metadata:
       m_Items:
       - rid: 7133309421595918957
@@ -1831,7 +1831,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421595919278
   - m_Id: 15859771125767
-    m_Localized: El texto de este mazo se ha copiado al portapapeles.
+    m_Localized: El texto de esta baraja se ha copiado al portapapeles.
     m_Metadata:
       m_Items:
       - rid: 7133309421595919279
@@ -1892,7 +1892,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421595919289
   - m_Id: 17340737925120
-    m_Localized: "#Pega aqu\xED el c\xF3digo del mazo"
+    m_Localized: "#Pega aqu\xED el c\xF3digo de la baraja"
     m_Metadata:
       m_Items:
       - rid: 7133309422095302684
@@ -2237,23 +2237,27 @@ MonoBehaviour:
     - rid: 7133309421012648648
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Mazo","status":"machine","sourceHash":"2203eea310e10f8797283d1fb55366f40e8d1213129fffdbe72522d9cf31bf98","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Baraja","status":"machine","sourceHash":"2203eea310e10f8797283d1fb55366f40e8d1213129fffdbe72522d9cf31bf98","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648649
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Editor de mazos","status":"machine","sourceHash":"890b60538804aea0cc9e0d970bd6f37c9a701ddc513c0f1431210f55399aebc4","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Editor de barajas","status":"machine","sourceHash":"890b60538804aea0cc9e0d970bd6f37c9a701ddc513c0f1431210f55399aebc4","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648650
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Nombre del mazo","status":"machine","sourceHash":"250e9633b07cdfc05432b87c34c91a4501b735ecd89eaf22a1253a498814b682","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Nombre de la baraja","status":"machine","sourceHash":"250e9633b07cdfc05432b87c34c91a4501b735ecd89eaf22a1253a498814b682","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648651
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Mazos","status":"machine","sourceHash":"2145a215c22fff2903bee15049d8451c9bda76b6b04a8b67039e9f6b3ea5fb3f","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Barajas","status":"machine","sourceHash":"2145a215c22fff2903bee15049d8451c9bda76b6b04a8b67039e9f6b3ea5fb3f","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648652
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2312,8 +2316,9 @@ MonoBehaviour:
     - rid: 7133309421012648663
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Editar mazo","status":"machine","sourceHash":"635f076acc8c855f144c76baffc8bfbf17e9639658b7e59193b485def335e360","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Editar baraja","status":"machine","sourceHash":"635f076acc8c855f144c76baffc8bfbf17e9639658b7e59193b485def335e360","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648664
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2332,8 +2337,9 @@ MonoBehaviour:
     - rid: 7133309421012648667
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Introduce el nombre del mazo...","status":"machine","sourceHash":"cbbbd5682f223337b9c9fe7dfe024c376f54a5e3c2c25195ba815ab497fa41a7","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Introduce el nombre de la baraja...","status":"machine","sourceHash":"cbbbd5682f223337b9c9fe7dfe024c376f54a5e3c2c25195ba815ab497fa41a7","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648668
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2542,8 +2548,9 @@ MonoBehaviour:
     - rid: 7133309421012648709
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Ver mazos","status":"machine","sourceHash":"2b51cf038fa932079552e21d2055a2867b2094fa7a3be605e961a1d7b8d86d3f","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Ver barajas","status":"machine","sourceHash":"2b51cf038fa932079552e21d2055a2867b2094fa7a3be605e961a1d7b8d86d3f","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648710
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2552,8 +2559,9 @@ MonoBehaviour:
     - rid: 7133309421012648711
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Cargar mazo","status":"machine","sourceHash":"e16fdfcbe9f9ce67054e80c41eed5dd56e7a6fd91e67b32740d05fd3993fa422","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Cargar baraja","status":"machine","sourceHash":"e16fdfcbe9f9ce67054e80c41eed5dd56e7a6fd91e67b32740d05fd3993fa422","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648712
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2627,8 +2635,9 @@ MonoBehaviour:
     - rid: 7133309421012648726
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"No hay mazos guardados","status":"machine","sourceHash":"5f5c44add3d937cc2e036c45e42472bc76e6e419c1c6b8e2d0359c34ca6d0505","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"No hay barajas guardadas","status":"machine","sourceHash":"5f5c44add3d937cc2e036c45e42472bc76e6e419c1c6b8e2d0359c34ca6d0505","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648727
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2792,13 +2801,15 @@ MonoBehaviour:
     - rid: 7133309421012648759
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Guardar como mazo","status":"machine","sourceHash":"b25f5eb82344ded0dffe153e668aa54691b374d9e698942390eee51f296408a0","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Guardar como baraja","status":"machine","sourceHash":"b25f5eb82344ded0dffe153e668aa54691b374d9e698942390eee51f296408a0","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648760
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Guardar mazo","status":"machine","sourceHash":"7563ad6fdcd1ee3c3bdef2f237e185dc2f095995a302186070b9a55ae9d7c8b0","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Guardar baraja","status":"machine","sourceHash":"7563ad6fdcd1ee3c3bdef2f237e185dc2f095995a302186070b9a55ae9d7c8b0","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648761
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3014,8 +3025,9 @@ MonoBehaviour:
     - rid: 7133309421012648803
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Editar mazos.","status":"machine","sourceHash":"1c4e496051ba46c81de6b6dfbe60746356dd11b0578f6dc35bcf130335d82b02","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Editar barajas.","status":"machine","sourceHash":"1c4e496051ba46c81de6b6dfbe60746356dd11b0578f6dc35bcf130335d82b02","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421012648804
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3216,24 +3228,28 @@ MonoBehaviour:
     - rid: 7133309421012649718
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"\xBFBorrar el texto del mazo?\",\"status\":\"machine\",\"sourceHash\":\"15d1cff53e3cfc2b72d8dffa45a212c66c2c7bc37820f81d7d8a28ce88f4ed0d\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"\xBFBorrar el texto de la baraja?\",\"status\":\"machine\",\"sourceHash\":\"15d1cff53e3cfc2b72d8dffa45a212c66c2c7bc37820f81d7d8a28ce88f4ed0d\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309421012649719
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"\xBFSeguro que quieres eliminar este mazo?\",\"status\":\"machine\",\"sourceHash\":\"347f20c1278aaae9acd9451e441ee0ae713bdce42b065dd312287fd061493b49\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"\xBFSeguro que quieres eliminar esta baraja?\",\"status\":\"machine\",\"sourceHash\":\"347f20c1278aaae9acd9451e441ee0ae713bdce42b065dd312287fd061493b49\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309421012649720
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"\xBFVaciar el editor y crear un mazo nuevo llamado
-          Untitled?\",\"status\":\"machine\",\"sourceHash\":\"c29a7c75db1fb086566623e2f6a31bec797631f421ecdfc06a3c3d94578b9caf\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"\xBFVaciar el editor y crear una baraja nueva
+          llamada Untitled?\",\"status\":\"machine\",\"sourceHash\":\"c29a7c75db1fb086566623e2f6a31bec797631f421ecdfc06a3c3d94578b9caf\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309421012649721
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"Ya existe un mazo con ese nombre. \xBFSobrescribirlo?\",\"status\":\"machine\",\"sourceHash\":\"6be133ed4ecde4d06827fe9c73c1bcb979172d7eb7993275c3a087eabb70a282\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"Ya existe una baraja con ese nombre. \xBFSobrescribirla?\",\"status\":\"machine\",\"sourceHash\":\"6be133ed4ecde4d06827fe9c73c1bcb979172d7eb7993275c3a087eabb70a282\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309421012649722
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3279,8 +3295,9 @@ MonoBehaviour:
     - rid: 7133309421012649730
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"\xBFQuieres compartir el mazo del anfitri\xF3n?\",\"status\":\"machine\",\"sourceHash\":\"7fbf2fe4f83bf75f3da8ca3d4acf543f0120750b9ec6877bd19c1912ffefb031\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"\xBFQuieres compartir la baraja del anfitri\xF3n?\",\"status\":\"machine\",\"sourceHash\":\"7fbf2fe4f83bf75f3da8ca3d4acf543f0120750b9ec6877bd19c1912ffefb031\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309421012649731
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3371,13 +3388,15 @@ MonoBehaviour:
     - rid: 7133309421595918354
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Descargando: mazos","status":"machine","sourceHash":"0af279effd1e36b706049e900ab57ac1c572ab14db9e717aca3f0c744377db85","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Descargando: barajas","status":"machine","sourceHash":"0af279effd1e36b706049e900ab57ac1c572ab14db9e717aca3f0c744377db85","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421595918355
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Descargando mazos: {count} / {total}","status":"machine","sourceHash":"33bb478e42e0568c9bac7e44ed18635d1681443ef62ff2c05cff55c80c3c290e","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Descargando barajas: {count} / {total}","status":"machine","sourceHash":"33bb478e42e0568c9bac7e44ed18635d1681443ef62ff2c05cff55c80c3c290e","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421595918356
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3461,18 +3480,21 @@ MonoBehaviour:
     - rid: 7133309421595918926
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Error al cargar el mazo: {detail}","status":"machine","sourceHash":"4e5d2478e465fb56cc5175eb9ebeb13ba2bd4f2ca6a1a0986ff6ee69a4569901","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Error al cargar la baraja: {detail}","status":"machine","sourceHash":"4e5d2478e465fb56cc5175eb9ebeb13ba2bd4f2ca6a1a0986ff6ee69a4569901","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421595918927
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Error al crear el PDF del mazo: {detail}","status":"machine","sourceHash":"fb2b21368f40988ed224bc666b695050c52ef743dc9d39c2d356d778f7dd1956","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Error al crear el PDF de la baraja: {detail}","status":"machine","sourceHash":"fb2b21368f40988ed224bc666b695050c52ef743dc9d39c2d356d778f7dd1956","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421595918928
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Error al guardar el mazo: {detail}","status":"machine","sourceHash":"e7781f047d7a4c5f789810e2c50b9794bec1b31d89bd529dde3e000424957b71","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"Error al guardar la baraja: {detail}","status":"machine","sourceHash":"e7781f047d7a4c5f789810e2c50b9794bec1b31d89bd529dde3e000424957b71","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421595918929
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3522,8 +3544,9 @@ MonoBehaviour:
     - rid: 7133309421595918938
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"\xA1No se pudo abrir el PDF del mazo!\",\"status\":\"machine\",\"sourceHash\":\"8887d9d2b87077f8a40096f94759202683de94d2dbcfd77ba02a6cb936c7ea2f\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"\xA1No se pudo abrir el PDF de la baraja!\",\"status\":\"machine\",\"sourceHash\":\"8887d9d2b87077f8a40096f94759202683de94d2dbcfd77ba02a6cb936c7ea2f\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309421595918939
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3590,8 +3613,9 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Al eliminar este juego tambi\xE9n se eliminar\xE1n
-          sus mazos guardados. \xBFEliminarlo?\",\"status\":\"machine\",\"sourceHash\":\"ddcbdac15204585c6fd38293bbfc2fa39795f9d3fe2b2695418c2223639e573a\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+          sus barajas guardadas. \xBFEliminarlo?\",\"status\":\"machine\",\"sourceHash\":\"ddcbdac15204585c6fd38293bbfc2fa39795f9d3fe2b2695418c2223639e573a\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309421595918952
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3623,8 +3647,9 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"\xA1Error al cargar el juego! Puede estar da\xF1ado.
-          \xBFEliminarlo y sus mazos guardados?\",\"status\":\"machine\",\"sourceHash\":\"6a5a7b5fff1e8ed62339f122165fc48fd9bfbee1e1ce0a5c8341985b01844b42\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+          \xBFEliminarlo y sus barajas guardadas?\",\"status\":\"machine\",\"sourceHash\":\"6a5a7b5fff1e8ed62339f122165fc48fd9bfbee1e1ce0a5c8341985b01844b42\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309421595918958
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3821,8 +3846,9 @@ MonoBehaviour:
     - rid: 7133309421595919279
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"El texto de este mazo se ha copiado al portapapeles.","status":"machine","sourceHash":"759c0a0d827331d2b4b1686b9d1f785656ee6a8cae900c7bd1350ec179b74238","provenance":{"method":"Codex
-          contextual machine draft; English context and CGS glossary","date":"2026-10-05"}}'
+        m_CommentText: '{"text":"El texto de esta baraja se ha copiado al portapapeles.","status":"machine","sourceHash":"759c0a0d827331d2b4b1686b9d1f785656ee6a8cae900c7bd1350ec179b74238","provenance":{"method":"Codex
+          contextual machine draft; English context and CGS glossary","date":"2026-10-05","note":"Use
+          baraja for deck per user terminology correction; adjust grammatical gender."}}'
     - rid: 7133309421595919280
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3884,8 +3910,9 @@ MonoBehaviour:
     - rid: 7133309422095302684
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"#Pega aqu\xED el c\xF3digo del mazo\",\"status\":\"machine\",\"sourceHash\":\"8ff58d46843bbda8a99b5e18968d1b67f8273d16db05f72f25b374da5b07f9dc\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"#Pega aqu\xED el c\xF3digo de la baraja\",\"status\":\"machine\",\"sourceHash\":\"8ff58d46843bbda8a99b5e18968d1b67f8273d16db05f72f25b374da5b07f9dc\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"Use
+          baraja for deck per user terminology correction; adjust grammatical gender.\"}}"
     - rid: 7133309422095302685
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
