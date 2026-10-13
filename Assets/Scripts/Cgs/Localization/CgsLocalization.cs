@@ -56,9 +56,9 @@ namespace Cgs.Localization
                 }
 
                 var settings = LocalizationSettings.Instance;
-                if (_settings == settings && IsReady)
-                    return;
                 var operation = settings.GetInitializationOperation();
+                if (_settings == settings && IsReady && _initialization.Equals(operation))
+                    return;
                 if (_settings != settings || !_initialization.Equals(operation))
                 {
                     if (_settings != null)
@@ -66,9 +66,12 @@ namespace Cgs.Localization
                     _settings = settings;
                     _initialization = operation;
                     _initializationCompleted = false;
+                    var wasReady = IsReady;
                     IsReady = false;
                     var generation = ++_generation;
                     operation.Completed += result => CompleteInitialization(result, settings, generation);
+                    if (wasReady && !operation.IsDone)
+                        Changed?.Invoke();
                 }
 
                 // Completed callbacks can be deferred, and Editor startup can replace
@@ -87,7 +90,8 @@ namespace Cgs.Localization
             LocalizationSettings settings, int generation)
         {
             if (generation != _generation || settings == null || settings != _settings
-                || _initializationCompleted)
+                || _initializationCompleted || !_initialization.Equals(result)
+                || !settings.GetInitializationOperation().Equals(result))
                 return;
             _initializationCompleted = true;
             IsReady = result.Status == AsyncOperationStatus.Succeeded && Selector != null;
@@ -117,7 +121,9 @@ namespace Cgs.Localization
 
         public static bool SelectLanguage(string code)
         {
-            if (!IsReady || Selector.ExactCode(code) == null)
+            Initialize();
+            // Keep the latest valid choice queued while a previous locale preloads.
+            if ((!IsReady && _initializationCompleted) || Selector?.ExactCode(code) == null)
                 return false;
             var locale = LocalizationSettings.AvailableLocales.Locales.FirstOrDefault(item =>
                 string.Equals(item.Identifier.Code, code, StringComparison.OrdinalIgnoreCase));
@@ -137,6 +143,7 @@ namespace Cgs.Localization
             var locale = _requestedLocale;
             _requestedLocale = null;
             LocalizationSettings.SelectedLocale = locale;
+            Initialize();
         }
     }
 }

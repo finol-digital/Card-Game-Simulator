@@ -13,8 +13,7 @@ namespace Cgs.Localization
 #pragma warning disable S2325 // Unity requires an instance method for lifecycle callbacks.
         private void LateUpdate()
         {
-            if (!CgsLocalization.IsReady)
-                CgsLocalization.Initialize();
+            CgsLocalization.Initialize();
             CgsLocalization.ApplyPendingLanguage();
         }
 #pragma warning restore S2325

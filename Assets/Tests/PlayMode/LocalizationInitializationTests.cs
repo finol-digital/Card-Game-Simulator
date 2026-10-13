@@ -26,7 +26,8 @@ namespace Tests.PlayMode
         private sealed class PendingInitialization : AsyncOperationBase<LocalizationSettings>
         {
             protected override void Execute() { }
-            public void Finish(LocalizationSettings settings) => Complete(settings, true, null);
+            public void Finish(LocalizationSettings settings, bool success = true) =>
+                Complete(settings, success, success ? null : "Expected replacement initialization failure.");
         }
 
         private static void ResetService() => typeof(CgsLocalization)
@@ -50,7 +51,20 @@ namespace Tests.PlayMode
             yield return CheckInitialization(true, true);
         }
 
-        private static IEnumerator CheckInitialization(bool replacePendingOperation, bool waitForQueue = false)
+        [UnityTest]
+        public IEnumerator Initialize_ReadyOperationReplacementDisablesUiUntilComplete()
+        {
+            yield return CheckInitialization(false, true, true);
+        }
+
+        [UnityTest]
+        public IEnumerator Initialize_FailedReadyOperationReplacementKeepsUiDisabled()
+        {
+            yield return CheckInitialization(false, true, true, true);
+        }
+
+        private static IEnumerator CheckInitialization(bool replacePendingOperation, bool waitForQueue = false,
+            bool replaceReadyOperation = false, bool failReplacement = false)
         {
             CgsLocalization.Initialize();
             yield return LocalizationSettings.InitializationOperation;
@@ -89,11 +103,28 @@ namespace Tests.PlayMode
                     "A completed current operation must make localization ready even if its callback was deferred or replaced.");
                 Assert.AreEqual(1, changes);
                 CgsLocalization.Initialize();
-                pending.Finish(settings);
+                if (replaceReadyOperation)
+                {
+                    settings.Operation = pendingHandle;
+                    yield return null;
+                    yield return null;
+                    Assert.IsFalse(CgsLocalization.IsReady,
+                        "A replacement preload must revoke readiness without another Initialize caller.");
+                    Assert.AreEqual(2, changes, "Readiness listeners must be notified to disable the language UI.");
+                    if (failReplacement)
+                    {
+                        LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(
+                            "Expected replacement initialization failure"));
+                        LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(
+                            "CGS localization initialization failed"));
+                    }
+                }
+                pending.Finish(settings, !failReplacement);
                 yield return null;
                 yield return null;
-                Assert.IsTrue(CgsLocalization.IsReady);
-                Assert.AreEqual(1, changes, "Repeated calls and stale callbacks must not publish readiness twice.");
+                Assert.AreEqual(!failReplacement, CgsLocalization.IsReady);
+                Assert.AreEqual(replaceReadyOperation ? 3 : 1, changes,
+                    "Repeated calls and stale callbacks must not publish readiness twice.");
             }
             finally
             {
