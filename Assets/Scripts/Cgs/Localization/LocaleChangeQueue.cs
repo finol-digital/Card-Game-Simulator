@@ -10,6 +10,12 @@ namespace Cgs.Localization
     // selections until that assignment's asynchronous preload and events settle.
     public sealed class LocaleChangeQueue : MonoBehaviour
     {
-        private void LateUpdate() => CgsLocalization.ApplyPendingLanguage();
+#pragma warning disable S2325 // Unity requires an instance method for lifecycle callbacks.
+        private void LateUpdate()
+        {
+            CgsLocalization.Initialize();
+            CgsLocalization.ApplyPendingLanguage();
+        }
+#pragma warning restore S2325
     }
 }

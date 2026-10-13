@@ -27,14 +27,14 @@ async function fetchResponse(path, options = {}) {
 
 /** Checks that a legacy or social route returns its permanent HTTP redirect. */
 async function verifyRedirect(path, target) {
-  for (const method of ["GET", "HEAD"]) {
-    await check(`${method} ${path}`, async () => {
+  await Promise.all(["GET", "HEAD"].map(method =>
+    check(`${method} ${path}`, async () => {
       const response = await fetchResponse(path, { method });
       assert.equal(response.status, 301, `${path} must return HTTP 301`);
       assert.equal(response.headers.get("location"), target, `${path} must have the expected Location header`);
       assert.equal(await response.text(), "", "redirect must not depend on a client-side HTML stub");
-    });
-  }
+    })
+  ));
 }
 
 await Promise.all([
@@ -123,21 +123,21 @@ await check("Sitemap routes", async () => {
   assert.match(sitemap, /<urlset\b[^>]*xmlns="http:\/\/www.sitemaps.org\/schemas\/sitemap\/0.9"/);
   const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => new URL(match[1]).pathname);
   assert.ok(paths.length > 0, "sitemap must list public routes");
-  for (const path of paths) {
-    await check(`sitemap ${path}`, async () => {
+  await Promise.all(paths.map(path =>
+    check(`sitemap ${path}`, async () => {
       const page = await fetchResponse(path);
       assert.ok([200, 301, 302].includes(page.status), `${path} returned ${page.status}`);
       if (page.status !== 200) assert.ok(page.headers.get("location"), "redirect needs Location");
       await page.arrayBuffer();
-    });
-  }
+    })
+  ));
 });
 
 // Check every published JSON and text resource, including game definitions and schemas.
 const docs = new URL("../../docs/", import.meta.url);
 const files = (await readdir(docs, { recursive: true })).filter(file =>
   !file.split(/[\\/]/).some(part => /^[_.]/.test(part)) && /\.(json|txt)$/.test(file));
-for (const file of files) {
+await Promise.all(files.map(async file => {
   const relativePath = file.split(/[\\/]/).map(encodeURIComponent).join("/");
   const source = await readFile(new URL(relativePath, docs), "utf8");
   // Jekyll can publish a text template at a different machine-readable URL.
@@ -151,7 +151,7 @@ for (const file of files) {
     assert.ok(body.trim(), "machine-readable file must not be empty");
     if (file.endsWith(".json")) JSON.parse(body.replace(/^\uFEFF/, ""));
   });
-}
+}));
 
 await check("Recoverable Markdown 404", async () => {
   const missing = await fetchResponse("/agent-audit-path-that-does-not-exist", {

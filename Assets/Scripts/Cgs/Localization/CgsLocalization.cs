@@ -17,7 +17,8 @@ namespace Cgs.Localization
         public const string TableName = "CgsUi";
         private const string InitializationError = "CGS localization initialization failed; retaining English UI.";
         private static LocalizationSettings _settings;
-        private static bool _started;
+        private static AsyncOperationHandle<LocalizationSettings> _initialization;
+        private static bool _initializationCompleted;
         private static int _generation;
         private static Locale _requestedLocale;
         private static LocaleChangeQueue _queue;
@@ -34,7 +35,8 @@ namespace Cgs.Localization
             if (_settings != null)
                 _settings.OnSelectedLocaleChanged -= OnLocaleChanged;
             _settings = null;
-            _started = false;
+            _initialization = default;
+            _initializationCompleted = false;
             IsReady = false;
             Changed = null;
             _generation++;
@@ -44,37 +46,61 @@ namespace Cgs.Localization
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
         {
-            if (_started)
-                return;
-            _started = true;
             try
             {
-                _settings = LocalizationSettings.Instance;
                 if (Application.isPlaying && _queue == null)
                 {
                     var queueObject = new GameObject("CGS Localization");
                     UnityEngine.Object.DontDestroyOnLoad(queueObject);
                     _queue = queueObject.AddComponent<LocaleChangeQueue>();
                 }
-                var settings = _settings;
-                var generation = _generation;
-                var operation = LocalizationSettings.InitializationOperation;
-                operation.Completed += result =>
+
+                var settings = LocalizationSettings.Instance;
+                var operation = settings.GetInitializationOperation();
+                if (_settings == settings && IsReady && _initialization.Equals(operation))
+                    return;
+                if (_settings != settings || !_initialization.Equals(operation))
                 {
-                    if (generation != _generation || settings == null || settings != _settings)
-                        return;
-                    IsReady = result.Status == AsyncOperationStatus.Succeeded && Selector != null;
-                    if (IsReady)
-                        settings.OnSelectedLocaleChanged += OnLocaleChanged;
-                    else
-                        Debug.LogError(InitializationError);
-                    Changed?.Invoke();
-                };
+                    if (_settings != null)
+                        _settings.OnSelectedLocaleChanged -= OnLocaleChanged;
+                    _settings = settings;
+                    _initialization = operation;
+                    _initializationCompleted = false;
+                    var wasReady = IsReady;
+                    IsReady = false;
+                    var generation = ++_generation;
+                    operation.Completed += result => CompleteInitialization(result, settings, generation);
+                    if (wasReady && !operation.IsDone)
+                        Changed?.Invoke();
+                }
+
+                // Completed callbacks can be deferred, and Editor startup can replace
+                // a pending operation. Reconcile the current handle instead of latching
+                // permanently onto the first initialization attempt.
+                if (operation.IsDone)
+                    CompleteInitialization(operation, settings, _generation);
             }
             catch (Exception error)
             {
                 Debug.LogError(InitializationError + " " + error.Message);
             }
+        }
+
+        private static void CompleteInitialization(AsyncOperationHandle<LocalizationSettings> result,
+            LocalizationSettings settings, int generation)
+        {
+            if (generation != _generation || settings == null || settings != _settings
+                || _initializationCompleted || !_initialization.Equals(result)
+                || !settings.GetInitializationOperation().Equals(result))
+                return;
+            _initializationCompleted = true;
+            IsReady = result.Status == AsyncOperationStatus.Succeeded && Selector != null;
+            if (IsReady)
+                settings.OnSelectedLocaleChanged += OnLocaleChanged;
+            else
+                Debug.LogError($"{InitializationError} Status: {result.Status}; " +
+                    $"startup selector available: {Selector != null}; {result.OperationException}");
+            Changed?.Invoke();
         }
 
         private static void OnLocaleChanged(Locale locale) => Changed?.Invoke();
@@ -95,7 +121,9 @@ namespace Cgs.Localization
 
         public static bool SelectLanguage(string code)
         {
-            if (!IsReady || Selector.ExactCode(code) == null)
+            Initialize();
+            // Keep the latest valid choice queued while a previous locale preloads.
+            if ((!IsReady && _initializationCompleted) || Selector?.ExactCode(code) == null)
                 return false;
             var locale = LocalizationSettings.AvailableLocales.Locales.FirstOrDefault(item =>
                 string.Equals(item.Identifier.Code, code, StringComparison.OrdinalIgnoreCase));
@@ -115,6 +143,7 @@ namespace Cgs.Localization
             var locale = _requestedLocale;
             _requestedLocale = null;
             LocalizationSettings.SelectedLocale = locale;
+            Initialize();
         }
     }
 }
