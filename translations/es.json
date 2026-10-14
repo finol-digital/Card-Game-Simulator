@@ -417,39 +417,43 @@
       }
     },
     "common.deck": {
-      "text": "Mazo",
+      "text": "Baraja",
       "status": "machine",
       "sourceHash": "2203eea310e10f8797283d1fb55366f40e8d1213129fffdbe72522d9cf31bf98",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.deck.editor": {
-      "text": "Editor de mazos",
+      "text": "Editor de barajas",
       "status": "machine",
       "sourceHash": "890b60538804aea0cc9e0d970bd6f37c9a701ddc513c0f1431210f55399aebc4",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.deck.name": {
-      "text": "Nombre del mazo",
+      "text": "Nombre de la baraja",
       "status": "machine",
       "sourceHash": "250e9633b07cdfc05432b87c34c91a4501b735ecd89eaf22a1253a498814b682",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.decks": {
-      "text": "Mazos",
+      "text": "Barajas",
       "status": "machine",
       "sourceHash": "2145a215c22fff2903bee15049d8451c9bda76b6b04a8b67039e9f6b3ea5fb3f",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.delete": {
@@ -552,12 +556,13 @@
       }
     },
     "common.edit.deck": {
-      "text": "Editar mazo",
+      "text": "Editar baraja",
       "status": "machine",
       "sourceHash": "635f076acc8c855f144c76baffc8bfbf17e9639658b7e59193b485def335e360",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.enter.card.id": {
@@ -588,12 +593,13 @@
       }
     },
     "common.enter.deck.name": {
-      "text": "Introduce el nombre del mazo...",
+      "text": "Introduce el nombre de la baraja...",
       "status": "machine",
       "sourceHash": "cbbbd5682f223337b9c9fe7dfe024c376f54a5e3c2c25195ba815ab497fa41a7",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.enter.game.name": {
@@ -975,12 +981,13 @@
       }
     },
     "common.list.decks": {
-      "text": "Ver mazos",
+      "text": "Ver barajas",
       "status": "machine",
       "sourceHash": "2b51cf038fa932079552e21d2055a2867b2094fa7a3be605e961a1d7b8d86d3f",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.load": {
@@ -993,12 +1000,13 @@
       }
     },
     "common.load.deck": {
-      "text": "Cargar mazo",
+      "text": "Cargar baraja",
       "status": "machine",
       "sourceHash": "e16fdfcbe9f9ce67054e80c41eed5dd56e7a6fd91e67b32740d05fd3993fa422",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.lock.rotation": {
@@ -1128,12 +1136,13 @@
       }
     },
     "common.no.decks.saved": {
-      "text": "No hay mazos guardados",
+      "text": "No hay barajas guardadas",
       "status": "machine",
       "sourceHash": "5f5c44add3d937cc2e036c45e42472bc76e6e419c1c6b8e2d0359c34ca6d0505",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.no.overlap": {
@@ -1434,21 +1443,23 @@
       }
     },
     "common.save.as.deck": {
-      "text": "Guardar como mazo",
+      "text": "Guardar como baraja",
       "status": "machine",
       "sourceHash": "b25f5eb82344ded0dffe153e668aa54691b374d9e698942390eee51f296408a0",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.save.deck": {
-      "text": "Guardar mazo",
+      "text": "Guardar baraja",
       "status": "machine",
       "sourceHash": "7563ad6fdcd1ee3c3bdef2f237e185dc2f095995a302186070b9a55ae9d7c8b0",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "common.save.load": {
@@ -1749,30 +1760,33 @@
       }
     },
     "decks.clear": {
-      "text": "¿Borrar el texto del mazo?",
+      "text": "¿Borrar el texto de la baraja?",
       "status": "machine",
       "sourceHash": "15d1cff53e3cfc2b72d8dffa45a212c66c2c7bc37820f81d7d8a28ce88f4ed0d",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "decks.delete": {
-      "text": "¿Seguro que quieres eliminar este mazo?",
+      "text": "¿Seguro que quieres eliminar esta baraja?",
       "status": "machine",
       "sourceHash": "347f20c1278aaae9acd9451e441ee0ae713bdce42b065dd312287fd061493b49",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "decks.instructions.code": {
-      "text": "#Pega aquí el código del mazo",
+      "text": "#Pega aquí el código de la baraja",
       "status": "machine",
       "sourceHash": "8ff58d46843bbda8a99b5e18968d1b67f8273d16db05f72f25b374da5b07f9dc",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "decks.instructions.dec": {
@@ -1803,21 +1817,23 @@
       }
     },
     "decks.new": {
-      "text": "¿Vaciar el editor y crear un mazo nuevo llamado Untitled?",
+      "text": "¿Vaciar el editor y crear una baraja nueva llamada Untitled?",
       "status": "machine",
       "sourceHash": "c29a7c75db1fb086566623e2f6a31bec797631f421ecdfc06a3c3d94578b9caf",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "decks.overwrite": {
-      "text": "Ya existe un mazo con ese nombre. ¿Sobrescribirlo?",
+      "text": "Ya existe una baraja con ese nombre. ¿Sobrescribirla?",
       "status": "machine",
       "sourceHash": "6be133ed4ecde4d06827fe9c73c1bcb979172d7eb7993275c3a087eabb70a282",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "decks.unsaved": {
@@ -1947,21 +1963,23 @@
       }
     },
     "download.decks": {
-      "text": "Descargando: mazos",
+      "text": "Descargando: barajas",
       "status": "machine",
       "sourceHash": "0af279effd1e36b706049e900ab57ac1c572ab14db9e717aca3f0c744377db85",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "download.decks.progress": {
-      "text": "Descargando mazos: {count} / {total}",
+      "text": "Descargando barajas: {count} / {total}",
       "status": "machine",
       "sourceHash": "33bb478e42e0568c9bac7e44ed18635d1681443ef62ff2c05cff55c80c3c290e",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "download.playmat": {
@@ -2037,30 +2055,33 @@
       }
     },
     "errors.deck.load": {
-      "text": "Error al cargar el mazo: {detail}",
+      "text": "Error al cargar la baraja: {detail}",
       "status": "machine",
       "sourceHash": "4e5d2478e465fb56cc5175eb9ebeb13ba2bd4f2ca6a1a0986ff6ee69a4569901",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "errors.deck.print": {
-      "text": "Error al crear el PDF del mazo: {detail}",
+      "text": "Error al crear el PDF de la baraja: {detail}",
       "status": "machine",
       "sourceHash": "fb2b21368f40988ed224bc666b695050c52ef743dc9d39c2d356d778f7dd1956",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "errors.deck.save": {
-      "text": "Error al guardar el mazo: {detail}",
+      "text": "Error al guardar la baraja: {detail}",
       "status": "machine",
       "sourceHash": "e7781f047d7a4c5f789810e2c50b9794bec1b31d89bd529dde3e000424957b71",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "errors.file.missing": {
@@ -2145,12 +2166,13 @@
       }
     },
     "errors.pdf.open": {
-      "text": "¡No se pudo abrir el PDF del mazo!",
+      "text": "¡No se pudo abrir el PDF de la baraja!",
       "status": "machine",
       "sourceHash": "8887d9d2b87077f8a40096f94759202683de94d2dbcfd77ba02a6cb936c7ea2f",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "errors.room.copy": {
@@ -2316,12 +2338,13 @@
       }
     },
     "games.delete.confirm": {
-      "text": "Al eliminar este juego también se eliminarán sus mazos guardados. ¿Eliminarlo?",
+      "text": "Al eliminar este juego también se eliminarán sus barajas guardadas. ¿Eliminarlo?",
       "status": "machine",
       "sourceHash": "ddcbdac15204585c6fd38293bbfc2fa39795f9d3fe2b2695418c2223639e573a",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "games.delete.warning": {
@@ -2379,12 +2402,13 @@
       }
     },
     "games.load.corrupt": {
-      "text": "¡Error al cargar el juego! Puede estar dañado. ¿Eliminarlo y sus mazos guardados?",
+      "text": "¡Error al cargar el juego! Puede estar dañado. ¿Eliminarlo y sus barajas guardadas?",
       "status": "machine",
       "sourceHash": "6a5a7b5fff1e8ed62339f122165fc48fd9bfbee1e1ce0a5c8341985b01844b42",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "games.overwrite": {
@@ -2451,12 +2475,13 @@
       }
     },
     "help.decks.edit": {
-      "text": "Editar mazos.",
+      "text": "Editar barajas.",
       "status": "machine",
       "sourceHash": "1c4e496051ba46c81de6b6dfbe60746356dd11b0578f6dc35bcf130335d82b02",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "help.desktop": {
@@ -2802,12 +2827,13 @@
       }
     },
     "network.share.deck": {
-      "text": "¿Quieres compartir el mazo del anfitrión?",
+      "text": "¿Quieres compartir la baraja del anfitrión?",
       "status": "machine",
       "sourceHash": "7fbf2fe4f83bf75f3da8ca3d4acf543f0120750b9ec6877bd19c1912ffefb031",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "play.back": {
@@ -3234,12 +3260,13 @@
       }
     },
     "sharing.deck.copied": {
-      "text": "El texto de este mazo se ha copiado al portapapeles.",
+      "text": "El texto de esta baraja se ha copiado al portapapeles.",
       "status": "machine",
       "sourceHash": "759c0a0d827331d2b4b1686b9d1f785656ee6a8cae900c7bd1350ec179b74238",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "Use baraja for deck per user terminology correction; adjust grammatical gender."
       }
     },
     "sharing.destination.selected": {

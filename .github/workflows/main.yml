@@ -746,6 +746,13 @@ jobs:
         run: cp -r build/WebGL/WebGL/Build/. firebase/public/Build
       - name: Copy the UnityServicesProjectConfiguration.json to the Firebase public directory
         run: cp -r build/WebGL/WebGL/StreamingAssets/UnityServicesProjectConfiguration.json firebase/public/StreamingAssets
+      - name: Copy WebGL localization runtime files to Firebase
+        run: |
+          source=build/WebGL/WebGL/StreamingAssets/aa
+          destination=firebase/public/StreamingAssets/aa
+          mkdir -p "$destination/WebGL"
+          cp "$source/settings.json" "$source/catalog.bin" "$source/catalog.hash" "$destination/"
+          cp "$source/WebGL/"*.bundle "$destination/WebGL/"
       - name: Firebase Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -776,6 +783,13 @@ jobs:
         run: cp -r build/WebGL/WebGL/Build/. firebase/public/Build
       - name: Copy the UnityServicesProjectConfiguration.json to the Firebase public directory
         run: cp -r build/WebGL/WebGL/StreamingAssets/UnityServicesProjectConfiguration.json firebase/public/StreamingAssets
+      - name: Copy WebGL localization runtime files to Firebase
+        run: |
+          source=build/WebGL/WebGL/StreamingAssets/aa
+          destination=firebase/public/StreamingAssets/aa
+          mkdir -p "$destination/WebGL"
+          cp "$source/settings.json" "$source/catalog.bin" "$source/catalog.hash" "$destination/"
+          cp "$source/WebGL/"*.bundle "$destination/WebGL/"
       - name: Firebase Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
