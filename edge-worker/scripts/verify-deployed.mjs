@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
+import { verifyRedirectChain } from "./redirect-chain.mjs";
 
 const siteUrl = new URL(process.env.SITE_URL || "https://www.cardgamesimulator.com/");
 const failures = [];
@@ -37,7 +38,7 @@ async function verifyRedirect(path, target) {
   ));
 }
 
-await Promise.all([
+const socialRedirects = [
   ["/bluesky", "https://bsky.app/profile/cardgamesim.bsky.social"],
   ["/bsky", "https://bsky.app/profile/cardgamesim.bsky.social"],
   ["/create", "https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS"],
@@ -51,7 +52,9 @@ await Promise.all([
   ["/twitter", "https://twitter.com/cardgamesim"],
   ["/wiki", "https://github.com/finol-digital/Card-Game-Simulator/wiki"],
   ["/x", "https://x.com/cardgamesim"]
-].flatMap(([path, target]) => {
+];
+
+await Promise.all(socialRedirects.flatMap(([path, target]) => {
   const hostname = `${path.slice(1)}.cardgamesimulator.com`;
   return [
     path,
@@ -63,6 +66,18 @@ await Promise.all([
     `http://${hostname}/ignored/path?ignored=yes`
   ].map(shortcutUrl => verifyRedirect(shortcutUrl, target));
 }));
+
+// Check chains in small batches so the extra hops do not overwhelm the origin.
+for (const [path, target] of socialRedirects) {
+  for (const scheme of ["http", "https"]) {
+    await Promise.all([path, `${path}?ignored=yes`, `${path}/`, `${path}/?ignored=yes`].flatMap(variant =>
+      ["GET", "HEAD"].map(method => {
+        const url = `${scheme}://cardgamesimulator.com${variant}`;
+        return check(`${method} ${url}`, () => verifyRedirectChain(url, target, method));
+      })
+    ));
+  }
+}
 
 await verifyRedirect("/PRIVACY.html", "https://www.cardgamesimulator.com/privacy/");
 

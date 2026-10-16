@@ -14,6 +14,10 @@ Run `npm --prefix edge-worker test` for source and request-handler regression te
 
 External social destinations are intentional. If an audit flags an off-domain destination even though GET and HEAD return a correct HTTP 301, preserve the destination and review the audit evidence rather than replacing a working shortcut. The GitHub Pages refresh fallback is used only when the Worker is absent; removing it cannot turn a Pages response into an HTTP redirect.
 
+The verifier also checks HTTP and HTTPS shortcuts on the bare `cardgamesimulator.com` domain with GET and HEAD, including trailing slashes and query strings. It follows up to five same-site HTTP redirects to the expected external destination, rejecting loops, unexpected destinations, HTTPS downgrades, missing `Location` headers, and client-side redirect stubs. It does not request the external social sites. These checks always use the public domain, even when `SITE_URL` is overridden.
+
+If `/bsky` returns 301 but `/bsky/` returns 404 (and likewise for other shortcuts), check that the deployed Worker includes the current trailing-slash handling in `src/index.js`. Publishing GitHub Pages alone does not update the Worker. Deploy the current Worker through the procedure below, then rerun verification before requesting a fresh readiness scan.
+
 ## Deploy
 
 1. Add `cardgamesimulator.com` to the Finol Digital Cloudflare account and proxy `www.cardgamesimulator.com` to the existing GitHub Pages origin (`finol-digital.github.io`). Keep the GitHub Pages custom-domain configuration in place.
