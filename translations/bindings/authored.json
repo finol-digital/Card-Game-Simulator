@@ -2644,7 +2644,7 @@
     },
     {
       "asset": "Assets/Prefabs/CardGameView/Multiplayer/Counter.prefab",
-      "path": "Counter/Value Label",
+      "path": "Counter/Local Visual/Value Label",
       "type": "UnityEngine.UI.Text",
       "property": "text",
       "text": "0",
@@ -2680,7 +2680,7 @@
     },
     {
       "asset": "Assets/Prefabs/CardGameView/Multiplayer/Die.prefab",
-      "path": "Die/Value Label",
+      "path": "Die/Local Visual/Value Label",
       "type": "UnityEngine.UI.Text",
       "property": "text",
       "text": "1",
@@ -2689,7 +2689,7 @@
     },
     {
       "asset": "Assets/Prefabs/CardGameView/Multiplayer/Die.prefab",
-      "path": "Die/Underscore Label",
+      "path": "Die/Local Visual/Underscore Label",
       "type": "UnityEngine.UI.Text",
       "property": "text",
       "text": "_",
@@ -7907,6 +7907,62 @@
       "id": "GlobalObjectId_V1-1-7aeec7aac0a4d0446bb25fbba25238ea-8946889515608447211-0",
       "dynamicKey": "download.*",
       "presenter": "ProgressBar selects a key from structured download stage/counts."
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/PieceSize Dropdown/Label",
+      "type": "UnityEngine.UI.Text",
+      "property": "text",
+      "text": "Dice and counter size",
+      "key": "play.piece.size"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/PieceSize Dropdown/Dropdown",
+      "type": "UnityEngine.UI.Dropdown",
+      "property": "options.0",
+      "text": "Auto",
+      "key": "play.piece.size.auto"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/PieceSize Dropdown/Dropdown",
+      "type": "UnityEngine.UI.Dropdown",
+      "property": "options.1",
+      "text": "Standard",
+      "key": "play.piece.size.standard"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/PieceSize Dropdown/Dropdown",
+      "type": "UnityEngine.UI.Dropdown",
+      "property": "options.2",
+      "text": "Large",
+      "key": "play.piece.size.large"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/PieceSize Dropdown/Dropdown",
+      "type": "UnityEngine.UI.Dropdown",
+      "property": "options.3",
+      "text": "Extra large",
+      "key": "play.piece.size.extra.large"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/PieceSize Dropdown/Dropdown/Label",
+      "type": "UnityEngine.UI.Text",
+      "property": "text",
+      "text": "Auto",
+      "exclusion": "Dropdown-owned caption/item label. LocalizedDropdown supplies options."
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/PieceSize Dropdown/Dropdown/Template/Viewport/Content/Item/Item Label",
+      "type": "UnityEngine.UI.Text",
+      "property": "text",
+      "text": "Auto",
+      "exclusion": "Dropdown-owned caption/item label. LocalizedDropdown supplies options."
     }
   ]
 }

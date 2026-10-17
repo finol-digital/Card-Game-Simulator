@@ -2258,6 +2258,32 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309422095302800
+  - m_Id: 3798968291483648
+    m_Localized: "\u0420\u0430\u0437\u043C\u0435\u0440 \u043A\u0443\u0431\u0438\u043A\u043E\u0432
+      \u0438 \u0441\u0447\u0451\u0442\u0447\u0438\u043A\u043E\u0432"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251979
+  - m_Id: 3798968631222272
+    m_Localized: "\u0410\u0432\u0442\u043E"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251980
+  - m_Id: 3798968631222273
+    m_Localized: "\u041E\u0447\u0435\u043D\u044C \u0431\u043E\u043B\u044C\u0448\u043E\u0439"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251981
+  - m_Id: 3798968631222274
+    m_Localized: "\u0411\u043E\u043B\u044C\u0448\u043E\u0439"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251982
+  - m_Id: 3798968631222275
+    m_Localized: "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u044B\u0439"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251983
   references:
     version: 2
     RefIds:
@@ -4588,3 +4614,29 @@ MonoBehaviour:
         m_CommentText: "{\"text\":\"\u0425\u043E\u0441\u0442 \u0432\u044B\u0431\u0440\u0430\u043B
           \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0443\u044E \u0438\u0433\u0440\u0443!\",\"status\":\"machine\",\"sourceHash\":\"fa19e97a2ac76a7638c0c380af28056fd4e53616ab325ef676aae67ee7dd5f09\",\"provenance\":{\"method\":\"Codex
           contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+    - rid: 7133309658329251979
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u0420\u0430\u0437\u043C\u0435\u0440 \u043A\u0443\u0431\u0438\u043A\u043E\u0432
+          \u0438 \u0441\u0447\u0451\u0442\u0447\u0438\u043A\u043E\u0432\",\"status\":\"machine\",\"sourceHash\":\"64aa99183d51eb043cf5e3a52d49b2e3bf479413950653fa93661e53690e5ed0\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"
+    - rid: 7133309658329251980
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u0410\u0432\u0442\u043E\",\"status\":\"machine\",\"sourceHash\":\"f311f754e16167c8e0a44c1560c53abfb892d029eb310841b3302bbe412c03dc\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"
+    - rid: 7133309658329251981
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u041E\u0447\u0435\u043D\u044C \u0431\u043E\u043B\u044C\u0448\u043E\u0439\",\"status\":\"machine\",\"sourceHash\":\"7be6d43d904b05819b08376189ac979cc1268adab768b5cafa5cd0d236f3f240\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"
+    - rid: 7133309658329251982
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u0411\u043E\u043B\u044C\u0448\u043E\u0439\",\"status\":\"machine\",\"sourceHash\":\"cde1f60fb95718e71d9158031c29d6854a6763022de4d836c6c92de6d19ec25b\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"
+    - rid: 7133309658329251983
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u044B\u0439\",\"status\":\"machine\",\"sourceHash\":\"d773e9b12d7c3199c4a564521b52c9afd50170f59c3d62b9f92ffbc6f70e2994\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"

@@ -2972,6 +2972,51 @@
         "date": "2026-10-05"
       }
     },
+    "play.piece.size": {
+      "text": "骰子和计数器大小",
+      "status": "machine",
+      "sourceHash": "64aa99183d51eb043cf5e3a52d49b2e3bf479413950653fa93661e53690e5ed0",
+      "provenance": {
+        "method": "Codex contextual machine draft; local display size preference",
+        "date": "2026-10-16"
+      }
+    },
+    "play.piece.size.auto": {
+      "text": "自动",
+      "status": "machine",
+      "sourceHash": "f311f754e16167c8e0a44c1560c53abfb892d029eb310841b3302bbe412c03dc",
+      "provenance": {
+        "method": "Codex contextual machine draft; local display size preference",
+        "date": "2026-10-16"
+      }
+    },
+    "play.piece.size.extra.large": {
+      "text": "特大",
+      "status": "machine",
+      "sourceHash": "7be6d43d904b05819b08376189ac979cc1268adab768b5cafa5cd0d236f3f240",
+      "provenance": {
+        "method": "Codex contextual machine draft; local display size preference",
+        "date": "2026-10-16"
+      }
+    },
+    "play.piece.size.large": {
+      "text": "大",
+      "status": "machine",
+      "sourceHash": "cde1f60fb95718e71d9158031c29d6854a6763022de4d836c6c92de6d19ec25b",
+      "provenance": {
+        "method": "Codex contextual machine draft; local display size preference",
+        "date": "2026-10-16"
+      }
+    },
+    "play.piece.size.standard": {
+      "text": "标准",
+      "status": "machine",
+      "sourceHash": "d773e9b12d7c3199c4a564521b52c9afd50170f59c3d62b9f92ffbc6f70e2994",
+      "provenance": {
+        "method": "Codex contextual machine draft; local display size preference",
+        "date": "2026-10-16"
+      }
+    },
     "play.restart": {
       "text": "重新开始？",
       "status": "machine",
