@@ -288,7 +288,8 @@ namespace Tests.PlayMode
             var target = Piece(Vector2.zero);
             var sourceProbe = source.gameObject.AddComponent<PieceDragProbe>();
             var targetProbe = target.gameObject.AddComponent<PieceDragProbe>();
-            var die = RealPiece<Die>("Die", new Vector2(350, 0));
+            // Keep the die and its assisted touch target inside a 640-wide CI viewport.
+            var die = RealPiece<Die>("Die", new Vector2(180, 0));
             source.name = "Source piece";
             target.name = "Target piece";
             PlaySettings.PieceSize = PieceDisplaySize.Large;
@@ -370,6 +371,8 @@ namespace Tests.PlayMode
             die.enabled = true;
             Canvas.ForceUpdateCanvases();
             var diePress = ScreenPoint(die.GetComponent<LocalPiecePresentation>(), new Vector2(80, 0));
+            Assert.AreEqual(die.gameObject, Hit(diePress, true),
+                $"The die tap must hit its assisted target inside the {Screen.width}x{Screen.height} viewport.");
             var remaining = typeof(Die).GetField("_rollRemainingTime",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var hadRollPreference = PlayerPrefs.HasKey("DoubleClickToRollDice");
