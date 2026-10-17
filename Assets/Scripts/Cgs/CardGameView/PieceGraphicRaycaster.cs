@@ -67,11 +67,12 @@ namespace Cgs.CardGameView
 
             if (assisted != null)
             {
-                foreach (var hit in _hits)
+                // Indexed access avoids allocating a captured predicate on each touch raycast.
+                for (var i = 0; i < _hits.Count; i++)
                 {
                     // Ancestor surfaces are the table/viewport behind the candidate, not direct
                     // interactive content. Everything else retains its normal blocking behavior.
-                    if (!assisted.transform.IsChildOf(hit.gameObject.transform))
+                    if (!assisted.transform.IsChildOf(_hits[i].gameObject.transform))
                     {
                         assisted = null;
                         break;
