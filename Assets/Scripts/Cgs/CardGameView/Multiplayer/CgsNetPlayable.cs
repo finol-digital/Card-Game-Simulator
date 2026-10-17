@@ -196,6 +196,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public static bool IsAnyDragging => DraggedPlayables.Values.Any(playable => playable != null);
 
+        public static bool IsPointerDragging(int pointerId)
+        {
+            return DraggedPlayables.TryGetValue(pointerId, out var playable) && playable != null;
+        }
+
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
         protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
@@ -250,10 +255,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         private HighlightMode _highlightMode = HighlightMode.Off;
 
-        private Outline Highlight => _highlight ??= gameObject.GetOrAddComponent<Outline>();
+        private Outline Highlight => _highlight ??=
+            (SelectableGraphic != null ? SelectableGraphic.gameObject : gameObject).GetOrAddComponent<Outline>();
         private Outline _highlight;
 
-        private Graphic SelectableGraphic => _selectableGraphic ??= GetComponent<Graphic>();
+        protected virtual Graphic SelectableGraphic => _selectableGraphic ??= GetComponent<Graphic>();
         private Graphic _selectableGraphic;
 
         protected void Awake()
@@ -515,6 +521,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected void UpdateSelectableHighlight(bool isSelected)
         {
+            if (TryGetComponent<LocalPiecePresentation>(out var presentation))
+            {
+                presentation.SetSelected(isSelected);
+                return;
+            }
             var graphic = SelectableGraphic;
             if (graphic == null)
                 return;

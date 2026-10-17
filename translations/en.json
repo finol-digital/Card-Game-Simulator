@@ -2088,6 +2088,36 @@
       "arguments": {},
       "smart": false
     },
+    "play.piece.size": {
+      "text": "Dice and counter size",
+      "context": "Local dice and counter display size preference. Auto uses larger visuals on mobile; other options override the default. Does not change shared tabletop geometry.",
+      "arguments": {},
+      "smart": false
+    },
+    "play.piece.size.auto": {
+      "text": "Auto",
+      "context": "Local dice and counter display size preference. Auto uses larger visuals on mobile; other options override the default. Does not change shared tabletop geometry.",
+      "arguments": {},
+      "smart": false
+    },
+    "play.piece.size.extra.large": {
+      "text": "Extra large",
+      "context": "Local dice and counter display size preference. Auto uses larger visuals on mobile; other options override the default. Does not change shared tabletop geometry.",
+      "arguments": {},
+      "smart": false
+    },
+    "play.piece.size.large": {
+      "text": "Large",
+      "context": "Local dice and counter display size preference. Auto uses larger visuals on mobile; other options override the default. Does not change shared tabletop geometry.",
+      "arguments": {},
+      "smart": false
+    },
+    "play.piece.size.standard": {
+      "text": "Standard",
+      "context": "Local dice and counter display size preference. Auto uses larger visuals on mobile; other options override the default. Does not change shared tabletop geometry.",
+      "arguments": {},
+      "smart": false
+    },
     "play.restart": {
       "text": "Restart?",
       "context": "CGS runtime play.restart presentation; keep supplied names and model data unchanged.",

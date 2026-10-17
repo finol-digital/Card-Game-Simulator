@@ -31,6 +31,8 @@ namespace Cgs.CardGameView.Multiplayer
         [SerializeField] Text valueText;
         [SerializeField] Image dieImage;
 
+        protected override Graphic SelectableGraphic => dieImage != null ? dieImage : base.SelectableGraphic;
+
         private static int Min => 1;
 
         public int Max
