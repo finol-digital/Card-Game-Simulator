@@ -2230,6 +2230,12 @@
       "arguments": {},
       "smart": false
     },
+    "settings.orientation": {
+      "text": "Orientation",
+      "context": "Label beside the screen orientation dropdown in General Settings. Keep concise.",
+      "arguments": {},
+      "smart": false
+    },
     "settings.orientation.auto": {
       "text": "Auto Rotate",
       "context": "Interface label or button at Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/AutoRotate Toggle/Label in Assets/Scenes/Settings.unity. Keep control labels concise.",

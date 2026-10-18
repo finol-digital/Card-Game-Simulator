@@ -2059,6 +2059,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309658329251938
+  - m_Id: 4568374009323520
+    m_Localized: Orientation
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251991
   references:
     version: 2
     RefIds:
@@ -4421,3 +4426,8 @@ MonoBehaviour:
         m_CommentText: '{"text":"Standard","context":"Local dice and counter display
           size preference. Auto uses larger visuals on mobile; other options override
           the default. Does not change shared tabletop geometry.","arguments":{},"smart":false}'
+    - rid: 7133309658329251991
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Orientation","context":"Label beside the screen
+          orientation dropdown in General Settings. Keep concise.","arguments":{},"smart":false}'

@@ -3170,6 +3170,15 @@
         "date": "2026-10-05"
       }
     },
+    "settings.orientation": {
+      "text": "Ориентация",
+      "status": "machine",
+      "sourceHash": "a3b22b0e5c71b6eba97a175fa8d3203abf141280cb06e32e2cd28805105b2f60",
+      "provenance": {
+        "method": "Codex contextual machine draft; screen orientation setting label",
+        "date": "2026-10-18"
+      }
+    },
     "settings.orientation.auto": {
       "text": "Автоповорот",
       "status": "machine",

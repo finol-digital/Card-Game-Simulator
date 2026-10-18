@@ -2365,80 +2365,47 @@
       "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/Label Text",
       "type": "UnityEngine.UI.Text",
       "property": "text",
-      "text": "",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-74464415-0",
-      "exclusion": "Empty/template value; populated by its owning presenter."
+      "text": "Orientation",
+      "key": "settings.orientation"
     },
     {
       "asset": "Assets/Scenes/Settings.unity",
-      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/OS Toggle",
+      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/Dropdown",
       "type": "Cgs.UI.ToolTip",
       "property": "tooltip",
-      "text": "Select",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-2398492824210769759-5235115288888140021",
-      "key": "common.select"
+      "text": "Orientation",
+      "key": "settings.orientation"
     },
     {
       "asset": "Assets/Scenes/Settings.unity",
-      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/OS Toggle/Label",
-      "type": "UnityEngine.UI.Text",
-      "property": "text",
+      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/Dropdown",
+      "type": "UnityEngine.UI.Dropdown",
+      "property": "options.0",
       "text": "OS Control",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-5235115289016548993-5235115288888140021",
       "key": "settings.orientation.system"
     },
     {
       "asset": "Assets/Scenes/Settings.unity",
-      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/AutoRotate Toggle",
-      "type": "Cgs.UI.ToolTip",
-      "property": "tooltip",
-      "text": "Select",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-2398492824210769759-509466714",
-      "key": "common.select"
-    },
-    {
-      "asset": "Assets/Scenes/Settings.unity",
-      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/AutoRotate Toggle/Label",
-      "type": "UnityEngine.UI.Text",
-      "property": "text",
+      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/Dropdown",
+      "type": "UnityEngine.UI.Dropdown",
+      "property": "options.1",
       "text": "Auto Rotate",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-5235115289016548993-509466714",
       "key": "settings.orientation.auto"
     },
     {
       "asset": "Assets/Scenes/Settings.unity",
-      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/Portrait Toggle",
-      "type": "Cgs.UI.ToolTip",
-      "property": "tooltip",
-      "text": "Select",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-2398492824210769759-1696311276",
-      "key": "common.select"
-    },
-    {
-      "asset": "Assets/Scenes/Settings.unity",
-      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/Portrait Toggle/Label",
-      "type": "UnityEngine.UI.Text",
-      "property": "text",
+      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/Dropdown",
+      "type": "UnityEngine.UI.Dropdown",
+      "property": "options.2",
       "text": "Portrait",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-5235115289016548993-1696311276",
       "key": "settings.orientation.portrait"
     },
     {
       "asset": "Assets/Scenes/Settings.unity",
-      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/LandScape Toggle",
-      "type": "Cgs.UI.ToolTip",
-      "property": "tooltip",
-      "text": "Select",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-2398492824210769759-1209368101",
-      "key": "common.select"
-    },
-    {
-      "asset": "Assets/Scenes/Settings.unity",
-      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/LandScape Toggle/Label",
-      "type": "UnityEngine.UI.Text",
-      "property": "text",
-      "text": "Land Scape",
-      "id": "GlobalObjectId_V1-2-6b4e37afed86a9944a552009d50c7857-5235115289016548993-1209368101",
+      "path": "Settings Canvas/Settings ScrollView/Viewport/Content/Screen Orientation/Dropdown",
+      "type": "UnityEngine.UI.Dropdown",
+      "property": "options.3",
+      "text": "Landscape",
       "key": "settings.orientation.landscape"
     },
     {
