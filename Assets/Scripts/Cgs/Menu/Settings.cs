@@ -62,10 +62,7 @@ namespace Cgs.Menu
         [SerializeField] Dropdown languageDropdown;
         [SerializeField] Dropdown framerateDropdown;
         [SerializeField] Dropdown resolutionDropdown;
-        [SerializeField] Toggle screenOsControlToggle;
-        [SerializeField] Toggle screenAutoRotateToggle;
-        [SerializeField] Toggle screenPortraitToggle;
-        [SerializeField] Toggle screenLandscapeToggle;
+        [SerializeField] UnityEngine.UI.Dropdown orientationDropdown;
 
         [FormerlySerializedAs("controllerLockToLandscapeToggle")]
         [SerializeField] Toggle gamepadLockToLandscapeToggle;
@@ -140,24 +137,7 @@ namespace Cgs.Menu
             framerateDropdown.value = FrameRateManager.FrameRateIndex;
             resolutionDropdown.value = ResolutionManager.ResolutionIndex;
 
-            switch (ScreenOrientationManager.PreferredScreenOrientation)
-            {
-                case ScreenOrientationPref.OsControl:
-                    screenOsControlToggle.isOn = true;
-                    break;
-                case ScreenOrientationPref.AutoRotate:
-                    screenAutoRotateToggle.isOn = true;
-                    break;
-                case ScreenOrientationPref.Portrait:
-                    screenPortraitToggle.isOn = true;
-                    break;
-                case ScreenOrientationPref.Landscape:
-                    screenLandscapeToggle.isOn = true;
-                    break;
-                default:
-                    Debug.LogError("Invalid value for ScreenOrientationManager.PreferredScreenOrientation!");
-                    break;
-            }
+            orientationDropdown.SetValueWithoutNotify((int)ScreenOrientationManager.PreferredScreenOrientation);
 
             gamepadLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesGamepadLockToLandscape;
             previewOnMouseOverToggle.isOn = PreviewOnMouseOver;
@@ -213,31 +193,11 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void SetScreenOsControl(bool isOn)
+        public void SetScreenOrientation(int index)
         {
-            if (isOn)
-                ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.OsControl;
-        }
-
-        [UsedImplicitly]
-        public void SetScreenAutoRotate(bool isOn)
-        {
-            if (isOn)
-                ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.AutoRotate;
-        }
-
-        [UsedImplicitly]
-        public void SetScreenPortrait(bool isOn)
-        {
-            if (isOn)
-                ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.Portrait;
-        }
-
-        [UsedImplicitly]
-        public void SetScreenLandscape(bool isOn)
-        {
-            if (isOn)
-                ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.Landscape;
+            if (index < (int)ScreenOrientationPref.OsControl || index > (int)ScreenOrientationPref.Landscape)
+                return;
+            ScreenOrientationManager.PreferredScreenOrientation = (ScreenOrientationPref)index;
         }
 
         [UsedImplicitly]

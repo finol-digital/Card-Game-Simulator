@@ -1976,6 +1976,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309658329251943
+  - m_Id: 4568374009323520
+    m_Localized: "\u753B\u9762\u306E\u5411\u304D"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251992
   references:
     version: 2
     RefIds:
@@ -3942,3 +3947,8 @@ MonoBehaviour:
       data:
         m_CommentText: "{\"text\":\"\u6A19\u6E96\",\"status\":\"machine\",\"sourceHash\":\"d773e9b12d7c3199c4a564521b52c9afd50170f59c3d62b9f92ffbc6f70e2994\",\"provenance\":{\"method\":\"Codex
           contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"
+    - rid: 7133309658329251992
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u753B\u9762\u306E\u5411\u304D\",\"status\":\"machine\",\"sourceHash\":\"a3b22b0e5c71b6eba97a175fa8d3203abf141280cb06e32e2cd28805105b2f60\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; screen orientation setting label\",\"date\":\"2026-10-18\"}}"

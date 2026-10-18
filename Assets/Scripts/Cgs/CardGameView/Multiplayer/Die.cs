@@ -104,19 +104,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnAwakePlayable()
         {
-            _maxNetworkVariable = new NetworkVariable<int>();
+            _maxNetworkVariable = new NetworkVariable<int>(_max);
             _maxNetworkVariable.OnValueChanged += OnChangeMax;
-            _valueNetworkVariable = new NetworkVariable<int>();
+            _valueNetworkVariable = new NetworkVariable<int>(_value);
             _valueNetworkVariable.OnValueChanged += OnChangeValue;
-            _colorNetworkVariable = new NetworkVariable<Vector3>();
+            _colorNetworkVariable = new NetworkVariable<Vector3>(new Vector3(_dieColor.r, _dieColor.g, _dieColor.b));
             _colorNetworkVariable.OnValueChanged += OnChangeColor;
         }
 
         protected override void OnNetworkSpawnPlayable()
         {
-            if (!Vector3.zero.Equals(_colorNetworkVariable.Value))
-                dieImage.color = new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
-                    _colorNetworkVariable.Value.z);
+            // Initial synchronization does not invoke OnValueChanged for players joining an existing game.
+            OnChangeMax(_max, _maxNetworkVariable.Value);
+            OnChangeValue(_value, _valueNetworkVariable.Value);
+            OnChangeColor(new Vector3(_dieColor.r, _dieColor.g, _dieColor.b), _colorNetworkVariable.Value);
         }
 
         protected override void OnStartPlayable()
