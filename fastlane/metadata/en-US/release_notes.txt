@@ -1,2 +1,4 @@
 ## What's Changed
-* Keep action panels compact and tooltips readable
+* Added Languages in Settings
+* Improve dice and counter sizing
+
