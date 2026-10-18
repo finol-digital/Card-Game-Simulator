@@ -28,6 +28,8 @@ namespace Cgs.CardGameView.Multiplayer
         [SerializeField] Transform logoTransform;
         [SerializeField] Text valueText;
 
+        protected override Graphic SelectableGraphic => counterImage != null ? counterImage : base.SelectableGraphic;
+
         public override string ViewValue => $"Counter: {Value}";
 
         public int Value

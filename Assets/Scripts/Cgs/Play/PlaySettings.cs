@@ -4,6 +4,7 @@
 
 using Cgs.CardGameView.Multiplayer;
 using Cgs.UI.ScrollRects;
+using System;
 using UnityEngine;
 
 namespace Cgs.Play
@@ -17,6 +18,28 @@ namespace Cgs.Play
         private const string PlayerPrefsStackViewerOverlap = "StackViewerOverlap";
         private const string PlayerPrefsShowActionsMenu = "ShowActionsMenu";
         private const string PlayerPrefsDefaultZoom = "DefaultZoom";
+        private const string PlayerPrefsPieceSize = "DiceAndCounterDisplaySize";
+
+        public static event Action PieceSizeChanged;
+
+        public static PieceDisplaySize PieceSize
+        {
+            get => PieceDisplayPolicy.Normalize(PlayerPrefs.GetInt(PlayerPrefsPieceSize, 0));
+            set
+            {
+                var choice = PieceDisplayPolicy.Normalize((int)value);
+                var previous = PieceSize;
+                PlayerPrefs.SetInt(PlayerPrefsPieceSize, (int)choice);
+                if (previous != choice)
+                    PieceSizeChanged?.Invoke();
+            }
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetPieceSizeListeners()
+        {
+            PieceSizeChanged = null;
+        }
 
         public static bool AutoStackCards
         {

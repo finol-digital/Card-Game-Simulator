@@ -2000,6 +2000,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309422095302795
+  - m_Id: 3798968291483648
+    m_Localized: Dimensione di dadi e contatori
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251954
+  - m_Id: 3798968631222272
+    m_Localized: Automatica
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251955
+  - m_Id: 3798968631222273
+    m_Localized: Molto grande
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251956
+  - m_Id: 3798968631222274
+    m_Localized: Grande
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251957
+  - m_Id: 3798968631222275
+    m_Localized: Standard
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251958
   references:
     version: 2
     RefIds:
@@ -3983,3 +4008,28 @@ MonoBehaviour:
       data:
         m_CommentText: "{\"text\":\"L\u2019host ha selezionato un gioco non disponibile!\",\"status\":\"machine\",\"sourceHash\":\"fa19e97a2ac76a7638c0c380af28056fd4e53616ab325ef676aae67ee7dd5f09\",\"provenance\":{\"method\":\"Codex
           contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+    - rid: 7133309658329251954
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Dimensione di dadi e contatori","status":"machine","sourceHash":"64aa99183d51eb043cf5e3a52d49b2e3bf479413950653fa93661e53690e5ed0","provenance":{"method":"Codex
+          contextual machine draft; local display size preference","date":"2026-10-16"}}'
+    - rid: 7133309658329251955
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Automatica","status":"machine","sourceHash":"f311f754e16167c8e0a44c1560c53abfb892d029eb310841b3302bbe412c03dc","provenance":{"method":"Codex
+          contextual machine draft; local display size preference","date":"2026-10-16"}}'
+    - rid: 7133309658329251956
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Molto grande","status":"machine","sourceHash":"7be6d43d904b05819b08376189ac979cc1268adab768b5cafa5cd0d236f3f240","provenance":{"method":"Codex
+          contextual machine draft; local display size preference","date":"2026-10-16"}}'
+    - rid: 7133309658329251957
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Grande","status":"machine","sourceHash":"cde1f60fb95718e71d9158031c29d6854a6763022de4d836c6c92de6d19ec25b","provenance":{"method":"Codex
+          contextual machine draft; local display size preference","date":"2026-10-16"}}'
+    - rid: 7133309658329251958
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Standard","status":"machine","sourceHash":"d773e9b12d7c3199c4a564521b52c9afd50170f59c3d62b9f92ffbc6f70e2994","provenance":{"method":"Codex
+          contextual machine draft; local display size preference","date":"2026-10-16"}}'

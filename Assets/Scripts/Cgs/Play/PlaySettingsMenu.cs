@@ -21,6 +21,7 @@ namespace Cgs.Play
         [SerializeField] Toggle autoStackCardsToggle;
         [SerializeField] Toggle doubleClickToViewStacksToggle;
         [SerializeField] Dropdown stackViewerOverlapDropdown;
+        [SerializeField] Dropdown pieceSizeDropdown;
         [SerializeField] Toggle doubleClickToRollDiceToggle;
         [SerializeField] InputField dieFaceCountInputField;
         [SerializeField] Toggle showActionsMenuToggle;
@@ -60,6 +61,7 @@ namespace Cgs.Play
             autoStackCardsToggle.isOn = PlaySettings.AutoStackCards;
             doubleClickToViewStacksToggle.isOn = PlaySettings.DoubleClickToViewStacks;
             stackViewerOverlapDropdown.value = PlaySettings.StackViewerOverlap;
+            pieceSizeDropdown.SetValueWithoutNotify((int)PlaySettings.PieceSize);
             doubleClickToRollDiceToggle.isOn = PlaySettings.DoubleClickToRollDice;
             dieFaceCountInputField.text = PlaySettings.DieFaceCount.ToString();
             showActionsMenuToggle.isOn = PlaySettings.ShowActionsMenu;
@@ -121,6 +123,12 @@ namespace Cgs.Play
         public void SetStackViewerOverlap(int stackViewerOverlap)
         {
             PlaySettings.StackViewerOverlap = stackViewerOverlap;
+        }
+
+        [UsedImplicitly]
+        public void SetPieceSize(int size)
+        {
+            PlaySettings.PieceSize = PieceDisplayPolicy.Normalize(size);
         }
 
         [UsedImplicitly]

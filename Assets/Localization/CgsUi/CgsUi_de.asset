@@ -2005,6 +2005,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309422095302790
+  - m_Id: 3798968291483648
+    m_Localized: "W\xFCrfel- und Z\xE4hlergr\xF6\xDFe"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251929
+  - m_Id: 3798968631222272
+    m_Localized: Automatisch
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251930
+  - m_Id: 3798968631222273
+    m_Localized: "Sehr gro\xDF"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251931
+  - m_Id: 3798968631222274
+    m_Localized: "Gro\xDF"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251932
+  - m_Id: 3798968631222275
+    m_Localized: Standard
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251933
   references:
     version: 2
     RefIds:
@@ -3997,3 +4022,28 @@ MonoBehaviour:
         m_CommentText: "{\"text\":\"Der Host hat ein Spiel ausgew\xE4hlt, das nicht
           verf\xFCgbar ist!\",\"status\":\"machine\",\"sourceHash\":\"fa19e97a2ac76a7638c0c380af28056fd4e53616ab325ef676aae67ee7dd5f09\",\"provenance\":{\"method\":\"Codex
           contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+    - rid: 7133309658329251929
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"W\xFCrfel- und Z\xE4hlergr\xF6\xDFe\",\"status\":\"machine\",\"sourceHash\":\"64aa99183d51eb043cf5e3a52d49b2e3bf479413950653fa93661e53690e5ed0\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"
+    - rid: 7133309658329251930
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Automatisch","status":"machine","sourceHash":"f311f754e16167c8e0a44c1560c53abfb892d029eb310841b3302bbe412c03dc","provenance":{"method":"Codex
+          contextual machine draft; local display size preference","date":"2026-10-16"}}'
+    - rid: 7133309658329251931
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Sehr gro\xDF\",\"status\":\"machine\",\"sourceHash\":\"7be6d43d904b05819b08376189ac979cc1268adab768b5cafa5cd0d236f3f240\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"
+    - rid: 7133309658329251932
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Gro\xDF\",\"status\":\"machine\",\"sourceHash\":\"cde1f60fb95718e71d9158031c29d6854a6763022de4d836c6c92de6d19ec25b\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; local display size preference\",\"date\":\"2026-10-16\"}}"
+    - rid: 7133309658329251933
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Standard","status":"machine","sourceHash":"d773e9b12d7c3199c4a564521b52c9afd50170f59c3d62b9f92ffbc6f70e2994","provenance":{"method":"Codex
+          contextual machine draft; local display size preference","date":"2026-10-16"}}'

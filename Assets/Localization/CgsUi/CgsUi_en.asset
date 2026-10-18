@@ -2034,6 +2034,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309422095302791
+  - m_Id: 3798968291483648
+    m_Localized: Dice and counter size
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251934
+  - m_Id: 3798968631222272
+    m_Localized: Auto
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251935
+  - m_Id: 3798968631222273
+    m_Localized: Extra large
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251936
+  - m_Id: 3798968631222274
+    m_Localized: Large
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251937
+  - m_Id: 3798968631222275
+    m_Localized: Standard
+    m_Metadata:
+      m_Items:
+      - rid: 7133309658329251938
   references:
     version: 2
     RefIds:
@@ -4366,3 +4391,33 @@ MonoBehaviour:
         m_CommentText: '{"text":"The host has selected a game that is not available!","context":"CGS
           runtime network.game.unavailable presentation; keep supplied names and
           model data unchanged.","arguments":{},"smart":false}'
+    - rid: 7133309658329251934
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Dice and counter size","context":"Local dice and
+          counter display size preference. Auto uses larger visuals on mobile; other
+          options override the default. Does not change shared tabletop geometry.","arguments":{},"smart":false}'
+    - rid: 7133309658329251935
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Auto","context":"Local dice and counter display
+          size preference. Auto uses larger visuals on mobile; other options override
+          the default. Does not change shared tabletop geometry.","arguments":{},"smart":false}'
+    - rid: 7133309658329251936
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Extra large","context":"Local dice and counter display
+          size preference. Auto uses larger visuals on mobile; other options override
+          the default. Does not change shared tabletop geometry.","arguments":{},"smart":false}'
+    - rid: 7133309658329251937
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Large","context":"Local dice and counter display
+          size preference. Auto uses larger visuals on mobile; other options override
+          the default. Does not change shared tabletop geometry.","arguments":{},"smart":false}'
+    - rid: 7133309658329251938
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Standard","context":"Local dice and counter display
+          size preference. Auto uses larger visuals on mobile; other options override
+          the default. Does not change shared tabletop geometry.","arguments":{},"smart":false}'
