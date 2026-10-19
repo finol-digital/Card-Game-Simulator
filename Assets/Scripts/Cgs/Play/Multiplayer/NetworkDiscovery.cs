@@ -206,26 +206,43 @@ namespace Cgs.Play.Multiplayer
                     else
                         await ReceiveResponseAsync(client);
                 }
-                catch (ObjectDisposedException)
+                catch (Exception e)
                 {
-                    // socket has been closed
-                    break;
-                }
-                catch (SocketException e)
-                {
-                    if (client == _mClient)
-                    {
-                        Debug.LogWarning(ReceiveErrorMessage + e.Message);
-                        StopDiscovery();
-                    }
-                    break;
+                    if (!TryRecoverReceive(client, e))
+                        break;
                 }
             }
         }
 
+        private bool TryRecoverReceive(UdpClient client, Exception exception)
+        {
+            if (client != _mClient)
+                return false;
+
+            // Windows can report a closed peer's ICMP port-unreachable here.
+            // The local socket is still usable and other players can still join.
+            if (exception is SocketException socketException &&
+                socketException.SocketErrorCode == SocketError.ConnectionReset)
+                return true;
+
+            if (exception is SocketException)
+                Debug.LogWarning(ReceiveErrorMessage + exception.Message);
+            else if (exception is not ObjectDisposedException)
+                Debug.LogException(exception);
+
+            // Do not leave a faulted listener marked as running or retry in a tight loop.
+            StopDiscovery();
+            return false;
+        }
+
+        protected virtual Task<UdpReceiveResult> ReceiveAsync(UdpClient client)
+        {
+            return client.ReceiveAsync();
+        }
+
         private async Task ReceiveResponseAsync(UdpClient client)
         {
-            var udpReceiveResult = await client.ReceiveAsync();
+            var udpReceiveResult = await ReceiveAsync(client);
             if (client != _mClient)
                 return;
 
@@ -250,7 +267,7 @@ namespace Cgs.Play.Multiplayer
 
         private async Task ReceiveBroadcastAsync(UdpClient client)
         {
-            var udpReceiveResult = await client.ReceiveAsync();
+            var udpReceiveResult = await ReceiveAsync(client);
             if (client != _mClient)
                 return;
 

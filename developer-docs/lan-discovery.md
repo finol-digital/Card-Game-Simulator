@@ -29,7 +29,9 @@ see [browser LAN](browser-lan.md).
 
 Run `LanDiscoveryTests` and `BrowserLanTests` through the Unity CLI PlayMode runner.
 The native tests cover subnet calculations, fallback, multiple UDP destinations,
-response payloads, rapid stop/restart, and socket cleanup using loopback sockets.
+response payloads, recoverable receive errors, failure cleanup, rapid stop/restart,
+and socket cleanup using loopback sockets. Target iteration uses two entries for
+127.0.0.1 so the tests do not require additional loopback aliases on macOS.
 
 Before release, verify on two physical native devices:
 

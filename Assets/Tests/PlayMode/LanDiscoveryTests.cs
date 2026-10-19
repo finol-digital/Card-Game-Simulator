@@ -6,6 +6,7 @@ using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Cgs.Play.Multiplayer;
 using NUnit.Framework;
 using Unity.Netcode;
@@ -56,7 +57,7 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator DiscoveryReachesMultipleTargetsAfterRepeatedRestarts()
+        public IEnumerator DiscoveryReachesEveryTargetAfterReceiveResetsAndRestarts()
         {
             var serverObject = new GameObject("LAN discovery server test");
             var clientObject = new GameObject("LAN discovery client test");
@@ -72,6 +73,8 @@ namespace Tests.PlayMode
 
                 for (var round = 1; round <= 3; round++)
                 {
+                    server.ReceiveErrors.Enqueue(new SocketException((int)SocketError.ConnectionReset));
+                    client.ReceiveErrors.Enqueue(new SocketException((int)SocketError.ConnectionReset));
                     server.StartServer();
                     client.StartClient();
                     client.ClientBroadcast(new DiscoveryBroadcastData());
@@ -96,6 +99,46 @@ namespace Tests.PlayMode
                 Object.DestroyImmediate(serverObject);
             }
             yield return null;
+        }
+
+        [Test]
+        public void FatalReceiveErrorStopsDiscoveryAndAllowsRestart()
+        {
+            var gameObject = new GameObject("LAN discovery receive failure test");
+            try
+            {
+                var peer = gameObject.AddComponent<LanDiscoveryTestPeer>();
+                peer.ReceiveErrors.Enqueue(new SocketException((int)SocketError.AccessDenied));
+                LogAssert.Expect(LogType.Warning, new Regex("Unable to receive LAN discovery packets:"));
+                peer.StartClient();
+                Assert.That(peer.IsRunning, Is.False);
+                Assert.That(peer.IsClient, Is.False);
+                peer.StartClient();
+                Assert.That(peer.IsRunning, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(gameObject);
+            }
+        }
+
+        [Test]
+        public void UnexpectedReceiveErrorDoesNotLeaveDiscoveryMarkedAsRunning()
+        {
+            var gameObject = new GameObject("LAN discovery unexpected receive failure test");
+            try
+            {
+                var peer = gameObject.AddComponent<LanDiscoveryTestPeer>();
+                peer.ReceiveErrors.Enqueue(new System.InvalidOperationException("Injected receive failure"));
+                LogAssert.Expect(LogType.Exception, new Regex("InvalidOperationException: Injected receive failure"));
+                peer.StartClient();
+                Assert.That(peer.IsRunning, Is.False);
+                Assert.That(peer.IsClient, Is.False);
+            }
+            finally
+            {
+                Object.DestroyImmediate(gameObject);
+            }
         }
 
         [Test]
