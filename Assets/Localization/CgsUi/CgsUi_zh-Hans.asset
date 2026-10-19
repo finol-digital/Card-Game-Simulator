@@ -1242,8 +1242,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649705
   - m_Id: 6646181277698
-    m_Localized: "\u5BC6\u7801\u672A\u5E94\u7528\uFF1A\u957F\u5EA6\u5FC5\u987B\u4E3A
-      8 \u81F3 64 \u4E2A\u5B57\u7B26\u3002"
+    m_Localized: "\u5BC6\u7801\u5FC5\u987B\u4E3A1\u81F364\u4E2A\u5B57\u7B26\uFF0C\u4E0D\u8BBE\u5BC6\u7801\u8BF7\u7559\u7A7A\u3002\u8BF7\u4FEE\u6539\u540E\u91CD\u8BD5\u3002"
     m_Metadata:
       m_Items:
       - rid: 7133309421012649706
@@ -1993,6 +1992,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309658329251997
+  - m_Id: 4715992412774400
+    m_Localized: "\u6E38\u620F\u670D\u52A1\u62D2\u7EDD\u4E86\u6B64\u623F\u95F4ID\u3002\u8BF7\u5C1D\u8BD5\u4ECE\u4E92\u8054\u7F51\u6E38\u620F\u5217\u8868\u4E2D\u9009\u62E9\u623F\u4E3B\uFF0C\u6216\u8BF7\u623F\u4E3B\u521B\u5EFA\u65B0\u623F\u95F4\u3002\u53C2\u8003\u7F16\u53F7\uFF1A{reference}"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648150
+      - rid: 7133309715749011559
+  - m_Id: 4715992727347200
+    m_Localized: "\u65E0\u6CD5\u52A0\u5165\u6E38\u620F\u3002\u8BF7\u786E\u8BA4\u623F\u4E3B\u4ECD\u5728\u7EBF\u4E14\u623F\u95F4\u5BC6\u7801\u6B63\u786E\uFF0C\u7136\u540E\u91CD\u8BD5\u3002\u53C2\u8003\u7F16\u53F7\uFF1A{reference}"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648150
+      - rid: 7133309715749011560
   references:
     version: 2
     RefIds:
@@ -2052,6 +2063,8 @@ MonoBehaviour:
         - id: 18086220935170
         - id: 18086220935171
         - id: 18086220935172
+        - id: 4715992412774400
+        - id: 4715992727347200
     - rid: 7133309421012648151
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3269,9 +3282,8 @@ MonoBehaviour:
     - rid: 7133309421012649706
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"\u5BC6\u7801\u672A\u5E94\u7528\uFF1A\u957F\u5EA6\u5FC5\u987B\u4E3A
-          8 \u81F3 64 \u4E2A\u5B57\u7B26\u3002\",\"status\":\"machine\",\"sourceHash\":\"986bd7c586c38703c8f9e5e14f089c4a6d0cd7aefa7d0aa5c016dd121a4bd958\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"\u5BC6\u7801\u5FC5\u987B\u4E3A1\u81F364\u4E2A\u5B57\u7B26\uFF0C\u4E0D\u8BBE\u5BC6\u7801\u8BF7\u7559\u7A7A\u3002\u8BF7\u4FEE\u6539\u540E\u91CD\u8BD5\u3002\",\"status\":\"machine\",\"sourceHash\":\"a47e2e9d304154489cf158f09f582d46d577f1cf8564a3a344aa365c76b59f9a\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; password validation and optional empty input\",\"date\":\"2026-10-18\"}}"
     - rid: 7133309421012649707
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3980,3 +3992,13 @@ MonoBehaviour:
       data:
         m_CommentText: "{\"text\":\"\u5C4F\u5E55\u65B9\u5411\",\"status\":\"machine\",\"sourceHash\":\"a3b22b0e5c71b6eba97a175fa8d3203abf141280cb06e32e2cd28805105b2f60\",\"provenance\":{\"method\":\"Codex
           contextual machine draft; screen orientation setting label\",\"date\":\"2026-10-18\"}}"
+    - rid: 7133309715749011559
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u6E38\u620F\u670D\u52A1\u62D2\u7EDD\u4E86\u6B64\u623F\u95F4ID\u3002\u8BF7\u5C1D\u8BD5\u4ECE\u4E92\u8054\u7F51\u6E38\u620F\u5217\u8868\u4E2D\u9009\u62E9\u623F\u4E3B\uFF0C\u6216\u8BF7\u623F\u4E3B\u521B\u5EFA\u65B0\u623F\u95F4\u3002\u53C2\u8003\u7F16\u53F7\uFF1A{reference}\",\"status\":\"machine\",\"sourceHash\":\"4097e314208ad5a6e8faf5017495bc8437c1224dd911478e3ce66fddcca3064b\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English connection error context\",\"date\":\"2026-10-18\"}}"
+    - rid: 7133309715749011560
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u65E0\u6CD5\u52A0\u5165\u6E38\u620F\u3002\u8BF7\u786E\u8BA4\u623F\u4E3B\u4ECD\u5728\u7EBF\u4E14\u623F\u95F4\u5BC6\u7801\u6B63\u786E\uFF0C\u7136\u540E\u91CD\u8BD5\u3002\u53C2\u8003\u7F16\u53F7\uFF1A{reference}\",\"status\":\"machine\",\"sourceHash\":\"52124dda1e4ab1a185ce2eae3db470e44ce0c5a9708ec35978539a271b92851d\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English connection error context\",\"date\":\"2026-10-18\"}}"

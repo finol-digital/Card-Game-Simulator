@@ -1910,6 +1910,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309658329251996
+  - m_Id: 4715992412774400
+    m_Key: network.join.code.rejected
+    m_Metadata:
+      m_Items:
+      - rid: 7133309715749011557
+  - m_Id: 4715992727347200
+    m_Key: network.join.failed
+    m_Metadata:
+      m_Items:
+      - rid: 7133309715749011558
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
@@ -3432,9 +3442,10 @@ MonoBehaviour:
     - rid: 7133309421012649684
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Password not applied: password length must be between
-          8 and 64 characters.","context":"CGS runtime network.password.invalid presentation;
-          keep supplied names and model data unchanged.","arguments":{},"smart":false}'
+        m_CommentText: "{\"text\":\"Password must contain 1\u201364 characters, or
+          be empty for no password. Please correct it and try again.\",\"context\":\"Invalid
+          Internet room password. Hosting/joining is blocked, the typed password
+          is retained. Empty means no password.\",\"arguments\":{},\"smart\":false}"
     - rid: 7133309421012649685
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -4230,3 +4241,21 @@ MonoBehaviour:
       data:
         m_CommentText: '{"text":"Orientation","context":"Label beside the screen
           orientation dropdown in General Settings. Keep concise.","arguments":{},"smart":false}'
+    - rid: 7133309715749011557
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"The game service rejected this Room Id. Try selecting
+          the host from the Internet game list, or ask the host to create a new room.
+          Reference: {reference}","context":"Connection failure message. Reference
+          identifies the local diagnostic attempt; preserve it unchanged. Internet
+          refers to the multiplayer connection source.","arguments":{"reference":"Diagnostic
+          attempt identifier, unchanged."},"smart":true}'
+    - rid: 7133309715749011558
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Unable to join the game. Check that the host is
+          still online and the room password is correct, then try again. Reference:
+          {reference}","context":"Connection failure message. Reference identifies
+          the local diagnostic attempt; preserve it unchanged. Internet refers to
+          the multiplayer connection source.","arguments":{"reference":"Diagnostic
+          attempt identifier, unchanged."},"smart":true}'

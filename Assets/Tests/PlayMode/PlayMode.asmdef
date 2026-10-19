@@ -10,6 +10,8 @@
         "unity.webp",
         "WebP.Editor",
         "Unity.Netcode.Runtime",
+        "Unity.Services.Core",
+        "Unity.Services.Multiplayer",
         "Unity.Collections",
         "Unity.TextMeshPro",
         "NativeShare.Runtime",

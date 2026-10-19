@@ -2748,12 +2748,12 @@
       }
     },
     "network.password.invalid": {
-      "text": "Senha não aplicada: deve ter entre 8 e 64 caracteres.",
+      "text": "A senha deve ter de 1 a 64 caracteres ou ficar vazia para não usar senha. Corrija e tente novamente.",
       "status": "machine",
-      "sourceHash": "986bd7c586c38703c8f9e5e14f089c4a6d0cd7aefa7d0aa5c016dd121a4bd958",
+      "sourceHash": "a47e2e9d304154489cf158f09f582d46d577f1cf8564a3a344aa365c76b59f9a",
       "provenance": {
-        "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "method": "Codex contextual machine draft; password validation and optional empty input",
+        "date": "2026-10-18"
       }
     },
     "network.room.id": {
@@ -3411,6 +3411,24 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "network.join.code.rejected": {
+      "text": "O serviço do jogo rejeitou este ID de sala. Tente selecionar o anfitrião na lista de partidas pela Internet ou peça que ele crie uma nova sala. Referência: {reference}",
+      "status": "machine",
+      "sourceHash": "4097e314208ad5a6e8faf5017495bc8437c1224dd911478e3ce66fddcca3064b",
+      "provenance": {
+        "method": "Codex contextual machine draft; English connection error context",
+        "date": "2026-10-18"
+      }
+    },
+    "network.join.failed": {
+      "text": "Não foi possível entrar na partida. Verifique se o anfitrião ainda está online e se a senha da sala está correta. Depois, tente novamente. Referência: {reference}",
+      "status": "machine",
+      "sourceHash": "52124dda1e4ab1a185ce2eae3db470e44ce0c5a9708ec35978539a271b92851d",
+      "provenance": {
+        "method": "Codex contextual machine draft; English connection error context",
+        "date": "2026-10-18"
       }
     }
   }

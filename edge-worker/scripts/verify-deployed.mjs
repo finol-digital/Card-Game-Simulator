@@ -68,16 +68,18 @@ await Promise.all(socialRedirects.flatMap(([path, target]) => {
 }));
 
 // Check chains in small batches so the extra hops do not overwhelm the origin.
+let redirectChainChecks = Promise.resolve();
 for (const [path, target] of socialRedirects) {
   for (const scheme of ["http", "https"]) {
-    await Promise.all([path, `${path}?ignored=yes`, `${path}/`, `${path}/?ignored=yes`].flatMap(variant =>
+    redirectChainChecks = redirectChainChecks.then(() => Promise.all([path, `${path}?ignored=yes`, `${path}/`, `${path}/?ignored=yes`].flatMap(variant =>
       ["GET", "HEAD"].map(method => {
         const url = `${scheme}://cardgamesimulator.com${variant}`;
         return check(`${method} ${url}`, () => verifyRedirectChain(url, target, method));
       })
-    ));
+    )));
   }
 }
+await redirectChainChecks;
 
 await verifyRedirect("/PRIVACY.html", "https://www.cardgamesimulator.com/privacy/");
 

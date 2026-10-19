@@ -140,6 +140,8 @@ namespace Cgs.Play
             try
             {
                 var shareText = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
+                if (IsOnline)
+                    CgsNetManager.Instance.RecordRoomShare(shareText);
                 TextSharing.CopyOrShare(shareText, CardGameManager.Instance.Messenger.ShowSharingStatus, RoomIdIpCopiedMessage);
             }
             catch (Exception e)

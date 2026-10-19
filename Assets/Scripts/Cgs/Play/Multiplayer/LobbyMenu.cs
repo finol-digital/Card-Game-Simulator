@@ -30,7 +30,7 @@ namespace Cgs.Play.Multiplayer
             "For assistance, contact david@finoldigital.com";
 
         public const string InvalidPasswordWarningMessage =
-            "Password not applied: password length must be between 8 and 64 characters.";
+            LobbyPassword.InvalidPasswordMessage;
 
         public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
@@ -367,10 +367,22 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Host()
         {
+            if (!ValidatePassword())
+                return;
             if (StartHost())
                 Hide();
             else
                 ShowConnectionStartError();
+        }
+
+        private bool ValidatePassword()
+        {
+            if (!IsInternetConnectionSource || LobbyPassword.IsValid(_password))
+                return true;
+            Debug.Log(InvalidPasswordWarningMessage);
+            CardGameManager.Instance.Messenger.Show(new UiMessage("network.password.invalid",
+                InvalidPasswordWarningMessage), true);
+            return false;
         }
 
         private static void ShowConnectionStartError()
@@ -387,13 +399,6 @@ namespace Cgs.Play.Multiplayer
                 if (CardGameManager.Current.AutoUpdateUrl == null ||
                     !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
                     CardGameManager.Instance.Messenger.Show(new UiMessage("network.game.zip.warning", ShareWarningMessage));
-                if (!string.IsNullOrEmpty(_password) && _password.Length is < 8 or > 64)
-                {
-                    Debug.LogWarning(InvalidPasswordWarningMessage);
-                    CardGameManager.Instance.Messenger.Show(new UiMessage("network.password.invalid", InvalidPasswordWarningMessage), true);
-                    _password = string.Empty;
-                }
-
                 CgsNetManager.Instance.StartBroadcastHost(_password);
             }
             else
@@ -415,6 +420,8 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Join()
         {
+            if (!ValidatePassword())
+                return;
             if (IsInternetConnectionSource)
             {
                 if (Lobbies.TryGetValue(_selectedServer, out var lobby))
