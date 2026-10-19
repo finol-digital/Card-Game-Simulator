@@ -6,11 +6,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using NUnit.Framework;
 using Unity.Netcode;
+using Unity.Services.Lobbies;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
@@ -102,10 +104,31 @@ namespace Tests.PlayMode
         public void ConnectionEventsAreIncludedInExportableTrace()
         {
             SetRecording(true);
-            LobbyConnectionDiagnostics.Record("join-code-request", "trace-attempt", lobbyCode: "OGGI");
+            LobbyConnectionDiagnostics.Record("join-code-request", "trace-attempt",
+                new LobbyConnectionDiagnostics.Context { LobbyCode = "OGGI" });
 
             Assert.IsTrue(Entries.Any(entry => entry.Contains("join-code-request") &&
                 entry.Contains("trace-attempt") && entry.Contains("0:U+004F")));
+        }
+
+        [TestCase("join-code-failed")]
+        [TestCase("relay-join-failed")]
+        public void ConnectionFailuresAreCapturedOnceThroughUnityErrorLog(string stage)
+        {
+            SetRecording(true);
+            var error = new LobbyServiceException(LobbyExceptionReason.InvalidJoinCode,
+                "Rejected O (U+004F) at index 0");
+            LogAssert.Expect(LogType.Error, new Regex("\\[CgsNet Connection\\].*trace-failure"));
+
+            LobbyConnectionDiagnostics.Record(stage, "trace-failure",
+                new LobbyConnectionDiagnostics.Context { LobbyCode = "OGGI" }, error);
+
+            var failures = Entries.Where(entry => entry.Contains("trace-failure")).ToArray();
+            Assert.That(failures, Has.Length.EqualTo(1));
+            StringAssert.Contains(stage, failures[0]);
+            StringAssert.Contains("InvalidJoinCode", failures[0]);
+            StringAssert.Contains("Rejected O (U+004F) at index 0", failures[0]);
+            StringAssert.Contains("0:U+004F", failures[0]);
         }
 
         [Test]

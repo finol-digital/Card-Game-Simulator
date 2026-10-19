@@ -145,7 +145,7 @@ namespace Tests.PlayMode
         {
             var password = new string('x', 65);
             var attempts = 0;
-            var error = Assert.ThrowsAsync<ArgumentException>(async () => await LobbyPassword.JoinAsync(password, _ =>
+            var error = Assert.Throws<ArgumentException>(() => LobbyPassword.JoinAsync(password, _ =>
             {
                 attempts++;
                 return Task.FromResult(true);
@@ -153,6 +153,12 @@ namespace Tests.PlayMode
             Assert.That(attempts, Is.Zero);
             Assert.That(error.Message, Does.Not.Contain(password));
             Assert.Throws<ArgumentException>(() => LobbyPassword.ToServicePassword(password));
+        }
+
+        [Test]
+        public void MissingJoinOperationIsRejectedSynchronously()
+        {
+            Assert.Throws<ArgumentNullException>(() => LobbyPassword.JoinAsync<bool>("password", null));
         }
 
         [Test]

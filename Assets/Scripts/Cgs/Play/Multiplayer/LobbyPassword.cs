@@ -38,11 +38,17 @@ namespace Cgs.Play.Multiplayer
             return BitConverter.ToString(sha256.ComputeHash(bytes)).Replace("-", "").ToLowerInvariant();
         }
 
-        public static async Task<T> JoinAsync<T>(string password, Func<string, Task<T>> join)
+        public static Task<T> JoinAsync<T>(string password, Func<string, Task<T>> join)
         {
             if (join == null)
                 throw new ArgumentNullException(nameof(join));
             var servicePassword = ToServicePassword(password);
+            return JoinServiceAsync(password, servicePassword, join);
+        }
+
+        private static async Task<T> JoinServiceAsync<T>(string password, string servicePassword,
+            Func<string, Task<T>> join)
+        {
             try
             {
                 return await join(servicePassword);

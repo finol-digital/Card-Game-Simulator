@@ -46,7 +46,8 @@ namespace Tests.PlayMode
         public void DiagnosticsDistinguishLettersDigitsAndInvisibleCharacters()
         {
             const string code = "O0I1 \u200B\r\n";
-            var entry = LobbyConnectionDiagnostics.FormatEvent("join-code-request", Reference, lobbyCode: code);
+            var entry = LobbyConnectionDiagnostics.FormatEvent("join-code-request", Reference,
+                new LobbyConnectionDiagnostics.Context { LobbyCode = code });
             var record = Parse(entry);
             Assert.That((string)record["lobbyCode"]["value"], Is.EqualTo(code));
             Assert.That((int)record["lobbyCode"]["length"], Is.EqualTo(8));
@@ -64,8 +65,12 @@ namespace Tests.PlayMode
         [Test]
         public void SharedLobbyAndRelayCodesHaveSeparateLabels()
         {
-            var record = Parse(LobbyConnectionDiagnostics.FormatEvent("room-share", null, "lobby-id",
-                "OGGI", "ABC123", "OGGI", "UnityTransport"));
+            var record = Parse(LobbyConnectionDiagnostics.FormatEvent("room-share", null,
+                new LobbyConnectionDiagnostics.Context
+                {
+                    LobbyId = "lobby-id", LobbyCode = "OGGI", RelayCode = "ABC123",
+                    SharedCode = "OGGI", Transport = "UnityTransport"
+                }));
             Assert.That((string)record["lobbyCode"]["value"], Is.EqualTo("OGGI"));
             Assert.That((string)record["relayCode"]["value"], Is.EqualTo("ABC123"));
             Assert.That((string)record["sharedCode"]["value"], Is.EqualTo("OGGI"));
@@ -78,7 +83,7 @@ namespace Tests.PlayMode
             var error = new AggregateException(new LobbyServiceException(
                 LobbyExceptionReason.InvalidJoinCode, "Rejected O (U+004F) at index 0"));
             var record = Parse(LobbyConnectionDiagnostics.FormatEvent("join-code-failed", Reference,
-                lobbyCode: "OGGI", error: error));
+                new LobbyConnectionDiagnostics.Context { LobbyCode = "OGGI" }, error));
             var serviceError = record["errors"][1];
             Assert.That((string)serviceError["reason"], Is.EqualTo("InvalidJoinCode"));
             Assert.That((int)serviceError["errorCode"], Is.EqualTo(16010));
@@ -89,7 +94,7 @@ namespace Tests.PlayMode
         public void LargeInputIsBoundedWithoutLosingOriginalLength()
         {
             var record = Parse(LobbyConnectionDiagnostics.FormatEvent("join-code-request", Reference,
-                lobbyCode: new string('A', 10000)));
+                new LobbyConnectionDiagnostics.Context { LobbyCode = new string('A', 10000) }));
             Assert.That((int)record["lobbyCode"]["length"], Is.EqualTo(10000));
             Assert.That(((string)record["lobbyCode"]["value"]).Length, Is.EqualTo(64));
             Assert.That((bool)record["lobbyCode"]["truncated"], Is.True);

@@ -14,6 +14,15 @@ namespace Cgs.Play.Multiplayer
 {
     public static class LobbyConnectionDiagnostics
     {
+        public sealed class Context
+        {
+            public string LobbyId { get; set; }
+            public string LobbyCode { get; set; }
+            public string RelayCode { get; set; }
+            public string SharedCode { get; set; }
+            public string Transport { get; set; }
+        }
+
         private const int MaxCodeLength = 64;
         private const string InvalidCodeMessage = "The game service rejected this Room Id. " +
             "Try selecting the host from the Internet game list, or ask the host to create a new room. ";
@@ -63,9 +72,8 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        public static string FormatEvent(string stage, string reference, string lobbyId = null,
-            string lobbyCode = null, string relayCode = null, string sharedCode = null,
-            string transport = null, Exception error = null)
+        public static string FormatEvent(string stage, string reference, Context context = null,
+            Exception error = null)
         {
             return "[CgsNet Connection] " + JsonConvert.SerializeObject(new
             {
@@ -78,11 +86,11 @@ namespace Cgs.Play.Multiplayer
                 unity = Application.unityVersion,
                 project = Application.cloudProjectId,
                 lobbySdk = typeof(LobbyService).Assembly.GetName().Version.ToString(),
-                transport,
-                lobbyId,
-                lobbyCode = DescribeCode(lobbyCode),
-                relayCode = DescribeCode(relayCode),
-                sharedCode = DescribeCode(sharedCode),
+                transport = context?.Transport,
+                lobbyId = context?.LobbyId,
+                lobbyCode = DescribeCode(context?.LobbyCode),
+                relayCode = DescribeCode(context?.RelayCode),
+                sharedCode = DescribeCode(context?.SharedCode),
                 errors = Exceptions(error).Select(item => new
                 {
                     type = item.GetType().FullName,
@@ -94,12 +102,11 @@ namespace Cgs.Play.Multiplayer
             }, new JsonSerializerSettings { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
 
-        public static void Record(string stage, string reference, string lobbyId = null,
-            string lobbyCode = null, string relayCode = null, string sharedCode = null,
-            string transport = null, Exception error = null)
+        public static void Record(string stage, string reference, Context context = null, Exception error = null)
         {
-            var entry = FormatEvent(stage, reference, lobbyId, lobbyCode, relayCode, sharedCode, transport, error);
+            var entry = FormatEvent(stage, reference, context, error);
             if (error != null)
+                // CgsNetDiagnostics.OnLog captures errors; recording again would duplicate them.
                 Debug.LogError(entry);
             else
             {

@@ -113,8 +113,12 @@ namespace Cgs.Play.Multiplayer
             var relayCode = CurrentLobby?.Data != null &&
                             CurrentLobby.Data.TryGetValue(LobbyData.KeyRelayJoinCode, out var relay)
                 ? relay.Value : null;
-            LobbyConnectionDiagnostics.Record("room-share", null, CurrentLobby?.Id,
-                CurrentLobby?.LobbyCode, relayCode, sharedCode, NetworkConfig.NetworkTransport.GetType().Name);
+            LobbyConnectionDiagnostics.Record("room-share", null, new LobbyConnectionDiagnostics.Context
+            {
+                LobbyId = CurrentLobby?.Id, LobbyCode = CurrentLobby?.LobbyCode,
+                RelayCode = relayCode, SharedCode = sharedCode,
+                Transport = NetworkConfig.NetworkTransport.GetType().Name
+            });
         }
 
         protected void Start()
@@ -134,6 +138,7 @@ namespace Cgs.Play.Multiplayer
             {
                 Debug.LogException(ex);
                 Debug.LogError("[CgsNet] Sign in anonymously failed!");
+                throw;
             }
         }
 
@@ -196,8 +201,11 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet] Created lobby with lobby code {createLobbyUtilityTask.Result.LobbyCode} success!");
 
             CurrentLobby = createLobbyUtilityTask.Result;
-            LobbyConnectionDiagnostics.Record("lobby-created", null, CurrentLobby.Id,
-                CurrentLobby.LobbyCode, relayServerData.Item2, transport: Transport.GetType().Name);
+            LobbyConnectionDiagnostics.Record("lobby-created", null, new LobbyConnectionDiagnostics.Context
+            {
+                LobbyId = CurrentLobby.Id, LobbyCode = CurrentLobby.LobbyCode,
+                RelayCode = relayServerData.Item2, Transport = Transport.GetType().Name
+            });
 
             while (IsOnline)
             {
@@ -417,7 +425,8 @@ namespace Cgs.Play.Multiplayer
         private IEnumerator JoinLobbyByCodeCoroutine(string lobbyCode, string password)
         {
             var reference = Guid.NewGuid().ToString("N");
-            LobbyConnectionDiagnostics.Record("join-code-start", reference, lobbyCode: lobbyCode);
+            LobbyConnectionDiagnostics.Record("join-code-start", reference,
+                new LobbyConnectionDiagnostics.Context { LobbyCode = lobbyCode });
             if (!AuthenticationService.Instance.IsSignedIn)
             {
                 var signInTask = SignInAnonymouslyAsync();
@@ -430,7 +439,8 @@ namespace Cgs.Play.Multiplayer
                 }
             }
 
-            LobbyConnectionDiagnostics.Record("join-code-request", reference, lobbyCode: lobbyCode);
+            LobbyConnectionDiagnostics.Record("join-code-request", reference,
+                new LobbyConnectionDiagnostics.Context { LobbyCode = lobbyCode });
             var joinLobbyTask = JoinLobbyByCode(lobbyCode, password);
             while (!joinLobbyTask.IsCompleted)
                 yield return null;
@@ -442,8 +452,8 @@ namespace Cgs.Play.Multiplayer
             }
 
             CurrentLobby = joinLobbyTask.Result;
-            LobbyConnectionDiagnostics.Record("join-code-succeeded", reference, CurrentLobby.Id,
-                CurrentLobby.LobbyCode);
+            LobbyConnectionDiagnostics.Record("join-code-succeeded", reference,
+                new LobbyConnectionDiagnostics.Context { LobbyId = CurrentLobby.Id, LobbyCode = CurrentLobby.LobbyCode });
             if (CurrentLobby is { Data: { } } &&
                 CurrentLobby.Data.TryGetValue(LobbyData.KeyRelayJoinCode, out var dataObject))
             {
@@ -458,7 +468,8 @@ namespace Cgs.Play.Multiplayer
 
         private static void ShowLobbyJoinFailure(string stage, string reference, string lobbyCode, Exception error)
         {
-            LobbyConnectionDiagnostics.Record(stage, reference, lobbyCode: lobbyCode, error: error);
+            LobbyConnectionDiagnostics.Record(stage, reference,
+                new LobbyConnectionDiagnostics.Context { LobbyCode = lobbyCode }, error);
             CardGameManager.Instance.Messenger.Show(LobbyConnectionDiagnostics.JoinFailureMessage(error, reference));
         }
 
@@ -483,16 +494,18 @@ namespace Cgs.Play.Multiplayer
         private IEnumerator JoinRelayCoroutine(string relayJoinCode, string reference = null)
         {
             reference ??= Guid.NewGuid().ToString("N");
-            LobbyConnectionDiagnostics.Record("relay-join-request", reference, CurrentLobby?.Id,
-                CurrentLobby?.LobbyCode, relayJoinCode);
+            var context = new LobbyConnectionDiagnostics.Context
+            {
+                LobbyId = CurrentLobby?.Id, LobbyCode = CurrentLobby?.LobbyCode, RelayCode = relayJoinCode
+            };
+            LobbyConnectionDiagnostics.Record("relay-join-request", reference, context);
             var clientRelayUtilityTask = JoinRelay(relayJoinCode);
             while (!clientRelayUtilityTask.IsCompleted)
                 yield return null;
 
             if (clientRelayUtilityTask.IsFaulted)
             {
-                LobbyConnectionDiagnostics.Record("relay-join-failed", reference, CurrentLobby?.Id,
-                    CurrentLobby?.LobbyCode, relayJoinCode, error: clientRelayUtilityTask.Exception);
+                LobbyConnectionDiagnostics.Record("relay-join-failed", reference, context, clientRelayUtilityTask.Exception);
                 CardGameManager.Instance.Messenger.Show(
                     LobbyConnectionDiagnostics.JoinFailureMessage(clientRelayUtilityTask.Exception, reference));
                 yield break;
@@ -506,8 +519,8 @@ namespace Cgs.Play.Multiplayer
             Transports.RelayUnityTransport.UseWebSockets = true;
 #endif
             var started = StartClient();
-            LobbyConnectionDiagnostics.Record("relay-client-start", reference, CurrentLobby?.Id,
-                CurrentLobby?.LobbyCode, transport: Transport.GetType().Name,
+            context.Transport = Transport.GetType().Name;
+            LobbyConnectionDiagnostics.Record("relay-client-start", reference, context,
                 error: started ? null : new InvalidOperationException("The network client could not start."));
             if (!started)
             {
