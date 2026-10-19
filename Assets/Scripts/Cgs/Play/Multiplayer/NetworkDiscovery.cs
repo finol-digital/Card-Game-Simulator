@@ -1,6 +1,11 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 // https://github.com/Unity-Technologies/multiplayer-community-contributions/tree/main/com.community.netcode.extensions/Runtime/NetworkDiscovery
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -25,6 +30,8 @@ namespace Cgs.Play.Multiplayer
         }
 
         private UdpClient _mClient;
+        private const string BroadcastErrorMessage = "Unable to send LAN discovery request to ";
+        private const string ReceiveErrorMessage = "Unable to receive LAN discovery packets: ";
 
         [FormerlySerializedAs("m_Port")] [SerializeField]
         private ushort mPort = 47777;
@@ -56,6 +63,11 @@ namespace Cgs.Play.Multiplayer
             StopDiscovery();
         }
 
+        protected void OnDestroy()
+        {
+            StopDiscovery();
+        }
+
         private void OnValidate()
         {
             if (mUniqueApplicationId != 0)
@@ -74,22 +86,43 @@ namespace Cgs.Play.Multiplayer
                     "Cannot send client broadcast while not running in client mode. Call StartClient first.");
             }
 
-            var endPoint = new IPEndPoint(IPAddress.Broadcast, mPort);
-
             using var writer = new FastBufferWriter(1024, Allocator.Temp, 1024 * 64);
             WriteHeader(writer, MessageType.BroadCast);
 
             writer.WriteNetworkSerializable(broadCast);
             var data = writer.ToArray();
 
-            try
+            // Directed broadcasts let routing reach each connected subnet instead of relying
+            // on the single interface chosen for 255.255.255.255. Refresh on each search.
+            _ = SendBroadcastsAsync(_mClient, data);
+        }
+
+        protected virtual IEnumerable<IPAddress> GetBroadcastAddresses()
+        {
+            return LanDiscoveryAddresses.GetBroadcastAddresses();
+        }
+
+        private async Task SendBroadcastsAsync(UdpClient client, byte[] data)
+        {
+            foreach (var address in GetBroadcastAddresses())
             {
-                // This works because PooledBitStream.Get resets the position to 0 so the array segment will always start from 0.
-                _mClient.SendAsync(data, data.Length, endPoint);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
+                if (client != _mClient)
+                    return;
+
+                try
+                {
+                    await client.SendAsync(data, data.Length, new IPEndPoint(address, mPort));
+                }
+                catch (ObjectDisposedException)
+                {
+                    return;
+                }
+                catch (SocketException e)
+                {
+                    if (client != _mClient)
+                        return;
+                    Debug.LogWarning(BroadcastErrorMessage + address + ": " + e.Message);
+                }
             }
         }
 
@@ -150,42 +183,51 @@ namespace Cgs.Play.Multiplayer
         {
             StopDiscovery();
 
-            IsServer = isServer;
-            IsClient = !isServer;
-
             // If we are not a server we use the 0 port (let udp client assign a free port to us)
             var port = isServer ? mPort : 0;
 
             _mClient = new UdpClient(port) {EnableBroadcast = true, MulticastLoopback = false};
 
-            _ = ListenAsync(isServer ? ReceiveBroadcastAsync : new Func<Task>(ReceiveResponseAsync));
-
+            IsServer = isServer;
+            IsClient = !isServer;
             IsRunning = true;
+            _ = ListenAsync(_mClient, isServer);
         }
 
-        private async Task ListenAsync(Func<Task> onReceiveTask)
+        private async Task ListenAsync(UdpClient client, bool isServer)
         {
-            while (true)
+            // A stopped listener must never consume packets from a replacement socket.
+            while (client == _mClient)
             {
                 try
                 {
-                    await onReceiveTask();
+                    if (isServer)
+                        await ReceiveBroadcastAsync(client);
+                    else
+                        await ReceiveResponseAsync(client);
                 }
                 catch (ObjectDisposedException)
                 {
                     // socket has been closed
                     break;
                 }
-                catch (Exception)
+                catch (SocketException e)
                 {
-                    // ignored
+                    if (client == _mClient)
+                    {
+                        Debug.LogWarning(ReceiveErrorMessage + e.Message);
+                        StopDiscovery();
+                    }
+                    break;
                 }
             }
         }
 
-        private async Task ReceiveResponseAsync()
+        private async Task ReceiveResponseAsync(UdpClient client)
         {
-            var udpReceiveResult = await _mClient.ReceiveAsync();
+            var udpReceiveResult = await client.ReceiveAsync();
+            if (client != _mClient)
+                return;
 
             var segment = new ArraySegment<byte>(udpReceiveResult.Buffer, 0, udpReceiveResult.Buffer.Length);
             using var reader = new FastBufferReader(segment, Allocator.Persistent);
@@ -206,9 +248,11 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private async Task ReceiveBroadcastAsync()
+        private async Task ReceiveBroadcastAsync(UdpClient client)
         {
-            var udpReceiveResult = await _mClient.ReceiveAsync();
+            var udpReceiveResult = await client.ReceiveAsync();
+            if (client != _mClient)
+                return;
 
             var segment = new ArraySegment<byte>(udpReceiveResult.Buffer, 0, udpReceiveResult.Buffer.Length);
             using var reader = new FastBufferReader(segment, Allocator.Persistent);
@@ -230,7 +274,7 @@ namespace Cgs.Play.Multiplayer
                     writer.WriteNetworkSerializable(response);
                     var data = writer.ToArray();
 
-                    await _mClient.SendAsync(data, data.Length, udpReceiveResult.RemoteEndPoint);
+                    await client.SendAsync(data, data.Length, udpReceiveResult.RemoteEndPoint);
                 }
             }
             catch (Exception e)

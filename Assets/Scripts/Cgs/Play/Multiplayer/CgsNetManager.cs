@@ -321,14 +321,15 @@ namespace Cgs.Play.Multiplayer
             StopLanDiscovery();
             Discovery.OnServerFound = (sender, response) => onServerFound(sender.Address.ToString(), response);
             Discovery.StartClient();
+            Discovery.ClientBroadcast(new DiscoveryBroadcastData());
         }
 
         public void RefreshLanDiscovery()
         {
             if (BrowserLanTransport.IsBrowser)
                 BrowserTransport.StartDiscovery();
-            else if (Discovery.IsRunning)
-                Discovery.ClientBroadcast(new DiscoveryBroadcastData());
+            else if (_cgsNetDiscovery != null && _cgsNetDiscovery.IsClient)
+                _cgsNetDiscovery.ClientBroadcast(new DiscoveryBroadcastData());
         }
 
         public void StopLanDiscovery()
