@@ -131,6 +131,112 @@ namespace Tests.PlayMode
             StringAssert.Contains("0:U+004F", failures[0]);
         }
 
+        private void TrackRelayAttempt()
+        {
+            SetRecording(true);
+            typeof(CgsNetManager).GetMethod("TrackRelayConnection", PrivateInstance).Invoke(_manager,
+                new object[] { "relay-attempt", new LobbyConnectionDiagnostics.Context { LobbyId = "lobby-id" } });
+        }
+
+        private void RaiseClientEvent(string eventName, ulong clientId)
+        {
+            var connection = typeof(NetworkManager).GetField("ConnectionManager", PrivateInstance).GetValue(_manager);
+            var callback = (System.Action<ulong>)connection.GetType()
+                .GetField(eventName, PrivateInstance | BindingFlags.Public).GetValue(connection);
+            callback?.Invoke(clientId);
+        }
+
+        private static void WithQueuedMessenger(System.Action<Dialog> action)
+        {
+            var instance = typeof(Cgs.CardGameManager).GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic);
+            var previous = instance.GetValue(null);
+            var root = new GameObject("Inactive connection error dialog");
+            root.SetActive(false);
+            try
+            {
+                var manager = root.AddComponent<Cgs.CardGameManager>();
+                instance.SetValue(null, manager);
+                var dialogObject = new GameObject("Queued connection dialog");
+                dialogObject.transform.SetParent(root.transform);
+                var dialog = dialogObject.AddComponent<Dialog>();
+                typeof(Cgs.CardGameManager).GetField("messenger", PrivateInstance).SetValue(manager, dialog);
+                action(dialog);
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+                instance.SetValue(null, previous);
+            }
+        }
+
+        private static object[] QueuedMessages(Dialog dialog) =>
+            ((IEnumerable)typeof(Dialog).GetProperty("MessageQueue", PrivateInstance).GetValue(dialog)).Cast<object>().ToArray();
+
+        [Test]
+        public void RelayDisconnectBeforeConnectionReportsAttemptOnlyOnce()
+        {
+            WithQueuedMessenger(dialog =>
+            {
+                TrackRelayAttempt();
+                // A callback for another client must not consume this attempt.
+                RaiseClientEvent("OnClientDisconnectCallback", _manager.LocalClientId + 1);
+                Assert.That(QueuedMessages(dialog), Is.Empty);
+                LogAssert.Expect(LogType.Error, new Regex("\\[CgsNet Connection\\].*relay-client-disconnected.*relay-attempt"));
+                RaiseClientEvent("OnClientDisconnectCallback", _manager.LocalClientId);
+                RaiseClientEvent("OnClientDisconnectCallback", _manager.LocalClientId);
+
+                var messages = QueuedMessages(dialog);
+                Assert.That(messages, Has.Length.EqualTo(1));
+                var localized = (Cgs.Localization.UiMessage)messages[0].GetType().GetField("Localized").GetValue(messages[0]);
+                StringAssert.Contains("relay-attempt", localized.English);
+                Assert.That(Entries.Count(entry => entry.Contains("relay-client-disconnected") &&
+                    entry.Contains("relay-attempt") && entry.Contains("lobby-id")), Is.EqualTo(1));
+            });
+        }
+
+        [Test]
+        public void EstablishedRelayConnectionIsNotReportedAsAFailedJoin()
+        {
+            TrackRelayAttempt();
+            RaiseClientEvent("OnClientConnectedCallback", _manager.LocalClientId + 1);
+            Assert.That(Entries.Any(entry => entry.Contains("relay-client-connected")), Is.False);
+            RaiseClientEvent("OnClientConnectedCallback", _manager.LocalClientId);
+            RaiseClientEvent("OnClientDisconnectCallback", _manager.LocalClientId);
+
+            Assert.That(Entries.Count(entry => entry.Contains("relay-client-connected") &&
+                entry.Contains("relay-attempt")), Is.EqualTo(1));
+            Assert.That(Entries.Any(entry => entry.Contains("relay-client-disconnected")), Is.False);
+        }
+
+        [Test]
+        public void StoppingIntentionallyCancelsPendingRelayFailureNotification()
+        {
+            TrackRelayAttempt();
+            _manager.Stop();
+            RaiseClientEvent("OnClientDisconnectCallback", _manager.LocalClientId);
+
+            Assert.That(Entries.Any(entry => entry.Contains("relay-client-disconnected")), Is.False);
+        }
+
+        [TestCase("sign-in-failed")]
+        [TestCase("join-id-failed")]
+        public void JoinByIdFailuresRetainReferenceAndLobbyIdentifier(string stage)
+        {
+            WithQueuedMessenger(dialog =>
+            {
+                SetRecording(true);
+                LogAssert.Expect(LogType.Error, new Regex("\\[CgsNet Connection\\].*id-attempt"));
+                typeof(CgsNetManager).GetMethod("ShowLobbyJoinFailure", BindingFlags.Static | BindingFlags.NonPublic)
+                    .Invoke(null, new object[] { stage, "id-attempt",
+                        new LobbyConnectionDiagnostics.Context { LobbyId = "lobby-id" },
+                        new System.InvalidOperationException("Service unavailable") });
+
+                Assert.That(QueuedMessages(dialog), Has.Length.EqualTo(1));
+                Assert.That(Entries.Any(entry => entry.Contains(stage) && entry.Contains("id-attempt") &&
+                    entry.Contains("lobby-id") && entry.Contains("Service unavailable")), Is.True);
+            });
+        }
+
         [Test]
         public void ToolbarKeepsIndependentCanvasScalingInPlayScene()
         {

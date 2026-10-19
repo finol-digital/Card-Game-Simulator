@@ -31,6 +31,9 @@ namespace Cgs.Play.Multiplayer
 
         private const int DefaultPort = 7777;
         private const int MaxPlayers = 10;
+        private const string RelayClientDisconnectedErrorMessage = "The network client disconnected before joining the host.";
+        private string _relayJoinReference;
+        private LobbyConnectionDiagnostics.Context _relayJoinContext;
 
         public static CgsNetManager Instance => (CgsNetManager)Singleton;
 
@@ -360,6 +363,9 @@ namespace Cgs.Play.Multiplayer
 
         private IEnumerator JoinLobbyByIdCoroutine(string lobbyId, string password)
         {
+            var reference = Guid.NewGuid().ToString("N");
+            var context = new LobbyConnectionDiagnostics.Context { LobbyId = lobbyId };
+            LobbyConnectionDiagnostics.Record("join-id-start", reference, context);
             if (!AuthenticationService.Instance.IsSignedIn)
             {
                 var signInTask = SignInAnonymouslyAsync();
@@ -367,29 +373,29 @@ namespace Cgs.Play.Multiplayer
                     yield return null;
                 if (signInTask.IsFaulted)
                 {
-                    Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
+                    ShowLobbyJoinFailure("sign-in-failed", reference, context, signInTask.Exception);
                     yield break;
                 }
             }
 
+            LobbyConnectionDiagnostics.Record("join-id-request", reference, context);
             var joinLobbyTask = JoinLobbyById(lobbyId, password);
             while (!joinLobbyTask.IsCompleted)
                 yield return null;
 
             if (joinLobbyTask.IsFaulted)
             {
-                Debug.LogError(GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(
-                    UiMessage.With("errors.connection", GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message, ("detail", joinLobbyTask.Exception?.Message)));
+                ShowLobbyJoinFailure("join-id-failed", reference, context, joinLobbyTask.Exception);
                 yield break;
             }
 
             CurrentLobby = joinLobbyTask.Result;
+            context.LobbyCode = CurrentLobby.LobbyCode;
+            LobbyConnectionDiagnostics.Record("join-id-succeeded", reference, context);
             if (CurrentLobby is { Data: { } } &&
                 CurrentLobby.Data.TryGetValue(LobbyData.KeyRelayJoinCode, out var dataObject))
             {
-                yield return JoinRelayCoroutine(dataObject.Value);
+                yield return JoinRelayCoroutine(dataObject.Value, reference);
             }
             else
             {
@@ -425,8 +431,8 @@ namespace Cgs.Play.Multiplayer
         private IEnumerator JoinLobbyByCodeCoroutine(string lobbyCode, string password)
         {
             var reference = Guid.NewGuid().ToString("N");
-            LobbyConnectionDiagnostics.Record("join-code-start", reference,
-                new LobbyConnectionDiagnostics.Context { LobbyCode = lobbyCode });
+            var context = new LobbyConnectionDiagnostics.Context { LobbyCode = lobbyCode };
+            LobbyConnectionDiagnostics.Record("join-code-start", reference, context);
             if (!AuthenticationService.Instance.IsSignedIn)
             {
                 var signInTask = SignInAnonymouslyAsync();
@@ -434,20 +440,19 @@ namespace Cgs.Play.Multiplayer
                     yield return null;
                 if (signInTask.IsFaulted)
                 {
-                    ShowLobbyJoinFailure("sign-in-failed", reference, lobbyCode, signInTask.Exception);
+                    ShowLobbyJoinFailure("sign-in-failed", reference, context, signInTask.Exception);
                     yield break;
                 }
             }
 
-            LobbyConnectionDiagnostics.Record("join-code-request", reference,
-                new LobbyConnectionDiagnostics.Context { LobbyCode = lobbyCode });
+            LobbyConnectionDiagnostics.Record("join-code-request", reference, context);
             var joinLobbyTask = JoinLobbyByCode(lobbyCode, password);
             while (!joinLobbyTask.IsCompleted)
                 yield return null;
 
             if (joinLobbyTask.IsFaulted)
             {
-                ShowLobbyJoinFailure("join-code-failed", reference, lobbyCode, joinLobbyTask.Exception);
+                ShowLobbyJoinFailure("join-code-failed", reference, context, joinLobbyTask.Exception);
                 yield break;
             }
 
@@ -466,10 +471,10 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private static void ShowLobbyJoinFailure(string stage, string reference, string lobbyCode, Exception error)
+        private static void ShowLobbyJoinFailure(string stage, string reference,
+            LobbyConnectionDiagnostics.Context context, Exception error)
         {
-            LobbyConnectionDiagnostics.Record(stage, reference,
-                new LobbyConnectionDiagnostics.Context { LobbyCode = lobbyCode }, error);
+            LobbyConnectionDiagnostics.Record(stage, reference, context, error);
             CardGameManager.Instance.Messenger.Show(LobbyConnectionDiagnostics.JoinFailureMessage(error, reference));
         }
 
@@ -518,12 +523,14 @@ namespace Cgs.Play.Multiplayer
 #if UNITY_WEBGL && !UNITY_EDITOR
             Transports.RelayUnityTransport.UseWebSockets = true;
 #endif
-            var started = StartClient();
             context.Transport = Transport.GetType().Name;
+            TrackRelayConnection(reference, context);
+            var started = StartClient();
             LobbyConnectionDiagnostics.Record("relay-client-start", reference, context,
                 error: started ? null : new InvalidOperationException("The network client could not start."));
             if (!started)
             {
+                ClearRelayConnectionTracking();
                 CardGameManager.Instance.Messenger.Show(LobbyConnectionDiagnostics.JoinFailureMessage(null, reference));
                 yield break;
             }
@@ -534,6 +541,44 @@ namespace Cgs.Play.Multiplayer
             UpdatePlayerRelayInfoAsync(relayServerData.AllocationId.ToString(),
                 relayServerData.ConnectionData.ToString());
 #pragma warning restore CS4014
+        }
+
+        private void TrackRelayConnection(string reference, LobbyConnectionDiagnostics.Context context)
+        {
+            ClearRelayConnectionTracking();
+            _relayJoinReference = reference;
+            _relayJoinContext = context;
+            OnClientConnectedCallback += OnRelayClientConnected;
+            OnClientDisconnectCallback += OnRelayClientDisconnected;
+        }
+
+        private void ClearRelayConnectionTracking()
+        {
+            OnClientConnectedCallback -= OnRelayClientConnected;
+            OnClientDisconnectCallback -= OnRelayClientDisconnected;
+            _relayJoinReference = null;
+            _relayJoinContext = null;
+        }
+
+        private void OnRelayClientConnected(ulong clientId)
+        {
+            if (_relayJoinReference == null || clientId != LocalClientId)
+                return;
+            var reference = _relayJoinReference;
+            var context = _relayJoinContext;
+            ClearRelayConnectionTracking();
+            LobbyConnectionDiagnostics.Record("relay-client-connected", reference, context);
+        }
+
+        private void OnRelayClientDisconnected(ulong clientId)
+        {
+            if (_relayJoinReference == null || clientId != LocalClientId)
+                return;
+            var reference = _relayJoinReference;
+            var context = _relayJoinContext;
+            ClearRelayConnectionTracking();
+            ShowLobbyJoinFailure("relay-client-disconnected", reference, context,
+                new InvalidOperationException(RelayClientDisconnectedErrorMessage + " " + DisconnectReason));
         }
 
         private static async Task<RelayServerData> JoinRelay(string relayJoinCode)
@@ -576,6 +621,7 @@ namespace Cgs.Play.Multiplayer
 
         public void Stop()
         {
+            ClearRelayConnectionTracking();
             StopLanDiscovery();
             Shutdown();
             CurrentLobby = null;

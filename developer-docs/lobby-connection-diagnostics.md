@@ -30,8 +30,10 @@ passwords, authentication tokens, or relay allocation keys.
 | `join-code-start` / `join-code-request` | Client input before sign-in and immediately before calling the lobby API |
 | `join-code-failed` | Same attempt reference, SDK exception type, service reason/error code, messages and stack traces |
 | `join-code-succeeded` | Lobby ID and lobby code returned by the service |
+| `join-id-start` / `join-id-request` / `join-id-failed` / `join-id-succeeded` | The same reference-aware stages when selecting the host from the Internet list, with the lobby ID labeled separately |
 | `relay-join-request` / `relay-join-failed` | The separate relay stage after a successful lobby join |
 | `relay-client-start` | Whether Netcode accepted the start request; this does not prove the client connected |
+| `relay-client-connected` / `relay-client-disconnected` | Connection confirmation, or a disconnect before connection with the same attempt reference and Netcode disconnect reason; intentionally leaving cancels the pending error notification |
 
 Each event includes UTC time, app/build/Unity version, platform, cloud project ID,
 and lobby SDK assembly version (which may not equal the package version). Match
