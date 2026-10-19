@@ -68,7 +68,7 @@ Everyone should use compatible CGS app versions and the same card game and game 
 
 1. Select the game on the main menu, then choose **Multi-player**. This opens the lobby for both hosting and joining.
 2. Choose **Internet** in the lobby.
-3. If you want a room password, enter one with **8–64 characters**, then choose **Host**. An invalid-length password is not applied; check any warning before sharing the room.
+3. If you want a room password, enter one with **1–64 characters**, then choose **Host**. Leave it empty for no password. An invalid password prevents hosting until you correct it. Players on older CGS versions may need to update before joining a password-protected room.
 4. Once hosting has succeeded, share the **Room Id** displayed in the scoreboard area, plus the room password if you set one. Players should join this room instead of each creating their own table.
 5. Follow the game's deck/setup prompts. A game with a shared deck may need only the host to load it; a game with individual decks needs each player's deck. Avoid loading duplicate shared decks.
 

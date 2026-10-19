@@ -99,6 +99,16 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void ConnectionEventsAreIncludedInExportableTrace()
+        {
+            SetRecording(true);
+            LobbyConnectionDiagnostics.Record("join-code-request", "trace-attempt", lobbyCode: "OGGI");
+
+            Assert.IsTrue(Entries.Any(entry => entry.Contains("join-code-request") &&
+                entry.Contains("trace-attempt") && entry.Contains("0:U+004F")));
+        }
+
+        [Test]
         public void ToolbarKeepsIndependentCanvasScalingInPlayScene()
         {
             SetRecording(true);

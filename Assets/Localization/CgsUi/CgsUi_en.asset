@@ -1252,8 +1252,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649573
   - m_Id: 6646181277698
-    m_Localized: 'Password not applied: password length must be between 8 and 64
-      characters.'
+    m_Localized: "Password must contain 1\u201364 characters, or be empty for no
+      password. Please correct it and try again."
     m_Metadata:
       m_Items:
       - rid: 7133309421012649574
@@ -2064,6 +2064,21 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309658329251991
+  - m_Id: 4715992412774400
+    m_Localized: 'The game service rejected this Room Id. Try selecting the host
+      from the Internet game list, or ask the host to create a new room. Reference:
+      {reference}'
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277315
+      - rid: 7133309715749011547
+  - m_Id: 4715992727347200
+    m_Localized: 'Unable to join the game. Check that the host is still online and
+      the room password is correct, then try again. Reference: {reference}'
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277315
+      - rid: 7133309715749011548
   references:
     version: 2
     RefIds:
@@ -2123,6 +2138,8 @@ MonoBehaviour:
         - id: 18086220935170
         - id: 18086220935171
         - id: 18086220935172
+        - id: 4715992412774400
+        - id: 4715992727347200
     - rid: 7133309420632277316
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3633,9 +3650,10 @@ MonoBehaviour:
     - rid: 7133309421012649574
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"Password not applied: password length must be between
-          8 and 64 characters.","context":"CGS runtime network.password.invalid presentation;
-          keep supplied names and model data unchanged.","arguments":{},"smart":false}'
+        m_CommentText: "{\"text\":\"Password must contain 1\u201364 characters, or
+          be empty for no password. Please correct it and try again.\",\"context\":\"Invalid
+          Internet room password. Hosting/joining is blocked, the typed password
+          is retained. Empty means no password.\",\"arguments\":{},\"smart\":false}"
     - rid: 7133309421012649575
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -4431,3 +4449,21 @@ MonoBehaviour:
       data:
         m_CommentText: '{"text":"Orientation","context":"Label beside the screen
           orientation dropdown in General Settings. Keep concise.","arguments":{},"smart":false}'
+    - rid: 7133309715749011547
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"The game service rejected this Room Id. Try selecting
+          the host from the Internet game list, or ask the host to create a new room.
+          Reference: {reference}","context":"Connection failure message. Reference
+          identifies the local diagnostic attempt; preserve it unchanged. Internet
+          refers to the multiplayer connection source.","arguments":{"reference":"Diagnostic
+          attempt identifier, unchanged."},"smart":true}'
+    - rid: 7133309715749011548
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Unable to join the game. Check that the host is
+          still online and the room password is correct, then try again. Reference:
+          {reference}","context":"Connection failure message. Reference identifies
+          the local diagnostic attempt; preserve it unchanged. Internet refers to
+          the multiplayer connection source.","arguments":{"reference":"Diagnostic
+          attempt identifier, unchanged."},"smart":true}'

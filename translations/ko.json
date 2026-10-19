@@ -2748,12 +2748,12 @@
       }
     },
     "network.password.invalid": {
-      "text": "비밀번호가 적용되지 않았습니다. 길이는 8~64자여야 합니다.",
+      "text": "비밀번호는 1~64자여야 합니다. 비밀번호를 사용하지 않으려면 비워 두세요. 수정한 후 다시 시도하세요.",
       "status": "machine",
-      "sourceHash": "986bd7c586c38703c8f9e5e14f089c4a6d0cd7aefa7d0aa5c016dd121a4bd958",
+      "sourceHash": "a47e2e9d304154489cf158f09f582d46d577f1cf8564a3a344aa365c76b59f9a",
       "provenance": {
-        "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "method": "Codex contextual machine draft; password validation and optional empty input",
+        "date": "2026-10-18"
       }
     },
     "network.room.id": {
@@ -3411,6 +3411,24 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "network.join.code.rejected": {
+      "text": "게임 서비스에서 이 방 ID를 거부했습니다. 인터넷 게임 목록에서 호스트를 선택하거나 호스트에게 새 방을 만들어 달라고 요청하세요. 참조 번호: {reference}",
+      "status": "machine",
+      "sourceHash": "4097e314208ad5a6e8faf5017495bc8437c1224dd911478e3ce66fddcca3064b",
+      "provenance": {
+        "method": "Codex contextual machine draft; English connection error context",
+        "date": "2026-10-18"
+      }
+    },
+    "network.join.failed": {
+      "text": "게임에 참가할 수 없습니다. 호스트가 아직 온라인인지, 방 비밀번호가 올바른지 확인한 후 다시 시도하세요. 참조 번호: {reference}",
+      "status": "machine",
+      "sourceHash": "52124dda1e4ab1a185ce2eae3db470e44ce0c5a9708ec35978539a271b92851d",
+      "provenance": {
+        "method": "Codex contextual machine draft; English connection error context",
+        "date": "2026-10-18"
       }
     }
   }

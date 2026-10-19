@@ -1250,7 +1250,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649639
   - m_Id: 6646181277698
-    m_Localized: "Mot de passe non appliqu\xE9 : il doit contenir entre 8 et 64 caract\xE8res."
+    m_Localized: "Le mot de passe doit contenir de 1 \xE0 64 caract\xE8res, ou rester
+      vide pour ne pas en utiliser. Corrigez-le et r\xE9essayez."
     m_Metadata:
       m_Items:
       - rid: 7133309421012649640
@@ -2024,6 +2025,22 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309658329251994
+  - m_Id: 4715992412774400
+    m_Localized: "Le service de jeu a refus\xE9 cet identifiant de salon. Essayez
+      de s\xE9lectionner l\u2019h\xF4te dans la liste des parties Internet ou demandez-lui
+      de cr\xE9er un nouveau salon. R\xE9f\xE9rence : {reference}"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277544
+      - rid: 7133309715749011553
+  - m_Id: 4715992727347200
+    m_Localized: "Impossible de rejoindre la partie. V\xE9rifiez que l\u2019h\xF4te
+      est toujours en ligne et que le mot de passe du salon est correct, puis r\xE9essayez.
+      R\xE9f\xE9rence : {reference}"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277544
+      - rid: 7133309715749011554
   references:
     version: 2
     RefIds:
@@ -2083,6 +2100,8 @@ MonoBehaviour:
         - id: 18086220935170
         - id: 18086220935171
         - id: 18086220935172
+        - id: 4715992412774400
+        - id: 4715992727347200
     - rid: 7133309420632277545
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3313,9 +3332,9 @@ MonoBehaviour:
     - rid: 7133309421012649640
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"Mot de passe non appliqu\xE9 : il doit contenir
-          entre 8 et 64 caract\xE8res.\",\"status\":\"machine\",\"sourceHash\":\"986bd7c586c38703c8f9e5e14f089c4a6d0cd7aefa7d0aa5c016dd121a4bd958\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"Le mot de passe doit contenir de 1 \xE0 64 caract\xE8res,
+          ou rester vide pour ne pas en utiliser. Corrigez-le et r\xE9essayez.\",\"status\":\"machine\",\"sourceHash\":\"a47e2e9d304154489cf158f09f582d46d577f1cf8564a3a344aa365c76b59f9a\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; password validation and optional empty input\",\"date\":\"2026-10-18\"}}"
     - rid: 7133309421012649641
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -4053,3 +4072,18 @@ MonoBehaviour:
       data:
         m_CommentText: '{"text":"Orientation","status":"machine","sourceHash":"a3b22b0e5c71b6eba97a175fa8d3203abf141280cb06e32e2cd28805105b2f60","provenance":{"method":"Codex
           contextual machine draft; screen orientation setting label","date":"2026-10-18"}}'
+    - rid: 7133309715749011553
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Le service de jeu a refus\xE9 cet identifiant
+          de salon. Essayez de s\xE9lectionner l\u2019h\xF4te dans la liste des parties
+          Internet ou demandez-lui de cr\xE9er un nouveau salon. R\xE9f\xE9rence
+          : {reference}\",\"status\":\"machine\",\"sourceHash\":\"4097e314208ad5a6e8faf5017495bc8437c1224dd911478e3ce66fddcca3064b\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English connection error context\",\"date\":\"2026-10-18\"}}"
+    - rid: 7133309715749011554
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Impossible de rejoindre la partie. V\xE9rifiez
+          que l\u2019h\xF4te est toujours en ligne et que le mot de passe du salon
+          est correct, puis r\xE9essayez. R\xE9f\xE9rence : {reference}\",\"status\":\"machine\",\"sourceHash\":\"52124dda1e4ab1a185ce2eae3db470e44ce0c5a9708ec35978539a271b92851d\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English connection error context\",\"date\":\"2026-10-18\"}}"

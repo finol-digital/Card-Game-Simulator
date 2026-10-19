@@ -1248,7 +1248,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649727
   - m_Id: 6646181277698
-    m_Localized: "Contrase\xF1a no aplicada: debe tener entre 8 y 64 caracteres."
+    m_Localized: "La contrase\xF1a debe tener entre 1 y 64 caracteres, o dejarse
+      vac\xEDa para no usar contrase\xF1a. Corr\xEDgela e int\xE9ntalo de nuevo."
     m_Metadata:
       m_Items:
       - rid: 7133309421012649728
@@ -2010,6 +2011,22 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309658329251998
+  - m_Id: 4715992412774400
+    m_Localized: "El servicio de juego rechaz\xF3 este ID de sala. Prueba a seleccionar
+      al anfitri\xF3n en la lista de partidas de Internet o p\xEDdele que cree una
+      sala nueva. Referencia: {reference}"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648608
+      - rid: 7133309715749011561
+  - m_Id: 4715992727347200
+    m_Localized: "No se pudo entrar en la partida. Comprueba que el anfitri\xF3n
+      siga conectado y que la contrase\xF1a de la sala sea correcta, e int\xE9ntalo
+      de nuevo. Referencia: {reference}"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648608
+      - rid: 7133309715749011562
   references:
     version: 2
     RefIds:
@@ -2069,6 +2086,8 @@ MonoBehaviour:
         - id: 18086220935170
         - id: 18086220935171
         - id: 18086220935172
+        - id: 4715992412774400
+        - id: 4715992727347200
     - rid: 7133309421012648609
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3313,9 +3332,10 @@ MonoBehaviour:
     - rid: 7133309421012649728
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"Contrase\xF1a no aplicada: debe tener entre 8
-          y 64 caracteres.\",\"status\":\"machine\",\"sourceHash\":\"986bd7c586c38703c8f9e5e14f089c4a6d0cd7aefa7d0aa5c016dd121a4bd958\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"La contrase\xF1a debe tener entre 1 y 64 caracteres,
+          o dejarse vac\xEDa para no usar contrase\xF1a. Corr\xEDgela e int\xE9ntalo
+          de nuevo.\",\"status\":\"machine\",\"sourceHash\":\"a47e2e9d304154489cf158f09f582d46d577f1cf8564a3a344aa365c76b59f9a\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; password validation and optional empty input\",\"date\":\"2026-10-18\"}}"
     - rid: 7133309421012649729
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -4054,3 +4074,17 @@ MonoBehaviour:
       data:
         m_CommentText: "{\"text\":\"Orientaci\xF3n\",\"status\":\"machine\",\"sourceHash\":\"a3b22b0e5c71b6eba97a175fa8d3203abf141280cb06e32e2cd28805105b2f60\",\"provenance\":{\"method\":\"Codex
           contextual machine draft; screen orientation setting label\",\"date\":\"2026-10-18\"}}"
+    - rid: 7133309715749011561
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"El servicio de juego rechaz\xF3 este ID de sala.
+          Prueba a seleccionar al anfitri\xF3n en la lista de partidas de Internet
+          o p\xEDdele que cree una sala nueva. Referencia: {reference}\",\"status\":\"machine\",\"sourceHash\":\"4097e314208ad5a6e8faf5017495bc8437c1224dd911478e3ce66fddcca3064b\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English connection error context\",\"date\":\"2026-10-18\"}}"
+    - rid: 7133309715749011562
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"No se pudo entrar en la partida. Comprueba que
+          el anfitri\xF3n siga conectado y que la contrase\xF1a de la sala sea correcta,
+          e int\xE9ntalo de nuevo. Referencia: {reference}\",\"status\":\"machine\",\"sourceHash\":\"52124dda1e4ab1a185ce2eae3db470e44ce0c5a9708ec35978539a271b92851d\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English connection error context\",\"date\":\"2026-10-18\"}}"

@@ -1248,7 +1248,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649749
   - m_Id: 6646181277698
-    m_Localized: "Senha n\xE3o aplicada: deve ter entre 8 e 64 caracteres."
+    m_Localized: "A senha deve ter de 1 a 64 caracteres ou ficar vazia para n\xE3o
+      usar senha. Corrija e tente novamente."
     m_Metadata:
       m_Items:
       - rid: 7133309421012649750
@@ -2026,6 +2027,22 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7133309658329251999
+  - m_Id: 4715992412774400
+    m_Localized: "O servi\xE7o do jogo rejeitou este ID de sala. Tente selecionar
+      o anfitri\xE3o na lista de partidas pela Internet ou pe\xE7a que ele crie uma
+      nova sala. Refer\xEAncia: {reference}"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648379
+      - rid: 7133309715749011563
+  - m_Id: 4715992727347200
+    m_Localized: "N\xE3o foi poss\xEDvel entrar na partida. Verifique se o anfitri\xE3o
+      ainda est\xE1 online e se a senha da sala est\xE1 correta. Depois, tente novamente.
+      Refer\xEAncia: {reference}"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648379
+      - rid: 7133309715749011564
   references:
     version: 2
     RefIds:
@@ -2085,6 +2102,8 @@ MonoBehaviour:
         - id: 18086220935170
         - id: 18086220935171
         - id: 18086220935172
+        - id: 4715992412774400
+        - id: 4715992727347200
     - rid: 7133309421012648380
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -3310,9 +3329,9 @@ MonoBehaviour:
     - rid: 7133309421012649750
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"Senha n\xE3o aplicada: deve ter entre 8 e 64
-          caracteres.\",\"status\":\"machine\",\"sourceHash\":\"986bd7c586c38703c8f9e5e14f089c4a6d0cd7aefa7d0aa5c016dd121a4bd958\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"A senha deve ter de 1 a 64 caracteres ou ficar
+          vazia para n\xE3o usar senha. Corrija e tente novamente.\",\"status\":\"machine\",\"sourceHash\":\"a47e2e9d304154489cf158f09f582d46d577f1cf8564a3a344aa365c76b59f9a\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; password validation and optional empty input\",\"date\":\"2026-10-18\"}}"
     - rid: 7133309421012649751
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -4046,3 +4065,17 @@ MonoBehaviour:
       data:
         m_CommentText: "{\"text\":\"Orienta\xE7\xE3o\",\"status\":\"machine\",\"sourceHash\":\"a3b22b0e5c71b6eba97a175fa8d3203abf141280cb06e32e2cd28805105b2f60\",\"provenance\":{\"method\":\"Codex
           contextual machine draft; screen orientation setting label\",\"date\":\"2026-10-18\"}}"
+    - rid: 7133309715749011563
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"O servi\xE7o do jogo rejeitou este ID de sala.
+          Tente selecionar o anfitri\xE3o na lista de partidas pela Internet ou pe\xE7a
+          que ele crie uma nova sala. Refer\xEAncia: {reference}\",\"status\":\"machine\",\"sourceHash\":\"4097e314208ad5a6e8faf5017495bc8437c1224dd911478e3ce66fddcca3064b\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English connection error context\",\"date\":\"2026-10-18\"}}"
+    - rid: 7133309715749011564
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"N\xE3o foi poss\xEDvel entrar na partida. Verifique
+          se o anfitri\xE3o ainda est\xE1 online e se a senha da sala est\xE1 correta.
+          Depois, tente novamente. Refer\xEAncia: {reference}\",\"status\":\"machine\",\"sourceHash\":\"52124dda1e4ab1a185ce2eae3db470e44ce0c5a9708ec35978539a271b92851d\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English connection error context\",\"date\":\"2026-10-18\"}}"
