@@ -158,6 +158,7 @@ namespace Tests.PlayMode
             holder.transform.SetParent(_canvas.transform, false);
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
                 $"Assets/Prefabs/CardGameView/Multiplayer/{name}.prefab");
+            Assert.IsNotNull(prefab, $"Missing prefab: {name}");
             var instance = Object.Instantiate(prefab, holder.transform);
             var playable = instance.GetComponent<CgsNetPlayable>();
             playable.enabled = false;

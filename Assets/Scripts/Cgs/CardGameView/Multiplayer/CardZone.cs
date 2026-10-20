@@ -259,7 +259,7 @@ namespace Cgs.CardGameView.Multiplayer
                 for (var i = lastIndex; i >= 0; i--)
                 {
                     var child = transform.GetChild(i);
-                    if (!child.TryGetComponent<Die>(out _) && !child.TryGetComponent<Counter>(out _))
+                    if (!child.TryGetComponent<CgsNetPlayable>(out var playable) || playable is not (Die or Counter))
                         continue;
 
                     // Walk backwards to preserve the relative order of both groups.
