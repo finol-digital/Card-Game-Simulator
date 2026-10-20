@@ -237,10 +237,43 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private bool _isCountDirty = true;
+        private bool _isPieceOrderDirty = true;
 
         protected void OnTransformChildrenChanged()
         {
             _isCountDirty = true;
+            _isPieceOrderDirty = true;
+        }
+
+        protected void LateUpdate()
+        {
+            if (!_isPieceOrderDirty)
+                return;
+
+            // Area pieces must remain visible and selectable after cards or stacks are
+            // created, dropped, dragged, or reordered by a network update. Row/column
+            // zones retain their synchronized card indices unchanged.
+            if (Type == CardZoneType.Area)
+            {
+                var lastIndex = transform.childCount - 1;
+                for (var i = lastIndex; i >= 0; i--)
+                {
+                    var child = transform.GetChild(i);
+                    if (!child.TryGetComponent<Die>(out _) && !child.TryGetComponent<Counter>(out _))
+                        continue;
+
+                    // Walk backwards to preserve the relative order of both groups.
+                    if (i != lastIndex)
+                        child.SetSiblingIndex(lastIndex);
+                    lastIndex--;
+                }
+
+                if (_countLabel != null)
+                    _countLabel.transform.SetAsLastSibling();
+            }
+
+            // Our own sibling changes also invoke OnTransformChildrenChanged.
+            _isPieceOrderDirty = false;
         }
 
         protected override void OnUpdatePlayable()
