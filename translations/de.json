@@ -2703,12 +2703,13 @@
       }
     },
     "multiplayer.password.placeholder": {
-      "text": "[Optional] Mindestens 8 Zeichen",
+      "text": "[Optional]",
       "status": "machine",
-      "sourceHash": "fa19feff31dd74835415921bdd12db2d349dfe229c0656270351f7c0d2854731",
+      "sourceHash": "eaacc41421643055dddb64f4668b7a6e47a7fc82bc6268e584572ce36880df5b",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
+        "date": "2026-10-05",
+        "note": "2026-10-20: Removed obsolete minimum-length guidance to match optional passwords of 1-64 characters."
       }
     },
     "network.browser.start.failed": {

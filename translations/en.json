@@ -1890,7 +1890,7 @@
       "smart": true
     },
     "multiplayer.password.placeholder": {
-      "text": "[Optional] Min length 8",
+      "text": "[Optional]",
       "context": "Input placeholder at Lobby Menu/Frame/Connection Panel/Password/Password InputField/Placeholder in Assets/Prefabs/Menus/Lobby Menu.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false

@@ -1072,7 +1072,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277523
   - m_Id: 18200518656
-    m_Localized: '[Optional] Min length 8'
+    m_Localized: '[Optional]'
     m_Metadata:
       m_Items:
       - rid: 7133309420632277524
@@ -3449,9 +3449,9 @@ MonoBehaviour:
     - rid: 7133309420632277524
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: '{"text":"[Optional] Min length 8","context":"Input placeholder
-          at Lobby Menu/Frame/Connection Panel/Password/Password InputField/Placeholder
-          in Assets/Prefabs/Menus/Lobby Menu.prefab. Keep control labels concise.","arguments":{},"smart":false}'
+        m_CommentText: '{"text":"[Optional]","context":"Input placeholder at Lobby
+          Menu/Frame/Connection Panel/Password/Password InputField/Placeholder in
+          Assets/Prefabs/Menus/Lobby Menu.prefab. Keep control labels concise.","arguments":{},"smart":false}'
     - rid: 7133309420632277525
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

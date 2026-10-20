@@ -6905,7 +6905,7 @@
       "path": "Lobby Menu/Frame/Connection Panel/Password/Password InputField/Placeholder",
       "type": "UnityEngine.UI.Text",
       "property": "text",
-      "text": "[Optional] Min length 8",
+      "text": "[Optional]",
       "id": "GlobalObjectId_V1-1-61b579ded7c51a4409a9f5bee03d3dff-9070535788799484696-0",
       "key": "multiplayer.password.placeholder"
     },
