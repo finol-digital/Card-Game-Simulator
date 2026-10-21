@@ -1607,7 +1607,7 @@ PrefabInstance:
     - target: {fileID: 4768883952711561113, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
       propertyPath: m_Text
-      value: '[Optional] Min length 8'
+      value: '[Optional]'
       objectReference: {fileID: 0}
     - target: {fileID: 4881203083407124929, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
@@ -1706,7 +1706,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
-  english: '[Optional] Min length 8'
+  english: '[Optional]'
   references:
     version: 2
     RefIds: []

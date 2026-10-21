@@ -1146,8 +1146,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649045
   - m_Id: 18200518656
-    m_Localized: "[\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E]
-      \u041D\u0435 \u043C\u0435\u043D\u0435\u0435 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432"
+    m_Localized: "[\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E]"
     m_Metadata:
       m_Items:
       - rid: 7133309421012649046
@@ -3542,9 +3541,10 @@ MonoBehaviour:
     - rid: 7133309421012649046
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_CommentText: "{\"text\":\"[\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E]
-          \u041D\u0435 \u043C\u0435\u043D\u0435\u0435 8 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432\",\"status\":\"machine\",\"sourceHash\":\"fa19feff31dd74835415921bdd12db2d349dfe229c0656270351f7c0d2854731\",\"provenance\":{\"method\":\"Codex
-          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\"}}"
+        m_CommentText: "{\"text\":\"[\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E]\",\"status\":\"machine\",\"sourceHash\":\"eaacc41421643055dddb64f4668b7a6e47a7fc82bc6268e584572ce36880df5b\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft; English context and CGS glossary\",\"date\":\"2026-10-05\",\"note\":\"2026-10-20:
+          Removed obsolete minimum-length guidance to match optional passwords of
+          1-64 characters.\"}}"
     - rid: 7133309421012649047
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
