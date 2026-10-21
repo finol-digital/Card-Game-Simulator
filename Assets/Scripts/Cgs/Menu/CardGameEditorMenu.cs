@@ -26,8 +26,7 @@ namespace Cgs.Menu
     public class CardGameEditorMenu : Modal
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
-        public const string WebWarningMessage =
- "The CGS web client cannot access files on your device; please use the appropriate CGS native app";
+        private Action _releaseBrowserBacksFolder;
 #endif
 #if ENABLE_WINMD_SUPPORT
         public const string UwpWarningMessage =
@@ -146,7 +145,11 @@ namespace Cgs.Menu
                 }
 
                 _backsFolderPath = value;
+#if UNITY_WEBGL && !UNITY_EDITOR
+                LocalizedUiText.SetLiteral(backsFolderText, FileBrowserHelpers.GetFilename(value));
+#else
                 Cgs.Localization.LocalizedUiText.SetLiteral(backsFolderText, _backsFolderPath);
+#endif
             }
         }
 
@@ -308,8 +311,8 @@ namespace Cgs.Menu
         public void ImportBannerImageFromFile()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
+            BrowserFileBrowser.OpenImage(new UiMessage("files.select.banner", SelectBannerImageFilePrompt),
+                path => { if (this != null && isActiveAndEnabled) ImportBannerImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
 #elif ENABLE_WINMD_SUPPORT
@@ -381,8 +384,8 @@ namespace Cgs.Menu
         public void ImportCardBackImageFromFile()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
+            BrowserFileBrowser.OpenImage(new UiMessage("files.select.back", SelectCardBackImageFilePrompt),
+                path => { if (this != null && isActiveAndEnabled) ImportCardBackImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
 #elif ENABLE_WINMD_SUPPORT
@@ -454,8 +457,8 @@ namespace Cgs.Menu
         public void ImportPlayMatImageFromFile()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
+            BrowserFileBrowser.OpenImage(new UiMessage("files.select.playmat", SelectPlayMatImageFilePrompt),
+                path => { if (this != null && isActiveAndEnabled) ImportPlayMatImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
 #elif ENABLE_WINMD_SUPPORT
@@ -587,7 +590,7 @@ namespace Cgs.Menu
                 JsonConvert.SerializeObject(unityCardGame, jsonSerializerSettings));
 
             if (!string.IsNullOrEmpty(BacksFolderPath) && FileBrowserHelpers.DirectoryExists(BacksFolderPath))
-                CopyBacksFolder();
+                CopyBacksFolder(unityCardGame);
 
             yield return CardGameManager.Instance.UpdateCardGame(unityCardGame);
 
@@ -616,8 +619,17 @@ namespace Cgs.Menu
         public void SelectBacksFolder()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
+            BrowserFileBrowser.OpenFolder(new UiMessage("files.select.folder", SelectFolderPrompt), (path, release) =>
+            {
+                if (this == null || !isActiveAndEnabled)
+                {
+                    release();
+                    return;
+                }
+                _releaseBrowserBacksFolder?.Invoke();
+                _releaseBrowserBacksFolder = release;
+                BacksFolderPath = path;
+            });
 #elif ENABLE_WINMD_SUPPORT
             Debug.LogWarning(UwpWarningMessage);
             CardGameManager.Instance.Messenger.Show(new UiMessage("files.uwp.unavailable", UwpWarningMessage));
@@ -627,22 +639,22 @@ namespace Cgs.Menu
 #endif
         }
 
-        private void CopyBacksFolder()
+        private void CopyBacksFolder(UnityCardGame game)
         {
             var backsToImport = FileBrowserHelpers.GetEntriesInDirectory(BacksFolderPath, true)
                 .Where(fileSystemEntry => !fileSystemEntry.IsDirectory &&
                                           !string.IsNullOrEmpty(fileSystemEntry.Extension) &&
-                                          fileSystemEntry.Extension.EndsWith(CardGameManager.Current
+                                          fileSystemEntry.Extension.EndsWith(game
                                               .CardBackImageFileType))
                 .ToList();
             for (var i = 0; i < backsToImport.Count; i++)
             {
                 try
                 {
-                    if (!Directory.Exists(CardGameManager.Current.BacksDirectoryPath))
-                        Directory.CreateDirectory(CardGameManager.Current.BacksDirectoryPath);
+                    if (!Directory.Exists(game.BacksDirectoryPath))
+                        Directory.CreateDirectory(game.BacksDirectoryPath);
                     FileBrowserHelpers.CopyFile(backsToImport[i].Path,
-                        Path.Join(CardGameManager.Current.BacksDirectoryPath, backsToImport[i].Name));
+                        Path.Join(game.BacksDirectoryPath, backsToImport[i].Name));
                 }
                 catch
                 {
@@ -654,6 +666,12 @@ namespace Cgs.Menu
 
         protected void OnDisable()
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            _releaseBrowserBacksFolder?.Invoke();
+            _releaseBrowserBacksFolder = null;
+            _backsFolderPath = string.Empty;
+            LocalizedUiText.SetLiteral(backsFolderText, string.Empty);
+#endif
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.DecksPivot).performed -= InputDownloadWeb;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputImportFile;

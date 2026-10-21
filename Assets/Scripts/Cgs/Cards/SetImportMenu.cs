@@ -24,8 +24,7 @@ namespace Cgs.Cards
     public class SetImportMenu : Modal, IProgressible
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
-        public const string WebWarningMessage =
- "The CGS web client cannot access files on your device; please use the appropriate CGS native app";
+        private Action _releaseBrowserFolder;
 #endif
 #if ENABLE_WINMD_SUPPORT
         public const string UwpWarningMessage =
@@ -139,8 +138,17 @@ namespace Cgs.Cards
         public void SelectFolder()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
+            BrowserFileBrowser.OpenFolder(new UiMessage("files.select.folder", SelectFolderPrompt), (path, release) =>
+            {
+                if (this == null || !isActiveAndEnabled)
+                {
+                    release();
+                    return;
+                }
+                _releaseBrowserFolder?.Invoke();
+                _releaseBrowserFolder = release;
+                SetFolderPath = path;
+            });
 #elif ENABLE_WINMD_SUPPORT
             Debug.LogWarning(UwpWarningMessage);
             CardGameManager.Instance.Messenger.Show(new UiMessage("files.uwp.unavailable", UwpWarningMessage));
@@ -267,6 +275,14 @@ namespace Cgs.Cards
 
         protected void OnDisable()
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            _releaseBrowserFolder?.Invoke();
+            _releaseBrowserFolder = null;
+            _setFolderPath = null;
+            LocalizedUiText.SetLiteral(setNameText, string.Empty);
+            LocalizedUiText.SetLiteral(cardNamesText, string.Empty);
+            importButton.interactable = false;
+#endif
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSelectFolder;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

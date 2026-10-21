@@ -1,4 +1,8 @@
-﻿using System;
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +33,88 @@ namespace Tests.PlayMode
         public void Setup()
         {
             Object.Instantiate(Resources.Load<GameObject>("CardGameManager"));
+        }
+
+        [Test]
+        public void ImportCompletionRunsWhenFileIsMissing()
+        {
+            var path = Path.Combine(Application.temporaryCachePath, Guid.NewGuid() + ".cgs.zip");
+            var completions = 0;
+            LogAssert.Expect(LogType.Error, string.Format(CardGameManager.FileNotFoundErrorMessage, path));
+
+            CardGameManager.Instance.ImportCardGame(path, () => completions++);
+
+            Assert.AreEqual(1, completions);
+        }
+
+        [TestCase(".zip", false)]
+        [TestCase(".cgs.zip", true)]
+        public void ImportCompletionReleasesInvalidArchive(string extension, bool corruptZip)
+        {
+            var path = Path.Combine(Application.temporaryCachePath, Guid.NewGuid() + extension);
+            File.WriteAllText(path, "Not ZIP data");
+            var completions = 0;
+            try
+            {
+                if (corruptZip)
+                    LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(
+                        "^" + System.Text.RegularExpressions.Regex.Escape(CardGameManager.ImportFailureErrorMessage)));
+                else
+                    LogAssert.Expect(LogType.Error, string.Format(CardGameManager.InvalidCgsZipFileErrorMessage, path));
+
+                CardGameManager.Instance.ImportCardGame(path, () =>
+                {
+                    completions++;
+                    File.Delete(path);
+                });
+
+                Assert.AreEqual(1, completions);
+                Assert.IsFalse(File.Exists(path));
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+
+        [Test]
+        public void ImportCompletionWaitsForOverwritePromptAndRunsOnDismissal()
+        {
+            var gameId = "ImportTest-" + Guid.NewGuid().ToString("N");
+            var path = Path.Combine(Application.temporaryCachePath, gameId + ".cgs.zip");
+            var gameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
+            Directory.CreateDirectory(gameDirectory);
+            var existingFile = Path.Combine(gameDirectory, "keep.txt");
+            File.WriteAllText(existingFile, "Existing game data");
+            File.WriteAllText(path, "ZIP is not read when overwrite is canceled");
+            var manager = CardGameManager.Instance;
+            while (manager.Messenger.gameObject.activeSelf)
+                manager.Messenger.OkClose();
+            var completions = 0;
+            try
+            {
+                manager.ImportCardGame(path, () =>
+                {
+                    completions++;
+                    File.Delete(path);
+                });
+                Assert.AreEqual(0, completions);
+                Assert.IsTrue(File.Exists(path), "The pending confirmation still owns the ZIP.");
+
+                // Escape and backdrop dismissal call OkClose, without clicking No.
+                manager.Messenger.OkClose();
+                manager.Messenger.OkClose();
+
+                Assert.AreEqual(1, completions);
+                Assert.IsFalse(File.Exists(path));
+                Assert.AreEqual("Existing game data", File.ReadAllText(existingFile));
+            }
+            finally
+            {
+                manager.Messenger.OkClose();
+                File.Delete(path);
+                Directory.Delete(gameDirectory, true);
+            }
         }
 
         [UnityTest]

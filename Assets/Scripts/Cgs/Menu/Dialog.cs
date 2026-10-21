@@ -31,6 +31,7 @@ namespace Cgs.Menu
         private UiMessage _feedbackMessage;
         private LocalizedMessageBinding _localizedFeedback;
         private string _feedback;
+        private Action _onClosed;
 
         protected struct Message : IEquatable<Message>
         {
@@ -38,6 +39,7 @@ namespace Cgs.Menu
             public UiMessage Localized;
             public UnityAction NoAction;
             public UnityAction YesAction;
+            public Action Closed { get; set; }
             public bool Unskippable;
             public bool CanCopy { get; set; }
 
@@ -157,9 +159,10 @@ namespace Cgs.Menu
             ShowMessage(message);
         }
 
-        public void Ask(UiMessage text, UnityAction noAction, UnityAction yesAction, bool unskippable = false)
+        public void Ask(UiMessage text, UnityAction noAction, UnityAction yesAction, bool unskippable = false,
+            Action closed = null)
             => ShowMessage(new Message { Text = text.English, Localized = text, NoAction = noAction,
-                YesAction = yesAction, Unskippable = unskippable, CanCopy = true });
+                YesAction = yesAction, Unskippable = unskippable, CanCopy = true, Closed = closed });
 
         private void ShowMessage(Message message)
         {
@@ -182,6 +185,7 @@ namespace Cgs.Menu
 
         private void DisplayMessage(Message message)
         {
+            _onClosed = message.Closed;
             _messageVersion++;
             _localizedFeedback?.Dispose();
             _localizedFeedback = null;
@@ -295,6 +299,11 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void OkClose()
         {
+            // Release resources owned by a prompt even when Escape or the backdrop dismisses it.
+            var onClosed = _onClosed;
+            _onClosed = null;
+            onClosed?.Invoke();
+
             if (EventSystem.current != null && !EventSystem.current.alreadySelecting &&
                 EventSystem.current.currentSelectedGameObject == gameObject)
                 EventSystem.current.SetSelectedGameObject(null);
