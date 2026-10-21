@@ -238,6 +238,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private bool _isCountDirty = true;
         private bool _isPieceOrderDirty = true;
+        private CardZoneType _pieceOrderType;
 
         protected void OnTransformChildrenChanged()
         {
@@ -247,13 +248,17 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected void LateUpdate()
         {
-            if (!_isPieceOrderDirty)
+            // Read Type so both local changes and synchronized snapshots invalidate the order.
+            var currentType = Type;
+            if (!_isPieceOrderDirty && _pieceOrderType == currentType)
                 return;
+
+            _pieceOrderType = currentType;
 
             // Area pieces must remain visible and selectable after cards or stacks are
             // created, dropped, dragged, or reordered by a network update. Row/column
             // zones retain their synchronized card indices unchanged.
-            if (Type == CardZoneType.Area)
+            if (currentType == CardZoneType.Area)
             {
                 var lastIndex = transform.childCount - 1;
                 for (var i = lastIndex; i >= 0; i--)

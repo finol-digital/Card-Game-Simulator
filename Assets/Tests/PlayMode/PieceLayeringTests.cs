@@ -5,9 +5,12 @@
 #if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using NUnit.Framework;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -32,6 +35,7 @@ namespace Tests.PlayMode
             _canvas = new GameObject("Layering canvas", typeof(RectTransform), typeof(Canvas),
                 typeof(PieceGraphicRaycaster));
             _canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+            _canvas.GetComponent<Canvas>().sortingOrder = 32000;
             _table = new GameObject("Table", typeof(RectTransform), typeof(CardZone)).GetComponent<CardZone>();
             _table.transform.SetParent(_canvas.transform, false);
             ((RectTransform)_table.transform).sizeDelta = new Vector2(1000, 1000);
@@ -135,6 +139,55 @@ namespace Tests.PlayMode
             card.OnChangeSiblingIndex(1, 2);
             yield return null;
             AssertOrder(die, counter, card);
+        }
+
+        [UnityTest]
+        public IEnumerator ChangingRowOrColumnToAreaReordersExistingPieces()
+        {
+            var die = Create("Die");
+            var card = Create("Card Model");
+            var counter = Create("Counter");
+            var stack = Create("Card Stack");
+            foreach (var type in new[] { CardZoneType.Horizontal, CardZoneType.Vertical })
+            {
+                _table.Type = type;
+                die.transform.SetSiblingIndex(0);
+                card.transform.SetSiblingIndex(1);
+                counter.transform.SetSiblingIndex(2);
+                yield return null;
+                AssertOrder(die, card, counter, stack);
+
+                _table.Type = CardZoneType.Area;
+                yield return null;
+                AssertOrder(card, stack, die, counter);
+                AssertTopHit(counter);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator SynchronizedAreaSnapshotReordersExistingPieces()
+        {
+            _table.Type = CardZoneType.Horizontal;
+            var die = Create("Die");
+            var card = Create("Card Model");
+            yield return null;
+            AssertOrder(die, card);
+
+            var variable = (NetworkVariable<int>)typeof(CardZone)
+                .GetField("_typeNetworkVariable", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(_table);
+            using (var source = new NetworkVariable<int>((int)CardZoneType.Area))
+            using (var writer = new FastBufferWriter(16, Allocator.Temp))
+            {
+                source.WriteField(writer);
+                using var reader = new FastBufferReader(writer, Allocator.Temp);
+                variable.ReadField(reader);
+            }
+            _table.OnNetworkSpawn();
+            yield return null;
+
+            Assert.AreEqual(CardZoneType.Area, _table.Type);
+            AssertOrder(card, die);
+            AssertTopHit(die);
         }
 
         [UnityTest]
