@@ -212,7 +212,7 @@ namespace Cgs.Menu
         private static void ShowFileLoader()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            BrowserGameImporter.Open();
+            BrowserFileBrowser.OpenGameZip();
 #elif UNITY_ANDROID || UNITY_IOS
             NativeFilePicker.PickFile(path =>
             {

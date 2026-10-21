@@ -24,10 +24,6 @@ namespace Cgs.Cards
 {
     public class CardEditorMenu : Modal
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        public const string WebWarningMessage =
- "The CGS web client cannot access files on your device; please use the appropriate CGS native app";
-#endif
         public const string DownloadCardImage = "Download Card Image";
         public const string DownloadCardImagePrompt = "Enter card image url...";
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -274,8 +270,8 @@ namespace Cgs.Cards
         public void ImportCardImageFromFile()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            Debug.LogWarning(WebWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.web.unavailable", WebWarningMessage));
+            BrowserFileBrowser.OpenImage(new UiMessage("files.select.card", SelectCardImageFilePrompt),
+                path => { if (this != null && isActiveAndEnabled) ImportCardImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
 #elif ENABLE_WINMD_SUPPORT
@@ -306,7 +302,7 @@ namespace Cgs.Cards
             }
 #if ENABLE_WINMD_SUPPORT
             CardImageUri = new Uri(await UnityFileMethods.CacheFileAsync(uri));
-#elif UNITY_STANDALONE
+#elif UNITY_STANDALONE || UNITY_WEBGL
             CardImageUri = new Uri(UnityFileMethods.CacheFile(uri));
 #else
             CardImageUri = new Uri(uri);

@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -149,6 +153,10 @@ namespace UnityExtensionMethods
         public static string CacheFile(string sourceFilePath)
         {
             var fileName = Path.GetFileName(sourceFilePath);
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // Different image pickers can select identically named files before the game is saved.
+            fileName = Guid.NewGuid().ToString("N") + "-" + fileName;
+#endif
             var cacheFilePath =
                 Path.Combine(Application.temporaryCachePath, fileName ?? throw new FileNotFoundException());
             File.Copy(sourceFilePath, cacheFilePath, true);
@@ -285,6 +293,22 @@ namespace UnityExtensionMethods
                 }
                 : new UriBuilder(url);
             var uri = uriBuilder.Uri;
+
+            // Browser-selected files live in Unity's virtual filesystem, not at an HTTP URL.
+            if (uri.IsFile)
+            {
+                try
+                {
+                    Directory.CreateDirectory(directory);
+                    if (Path.GetFullPath(uri.LocalPath) != Path.GetFullPath(filePath))
+                        File.Copy(uri.LocalPath, filePath, true);
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogWarning("SaveUrlToFile::LocalCopyFailed:" + exception.Message);
+                }
+                yield break;
+            }
 
             var unityWebRequest = CreateUnityWebRequest(uri, postJsonBody, headers);
 
@@ -463,7 +487,14 @@ namespace UnityExtensionMethods
         // Note: Memory Leak Potential
         public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageUrl)
         {
-            using var unityWebRequest = CreateUnityWebRequest(new Uri(imageUrl));
+            var uri = new Uri(imageUrl);
+            if (uri.IsFile)
+            {
+                yield return CreateSprite(uri.LocalPath);
+                yield break;
+            }
+
+            using var unityWebRequest = CreateUnityWebRequest(uri);
             yield return unityWebRequest.SendWebRequest();
             if (unityWebRequest.result != UnityWebRequest.Result.Success ||
                 !string.IsNullOrEmpty(unityWebRequest.error))
