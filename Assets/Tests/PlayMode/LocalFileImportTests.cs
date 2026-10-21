@@ -5,6 +5,8 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Reflection;
+using FinolDigital.Cgs.Json.Unity;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -43,6 +45,32 @@ namespace Tests.PlayMode
             CollectionAssert.AreEqual(bytes, File.ReadAllBytes(target));
             yield return UnityFileMethods.SaveUrlToFile(new Uri(target).AbsoluteUri, target);
             CollectionAssert.AreEqual(bytes, File.ReadAllBytes(target));
+        }
+
+        [UnityTest]
+        public IEnumerator LoadsImportedCardImageWithoutRemoteUrl()
+        {
+            var game = new UnityCardGame(null, "LocalCard-" + Guid.NewGuid().ToString("N"));
+            var card = new UnityCard(game, "First_Card", "First Card", "Browser Cards", null, false);
+            Directory.CreateDirectory(Path.GetDirectoryName(card.ImageFilePath));
+            var texture = new Texture2D(2, 3);
+            File.WriteAllBytes(card.ImageFilePath, texture.EncodeToPNG());
+            UnityEngine.Object.Destroy(texture);
+            try
+            {
+                Assert.IsTrue(string.IsNullOrEmpty(card.ImageWebUrl));
+                var loader = typeof(ImageQueueService).GetMethod("LoadImageSprite",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                yield return (IEnumerator)loader.Invoke(new ImageQueueService(), new object[] { card });
+                Assert.IsNotNull(card.ImageSprite);
+                Assert.AreEqual(2, card.ImageSprite.texture.width);
+                Assert.AreEqual(3, card.ImageSprite.texture.height);
+            }
+            finally
+            {
+                card.ImageSprite = null;
+                Directory.Delete(game.GameDirectoryPath, true);
+            }
         }
 
         [UnityTest]

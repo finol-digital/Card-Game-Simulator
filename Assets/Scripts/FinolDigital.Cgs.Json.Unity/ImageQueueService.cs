@@ -4,11 +4,11 @@
 
 using System.Collections;
 using System.Collections.Concurrent;
+using System.IO;
 using UnityEngine;
 using UnityExtensionMethods;
 #if !UNITY_WEBGL
 using System;
-using System.IO;
 #endif
 
 namespace FinolDigital.Cgs.Json.Unity
@@ -76,6 +76,14 @@ namespace FinolDigital.Cgs.Json.Unity
                         $"Failed to check image file size for card: {unityCard.Name} ({unityCard.Id}): {e}");
                 }
 #else
+                if (File.Exists(unityCard.ImageFilePath))
+                {
+                    yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
+                        UnityFileMethods.CreateAndOutputSpriteFromImageFile(unityCard.ImageFilePath, null),
+                        output => newSprite = output);
+                    yield break;
+                }
+
                 var url = unityCard.ImageWebUrl;
                 if (url.StartsWith("https://"))
                 {
