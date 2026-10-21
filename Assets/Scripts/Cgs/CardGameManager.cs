@@ -293,11 +293,17 @@ namespace Cgs
 
         public void ImportCardGame(string zipFilePath)
         {
+            ImportCardGame(zipFilePath, null);
+        }
+
+        internal void ImportCardGame(string zipFilePath, Action completed)
+        {
             if (!File.Exists(zipFilePath))
             {
                 var errorMessage = string.Format(FileNotFoundErrorMessage, zipFilePath);
                 Debug.LogError(errorMessage);
                 Messenger.Show(UiMessage.With("errors.file.missing", errorMessage, ("detail", zipFilePath)));
+                completed?.Invoke();
                 return;
             }
 
@@ -306,6 +312,7 @@ namespace Cgs
                 var errorMessage = string.Format(InvalidCgsZipFileErrorMessage, zipFilePath);
                 Debug.LogError(errorMessage);
                 Messenger.Show(UiMessage.With("errors.zip.invalid", errorMessage, ("detail", zipFilePath)));
+                completed?.Invoke();
                 return;
             }
 
@@ -316,12 +323,24 @@ namespace Cgs
             var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
             if (Directory.Exists(targetGameDirectory))
             {
-                Messenger.Ask(new UiMessage("games.overwrite", OverwriteGamePrompt), () => { },
-                    () => ForceImportCardGame(zipFilePath));
+                Messenger.Ask(new UiMessage("games.overwrite", OverwriteGamePrompt), null,
+                    () => ForceImportCardGame(zipFilePath), closed: completed);
                 return;
             }
 
-            ForceImportCardGame(zipFilePath);
+            ImportAndComplete();
+
+            void ImportAndComplete()
+            {
+                try
+                {
+                    ForceImportCardGame(zipFilePath);
+                }
+                finally
+                {
+                    completed?.Invoke();
+                }
+            }
         }
 
         private void ForceImportCardGame(string zipFilePath)
@@ -607,7 +626,7 @@ namespace Cgs
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
                 Debug.LogError(DownloadErrorMessage + cardGame.Error);
-                Messenger.Show(UiMessage.With("errors.game.download", DownloadErrorMessage + cardGame.Error, ("detail", cardGame.Error)));
+                ShowDownloadError(cardGame.Error);
 
                 if (!Directory.Exists(cardGame.GameDirectoryPath))
                     yield break;
@@ -642,13 +661,21 @@ namespace Cgs
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
                 Debug.LogError(DownloadErrorMessage + cardGame.Error);
-                Messenger.Show(UiMessage.With("errors.game.download", DownloadErrorMessage + cardGame.Error, ("detail", cardGame.Error)));
+                ShowDownloadError(cardGame.Error);
                 cardGame.ClearError();
             }
 
             cardGame.Load(null, LoadCards, LoadSetCards);
             if (cardGame == Current)
                 ResetGameScene();
+        }
+
+        private void ShowDownloadError(string detail)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            detail += "\n\n" + BrowserGameImporter.DownloadHelp;
+#endif
+            Messenger.Show(UiMessage.With("errors.game.download", DownloadErrorMessage + detail, ("detail", detail)));
         }
 
         private IEnumerator LoadCards(UnityCardGame cardGame)

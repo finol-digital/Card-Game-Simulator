@@ -10,10 +10,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
-#if !UNITY_WEBGL
 using System;
 using UnityEngine.Events;
-#endif
 
 #if !UNITY_ANDROID && !UNITY_IOS
 using SimpleFileBrowser;
@@ -60,12 +58,10 @@ namespace Cgs.Menu
 
         private CardGameEditorMenu _cardGameEditor;
 
-#if !UNITY_WEBGL
         private DecisionModal ImportModal =>
             _importModal ??= Instantiate(gameImportModalPrefab).GetOrAddComponent<DecisionModal>();
 
         private DecisionModal _importModal;
-#endif
 
         private DownloadMenu Downloader => _downloader ??= Instantiate(downloadMenuPrefab)
             .GetOrAddComponent<DownloadMenu>();
@@ -202,13 +198,9 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void Import()
         {
-#if UNITY_WEBGL
-            ShowDownloader();
-#else
             ImportModal.Show(new UiMessage("games.import.choice", ImportGamePrompt),
                 new Tuple<UiMessage, UnityAction>(new UiMessage("games.import.web", DownloadFromWeb), ShowDownloader),
                 new Tuple<UiMessage, UnityAction>(new UiMessage("games.import.file", LoadFromFile), ShowFileLoader));
-#endif
         }
 
         private void ShowDownloader()
@@ -219,7 +211,9 @@ namespace Cgs.Menu
         // ReSharper disable once UnusedMember.Local
         private static void ShowFileLoader()
         {
-#if UNITY_ANDROID || UNITY_IOS
+#if UNITY_WEBGL && !UNITY_EDITOR
+            BrowserGameImporter.Open();
+#elif UNITY_ANDROID || UNITY_IOS
             NativeFilePicker.PickFile(path =>
             {
                 if (path == null)
