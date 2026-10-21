@@ -81,7 +81,8 @@ namespace FinolDigital.Cgs.Json.Unity
                     yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
                         UnityFileMethods.CreateAndOutputSpriteFromImageFile(unityCard.ImageFilePath, null),
                         output => newSprite = output);
-                    yield break;
+                    if (newSprite != null || string.IsNullOrEmpty(unityCard.ImageWebUrl))
+                        yield break;
                 }
 
                 var url = unityCard.ImageWebUrl;

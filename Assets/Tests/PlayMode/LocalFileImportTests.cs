@@ -73,6 +73,39 @@ namespace Tests.PlayMode
             }
         }
 
+#if UNITY_WEBGL
+        [UnityTest]
+        public IEnumerator InvalidCachedCardImageFallsBackToItsUrl()
+        {
+            var game = new UnityCardGame(null, "DamagedCard-" + Guid.NewGuid().ToString("N"));
+            var source = Path.Combine(_directory, "fallback.png");
+            var texture = new Texture2D(3, 2);
+            File.WriteAllBytes(source, texture.EncodeToPNG());
+            UnityEngine.Object.Destroy(texture);
+            var card = new UnityCard(game, "Card", "Card", "Set", null, false)
+            {
+                ImageWebUrl = new Uri(source).AbsoluteUri
+            };
+            Directory.CreateDirectory(Path.GetDirectoryName(card.ImageFilePath));
+            File.WriteAllBytes(card.ImageFilePath, Array.Empty<byte>());
+            try
+            {
+                var loader = typeof(ImageQueueService).GetMethod("LoadImageSprite",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                yield return (IEnumerator)loader.Invoke(new ImageQueueService(), new object[] { card });
+                Assert.IsFalse(File.Exists(card.ImageFilePath), "The damaged cache entry must be discarded.");
+                Assert.IsNotNull(card.ImageSprite, "The fallback URL must still be loaded.");
+                Assert.AreEqual(3, card.ImageSprite.texture.width);
+                Assert.AreEqual(2, card.ImageSprite.texture.height);
+            }
+            finally
+            {
+                card.ImageSprite = null;
+                Directory.Delete(game.GameDirectoryPath, true);
+            }
+        }
+#endif
+
         [UnityTest]
         public IEnumerator PreviewsSelectedImageFromLocalFileUri()
         {
