@@ -145,7 +145,11 @@ namespace Cgs.Menu
                 }
 
                 _backsFolderPath = value;
+#if UNITY_WEBGL && !UNITY_EDITOR
+                LocalizedUiText.SetLiteral(backsFolderText, FileBrowserHelpers.GetFilename(value));
+#else
                 Cgs.Localization.LocalizedUiText.SetLiteral(backsFolderText, _backsFolderPath);
+#endif
             }
         }
 
@@ -666,6 +670,7 @@ namespace Cgs.Menu
             _releaseBrowserBacksFolder?.Invoke();
             _releaseBrowserBacksFolder = null;
             _backsFolderPath = string.Empty;
+            LocalizedUiText.SetLiteral(backsFolderText, string.Empty);
 #endif
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.DecksPivot).performed -= InputDownloadWeb;

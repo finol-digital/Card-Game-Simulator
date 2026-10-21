@@ -279,6 +279,9 @@ namespace Cgs.Cards
             _releaseBrowserFolder?.Invoke();
             _releaseBrowserFolder = null;
             _setFolderPath = null;
+            LocalizedUiText.SetLiteral(setNameText, string.Empty);
+            LocalizedUiText.SetLiteral(cardNamesText, string.Empty);
+            importButton.interactable = false;
 #endif
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSelectFolder;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
