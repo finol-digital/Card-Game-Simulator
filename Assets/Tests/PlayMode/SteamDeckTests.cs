@@ -28,6 +28,8 @@ namespace Tests.PlayMode
         private GameObject _events;
         private FloatingTextKeyboard _presenter;
         private FakeKeyboard _backend;
+        private InputSettings.BackgroundBehavior _backgroundBehavior;
+        private InputSettings.EditorInputBehaviorInPlayMode _editorInputBehavior;
 
         private sealed class FakeKeyboard : IFloatingTextKeyboard
         {
@@ -58,6 +60,12 @@ namespace Tests.PlayMode
         public void SetUp()
         {
             InvokeInput("Reset");
+            _backgroundBehavior = InputSystem.settings.backgroundBehavior;
+            _editorInputBehavior = InputSystem.settings.editorInputBehaviorInPlayMode;
+            // Batch Editors have no focused Game view; still process our simulated devices.
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+            InputSystem.settings.editorInputBehaviorInPlayMode =
+                InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
             _gamepad = InputSystem.AddDevice<Gamepad>();
             _mouse = InputSystem.AddDevice<Mouse>();
             _keyboard = InputSystem.AddDevice<Keyboard>();
@@ -78,6 +86,8 @@ namespace Tests.PlayMode
             InputSystem.RemoveDevice(_gamepad);
             InputSystem.RemoveDevice(_mouse);
             InputSystem.RemoveDevice(_keyboard);
+            InputSystem.settings.backgroundBehavior = _backgroundBehavior;
+            InputSystem.settings.editorInputBehaviorInPlayMode = _editorInputBehavior;
             InvokeInput("Reset");
             InvokeInput("Initialize");
         }
