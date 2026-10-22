@@ -2043,9 +2043,35 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648379
       - rid: 7133309715749011564
+  - m_Id: 5713604222373888
+    m_Localized: "Selecionar carta: {move}.\nMover carta: Use {page} com uma carta
+      selecionada.\nMover a visualiza\xE7\xE3o: Use {page} sem nenhuma carta selecionada.\nZoom
+      / Rota\xE7\xE3o: Pressione {toggle} e use {page}."
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648379
+      - rid: 451339017653846036
+  - m_Id: 5713604364980224
+    m_Localized: "Pressione qualquer bot\xE3o"
+    m_Metadata:
+      m_Items:
+      - rid: 451339017653846037
   references:
     version: 2
     RefIds:
+    - rid: 451339017653846036
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Selecionar carta: {move}.\\nMover carta: Use
+          {page} com uma carta selecionada.\\nMover a visualiza\xE7\xE3o: Use {page}
+          sem nenhuma carta selecionada.\\nZoom / Rota\xE7\xE3o: Pressione {toggle}
+          e use {page}.\",\"status\":\"machine\",\"sourceHash\":\"5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b\",\"provenance\":{\"method\":\"Codex
+          translation from English controller help context\",\"date\":\"2026-10-21\"}}"
+    - rid: 451339017653846037
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Pressione qualquer bot\xE3o\",\"status\":\"machine\",\"sourceHash\":\"5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f\",\"provenance\":{\"method\":\"Codex
+          translation from English controller help context\",\"date\":\"2026-10-21\"}}"
     - rid: 7133309421012648379
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2104,6 +2130,7 @@ MonoBehaviour:
         - id: 18086220935172
         - id: 4715992412774400
         - id: 4715992727347200
+        - id: 5713604222373888
     - rid: 7133309421012648380
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

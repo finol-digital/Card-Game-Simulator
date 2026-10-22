@@ -69,6 +69,13 @@ namespace Cgs
             }
         }
 
+        public static void UseSteamDeckDisplay()
+        {
+            // The Settings resolution controls UI scale, not the player framebuffer.
+            // Select the native display mode even when Unity saved a previous 4:3 mode.
+            Screen.SetResolution(1280, 800, FullScreenMode.FullScreenWindow);
+        }
+
         public static void ScaleResolution()
         {
             foreach (var canvasScaler in FindObjectsByType<CanvasScaler>(FindObjectsSortMode.None))

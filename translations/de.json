@@ -2504,6 +2504,15 @@
         "date": "2026-10-05"
       }
     },
+    "help.gamepad": {
+      "text": "Karte auswählen: {move}.\nKarte bewegen: {page} bei ausgewählter Karte verwenden.\nAnsicht verschieben: {page} ohne ausgewählte Karte verwenden.\nZoomen / Drehen: {toggle} drücken, dann {page} verwenden.",
+      "status": "machine",
+      "sourceHash": "5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
+      }
+    },
     "help.gamepad.landscape": {
       "text": "Beim Anschließen eines Gamepads wird unabhängig von der Bildschirmausrichtung das Querformat aktiviert.",
       "status": "machine",
@@ -3367,6 +3376,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "title.start.gamepad": {
+      "text": "Beliebige Taste drücken",
+      "status": "machine",
+      "sourceHash": "5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
       }
     },
     "title.start.keyboard": {

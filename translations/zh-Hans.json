@@ -2504,6 +2504,15 @@
         "date": "2026-10-05"
       }
     },
+    "help.gamepad": {
+      "text": "选择卡牌：{move}。\n移动卡牌：选中卡牌后使用{page}。\n移动视图：未选中卡牌时使用{page}。\n缩放／旋转：按{toggle}，然后使用{page}。",
+      "status": "machine",
+      "sourceHash": "5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
+      }
+    },
     "help.gamepad.landscape": {
       "text": "连接手柄后将使用横屏，无论当前屏幕方向设置如何。",
       "status": "machine",
@@ -3367,6 +3376,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "title.start.gamepad": {
+      "text": "按任意按钮",
+      "status": "machine",
+      "sourceHash": "5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
       }
     },
     "title.start.keyboard": {

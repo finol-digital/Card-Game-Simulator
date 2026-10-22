@@ -2529,6 +2529,15 @@
         "date": "2026-10-05"
       }
     },
+    "help.gamepad": {
+      "text": "Seleccionar carta: {move}.\nMover carta: Usa {page} con una carta seleccionada.\nDesplazar vista: Usa {page} sin ninguna carta seleccionada.\nAmpliar / Girar: Pulsa {toggle} y luego usa {page}.",
+      "status": "machine",
+      "sourceHash": "5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
+      }
+    },
     "help.gamepad.landscape": {
       "text": "Al conectar un mando se aplica la orientación horizontal, independientemente del ajuste de orientación.",
       "status": "machine",
@@ -3394,6 +3403,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "title.start.gamepad": {
+      "text": "Pulsa cualquier botón",
+      "status": "machine",
+      "sourceHash": "5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
       }
     },
     "title.start.keyboard": {

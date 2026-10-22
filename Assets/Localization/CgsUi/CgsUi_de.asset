@@ -2052,9 +2052,35 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277086
       - rid: 7133309715749011546
+  - m_Id: 5713604222373888
+    m_Localized: "Karte ausw\xE4hlen: {move}.\nKarte bewegen: {page} bei ausgew\xE4hlter
+      Karte verwenden.\nAnsicht verschieben: {page} ohne ausgew\xE4hlte Karte verwenden.\nZoomen
+      / Drehen: {toggle} dr\xFCcken, dann {page} verwenden."
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277086
+      - rid: 451339017653846018
+  - m_Id: 5713604364980224
+    m_Localized: "Beliebige Taste dr\xFCcken"
+    m_Metadata:
+      m_Items:
+      - rid: 451339017653846019
   references:
     version: 2
     RefIds:
+    - rid: 451339017653846018
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Karte ausw\xE4hlen: {move}.\\nKarte bewegen:
+          {page} bei ausgew\xE4hlter Karte verwenden.\\nAnsicht verschieben: {page}
+          ohne ausgew\xE4hlte Karte verwenden.\\nZoomen / Drehen: {toggle} dr\xFCcken,
+          dann {page} verwenden.\",\"status\":\"machine\",\"sourceHash\":\"5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b\",\"provenance\":{\"method\":\"Codex
+          translation from English controller help context\",\"date\":\"2026-10-21\"}}"
+    - rid: 451339017653846019
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Beliebige Taste dr\xFCcken\",\"status\":\"machine\",\"sourceHash\":\"5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f\",\"provenance\":{\"method\":\"Codex
+          translation from English controller help context\",\"date\":\"2026-10-21\"}}"
     - rid: 7133309420632277086
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2113,6 +2139,7 @@ MonoBehaviour:
         - id: 18086220935172
         - id: 4715992412774400
         - id: 4715992727347200
+        - id: 5713604222373888
     - rid: 7133309420632277087
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

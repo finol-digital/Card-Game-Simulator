@@ -1,0 +1,6 @@
+{
+    "name": "Cgs.Steam",
+    "references": ["Cgs", "com.rlabrecque.steamworks.net"],
+    "includePlatforms": ["Editor", "LinuxStandalone64", "WindowsStandalone32", "WindowsStandalone64", "macOSStandalone"],
+    "autoReferenced": true
+}
