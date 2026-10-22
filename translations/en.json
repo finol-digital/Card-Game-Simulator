@@ -1750,6 +1750,16 @@
       "arguments": {},
       "smart": false
     },
+    "help.gamepad": {
+      "text": "Select Card: {move}.\nMove Card: Use {page} with a card selected.\nPan: Use {page} with no card selected.\nZoom / Rotate: Press {toggle}, then use {page}.",
+      "context": "Controller-only play help. Binding names are supplied for the active gamepad; do not add keyboard or mouse instructions.",
+      "arguments": {
+        "move": "Selection direction binding.",
+        "page": "Card movement and play area direction binding.",
+        "toggle": "Zoom and rotation toggle binding."
+      },
+      "smart": true
+    },
     "help.gamepad.landscape": {
       "text": "Connecting a gamepad/controller will apply the landscape orientation, regardless of the screen orientation setting.",
       "context": "Tooltip explaining a control at Settings Canvas/Settings ScrollView/Viewport/Content/GamepadLock Toggle in Assets/Scenes/Settings.unity. Keep control labels concise.",
@@ -2359,6 +2369,12 @@
     "sharing.unknown": {
       "text": "Sharing closed. Couldn't confirm whether the content was shared or copied.",
       "context": "CGS runtime sharing.unknown presentation; keep supplied names and model data unchanged.",
+      "arguments": {},
+      "smart": false
+    },
+    "title.start.gamepad": {
+      "text": "Press Any Button",
+      "context": "Title screen start prompt when a gamepad or Steam Deck is active. Button refers to a physical controller button.",
       "arguments": {},
       "smart": false
     },

@@ -2004,9 +2004,30 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648150
       - rid: 7133309715749011560
+  - m_Id: 5713604222373888
+    m_Localized: "\u9009\u62E9\u5361\u724C\uFF1A{move}\u3002\n\u79FB\u52A8\u5361\u724C\uFF1A\u9009\u4E2D\u5361\u724C\u540E\u4F7F\u7528{page}\u3002\n\u79FB\u52A8\u89C6\u56FE\uFF1A\u672A\u9009\u4E2D\u5361\u724C\u65F6\u4F7F\u7528{page}\u3002\n\u7F29\u653E\uFF0F\u65CB\u8F6C\uFF1A\u6309{toggle}\uFF0C\u7136\u540E\u4F7F\u7528{page}\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648150
+      - rid: 451339017653846032
+  - m_Id: 5713604364980224
+    m_Localized: "\u6309\u4EFB\u610F\u6309\u94AE"
+    m_Metadata:
+      m_Items:
+      - rid: 451339017653846033
   references:
     version: 2
     RefIds:
+    - rid: 451339017653846032
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u9009\u62E9\u5361\u724C\uFF1A{move}\u3002\\n\u79FB\u52A8\u5361\u724C\uFF1A\u9009\u4E2D\u5361\u724C\u540E\u4F7F\u7528{page}\u3002\\n\u79FB\u52A8\u89C6\u56FE\uFF1A\u672A\u9009\u4E2D\u5361\u724C\u65F6\u4F7F\u7528{page}\u3002\\n\u7F29\u653E\uFF0F\u65CB\u8F6C\uFF1A\u6309{toggle}\uFF0C\u7136\u540E\u4F7F\u7528{page}\u3002\",\"status\":\"machine\",\"sourceHash\":\"5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b\",\"provenance\":{\"method\":\"Codex
+          translation from English controller help context\",\"date\":\"2026-10-21\"}}"
+    - rid: 451339017653846033
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u6309\u4EFB\u610F\u6309\u94AE\",\"status\":\"machine\",\"sourceHash\":\"5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f\",\"provenance\":{\"method\":\"Codex
+          translation from English controller help context\",\"date\":\"2026-10-21\"}}"
     - rid: 7133309421012648150
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2065,6 +2086,7 @@ MonoBehaviour:
         - id: 18086220935172
         - id: 4715992412774400
         - id: 4715992727347200
+        - id: 5713604222373888
     - rid: 7133309421012648151
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

@@ -22,9 +22,6 @@ namespace Cgs.Play
 
         private const string MissingBindingErrorFormat = "PlayHelpMenu: Input Action '{0}' has no '{1}' binding.";
 
-        private const string GamepadGroup = "Gamepad";
-        private const string KeyboardMouseGroup = "Keyboard&Mouse";
-
         private const string MobileHelpText = "Select Card: Tap a card.\n" +
                                               "View Card: Press-and-hold a card to zoom in on it.\n" +
                                               "Move Card: Drag a card with 1 finger.\n" +
@@ -48,6 +45,7 @@ namespace Cgs.Play
 
         protected void OnEnable()
         {
+            ActiveInputDevice.Changed += RefreshHelp;
             InputSystem.actions.FindAction(Tags.PlayGameHelp).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleZoomRotation;
@@ -56,13 +54,24 @@ namespace Cgs.Play
         public override void Show()
         {
             base.Show();
-            LocalizedUiText.Set(helpText, Application.isMobilePlatform
-                ? new UiMessage("help.mobile", MobileHelpText)
-                : UiMessage.With("help.desktop", DesktopHelpText,
-                    ("move", GetBindingDisplayString(Tags.PlayerMove)),
-                    ("page", GetBindingDisplayString(Tags.PlayerPage)),
-                    ("toggle", GetBindingDisplayString(Tags.PlayGameToggleZoomRotation))));
+            RefreshHelp();
             SyncToggles();
+        }
+
+        private void RefreshHelp()
+        {
+            if (Application.isMobilePlatform)
+            {
+                LocalizedUiText.Set(helpText, new UiMessage("help.mobile", MobileHelpText));
+                return;
+            }
+
+            var key = ActiveInputDevice.UseGamepad ? "help.gamepad" : "help.desktop";
+            var text = ActiveInputDevice.UseGamepad ? GamepadHelpText : DesktopHelpText;
+            LocalizedUiText.Set(helpText, UiMessage.With(key, text,
+                ("move", GetBindingDisplayString(Tags.PlayerMove)),
+                ("page", GetBindingDisplayString(Tags.PlayerPage)),
+                ("toggle", GetBindingDisplayString(Tags.PlayGameToggleZoomRotation))));
         }
 
         protected void Update()
@@ -97,6 +106,12 @@ namespace Cgs.Play
                 PlayArea.ZoomEnabled = isZoomEnabled;
         }
 
+        private static string GamepadHelpText =>
+            $"Select Card: {GetBindingDisplayString(Tags.PlayerMove)}.\n" +
+            $"Move Card: Use {GetBindingDisplayString(Tags.PlayerPage)} with a card selected.\n" +
+            $"Pan: Use {GetBindingDisplayString(Tags.PlayerPage)} with no card selected.\n" +
+            $"Zoom / Rotate: Press {GetBindingDisplayString(Tags.PlayGameToggleZoomRotation)}, then use {GetBindingDisplayString(Tags.PlayerPage)}.";
+
         private static string DesktopHelpText
         {
             get
@@ -125,7 +140,7 @@ namespace Cgs.Play
                 return string.Empty;
             }
 
-            var group = Gamepad.current != null ? GamepadGroup : KeyboardMouseGroup;
+            var group = ActiveInputDevice.BindingGroup;
             var bindings = inputAction.bindings;
             for (var i = 0; i < bindings.Count; i++)
             {
@@ -142,7 +157,7 @@ namespace Cgs.Play
                     continue;
 
                 if (!string.IsNullOrEmpty(displayString))
-                    return Simplify(displayString);
+                    return ActiveInputDevice.FormatBinding(Simplify(displayString));
             }
 
             Debug.LogError(string.Format(MissingBindingErrorFormat, inputActionId, group));
@@ -227,6 +242,7 @@ namespace Cgs.Play
 
         protected void OnDisable()
         {
+            ActiveInputDevice.Changed -= RefreshHelp;
             InputSystem.actions.FindAction(Tags.PlayGameHelp).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed -= InputToggleZoomRotation;

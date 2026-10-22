@@ -92,13 +92,25 @@ namespace Cgs.Menu
             }
         }
 
-        protected IEnumerator Start()
+        protected void OnEnable()
+        {
+            ActiveInputDevice.Changed += RefreshStartPrompt;
+            RefreshStartPrompt();
+        }
+
+        private void RefreshStartPrompt()
         {
 #if !UNITY_ANDROID && !UNITY_IOS
-            LocalizedUiText.Set(centerText, new UiMessage("title.start.keyboard", TouchlessStartMessage));
+            LocalizedUiText.Set(centerText, ActiveInputDevice.UseGamepad
+                ? new UiMessage("title.start.gamepad", "Press Any Button")
+                : new UiMessage("title.start.keyboard", TouchlessStartMessage));
 #else
             LocalizedUiText.Set(centerText, new UiMessage("title.start.touch", "TAP ANYWHERE TO START"));
 #endif
+        }
+
+        protected IEnumerator Start()
+        {
             LocalizedUiText.Set(versionText, LocalizedVersion);
 
             yield return null;
@@ -126,6 +138,7 @@ namespace Cgs.Menu
 
         protected void OnDisable()
         {
+            ActiveInputDevice.Changed -= RefreshStartPrompt;
             _anyButtonPressListener?.Dispose();
         }
     }

@@ -2504,6 +2504,15 @@
         "date": "2026-10-05"
       }
     },
+    "help.gamepad": {
+      "text": "カードを選択：{move}。\nカードを移動：カードを選択して{page}を操作。\n表示を移動：カードを選択せずに{page}を操作。\nズーム／回転：{toggle}を押してから{page}を操作。",
+      "status": "machine",
+      "sourceHash": "5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
+      }
+    },
     "help.gamepad.landscape": {
       "text": "ゲームパッドを接続すると、画面の向きの設定に関係なく横向きになります。",
       "status": "machine",
@@ -3367,6 +3376,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "title.start.gamepad": {
+      "text": "いずれかのボタンを押してください",
+      "status": "machine",
+      "sourceHash": "5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
       }
     },
     "title.start.keyboard": {
