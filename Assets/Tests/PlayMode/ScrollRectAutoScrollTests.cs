@@ -124,6 +124,30 @@ namespace Tests.PlayMode
             Assert.That(_scroll.verticalNormalizedPosition, Is.EqualTo(1).Within(0.001f));
         }
 
+        [Test]
+        public void NewlySelectedVisibleControlStopsInertiaButUnchangedSelectionDoesNot()
+        {
+            var item = Control(270);
+            Canvas.ForceUpdateCanvases();
+            _scroll.verticalNormalizedPosition = 0.5f;
+            _scroll.velocity = Vector2.up * 100;
+            Select(item);
+
+            // Observe selection before ScrollRect's physics tick can decay the velocity.
+            var update = typeof(ScrollRectAutoScroll).GetMethod("LateUpdate",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var autoScroll = _scroll.GetComponent<ScrollRectAutoScroll>();
+            update.Invoke(autoScroll, null);
+            AssertVisible(_scroll, item);
+            Assert.AreEqual(Vector2.zero, _scroll.velocity);
+            Assert.That(_scroll.verticalNormalizedPosition, Is.EqualTo(0.5f).Within(0.001f));
+
+            _scroll.velocity = Vector2.up * 100;
+            update.Invoke(autoScroll, null);
+            Assert.AreEqual(Vector2.up * 100, _scroll.velocity,
+                "Manual scrolling stays free until the selection changes again.");
+        }
+
         [UnityTest]
         public IEnumerator PointerHoverDoesNotBlockNewSelectionAndDynamicControlsWork()
         {

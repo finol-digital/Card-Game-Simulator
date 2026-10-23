@@ -65,9 +65,10 @@ namespace Cgs.UI.ScrollRects
                 next.y = Mathf.Clamp01(position.y - offset / hiddenHeight);
             }
 
+            // A newly selected visible control must not drift away with leftover inertia.
+            _scrollRect.StopMovement();
             if (next == position)
                 return;
-            _scrollRect.StopMovement();
             _scrollRect.normalizedPosition = next;
         }
 

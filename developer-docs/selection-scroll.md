@@ -9,7 +9,7 @@ controllers, custom ScrollRect subclasses, and the bundled file picker.
 after UI navigation. It updates layout and moves only far enough to reveal the
 selected RectTransform on enabled scroll axes. It handles controls created after
 the view opens, uneven row heights, repeated navigation, and paused time. It
-stops inertia when correcting the position. Visible controls do not cause an
+stops inertia for a newly selected control, even when already visible. Visible controls do not cause an
 extra scroll; wheel, drag, and page scrolling remain free until selection changes.
 Oversized controls align to the top/left because they cannot fit fully.
 
@@ -51,7 +51,7 @@ not add keyboard navigation to fields whose Navigation mode is currently None.
 ## Verification
 
 - `ScrollRectAutoScrollTests` covers uneven rows in both directions, dynamic
-  controls, pointer hover/exit, manual scrolling, visible/outside selections,
+  controls, pointer hover/exit, manual scrolling, residual inertia, visible/outside selections,
   nested popup ownership, horizontal scrolling with a scaled hierarchy, fitting
   and oversized content, and reopening while time is paused.
 - `ScrollNavigationWiringTests` checks the actual Settings scene and the affected
