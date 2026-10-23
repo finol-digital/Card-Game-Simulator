@@ -1,4 +1,4 @@
 ## What's Changed
-* Added Languages in Settings
-* Improve dice and counter sizing
-
+* Shorter room passwords
+* Improve local game discovery
+* Keep tabletop pieces visible
