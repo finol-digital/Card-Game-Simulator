@@ -2322,6 +2322,28 @@
                 },
                 {
                     "name": "",
+                    "id": "f564a590-93a7-4abb-bb69-4db841c614f0",
+                    "path": "<Keyboard>/f13",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "SteamDeck",
+                    "action": "FocusNext",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a9d4beb-f44b-489f-b1f0-9af0bfae54a7",
+                    "path": "<Keyboard>/f14",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "SteamDeck",
+                    "action": "FocusPrevious",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "7bd2c099-0706-450e-b3fc-f0dcf52686b8",
                     "path": "<Gamepad>/buttonWest",
                     "interactions": "",
