@@ -2323,7 +2323,7 @@
                 {
                     "name": "",
                     "id": "f564a590-93a7-4abb-bb69-4db841c614f0",
-                    "path": "<Keyboard>/f13",
+                    "path": "<Keyboard>/f9",
                     "interactions": "",
                     "processors": "",
                     "groups": "SteamDeck",
@@ -2334,7 +2334,7 @@
                 {
                     "name": "",
                     "id": "6a9d4beb-f44b-489f-b1f0-9af0bfae54a7",
-                    "path": "<Keyboard>/f14",
+                    "path": "<Keyboard>/f10",
                     "interactions": "",
                     "processors": "",
                     "groups": "SteamDeck",

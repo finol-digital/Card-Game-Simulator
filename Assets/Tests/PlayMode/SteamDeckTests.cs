@@ -144,10 +144,10 @@ namespace Tests.PlayMode
                 "Button South / Button East / Button West / Button North / LB / RT / Start"));
         }
 
-        [TestCase(Key.F13, false)]
-        [TestCase(Key.F14, false)]
-        [TestCase(Key.F13, true)]
-        [TestCase(Key.F14, true)]
+        [TestCase(Key.F9, false)]
+        [TestCase(Key.F10, false)]
+        [TestCase(Key.F9, true)]
+        [TestCase(Key.F10, true)]
         public void DeckGripKeysRestoreControllerPrompts(Key key, bool keyboardOpen)
         {
             ActiveInputDevice.EnableSteamDeck();
@@ -165,8 +165,8 @@ namespace Tests.PlayMode
             Assert.IsFalse(ActiveInputDevice.UseGamepad, "Physical Tab must still select desktop prompts.");
         }
 
-        [TestCase(Key.F13)]
-        [TestCase(Key.F14)]
+        [TestCase(Key.F9)]
+        [TestCase(Key.F10)]
         public void ReservedKeysRemainKeyboardInputOutsideSteamDeck(Key key)
         {
             InputSystem.QueueStateEvent(_keyboard, new KeyboardState(key));
@@ -174,8 +174,8 @@ namespace Tests.PlayMode
             Assert.IsFalse(ActiveInputDevice.UseGamepad);
         }
 
-        [TestCase(Key.F13, Tags.SubMenuFocusNext)]
-        [TestCase(Key.F14, Tags.SubMenuFocusPrevious)]
+        [TestCase(Key.F9, Tags.SubMenuFocusNext)]
+        [TestCase(Key.F10, Tags.SubMenuFocusPrevious)]
         public void GripBindingsTriggerOnlyTheirExistingFocusAction(Key key, string expectedAction)
         {
             var actions = Object.Instantiate(InputSystem.actions);
@@ -225,7 +225,7 @@ namespace Tests.PlayMode
                 actions.Enable();
                 ActiveInputDevice.EnableSteamDeck();
 
-                var steps = new[] { (Key.F13, first), (Key.F13, second), (Key.F13, first), (Key.F14, second) };
+                var steps = new[] { (Key.F9, first), (Key.F9, second), (Key.F9, first), (Key.F10, second) };
                 foreach (var (key, expected) in steps)
                 {
                     InputSystem.QueueStateEvent(_keyboard, new KeyboardState());

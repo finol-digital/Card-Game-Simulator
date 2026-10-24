@@ -18,7 +18,7 @@ and mouse clicks switch to desktop prompts; controller buttons and deliberate
 stick movement restore controller prompts. Mouse motion, including trackpad or
 gyro input, does not change the prompt device. Keyboard events generated while
 Steam's floating keyboard is open also preserve controller prompts.
-On a detected Steam Deck, reserved F13/F14 navigation events restore controller
+On a detected Steam Deck, reserved F9/F10 navigation events restore controller
 prompts as well. Other keyboard keys and mouse clicks retain the behavior above.
 
 The floating keyboard watches the currently focused uGUI or TMP input field,
@@ -41,15 +41,18 @@ no repeat/turbo or modifiers:
 
 | Deck button | Keyboard output | Existing CGS action |
 | --- | --- | --- |
-| R4 | F13 | `SubMenu/FocusNext` |
-| L4 | F14 | `SubMenu/FocusPrevious` |
+| R4 | F9 | `SubMenu/FocusNext` |
+| L4 | F10 | `SubMenu/FocusPrevious` |
+
+Use these standard function keys rather than F13/F14: Unity supports extended
+function keys, but Steam Input has an [open extended-key binding issue](https://github.com/ValveSoftware/steam-for-linux/issues/11542).
 
 Export the tested layout and publish it as the official default configuration in
 Steamworks. These bindings must be applied in Steam Input; changing the Unity
 asset does not configure the physical rear buttons. Keep Tab/Shift+Tab for normal
 keyboard navigation. Do not map the grips to Tab: it also triggers commands in
 other contexts. The reserved bindings reuse the existing menu focus handlers and
-are grouped separately so desktop tooltips do not advertise F13/F14. They do not
+are grouped separately so desktop tooltips do not advertise F9/F10. They do not
 add focus navigation to screens that lack it already.
 
 ## Validation
