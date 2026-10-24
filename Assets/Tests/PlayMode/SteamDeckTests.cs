@@ -4,8 +4,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using Cgs;
+using Cgs.Menu;
 using Cgs.UI;
 using NUnit.Framework;
 using TMPro;
@@ -140,6 +142,111 @@ namespace Tests.PlayMode
             Assert.IsTrue(ActiveInputDevice.UseGamepad);
             Assert.AreEqual("A / B / X / Y / L1 / R2 / Menu", ActiveInputDevice.FormatBinding(
                 "Button South / Button East / Button West / Button North / LB / RT / Start"));
+        }
+
+        [TestCase(Key.F9, false)]
+        [TestCase(Key.F10, false)]
+        [TestCase(Key.F9, true)]
+        [TestCase(Key.F10, true)]
+        public void DeckGripKeysRestoreControllerPrompts(Key key, bool keyboardOpen)
+        {
+            ActiveInputDevice.EnableSteamDeck();
+            InputSystem.QueueStateEvent(_keyboard, new KeyboardState(Key.Space));
+            InputSystem.Update();
+            Assert.IsFalse(ActiveInputDevice.UseGamepad);
+            ActiveInputDevice.IsOnScreenKeyboardOpen = keyboardOpen;
+            InputSystem.QueueStateEvent(_keyboard, new KeyboardState(key));
+            InputSystem.Update();
+            Assert.IsTrue(ActiveInputDevice.UseGamepad);
+
+            ActiveInputDevice.IsOnScreenKeyboardOpen = false;
+            InputSystem.QueueStateEvent(_keyboard, new KeyboardState(Key.Tab));
+            InputSystem.Update();
+            Assert.IsFalse(ActiveInputDevice.UseGamepad, "Physical Tab must still select desktop prompts.");
+        }
+
+        [TestCase(Key.F9)]
+        [TestCase(Key.F10)]
+        public void ReservedKeysRemainKeyboardInputOutsideSteamDeck(Key key)
+        {
+            InputSystem.QueueStateEvent(_keyboard, new KeyboardState(key));
+            InputSystem.Update();
+            Assert.IsFalse(ActiveInputDevice.UseGamepad);
+        }
+
+        [TestCase(Key.F9, Tags.SubMenuFocusNext)]
+        [TestCase(Key.F10, Tags.SubMenuFocusPrevious)]
+        public void GripBindingsTriggerOnlyTheirExistingFocusAction(Key key, string expectedAction)
+        {
+            var actions = Object.Instantiate(InputSystem.actions);
+            try
+            {
+                actions.devices = new InputDevice[] { _keyboard };
+                var performed = new List<string>();
+                foreach (var map in actions.actionMaps)
+                    map.actionTriggered += context =>
+                    {
+                        if (context.performed)
+                            performed.Add(context.action.actionMap.name + "/" + context.action.name);
+                    };
+                actions.Enable();
+                InputSystem.QueueStateEvent(_keyboard, new KeyboardState(key));
+                InputSystem.Update();
+                CollectionAssert.AreEqual(new[] { expectedAction }, performed,
+                    "Grip keys must not trigger Tab's gameplay, menu, or dialog shortcuts.");
+            }
+            finally
+            {
+                actions.Disable();
+                Object.DestroyImmediate(actions);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator GripBindingsCycleExistingModalFieldsAndMoveFloatingKeyboard()
+        {
+            var actions = Object.Instantiate(InputSystem.actions);
+            try
+            {
+                actions.devices = new InputDevice[] { _keyboard };
+                var next = actions.FindAction(Tags.SubMenuFocusNext);
+                var previous = actions.FindAction(Tags.SubMenuFocusPrevious);
+                var modal = _root.AddComponent<Modal>();
+                // Supply the normal cached fields/actions without starting the game's menu manager.
+                modal.enabled = false;
+                var first = CreateLegacyField();
+                var second = CreateLegacyField();
+                const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                typeof(Modal).GetProperty("InputFields", flags).SetValue(modal, new List<InputField> { first, second });
+                typeof(Modal).GetProperty("FocusNextAction", flags).SetValue(modal, next);
+                typeof(Modal).GetProperty("FocusPreviousAction", flags).SetValue(modal, previous);
+                next.performed += _ => modal.FocusInputField();
+                previous.performed += _ => modal.FocusInputField();
+                actions.Enable();
+                ActiveInputDevice.EnableSteamDeck();
+
+                var steps = new[] { (Key.F9, first), (Key.F9, second), (Key.F9, first), (Key.F10, second) };
+                foreach (var (key, expected) in steps)
+                {
+                    InputSystem.QueueStateEvent(_keyboard, new KeyboardState());
+                    InputSystem.Update();
+                    InputSystem.QueueStateEvent(_keyboard, new KeyboardState(key));
+                    InputSystem.Update();
+                    yield return null;
+                    yield return null;
+                    Assert.AreEqual(expected.gameObject, EventSystem.current.currentSelectedGameObject);
+                    Assert.IsTrue(expected.isFocused);
+                    Assert.IsTrue(ActiveInputDevice.UseGamepad);
+                }
+
+                Assert.AreEqual(second.gameObject, EventSystem.current.currentSelectedGameObject);
+                Assert.AreEqual(4, _backend.ShowCount, "The floating keyboard must follow every focus change.");
+            }
+            finally
+            {
+                actions.Disable();
+                Object.DestroyImmediate(actions);
+            }
         }
 
         [Test]

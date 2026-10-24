@@ -49,7 +49,10 @@ namespace Cgs
 
         private static void OnButtonPress(InputControl control)
         {
-            if (control.device is Gamepad)
+            // The official Deck layout sends reserved keys for R4/L4. Treat them as
+            // controller input, including when restoring prompts after physical typing.
+            if (control.device is Gamepad || IsSteamDeck && control.device is Keyboard keyboard
+                && (control == keyboard.f9Key || control == keyboard.f10Key))
                 SetGamepad(true);
             else if (!IsOnScreenKeyboardOpen && (control.device is Keyboard || control.device is Mouse))
                 SetGamepad(false);

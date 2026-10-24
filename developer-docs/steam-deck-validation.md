@@ -18,6 +18,8 @@ and mouse clicks switch to desktop prompts; controller buttons and deliberate
 stick movement restore controller prompts. Mouse motion, including trackpad or
 gyro input, does not change the prompt device. Keyboard events generated while
 Steam's floating keyboard is open also preserve controller prompts.
+On a detected Steam Deck, reserved F9/F10 navigation events restore controller
+prompts as well. Other keyboard keys and mouse clicks retain the behavior above.
 
 The floating keyboard watches the currently focused uGUI or TMP input field,
 including dynamically created fields. Read-only and disabled fields are ignored.
@@ -33,6 +35,25 @@ based on the **Gamepad** template. CGS uses Unity's gamepad bindings; a legacy
 configuration that emulates only keyboard/mouse events cannot supply controller
 identity to Unity. Keep trackpad mouse movement if desired. This partner-site
 configuration is separate from the repository and must be checked before release.
+
+Enable the back grip buttons in that layout and configure **Regular Press**, with
+no repeat/turbo or modifiers:
+
+| Deck button | Keyboard output | Existing CGS action |
+| --- | --- | --- |
+| R4 | F9 | `SubMenu/FocusNext` |
+| L4 | F10 | `SubMenu/FocusPrevious` |
+
+Use these standard function keys rather than F13/F14: Unity supports extended
+function keys, but Steam Input has an [open extended-key binding issue](https://github.com/ValveSoftware/steam-for-linux/issues/11542).
+
+Export the tested layout and publish it as the official default configuration in
+Steamworks. These bindings must be applied in Steam Input; changing the Unity
+asset does not configure the physical rear buttons. Keep Tab/Shift+Tab for normal
+keyboard navigation. Do not map the grips to Tab: it also triggers commands in
+other contexts. The reserved bindings reuse the existing menu focus handlers and
+are grouped separately so desktop tooltips do not advertise F9/F10. They do not
+add focus navigation to screens that lack it already.
 
 ## Validation
 
@@ -60,6 +81,13 @@ build under Proton if both are distributed):
    settings, deck/card editors, gameplay, and modal dialogs for clipped controls.
 5. Launch the same build without Steam and confirm ordinary desktop input still
    works. Confirm mobile/WebGL builds contain no Steam integration assembly.
+6. With the published rear-button layout, press R4/L4 in card search and the lobby.
+   Confirm next/previous field navigation and wrapping match Tab/Shift+Tab, and
+   the floating keyboard follows the newly focused field. Try with the keyboard
+   open and dismissed. After using a physical keyboard, either grip must restore
+   controller prompts. Outside text-entry menus, the grips must not trigger Tab's
+   card-move, settings, games-management, or dialog-No shortcuts. Verify ordinary
+   Tab/Shift+Tab still work with a physical keyboard.
 
 Reference: [Valve's Steam Deck recommendations](https://partner.steamgames.com/doc/steamhardware/recommendations)
 and [ISteamUtils floating keyboard API](https://partner.steamgames.com/doc/api/ISteamUtils#ShowFloatingGamepadTextInput).
