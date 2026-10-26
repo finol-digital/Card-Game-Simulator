@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Cgs;
@@ -99,11 +100,13 @@ namespace Tests.PlayMode
         }
 
         [Test]
-        public void MissingCardsWarning_QueuesOneMessageAndCompleteDeckStaysQuiet()
+        public void MissingCardsWarning_PrecedesLoadCallbackPromptAndCompleteDeckStaysQuiet()
         {
             const BindingFlags privateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
             var instance = typeof(CardGameManager).GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic);
             var previous = instance.GetValue(null);
+            var previousGame = CardGameManager.Current;
+            var deckPath = Path.GetTempFileName();
             var root = new GameObject("Inactive deck warning test");
             root.SetActive(false);
             try
@@ -115,11 +118,23 @@ namespace Tests.PlayMode
                 var dialog = dialogObject.AddComponent<Dialog>();
                 typeof(CardGameManager).GetField("messenger", privateInstance).SetValue(manager, dialog);
                 DeckLoadMenu.ShowMissingCardsWarning(UnityDeck.Parse(NewGame(), "Complete", DeckFileType.Ydk, "1"));
-                DeckLoadMenu.ShowMissingCardsWarning(UnityDeck.Parse(NewGame(), "Kaiba", DeckFileType.Ydk,
-                    "1\n97590748\n97590748\n999"));
+                var game = NewGame();
+                game.DeckFileType = DeckFileType.Ydk;
+                typeof(CardGameManager).GetProperty(nameof(CardGameManager.Current)).SetValue(null, game);
+                File.WriteAllText(deckPath, "1\n97590748\n97590748\n999");
+                var menuObject = new GameObject("Deck loader");
+                menuObject.transform.SetParent(root.transform);
+                var menu = menuObject.AddComponent<DeckLoadMenu>();
+                typeof(DeckLoadMenu).GetField("_selectedFilePath", privateInstance).SetValue(menu, deckPath);
+                var files = (SortedList<string, string>)typeof(DeckLoadMenu).GetField("_deckFiles", privateInstance)
+                    .GetValue(menu);
+                files.Add(deckPath, "Kaiba");
+                OnDeckLoadedDelegate callback = _ => dialog.Show("Starting cards prompt");
+                typeof(DeckLoadMenu).GetField("_loadCallback", privateInstance).SetValue(menu, callback);
+                menu.LoadFromFileAndHide();
                 var messages = ((IEnumerable)typeof(Dialog).GetProperty("MessageQueue", privateInstance)
                     .GetValue(dialog)).Cast<object>().ToArray();
-                Assert.That(messages, Has.Length.EqualTo(1));
+                Assert.That(messages, Has.Length.EqualTo(2));
                 var message = (UiMessage)messages[0].GetType().GetField("Localized").GetValue(messages[0]);
                 Assert.That(message.Key, Is.EqualTo("decks.load.missing"));
                 StringAssert.Contains("Kaiba", message.English);
@@ -127,11 +142,15 @@ namespace Tests.PlayMode
                 StringAssert.Contains("Missing cards: 3", message.English);
                 StringAssert.Contains("2 × 97590748", message.English);
                 StringAssert.Contains("1 × 999", message.English);
+                Assert.That(messages[1].GetType().GetField("Text").GetValue(messages[1]),
+                    Is.EqualTo("Starting cards prompt"));
             }
             finally
             {
                 Object.DestroyImmediate(root);
                 instance.SetValue(null, previous);
+                typeof(CardGameManager).GetProperty(nameof(CardGameManager.Current)).SetValue(null, previousGame);
+                File.Delete(deckPath);
             }
         }
     }

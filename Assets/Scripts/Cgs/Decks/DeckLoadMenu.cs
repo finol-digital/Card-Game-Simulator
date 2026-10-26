@@ -321,9 +321,9 @@ namespace Cgs.Decks
                 var deckText = File.ReadAllText(_selectedFilePath);
                 var newDeck = UnityDeck.Parse(CardGameManager.Current, _deckFiles[_selectedFilePath],
                     CardGameManager.Current.DeckFileType, deckText);
+                ShowMissingCardsWarning(newDeck);
                 _loadCallback?.Invoke(newDeck);
                 Hide();
-                ShowMissingCardsWarning(newDeck);
             }
             catch (Exception e)
             {
