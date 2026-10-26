@@ -1930,6 +1930,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 451339017653846031
+  - m_Id: 7237786089279488
+    m_Key: decks.load.missing
+    m_Metadata:
+      m_Items:
+      - rid: 451339117355073542
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
@@ -1953,6 +1958,18 @@ MonoBehaviour:
         m_CommentText: '{"text":"Press Any Button","context":"Title screen start
           prompt when a gamepad or Steam Deck is active. Button refers to a physical
           controller button.","arguments":{},"smart":false}'
+    - rid: 451339117355073542
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Deck \"{deckName}\" is incomplete. Loaded cards:
+          {loadedCount}. Missing cards: {missingCount}.\n\nThese card names or IDs
+          could not be found in this game:\n{cards}\n\nCheck the deck list or update
+          the game data before playing.","context":"Warning after a partial deck
+          load. Card names, IDs and deck name are supplied data; preserve them. Counts
+          include duplicate copies.","arguments":{"deckName":"Name of the loaded
+          deck.","loadedCount":"Number of card copies successfully loaded.","missingCount":"Number
+          of card copies not found.","cards":"Newline-separated quantities and missing
+          card names or IDs."},"smart":true}'
     - rid: 7133309420632277078
       type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
         asm: Unity.Localization}

@@ -1802,6 +1802,15 @@
         "date": "2026-10-05"
       }
     },
+    "decks.load.missing": {
+      "text": "덱 \"{deckName}\"이 완전하지 않습니다. 불러온 카드: {loadedCount}. 누락된 카드: {missingCount}.\n\n이 게임에서 다음 카드 이름 또는 ID를 찾을 수 없습니다:\n{cards}\n\n플레이하기 전에 덱 목록을 확인하거나 게임 데이터를 업데이트하세요.",
+      "status": "machine",
+      "sourceHash": "b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142",
+      "provenance": {
+        "method": "Codex contextual machine draft",
+        "date": "2026-10-25"
+      }
+    },
     "decks.new": {
       "text": "편집기를 비우고 새 Untitled 덱을 만들까요?",
       "status": "machine",

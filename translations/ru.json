@@ -1802,6 +1802,15 @@
         "date": "2026-10-05"
       }
     },
+    "decks.load.missing": {
+      "text": "Колода «{deckName}» неполная. Загружено карт: {loadedCount}. Отсутствует карт: {missingCount}.\n\nВ этой игре не найдены карты со следующими названиями или идентификаторами:\n{cards}\n\nПеред игрой проверьте список карт колоды или обновите данные игры.",
+      "status": "machine",
+      "sourceHash": "b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142",
+      "provenance": {
+        "method": "Codex contextual machine draft",
+        "date": "2026-10-25"
+      }
+    },
     "decks.new": {
       "text": "Очистить редактор и создать новую колоду Untitled?",
       "status": "machine",

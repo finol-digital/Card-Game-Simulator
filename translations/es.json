@@ -1816,6 +1816,15 @@
         "date": "2026-10-05"
       }
     },
+    "decks.load.missing": {
+      "text": "El mazo «{deckName}» está incompleto. Cartas cargadas: {loadedCount}. Cartas faltantes: {missingCount}.\n\nNo se encontraron estos nombres o identificadores de cartas en este juego:\n{cards}\n\nRevisa la lista del mazo o actualiza los datos del juego antes de jugar.",
+      "status": "machine",
+      "sourceHash": "b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142",
+      "provenance": {
+        "method": "Codex contextual machine draft",
+        "date": "2026-10-25"
+      }
+    },
     "decks.new": {
       "text": "¿Vaciar el editor y crear una baraja nueva llamada Untitled?",
       "status": "machine",
