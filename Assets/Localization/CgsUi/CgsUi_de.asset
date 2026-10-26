@@ -2065,6 +2065,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 451339017653846019
+  - m_Id: 7237786089279488
+    m_Localized: "Das Deck \u201E{deckName}\u201C ist unvollst\xE4ndig. Geladene
+      Karten: {loadedCount}. Fehlende Karten: {missingCount}.\n\nDiese Kartennamen
+      oder IDs wurden in diesem Spiel nicht gefunden:\n{cards}\n\nPr\xFCfe die Deckliste
+      oder aktualisiere die Spieldaten, bevor du spielst."
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277086
+      - rid: 451339117355073536
   references:
     version: 2
     RefIds:
@@ -2081,6 +2090,14 @@ MonoBehaviour:
       data:
         m_CommentText: "{\"text\":\"Beliebige Taste dr\xFCcken\",\"status\":\"machine\",\"sourceHash\":\"5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f\",\"provenance\":{\"method\":\"Codex
           translation from English controller help context\",\"date\":\"2026-10-21\"}}"
+    - rid: 451339117355073536
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Das Deck \u201E{deckName}\u201C ist unvollst\xE4ndig.
+          Geladene Karten: {loadedCount}. Fehlende Karten: {missingCount}.\\n\\nDiese
+          Kartennamen oder IDs wurden in diesem Spiel nicht gefunden:\\n{cards}\\n\\nPr\xFCfe
+          die Deckliste oder aktualisiere die Spieldaten, bevor du spielst.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft\",\"date\":\"2026-10-25\"}}"
     - rid: 7133309420632277086
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2140,6 +2157,7 @@ MonoBehaviour:
         - id: 4715992412774400
         - id: 4715992727347200
         - id: 5713604222373888
+        - id: 7237786089279488
     - rid: 7133309420632277087
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

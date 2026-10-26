@@ -2117,6 +2117,17 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 451339017653846025
+  - m_Id: 7237786089279488
+    m_Localized: "\uB371 \"{deckName}\"\uC774 \uC644\uC804\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.
+      \uBD88\uB7EC\uC628 \uCE74\uB4DC: {loadedCount}. \uB204\uB77D\uB41C \uCE74\uB4DC:
+      {missingCount}.\n\n\uC774 \uAC8C\uC784\uC5D0\uC11C \uB2E4\uC74C \uCE74\uB4DC
+      \uC774\uB984 \uB610\uB294 ID\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4:\n{cards}\n\n\uD50C\uB808\uC774\uD558\uAE30
+      \uC804\uC5D0 \uB371 \uBAA9\uB85D\uC744 \uD655\uC778\uD558\uAC70\uB098 \uAC8C\uC784
+      \uB370\uC774\uD130\uB97C \uC5C5\uB370\uC774\uD2B8\uD558\uC138\uC694."
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012649295
+      - rid: 451339117355073539
   references:
     version: 2
     RefIds:
@@ -2135,6 +2146,17 @@ MonoBehaviour:
       data:
         m_CommentText: "{\"text\":\"\uC544\uBB34 \uBC84\uD2BC\uC774\uB098 \uB204\uB974\uC138\uC694\",\"status\":\"machine\",\"sourceHash\":\"5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f\",\"provenance\":{\"method\":\"Codex
           translation from English controller help context\",\"date\":\"2026-10-21\"}}"
+    - rid: 451339117355073539
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\uB371 \\\"{deckName}\\\"\uC774 \uC644\uC804\uD558\uC9C0
+          \uC54A\uC2B5\uB2C8\uB2E4. \uBD88\uB7EC\uC628 \uCE74\uB4DC: {loadedCount}.
+          \uB204\uB77D\uB41C \uCE74\uB4DC: {missingCount}.\\n\\n\uC774 \uAC8C\uC784\uC5D0\uC11C
+          \uB2E4\uC74C \uCE74\uB4DC \uC774\uB984 \uB610\uB294 ID\uB97C \uCC3E\uC744
+          \uC218 \uC5C6\uC2B5\uB2C8\uB2E4:\\n{cards}\\n\\n\uD50C\uB808\uC774\uD558\uAE30
+          \uC804\uC5D0 \uB371 \uBAA9\uB85D\uC744 \uD655\uC778\uD558\uAC70\uB098 \uAC8C\uC784
+          \uB370\uC774\uD130\uB97C \uC5C5\uB370\uC774\uD2B8\uD558\uC138\uC694.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft\",\"date\":\"2026-10-25\"}}"
     - rid: 7133309421012649295
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2194,6 +2216,7 @@ MonoBehaviour:
         - id: 4715992412774400
         - id: 4715992727347200
         - id: 5713604222373888
+        - id: 7237786089279488
     - rid: 7133309421012649296
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

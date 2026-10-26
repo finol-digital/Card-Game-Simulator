@@ -2015,6 +2015,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 451339017653846033
+  - m_Id: 7237786089279488
+    m_Localized: "\u724C\u7EC4\u201C{deckName}\u201D\u4E0D\u5B8C\u6574\u3002\u5DF2\u52A0\u8F7D\u5361\u724C\uFF1A{loadedCount}\u3002\u7F3A\u5931\u5361\u724C\uFF1A{missingCount}\u3002\n\n\u5728\u6B64\u6E38\u620F\u4E2D\u627E\u4E0D\u5230\u4EE5\u4E0B\u5361\u724C\u540D\u79F0\u6216
+      ID\uFF1A\n{cards}\n\n\u5F00\u59CB\u6E38\u620F\u524D\uFF0C\u8BF7\u68C0\u67E5\u724C\u7EC4\u5217\u8868\u6216\u66F4\u65B0\u6E38\u620F\u6570\u636E\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 7133309421012648150
+      - rid: 451339117355073543
   references:
     version: 2
     RefIds:
@@ -2028,6 +2035,12 @@ MonoBehaviour:
       data:
         m_CommentText: "{\"text\":\"\u6309\u4EFB\u610F\u6309\u94AE\",\"status\":\"machine\",\"sourceHash\":\"5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f\",\"provenance\":{\"method\":\"Codex
           translation from English controller help context\",\"date\":\"2026-10-21\"}}"
+    - rid: 451339117355073543
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u724C\u7EC4\u201C{deckName}\u201D\u4E0D\u5B8C\u6574\u3002\u5DF2\u52A0\u8F7D\u5361\u724C\uFF1A{loadedCount}\u3002\u7F3A\u5931\u5361\u724C\uFF1A{missingCount}\u3002\\n\\n\u5728\u6B64\u6E38\u620F\u4E2D\u627E\u4E0D\u5230\u4EE5\u4E0B\u5361\u724C\u540D\u79F0\u6216
+          ID\uFF1A\\n{cards}\\n\\n\u5F00\u59CB\u6E38\u620F\u524D\uFF0C\u8BF7\u68C0\u67E5\u724C\u7EC4\u5217\u8868\u6216\u66F4\u65B0\u6E38\u620F\u6570\u636E\u3002\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft\",\"date\":\"2026-10-25\"}}"
     - rid: 7133309421012648150
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2087,6 +2100,7 @@ MonoBehaviour:
         - id: 4715992412774400
         - id: 4715992727347200
         - id: 5713604222373888
+        - id: 7237786089279488
     - rid: 7133309421012648151
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
