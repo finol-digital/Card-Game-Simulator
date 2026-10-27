@@ -36,6 +36,11 @@ namespace FinolDigital.Cgs.Json.Unity
         public override IReadOnlyCollection<Card> Cards => new List<Card>(_cards);
         private readonly List<UnityCard> _cards;
 
+        public IReadOnlyDictionary<string, int> MissingCards =>
+            new System.Collections.ObjectModel.ReadOnlyDictionary<string, int>(_missingCards);
+
+        private readonly Dictionary<string, int> _missingCards = new();
+
         public UnityDeck(UnityCardGame sourceGame, string name = DefaultName, DeckFileType fileType = DeckFileType.Txt,
             IReadOnlyCollection<UnityCard> cards = null) : base(sourceGame, name, fileType, cards)
         {
@@ -88,6 +93,14 @@ namespace FinolDigital.Cgs.Json.Unity
             return deck;
         }
 
+        private void RecordMissingCard(string nameOrId, int count)
+        {
+            if (count <= 0)
+                return;
+            _missingCards.TryGetValue(nameOrId, out var previousCount);
+            _missingCards[nameOrId] = previousCount + count;
+        }
+
         private void LoadDec(string line)
         {
             if (string.IsNullOrEmpty(line) || line.StartsWith("//") || line.StartsWith("SB:"))
@@ -95,8 +108,11 @@ namespace FinolDigital.Cgs.Json.Unity
 
             var cardCount = 1;
             var tokens = line.Split(' ').ToList();
-            if (tokens.Count > 0 && int.TryParse(tokens[0], out cardCount))
+            if (tokens.Count > 0 && int.TryParse(tokens[0], out var parsedCount))
+            {
+                cardCount = parsedCount;
                 tokens.RemoveAt(0);
+            }
             var cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
             var cards =
                 ((UnityCardGame) SourceGame).FilterCards(new CardSearchFilters() {Name = cardName});
@@ -106,8 +122,9 @@ namespace FinolDigital.Cgs.Json.Unity
                     continue;
                 for (var i = 0; i < cardCount; i++)
                     _cards.Add(card);
-                break;
+                return;
             }
+            RecordMissingCard(cardName, cardCount);
         }
 
         private void LoadHsd(string line)
@@ -151,6 +168,8 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             var card = ((UnityCardGame) SourceGame).Cards.Values.FirstOrDefault(currCard =>
                 currCard.GetPropertyValueInt(propertyName) == propertyValue);
+            if (card == null)
+                RecordMissingCard(propertyValue.ToString(System.Globalization.CultureInfo.InvariantCulture), count);
             for (var i = 0; card != null && i < count; i++)
                 _cards.Add(card);
         }
@@ -159,6 +178,8 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             var card = ((UnityCardGame) SourceGame).Cards.Values.FirstOrDefault(currCard =>
                 currCard.GetPropertyValueString(propertyName).Equals(propertyValue));
+            if (card == null)
+                RecordMissingCard(propertyValue, count);
             for (var i = 0; card != null && i < count; i++)
                 _cards.Add(card);
         }
@@ -178,7 +199,10 @@ namespace FinolDigital.Cgs.Json.Unity
             foreach (var cardCodeAndCount in cardCodeAndCounts)
             {
                 if (!((UnityCardGame) SourceGame).Cards.TryGetValue(cardCodeAndCount.CardCode, out var card))
+                {
+                    RecordMissingCard(cardCodeAndCount.CardCode, cardCodeAndCount.Count);
                     continue;
+                }
                 for (var i = 0; i < cardCodeAndCount.Count; i++)
                     _cards.Add(card);
             }
@@ -209,8 +233,11 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (tokens.Count > 0 &&
                     int.TryParse(
                         (tokens[0].StartsWith("x") || tokens[0].EndsWith("x")) ? tokens[0].Replace("x", "") : tokens[0],
-                        out cardCount))
+                        out var parsedCount))
+                {
+                    cardCount = parsedCount;
                     tokens.RemoveAt(0);
+                }
 
                 if (tokens.Count > 0 && tokens[0].StartsWith("[") && tokens[0].EndsWith("]"))
                 {
@@ -270,8 +297,9 @@ namespace FinolDigital.Cgs.Json.Unity
                     continue;
                 for (var i = 0; i < cardCount; i++)
                     _cards.Add(card);
-                break;
+                return;
             }
+            RecordMissingCard(string.IsNullOrEmpty(cardId) ? cardName : cardId, cardCount);
         }
 
         public void Add(UnityCard card)

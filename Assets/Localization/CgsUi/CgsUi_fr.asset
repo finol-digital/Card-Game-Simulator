@@ -2041,9 +2041,53 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277544
       - rid: 7133309715749011554
+  - m_Id: 5713604222373888
+    m_Localized: "S\xE9lectionner une carte : {move}.\nD\xE9placer une carte : Utilisez
+      {page} avec une carte s\xE9lectionn\xE9e.\nD\xE9placer la vue : Utilisez {page}
+      sans carte s\xE9lectionn\xE9e.\nZoomer / Pivoter : Appuyez sur {toggle}, puis
+      utilisez {page}."
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277544
+      - rid: 451339017653846026
+  - m_Id: 5713604364980224
+    m_Localized: Appuyez sur un bouton
+    m_Metadata:
+      m_Items:
+      - rid: 451339017653846027
+  - m_Id: 7237786089279488
+    m_Localized: "Le deck \xAB {deckName} \xBB est incomplet. Cartes charg\xE9es
+      : {loadedCount}. Cartes manquantes : {missingCount}.\n\nCes noms ou identifiants
+      de cartes sont introuvables dans ce jeu :\n{cards}\n\nV\xE9rifiez la liste
+      du deck ou mettez \xE0 jour les donn\xE9es du jeu avant de jouer."
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277544
+      - rid: 451339117355073540
   references:
     version: 2
     RefIds:
+    - rid: 451339017653846026
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"S\xE9lectionner une carte : {move}.\\nD\xE9placer
+          une carte : Utilisez {page} avec une carte s\xE9lectionn\xE9e.\\nD\xE9placer
+          la vue : Utilisez {page} sans carte s\xE9lectionn\xE9e.\\nZoomer / Pivoter
+          : Appuyez sur {toggle}, puis utilisez {page}.\",\"status\":\"machine\",\"sourceHash\":\"5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b\",\"provenance\":{\"method\":\"Codex
+          translation from English controller help context\",\"date\":\"2026-10-21\"}}"
+    - rid: 451339017653846027
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Appuyez sur un bouton","status":"machine","sourceHash":"5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f","provenance":{"method":"Codex
+          translation from English controller help context","date":"2026-10-21"}}'
+    - rid: 451339117355073540
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Le deck \xAB {deckName} \xBB est incomplet. Cartes
+          charg\xE9es : {loadedCount}. Cartes manquantes : {missingCount}.\\n\\nCes
+          noms ou identifiants de cartes sont introuvables dans ce jeu :\\n{cards}\\n\\nV\xE9rifiez
+          la liste du deck ou mettez \xE0 jour les donn\xE9es du jeu avant de jouer.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft\",\"date\":\"2026-10-25\"}}"
     - rid: 7133309420632277544
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2102,6 +2146,8 @@ MonoBehaviour:
         - id: 18086220935172
         - id: 4715992412774400
         - id: 4715992727347200
+        - id: 5713604222373888
+        - id: 7237786089279488
     - rid: 7133309420632277545
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

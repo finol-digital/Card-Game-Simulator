@@ -1802,6 +1802,15 @@
         "date": "2026-10-05"
       }
     },
+    "decks.load.missing": {
+      "text": "덱 \"{deckName}\"이 완전하지 않습니다. 불러온 카드: {loadedCount}. 누락된 카드: {missingCount}.\n\n이 게임에서 다음 카드 이름 또는 ID를 찾을 수 없습니다:\n{cards}\n\n플레이하기 전에 덱 목록을 확인하거나 게임 데이터를 업데이트하세요.",
+      "status": "machine",
+      "sourceHash": "b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142",
+      "provenance": {
+        "method": "Codex contextual machine draft",
+        "date": "2026-10-25"
+      }
+    },
     "decks.new": {
       "text": "편집기를 비우고 새 Untitled 덱을 만들까요?",
       "status": "machine",
@@ -2502,6 +2511,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "help.gamepad": {
+      "text": "카드 선택: {move}.\n카드 이동: 카드를 선택한 상태에서 {page} 사용.\n화면 이동: 카드를 선택하지 않은 상태에서 {page} 사용.\n확대 / 회전: {toggle} 버튼을 누른 다음 {page} 사용.",
+      "status": "machine",
+      "sourceHash": "5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
       }
     },
     "help.gamepad.landscape": {
@@ -3367,6 +3385,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "title.start.gamepad": {
+      "text": "아무 버튼이나 누르세요",
+      "status": "machine",
+      "sourceHash": "5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
       }
     },
     "title.start.keyboard": {

@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Cgs.Menu;
 using Cgs.UI;
 using FinolDigital.Cgs.Json;
@@ -27,6 +28,11 @@ namespace Cgs.Decks
     public class DeckLoadMenu : SelectionPanel
     {
         public const string Untitled = "Untitled";
+
+        private const string MissingCardsMessage =
+            "Deck \"{0}\" is incomplete. Loaded cards: {1}. Missing cards: {2}.\n\n" +
+            "These card names or IDs could not be found in this game:\n{3}\n\n" +
+            "Check the deck list or update the game data before playing.";
 
         public const string DecInstructions =
             "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
@@ -315,6 +321,7 @@ namespace Cgs.Decks
                 var deckText = File.ReadAllText(_selectedFilePath);
                 var newDeck = UnityDeck.Parse(CardGameManager.Current, _deckFiles[_selectedFilePath],
                     CardGameManager.Current.DeckFileType, deckText);
+                ShowMissingCardsWarning(newDeck);
                 _loadCallback?.Invoke(newDeck);
                 Hide();
             }
@@ -323,6 +330,21 @@ namespace Cgs.Decks
                 Debug.LogError(DeckLoadErrorMessage + e);
                 CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.deck.load", DeckLoadErrorMessage + e.Message, ("detail", e.Message)));
             }
+        }
+
+        public static void ShowMissingCardsWarning(UnityDeck deck)
+        {
+            var missing = deck.MissingCards;
+            if (missing.Count == 0)
+                return;
+
+            var missingCount = missing.Values.Sum();
+            var missingCards = string.Join("\n", missing.Select(card => $"{card.Value} × {card.Key}"));
+            var loadedCount = deck.Cards.Count;
+            var message = string.Format(MissingCardsMessage, deck.Name, loadedCount, missingCount, missingCards);
+            CardGameManager.Instance.Messenger.Show(UiMessage.With("decks.load.missing", message,
+                ("deckName", deck.Name), ("loadedCount", loadedCount),
+                ("missingCount", missingCount), ("cards", missingCards)));
         }
 
         private void InputDecksNew(InputAction.CallbackContext callbackContext)

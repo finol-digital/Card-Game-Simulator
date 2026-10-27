@@ -2047,9 +2047,57 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277773
       - rid: 7133309715749011556
+  - m_Id: 5713604222373888
+    m_Localized: 'Seleziona carta: {move}.
+
+      Sposta carta: Usa {page} con una
+      carta selezionata.
+
+      Sposta visuale: Usa {page} senza carte selezionate.
+
+      Zoom
+      / Rotazione: Premi {toggle}, poi usa {page}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277773
+      - rid: 451339017653846028
+  - m_Id: 5713604364980224
+    m_Localized: Premi un pulsante qualsiasi
+    m_Metadata:
+      m_Items:
+      - rid: 451339017653846029
+  - m_Id: 7237786089279488
+    m_Localized: "Il mazzo \xAB{deckName}\xBB \xE8 incompleto. Carte caricate: {loadedCount}.
+      Carte mancanti: {missingCount}.\n\nQuesti nomi o identificativi di carte non
+      sono stati trovati in questo gioco:\n{cards}\n\nControlla la lista del mazzo
+      o aggiorna i dati del gioco prima di giocare."
+    m_Metadata:
+      m_Items:
+      - rid: 7133309420632277773
+      - rid: 451339117355073541
   references:
     version: 2
     RefIds:
+    - rid: 451339017653846028
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Seleziona carta: {move}.\nSposta carta: Usa {page}
+          con una carta selezionata.\nSposta visuale: Usa {page} senza carte selezionate.\nZoom
+          / Rotazione: Premi {toggle}, poi usa {page}.","status":"machine","sourceHash":"5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b","provenance":{"method":"Codex
+          translation from English controller help context","date":"2026-10-21"}}'
+    - rid: 451339017653846029
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Premi un pulsante qualsiasi","status":"machine","sourceHash":"5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f","provenance":{"method":"Codex
+          translation from English controller help context","date":"2026-10-21"}}'
+    - rid: 451339117355073541
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Il mazzo \xAB{deckName}\xBB \xE8 incompleto.
+          Carte caricate: {loadedCount}. Carte mancanti: {missingCount}.\\n\\nQuesti
+          nomi o identificativi di carte non sono stati trovati in questo gioco:\\n{cards}\\n\\nControlla
+          la lista del mazzo o aggiorna i dati del gioco prima di giocare.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex
+          contextual machine draft\",\"date\":\"2026-10-25\"}}"
     - rid: 7133309420632277773
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
@@ -2108,6 +2156,8 @@ MonoBehaviour:
         - id: 18086220935172
         - id: 4715992412774400
         - id: 4715992727347200
+        - id: 5713604222373888
+        - id: 7237786089279488
     - rid: 7133309420632277774
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

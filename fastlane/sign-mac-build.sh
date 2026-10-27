@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -e
+
 echo "Setting up macOS certificates..."
 sleep 10
 
@@ -40,6 +42,8 @@ echo "Signing app..."
 sleep 10
 
 mv "${MAC_BUILD_PATH}/StandaloneOSX.app" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
+
+python3 "$(dirname "$0")/prepare-mac-build.py" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
 
 chmod -R a+xr "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
 bundlepaths=$(echo $MAC_APP_BUNDLE_PATHS | tr ";" "\n")

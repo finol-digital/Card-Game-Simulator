@@ -45,8 +45,8 @@ PlayerSettings:
   m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 5845ad4b92e3f6d42a2b3155b4c22f32,
     type: 3}
   m_HolographicTrackingLossScreen: {fileID: 0}
-  defaultScreenWidth: 1024
-  defaultScreenHeight: 768
+  defaultScreenWidth: 1280
+  defaultScreenHeight: 800
   defaultScreenWidthWeb: 1920
   defaultScreenHeightWeb: 1080
   m_StereoRenderingPath: 0
@@ -913,7 +913,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     : CT_FB;CT_FB_PRO
     Android: PORTABLE
-    Standalone: PORTABLE;APP_UI_EDITOR_ONLY;SENTIS_ANALYTICS_ENABLED
+    Standalone: PORTABLE;APP_UI_EDITOR_ONLY;SENTIS_ANALYTICS_ENABLED;STEAMWORKS_NET
     WebGL: PORTABLE;SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY
     Windows Store Apps: PORTABLE
     iPhone: PORTABLE

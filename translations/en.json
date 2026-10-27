@@ -1215,6 +1215,17 @@
       "arguments": {},
       "smart": false
     },
+    "decks.load.missing": {
+      "text": "Deck \"{deckName}\" is incomplete. Loaded cards: {loadedCount}. Missing cards: {missingCount}.\n\nThese card names or IDs could not be found in this game:\n{cards}\n\nCheck the deck list or update the game data before playing.",
+      "context": "Warning after a partial deck load. Card names, IDs and deck name are supplied data; preserve them. Counts include duplicate copies.",
+      "arguments": {
+        "deckName": "Name of the loaded deck.",
+        "loadedCount": "Number of card copies successfully loaded.",
+        "missingCount": "Number of card copies not found.",
+        "cards": "Newline-separated quantities and missing card names or IDs."
+      },
+      "smart": true
+    },
     "decks.new": {
       "text": "Clear the editor and start a new Untitled deck?",
       "context": "CGS runtime decks.new presentation; keep supplied names and model data unchanged.",
@@ -1749,6 +1760,16 @@
       "context": "Tooltip explaining a control at PlayGame Canvas/Card Drawer/DeckStack Controls/Draw Button in Assets/Scenes/PlayGame.unity. Keep control labels concise.",
       "arguments": {},
       "smart": false
+    },
+    "help.gamepad": {
+      "text": "Select Card: {move}.\nMove Card: Use {page} with a card selected.\nPan: Use {page} with no card selected.\nZoom / Rotate: Press {toggle}, then use {page}.",
+      "context": "Controller-only play help. Binding names are supplied for the active gamepad; do not add keyboard or mouse instructions.",
+      "arguments": {
+        "move": "Selection direction binding.",
+        "page": "Card movement and play area direction binding.",
+        "toggle": "Zoom and rotation toggle binding."
+      },
+      "smart": true
     },
     "help.gamepad.landscape": {
       "text": "Connecting a gamepad/controller will apply the landscape orientation, regardless of the screen orientation setting.",
@@ -2359,6 +2380,12 @@
     "sharing.unknown": {
       "text": "Sharing closed. Couldn't confirm whether the content was shared or copied.",
       "context": "CGS runtime sharing.unknown presentation; keep supplied names and model data unchanged.",
+      "arguments": {},
+      "smart": false
+    },
+    "title.start.gamepad": {
+      "text": "Press Any Button",
+      "context": "Title screen start prompt when a gamepad or Steam Deck is active. Button refers to a physical controller button.",
       "arguments": {},
       "smart": false
     },

@@ -89,7 +89,7 @@ namespace Tests.PlayMode
             // Includes the review's reference height, a shorter ultrawide canvas, narrow portrait,
             // and a return to the original size to catch cumulative scale/position drift.
             foreach (var size in new[] {new Vector2(3200, 1800), new Vector2(1920, 1080),
-                         new Vector2(2560, 820), new Vector2(1080, 1920), new Vector2(800, 1920), new Vector2(480, 1920),
+                         new Vector2(1280, 800), new Vector2(2560, 820), new Vector2(1080, 1920), new Vector2(800, 1920), new Vector2(480, 1920),
                          new Vector2(320, 1920), new Vector2(1080, 1920), new Vector2(3200, 1800)})
             {
                 viewport.sizeDelta = size;

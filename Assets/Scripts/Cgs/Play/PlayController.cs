@@ -427,6 +427,7 @@ namespace Cgs.Play
                     var deckText = File.ReadAllText(deckFilePath);
                     var newDeck = UnityDeck.Parse(CardGameManager.Current, deckUrl.Name,
                         CardGameManager.Current.DeckFileType, deckText);
+                    DeckLoadMenu.ShowMissingCardsWarning(newDeck);
                     LoadDeck(newDeck);
                 }
                 catch (Exception e)

@@ -1802,6 +1802,15 @@
         "date": "2026-10-05"
       }
     },
+    "decks.load.missing": {
+      "text": "Das Deck „{deckName}“ ist unvollständig. Geladene Karten: {loadedCount}. Fehlende Karten: {missingCount}.\n\nDiese Kartennamen oder IDs wurden in diesem Spiel nicht gefunden:\n{cards}\n\nPrüfe die Deckliste oder aktualisiere die Spieldaten, bevor du spielst.",
+      "status": "machine",
+      "sourceHash": "b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142",
+      "provenance": {
+        "method": "Codex contextual machine draft",
+        "date": "2026-10-25"
+      }
+    },
     "decks.new": {
       "text": "Editor leeren und ein neues Deck namens Untitled erstellen?",
       "status": "machine",
@@ -2502,6 +2511,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "help.gamepad": {
+      "text": "Karte auswählen: {move}.\nKarte bewegen: {page} bei ausgewählter Karte verwenden.\nAnsicht verschieben: {page} ohne ausgewählte Karte verwenden.\nZoomen / Drehen: {toggle} drücken, dann {page} verwenden.",
+      "status": "machine",
+      "sourceHash": "5eb7e89d5871bf651bfcafe0267a0f6ba6df0ab1b01e5c2c4e698e5e4327151b",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
       }
     },
     "help.gamepad.landscape": {
@@ -3367,6 +3385,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "title.start.gamepad": {
+      "text": "Beliebige Taste drücken",
+      "status": "machine",
+      "sourceHash": "5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f",
+      "provenance": {
+        "method": "Codex translation from English controller help context",
+        "date": "2026-10-21"
       }
     },
     "title.start.keyboard": {
