@@ -36,6 +36,7 @@ namespace Cgs.Cards
         public const string ImportCardFailedWarningMessage = "Failed to find card: ";
         public const string ImportErrorMessage = "Error during import!: ";
         public const string DuplicateCardIdErrorMessage = "A card with the same ID already exists: ";
+        public const string ExistingCardImageErrorMessage = "A card image already exists at: ";
 
         public string SetImportMissingWarningMessage =>
             $"No images found! Does the selected folder have image files saved as {CardGameManager.Current.CardImageFileType}?";
@@ -213,6 +214,9 @@ namespace Cgs.Cards
 
                     var card = new UnityCard(CardGameManager.Current, cardId, cardName, SetName, null, false, false,
                         BackFaceId);
+                    if (FileBrowserHelpers.FileExists(card.ImageFilePath))
+                        throw new IOException(ExistingCardImageErrorMessage + card.ImageFilePath);
+
                     FileBrowserHelpers.CopyFile(cardPathsToImport[i].Path, card.ImageFilePath);
 
                     if (!File.Exists(card.ImageFilePath))
@@ -238,8 +242,9 @@ namespace Cgs.Cards
                 {
                     var file = cardPathsToImport[i];
                     Debug.LogWarning(ImportErrorMessage + file.Path + "\n" + e);
-                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.card.missing",
-                        ImportCardFailedWarningMessage + file.Name, ("detail", file.Name)));
+                    var detail = file.Name + ": " + e.Message;
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.import",
+                        ImportErrorMessage + detail, ("detail", detail)));
                 }
 
                 yield return null;

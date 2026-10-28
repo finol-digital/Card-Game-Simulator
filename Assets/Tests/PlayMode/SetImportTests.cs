@@ -158,11 +158,58 @@ namespace Tests.PlayMode
             var saved = JArray.Parse(File.ReadAllText(_game.CardsFilePath));
             Assert.That(saved.Count, Is.EqualTo(1));
             Assert.That(saved[0].Value<string>("name"), Is.EqualTo(original.Name));
+            var warning = GetImportWarning();
+            StringAssert.Contains(rejectedName, warning.English);
+            StringAssert.Contains(SetImportMenu.DuplicateCardIdErrorMessage + "Same_Card", warning.English);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ExistingImageIsPreservedWhenDifferentIdResolvesToSamePath(bool imageBelongsToCard)
+        {
+            _game.CardBackFaceImageSprites["Blue"] = null;
+            var backs = (IList)typeof(SetImportMenu).GetProperty("BackFaceOptions", PrivateInstance).GetValue(_menu);
+            backs.Add(new Dropdown.OptionData("Blue"));
+            var original = new UnityCard(_game, "A", "Original", Path.GetFileName(_folder), null, false,
+                false, "Blue");
+            Directory.CreateDirectory(Path.GetDirectoryName(original.ImageFilePath));
+            var originalBytes = new byte[] { 7, 8, 9 };
+            File.WriteAllBytes(original.ImageFilePath, originalBytes);
+            if (imageBelongsToCard)
+                _game.Add(original, false);
+            var incoming = new UnityCard(_game, "A.Blue", "A.Blue", original.SetCode, null, false, false, "Blue");
+            Assert.That(incoming.Id, Is.Not.EqualTo(original.Id));
+            Assert.That(incoming.ImageFilePath, Is.EqualTo(original.ImageFilePath));
+            File.WriteAllBytes(Path.Combine(_folder, "A.Blue.PNG"), new byte[] { 1, 2, 3 });
+            var otherBytes = new byte[] { 4, 5, 6 };
+            File.WriteAllBytes(Path.Combine(_folder, "Other.PNG"), otherBytes);
+            LogAssert.Expect(LogType.Warning, new Regex(Regex.Escape(SetImportMenu.ImportErrorMessage) +
+                ".*A.Blue.PNG[\\s\\S]*" + Regex.Escape(SetImportMenu.ExistingCardImageErrorMessage)));
+
+            CompleteImport(CreateImport());
+
+            Assert.That(_completions, Is.EqualTo(1));
+            Assert.That(_game.Cards.ContainsKey(incoming.Id), Is.False);
+            Assert.That(_game.Cards.Count, Is.EqualTo(imageBelongsToCard ? 2 : 1));
+            if (imageBelongsToCard)
+                Assert.That(_game.Cards[original.Id], Is.SameAs(original));
+            CollectionAssert.AreEqual(originalBytes, File.ReadAllBytes(original.ImageFilePath));
+            CollectionAssert.AreEqual(otherBytes, File.ReadAllBytes(_game.Cards["Other"].ImageFilePath));
+            var saved = JArray.Parse(File.ReadAllText(_game.CardsFilePath));
+            CollectionAssert.AreEquivalent(_game.Cards.Keys, saved.Select(card => card.Value<string>("id")));
+            var warning = GetImportWarning();
+            StringAssert.Contains("A.Blue.PNG", warning.English);
+            StringAssert.Contains(SetImportMenu.ExistingCardImageErrorMessage, warning.English);
+        }
+
+        private Cgs.Localization.UiMessage GetImportWarning()
+        {
             var messages = ((IEnumerable)typeof(Dialog).GetProperty("MessageQueue", PrivateInstance)
                 .GetValue(_dialog)).Cast<object>().ToArray();
             Assert.That(messages.Length, Is.EqualTo(1));
             var warning = (Cgs.Localization.UiMessage)messages[0].GetType().GetField("Localized").GetValue(messages[0]);
-            StringAssert.Contains(rejectedName, warning.English);
+            Assert.That(warning.Key, Is.EqualTo("errors.import"));
+            return warning;
         }
 
         private IEnumerator CreateImport()
