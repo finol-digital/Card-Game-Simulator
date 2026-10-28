@@ -7,6 +7,7 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Cgs;
 using Cgs.Cards;
 using Cgs.Menu;
@@ -16,6 +17,7 @@ using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -25,82 +27,155 @@ namespace Tests.PlayMode
     {
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
 
+        private readonly FieldInfo _instance = typeof(CardGameManager).GetField("_instance",
+            BindingFlags.Static | BindingFlags.NonPublic);
+        private readonly PropertyInfo _current = typeof(CardGameManager).GetProperty(nameof(CardGameManager.Current));
+        private object _previousManager;
+        private object _previousGame;
+        private GameObject _root;
+        private UnityCardGame _game;
+        private string _folder;
+        private SetImportMenu _menu;
+        private TMP_Text _preview;
+        private Dialog _dialog;
+        private int _completions;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _folder = Path.Combine(Application.temporaryCachePath, "SetImport-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(_folder);
+            _game = new UnityCardGame(null, "SetImport-" + Guid.NewGuid().ToString("N"))
+            {
+                CardImageFileType = "png"
+            };
+            _previousManager = _instance.GetValue(null);
+            _previousGame = _current.GetValue(null);
+            _root = new GameObject("Inactive set import test");
+            _root.SetActive(false);
+            var manager = _root.AddComponent<CardGameManager>();
+            _instance.SetValue(null, manager);
+            _current.SetValue(null, _game);
+            _dialog = AddChild<Dialog>(_root);
+            typeof(CardGameManager).GetField("messenger", PrivateInstance).SetValue(manager, _dialog);
+            typeof(CardGameManager).GetField("progress", PrivateInstance)
+                .SetValue(manager, AddChild<ProgressBar>(_root));
+            _menu = AddChild<SetImportMenu>(_root);
+            _preview = AddChild<TextMeshProUGUI>(_root);
+            typeof(SetImportMenu).GetField("cardNamesText", PrivateInstance).SetValue(_menu, _preview);
+            typeof(SetImportMenu).GetField("importButton", PrivateInstance)
+                .SetValue(_menu, AddChild<Button>(_root));
+            _completions = 0;
+            typeof(SetImportMenu).GetField("_onCreationCallback", PrivateInstance)
+                .SetValue(_menu, (UnityAction)(() => _completions++));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Object.DestroyImmediate(_root);
+            _instance.SetValue(null, _previousManager);
+            _current.SetValue(null, _previousGame);
+            if (Directory.Exists(_folder))
+                Directory.Delete(_folder, true);
+            if (Directory.Exists(_game.GameDirectoryPath))
+                Directory.Delete(_game.GameDirectoryPath, true);
+        }
+
         [TestCase("png", false)]
         [TestCase("png", true)]
         [TestCase("PNG", true)]
         public void ImportsAndSavesEveryCardInLargeFolder(string imageFileType, bool mixedCase)
         {
             const int cardCount = 300;
-            var folder = Path.Combine(Application.temporaryCachePath, "SetImport-" + Guid.NewGuid().ToString("N"));
-            var game = new UnityCardGame(null, "SetImport-" + Guid.NewGuid().ToString("N"))
+            _game.CardImageFileType = imageFileType;
+            var texture = new Texture2D(2, 3);
+            var bytes = texture.EncodeToPNG();
+            Object.DestroyImmediate(texture);
+            for (var i = 0; i < cardCount; i++)
             {
-                CardImageFileType = imageFileType
-            };
-            var instance = typeof(CardGameManager).GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic);
-            var previousManager = instance.GetValue(null);
-            var current = typeof(CardGameManager).GetProperty(nameof(CardGameManager.Current));
-            var previousGame = current.GetValue(null);
-            var root = new GameObject("Inactive set import test");
-            root.SetActive(false);
-            try
-            {
-                Directory.CreateDirectory(folder);
-                var texture = new Texture2D(2, 3);
-                var bytes = texture.EncodeToPNG();
-                Object.DestroyImmediate(texture);
-                for (var i = 0; i < cardCount; i++)
-                {
-                    var extension = mixedCase ? new[] { "png", "PNG", "PnG" }[i % 3] : "png";
-                    File.WriteAllBytes(Path.Combine(folder, $"Card {i:D3}.{extension}"), bytes);
-                }
-                File.WriteAllText(Path.Combine(folder, "Ignore.apng"), "Not a PNG card");
-                Directory.CreateDirectory(Path.Combine(folder, "Ignore.png"));
-
-                var manager = root.AddComponent<CardGameManager>();
-                instance.SetValue(null, manager);
-                current.SetValue(null, game);
-                typeof(CardGameManager).GetField("messenger", PrivateInstance)
-                    .SetValue(manager, AddChild<Dialog>(root));
-                typeof(CardGameManager).GetField("progress", PrivateInstance)
-                    .SetValue(manager, AddChild<ProgressBar>(root));
-                var menu = AddChild<SetImportMenu>(root);
-                var preview = AddChild<TextMeshProUGUI>(root);
-                typeof(SetImportMenu).GetField("cardNamesText", PrivateInstance).SetValue(menu, preview);
-                typeof(SetImportMenu).GetField("importButton", PrivateInstance)
-                    .SetValue(menu, AddChild<Button>(root));
-                typeof(SetImportMenu).GetProperty("SetFolderPath", PrivateInstance).SetValue(menu, folder);
-
-                var completions = 0;
-                typeof(SetImportMenu).GetField("_onCreationCallback", PrivateInstance)
-                    .SetValue(menu, (UnityAction)(() => completions++));
-                var import = (IEnumerator)typeof(SetImportMenu).GetMethod("ImportSet", PrivateInstance)
-                    .Invoke(menu, null);
-                // Execute every step of the production coroutine without activating scene UI.
-                while (import.MoveNext()) { }
-
-                Assert.That(completions, Is.EqualTo(1));
-                Assert.That(game.Cards.Count, Is.EqualTo(cardCount));
-                var names = preview.text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-                Assert.That(names.Length, Is.EqualTo(cardCount));
-                CollectionAssert.AreEquivalent(Enumerable.Range(0, cardCount).Select(i => $"Card {i:D3}"), names);
-                var saved = JArray.Parse(File.ReadAllText(game.CardsFilePath));
-                CollectionAssert.AreEquivalent(game.Cards.Keys, saved.Select(card => card.Value<string>("id")));
-                for (var i = 0; i < cardCount; i++)
-                {
-                    var card = game.Cards[$"Card_{i:D3}"];
-                    Assert.That(card.Name, Is.EqualTo($"Card {i:D3}"));
-                    CollectionAssert.AreEqual(bytes, File.ReadAllBytes(card.ImageFilePath));
-                }
+                var extension = mixedCase ? new[] { "png", "PNG", "PnG" }[i % 3] : "png";
+                File.WriteAllBytes(Path.Combine(_folder, $"Card {i:D3}.{extension}"), bytes);
             }
-            finally
+            File.WriteAllText(Path.Combine(_folder, "Ignore.apng"), "Not a PNG card");
+            Directory.CreateDirectory(Path.Combine(_folder, "Ignore.png"));
+
+            CompleteImport(CreateImport());
+
+            Assert.That(_completions, Is.EqualTo(1));
+            Assert.That(_game.Cards.Count, Is.EqualTo(cardCount));
+            var names = _preview.text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            Assert.That(names.Length, Is.EqualTo(cardCount));
+            CollectionAssert.AreEquivalent(Enumerable.Range(0, cardCount).Select(i => $"Card {i:D3}"), names);
+            var saved = JArray.Parse(File.ReadAllText(_game.CardsFilePath));
+            CollectionAssert.AreEquivalent(_game.Cards.Keys, saved.Select(card => card.Value<string>("id")));
+            for (var i = 0; i < cardCount; i++)
             {
-                Object.DestroyImmediate(root);
-                instance.SetValue(null, previousManager);
-                current.SetValue(null, previousGame);
-                if (Directory.Exists(folder))
-                    Directory.Delete(folder, true);
-                if (Directory.Exists(game.GameDirectoryPath))
-                    Directory.Delete(game.GameDirectoryPath, true);
+                var card = _game.Cards[$"Card_{i:D3}"];
+                Assert.That(card.Name, Is.EqualTo($"Card {i:D3}"));
+                CollectionAssert.AreEqual(bytes, File.ReadAllBytes(card.ImageFilePath));
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void DuplicateIdPreservesFirstCardAndImageAndReportsRejectedFilename(bool alreadyInGame)
+        {
+            var firstPath = Path.Combine(_folder, "Same Card.png");
+            var secondPath = Path.Combine(_folder, "Same_Card.PNG");
+            File.WriteAllBytes(firstPath, new byte[] { 1, 2, 3 });
+            File.WriteAllBytes(secondPath, new byte[] { 4, 5, 6 });
+            UnityCard original;
+            IEnumerator import;
+            if (alreadyInGame)
+            {
+                original = new UnityCard(_game, "Same_Card", "Existing card", Path.GetFileName(_folder), null, false);
+                Directory.CreateDirectory(Path.GetDirectoryName(original.ImageFilePath));
+                File.WriteAllBytes(original.ImageFilePath, new byte[] { 7, 8, 9 });
+                _game.Add(original, false);
+                File.Delete(firstPath);
+                import = CreateImport();
+            }
+            else
+            {
+                import = CreateImport();
+                Assert.IsTrue(import.MoveNext()); // Initial UI yield, before enumerating the folder.
+                Assert.IsTrue(import.MoveNext()); // Import the first file, in filesystem order.
+                original = _game.Cards["Same_Card"];
+            }
+            var originalBytes = File.ReadAllBytes(original.ImageFilePath);
+            var rejectedName = original.Name == "Same_Card" ? "Same Card.png" : "Same_Card.PNG";
+            LogAssert.Expect(LogType.Warning, new Regex(Regex.Escape(SetImportMenu.ImportErrorMessage) +
+                ".*" + Regex.Escape(rejectedName) + "[\\s\\S]*" +
+                Regex.Escape(SetImportMenu.DuplicateCardIdErrorMessage + "Same_Card")));
+
+            CompleteImport(import);
+
+            Assert.That(_game.Cards.Count, Is.EqualTo(1));
+            Assert.That(_game.Cards["Same_Card"], Is.SameAs(original));
+            CollectionAssert.AreEqual(originalBytes, File.ReadAllBytes(original.ImageFilePath));
+            Assert.That(_completions, Is.EqualTo(1));
+            var saved = JArray.Parse(File.ReadAllText(_game.CardsFilePath));
+            Assert.That(saved.Count, Is.EqualTo(1));
+            Assert.That(saved[0].Value<string>("name"), Is.EqualTo(original.Name));
+            var messages = ((IEnumerable)typeof(Dialog).GetProperty("MessageQueue", PrivateInstance)
+                .GetValue(_dialog)).Cast<object>().ToArray();
+            Assert.That(messages.Length, Is.EqualTo(1));
+            var warning = (Cgs.Localization.UiMessage)messages[0].GetType().GetField("Localized").GetValue(messages[0]);
+            StringAssert.Contains(rejectedName, warning.English);
+        }
+
+        private IEnumerator CreateImport()
+        {
+            typeof(SetImportMenu).GetProperty("SetFolderPath", PrivateInstance).SetValue(_menu, _folder);
+            return (IEnumerator)typeof(SetImportMenu).GetMethod("ImportSet", PrivateInstance).Invoke(_menu, null);
+        }
+
+        private static void CompleteImport(IEnumerator import)
+        {
+            while (import.MoveNext())
+            {
+                // Execute every step of the production coroutine without activating scene UI.
             }
         }
 
