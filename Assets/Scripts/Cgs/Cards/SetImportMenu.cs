@@ -68,19 +68,8 @@ namespace Cgs.Cards
 
                 Debug.Log("Import Set Folder Path set: " + _setFolderPath);
                 Cgs.Localization.LocalizedUiText.SetLiteral(setNameText, SetName);
-                var cardNames = FileBrowserHelpers.GetEntriesInDirectory(_setFolderPath, true)
-                    .Where(fileSystemEntry =>
-                        !fileSystemEntry.IsDirectory && !string.IsNullOrEmpty(fileSystemEntry.Extension)
-                                                     && fileSystemEntry.Extension.EndsWith(CardGameManager.Current
-                                                         .CardImageFileType))
-                    .Aggregate(string.Empty, (current, file) =>
-                    {
-                        var fileName = file.Name;
-                        if (fileName.EndsWith(CardGameManager.Current.CardImageFileType))
-                            fileName = fileName[..(fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
-                                StringComparison.Ordinal) - 1)];
-                        return current + fileName + "\n";
-                    });
+                var cardNames = string.Join("\n", GetCardFilesToImport()
+                    .Select(file => Path.GetFileNameWithoutExtension(file.Name)));
                 if (!string.IsNullOrWhiteSpace(cardNames))
                     LocalizedUiText.SetLiteral(cardNamesText, cardNames);
                 else
@@ -91,6 +80,14 @@ namespace Cgs.Cards
         }
 
         private string _setFolderPath;
+
+        private IEnumerable<FileSystemEntry> GetCardFilesToImport()
+        {
+            var extension = "." + CardGameManager.Current.CardImageFileType;
+            return FileBrowserHelpers.GetEntriesInDirectory(_setFolderPath, true)
+                .Where(file => !file.IsDirectory &&
+                               string.Equals(file.Extension, extension, StringComparison.OrdinalIgnoreCase));
+        }
 
         [UsedImplicitly] public int Back { get; set; }
 
@@ -200,11 +197,7 @@ namespace Cgs.Cards
             ProgressStatus = ImportStatus;
             LocalizedProgressStatus = UiMessage.With("sets.import.progress", ImportStatus, ("setName", SetName));
 
-            var cardPathsToImport = FileBrowserHelpers.GetEntriesInDirectory(_setFolderPath, true)
-                .Where(fileSystemEntry => !fileSystemEntry.IsDirectory &&
-                                          !string.IsNullOrEmpty(fileSystemEntry.Extension) &&
-                                          fileSystemEntry.Extension.EndsWith(CardGameManager.Current.CardImageFileType))
-                .ToList();
+            var cardPathsToImport = GetCardFilesToImport().ToList();
             var cardCount = cardPathsToImport.Count;
             for (var i = 0; i < cardCount; i++)
             {
@@ -212,9 +205,7 @@ namespace Cgs.Cards
                 {
                     ProgressPercentage = (float)i / cardCount;
                     var fileName = cardPathsToImport[i].Name;
-                    var end = fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
-                        StringComparison.Ordinal);
-                    var cardName = fileName[..(end - 1)];
+                    var cardName = Path.GetFileNameWithoutExtension(fileName);
                     var cardId = UnityFileMethods.GetSafeFileName(cardName).Replace(" ", "_");
                     var card = new UnityCard(CardGameManager.Current, cardId, cardName, SetName, null, false, false,
                         BackFaceId);
@@ -239,10 +230,12 @@ namespace Cgs.Cards
                         CardGameManager.Current.Add(card, false);
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    Debug.LogWarning(ImportCardFailedWarningMessage + cardPathsToImport[i]);
-                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.card.missing", ImportCardFailedWarningMessage + cardPathsToImport[i], ("detail", cardPathsToImport[i])));
+                    var file = cardPathsToImport[i];
+                    Debug.LogWarning(ImportErrorMessage + file.Path + "\n" + e);
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.card.missing",
+                        ImportCardFailedWarningMessage + file.Name, ("detail", file.Name)));
                 }
 
                 yield return null;
