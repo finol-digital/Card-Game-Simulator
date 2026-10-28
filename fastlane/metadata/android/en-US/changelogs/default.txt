@@ -1,4 +1,3 @@
 ## What's Changed
-* Shorter room passwords
-* Improve local game discovery
-* Keep tabletop pieces visible
+* Warn when decks contain missing cards
+* Fix skipped cards when importing card sets
