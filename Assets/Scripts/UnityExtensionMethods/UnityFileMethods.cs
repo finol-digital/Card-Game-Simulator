@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using WebP.Experiment.Animation;
 #if !UNITY_WEBGL
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -37,6 +38,10 @@ namespace UnityExtensionMethods
         private const string HttpsPrefix = "https://";
         private const string HttpPrefix = "http://";
         private const string ImageDecodeErrorMessage = "CreateSprite::DecodeFailed:";
+        private const string ImageReadErrorMessage = "ReadImageFileBytes::ReadFailed:";
+#if !UNITY_WEBGL
+        private static readonly SemaphoreSlim ImageFileReads = new(5);
+#endif
 
         public static string ToCgsGamesProxyUrl(string url)
         {
@@ -579,33 +584,15 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
-            byte[] bytes;
-#if UNITY_WEBGL
-            try
+            byte[] bytes = null;
+            yield return ReadImageFileBytes(textureFilePath, value => bytes = value);
+            if (bytes == null)
             {
-                bytes = File.ReadAllBytes(textureFilePath);
-            }
-            catch (Exception exception)
-            {
-                Debug.LogWarning("CreateSpriteFromFileAsync::ReadFailed:" + exception);
-                output(null);
-                yield break;
-            }
-#else
-            var loadTask = Task.Run(() => File.ReadAllBytes(textureFilePath));
-            while (!loadTask.IsCompleted)
-                yield return null;
-            if (loadTask.IsFaulted)
-            {
-                Debug.LogWarning("CreateSpriteFromFileAsync::ReadFailed:" + loadTask.Exception);
                 output(null);
                 yield break;
             }
 
-            bytes = loadTask.Result;
-#endif
-
-            if (bytes is not { Length: > 0 })
+            if (bytes.Length == 0)
             {
                 Debug.LogWarning("CreateSpriteFromFileAsync::TextureFileEmpty:" + textureFilePath);
                 onInvalidImage?.Invoke();
@@ -618,6 +605,67 @@ namespace UnityExtensionMethods
                 onInvalidImage?.Invoke();
             output(sprite);
         }
+
+        public static IEnumerator ReadImageFileBytes(string path, Action<byte[]> output)
+        {
+            if (output == null)
+                yield break;
+#if UNITY_WEBGL
+            byte[] bytes;
+            try
+            {
+                bytes = File.ReadAllBytes(path);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning(ImageReadErrorMessage + path + " " + exception.Message);
+                output(null);
+                yield break;
+            }
+            output(bytes);
+#else
+            using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+            var cancellationToken = cancellation.Token;
+            var loadTask = Task.Run(() => ReadImageFileAsync(path, cancellationToken), cancellationToken);
+            // Observe faults even if the caller leaves the page before the read finishes.
+            _ = loadTask.ContinueWith(task => { _ = task.Exception; }, CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
+            try
+            {
+                while (!loadTask.IsCompleted && !cancellation.IsCancellationRequested)
+                    yield return null;
+                if (loadTask.Status == TaskStatus.RanToCompletion)
+                    output(loadTask.Result);
+                else
+                {
+                    Debug.LogWarning(ImageReadErrorMessage + path + " " +
+                                     (loadTask.Exception?.Message ?? "Read cancelled or timed out."));
+                    output(null);
+                }
+            }
+            finally
+            {
+                // Leaving a page also cancels reads waiting for a physical I/O slot.
+                cancellation.Cancel();
+            }
+#endif
+        }
+
+#if !UNITY_WEBGL
+        private static async Task<byte[]> ReadImageFileAsync(string path, CancellationToken cancellationToken)
+        {
+            await ImageFileReads.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return await File.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                ImageFileReads.Release();
+            }
+        }
+#endif
 
         // Some hosts serve webp bytes under a .jpg/.png url with a mismatched Content-Type,
         // so the file signature is checked instead of trusting the file extension

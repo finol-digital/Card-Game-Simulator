@@ -137,6 +137,39 @@ namespace Tests.PlayMode
 
 #if !UNITY_WEBGL
         [UnityTest]
+        public IEnumerator QueuedFileReadTimesOutWithoutBlockingLaterReads()
+        {
+            var limiter = (System.Threading.SemaphoreSlim)typeof(UnityFileMethods)
+                .GetField("ImageFileReads", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+            var acquired = 0;
+            var path = Path.Combine(_directory, "queued.png");
+            var expected = new byte[] { 1, 2, 3 };
+            File.WriteAllBytes(path, expected);
+            try
+            {
+                for (; acquired < 5; acquired++)
+                    Assert.IsTrue(limiter.Wait(0), "The test must start with all file-read slots available.");
+                var called = false;
+                LogAssert.Expect(LogType.Warning, new Regex("ReadImageFileBytes::ReadFailed:"));
+                yield return UnityFileMethods.ReadImageFileBytes(path, bytes =>
+                {
+                    called = true;
+                    Assert.IsNull(bytes);
+                });
+                Assert.IsTrue(called, "A saturated reader must finish with a failure instead of waiting forever.");
+            }
+            finally
+            {
+                if (acquired > 0)
+                    limiter.Release(acquired);
+            }
+
+            byte[] actual = null;
+            yield return UnityFileMethods.ReadImageFileBytes(path, bytes => actual = bytes);
+            CollectionAssert.AreEqual(expected, actual, "Timed-out reads must not leak I/O permits.");
+        }
+
+        [UnityTest]
         public IEnumerator FailedReadPreservesLocallyImportedImage()
         {
             var game = new UnityCardGame(null, "LockedCard-" + Guid.NewGuid().ToString("N"));
@@ -150,7 +183,7 @@ namespace Tests.PlayMode
             {
                 using (File.Open(card.ImageFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 {
-                    LogAssert.Expect(LogType.Warning, new Regex("CreateSpriteFromFileAsync::ReadFailed:"));
+                    LogAssert.Expect(LogType.Warning, new Regex("ReadImageFileBytes::ReadFailed:"));
                     var loader = typeof(ImageQueueService).GetMethod("LoadImageSprite",
                         BindingFlags.Instance | BindingFlags.NonPublic);
                     yield return (IEnumerator)loader.Invoke(new FileOnlyQueue(), new object[] { card });

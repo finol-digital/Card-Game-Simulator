@@ -9,9 +9,6 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityExtensionMethods;
-#if !UNITY_WEBGL
-using System.Threading.Tasks;
-#endif
 
 namespace FinolDigital.Cgs.Json.Unity
 {
@@ -165,19 +162,10 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (uri.IsFile)
                 {
                     // Browser imports live in the virtual filesystem, outside fetch's file: access.
-#if UNITY_WEBGL
-                    var bytes = File.ReadAllBytes(uri.LocalPath);
-#else
-                    var loadTask = Task.Run(() => File.ReadAllBytes(uri.LocalPath));
-                    while (!loadTask.IsCompleted)
-                        yield return null;
-                    if (loadTask.IsFaulted)
-                    {
-                        Debug.LogWarning(LoadErrorMessage + card.Id + ": " + loadTask.Exception);
+                    byte[] bytes = null;
+                    yield return UnityFileMethods.ReadImageFileBytes(uri.LocalPath, value => bytes = value);
+                    if (bytes == null)
                         yield break;
-                    }
-                    var bytes = loadTask.Result;
-#endif
                     sprite = UnityFileMethods.CreateSprite(bytes);
                     if (sprite != null)
                         CacheImage(card, bytes);
