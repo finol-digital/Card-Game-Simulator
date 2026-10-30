@@ -537,6 +537,23 @@ namespace UnityExtensionMethods
             return CreateSprite(texture);
         }
 
+        // Note: Memory Leak Potential
+        public static Sprite CreateSprite(byte[] bytes)
+        {
+            if (bytes is not { Length: > 0 })
+                return null;
+
+            return CreateSprite(IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes));
+        }
+
+        private static Sprite CreateSprite(Texture2D texture)
+        {
+            if (texture != null)
+                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            Debug.LogWarning("CreateSprite::TextureNull");
+            return null;
+        }
+
         public static IEnumerator CreateSpriteFromFileAsync(string textureFilePath, Action<Sprite> output)
         {
             if (output == null)
@@ -671,23 +688,6 @@ namespace UnityExtensionMethods
             if (didLoad)
                 return texture2D;
             UnityEngine.Object.Destroy(texture2D);
-            return null;
-        }
-
-        // Note: Memory Leak Potential
-        public static Sprite CreateSprite(byte[] bytes)
-        {
-            if (bytes is not { Length: > 0 })
-                return null;
-
-            return CreateSprite(IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes));
-        }
-
-        private static Sprite CreateSprite(Texture2D texture)
-        {
-            if (texture != null)
-                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            Debug.LogWarning("CreateSprite::TextureNull");
             return null;
         }
 

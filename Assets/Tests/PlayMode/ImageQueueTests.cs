@@ -18,7 +18,7 @@ namespace Tests.PlayMode
         private sealed class Display : ICardDisplay
         {
             public bool UsesOrientedImage => false;
-            public void SetImageSprite(Sprite sprite) { }
+            public void SetImageSprite(Sprite imageSprite) { }
         }
 
         private sealed class ControlledQueue : ImageQueueService
