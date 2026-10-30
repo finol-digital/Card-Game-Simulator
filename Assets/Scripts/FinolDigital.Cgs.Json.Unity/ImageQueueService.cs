@@ -162,13 +162,12 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (uri.IsFile)
                 {
                     // Browser imports live in the virtual filesystem, outside fetch's file: access.
-                    byte[] bytes = null;
-                    yield return UnityFileMethods.ReadImageFileBytes(uri.LocalPath, value => bytes = value);
-                    if (bytes == null)
-                        yield break;
-                    sprite = UnityFileMethods.CreateSprite(bytes);
-                    if (sprite != null)
-                        CacheImage(card, bytes);
+                    yield return UnityFileMethods.ReadImageFileBytes(uri.LocalPath, bytes =>
+                    {
+                        sprite = UnityFileMethods.CreateSprite(bytes);
+                        if (sprite != null)
+                            CacheImage(card, bytes);
+                    });
                     yield break;
                 }
 

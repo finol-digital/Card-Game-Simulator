@@ -584,26 +584,27 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
-            byte[] bytes = null;
-            yield return ReadImageFileBytes(textureFilePath, value => bytes = value);
-            if (bytes == null)
+            yield return ReadImageFileBytes(textureFilePath, bytes =>
             {
-                output(null);
-                yield break;
-            }
+                if (bytes == null)
+                {
+                    output(null);
+                    return;
+                }
 
-            if (bytes.Length == 0)
-            {
-                Debug.LogWarning("CreateSpriteFromFileAsync::TextureFileEmpty:" + textureFilePath);
-                onInvalidImage?.Invoke();
-                output(null);
-                yield break;
-            }
+                if (bytes.Length == 0)
+                {
+                    Debug.LogWarning("CreateSpriteFromFileAsync::TextureFileEmpty:" + textureFilePath);
+                    onInvalidImage?.Invoke();
+                    output(null);
+                    return;
+                }
 
-            var sprite = CreateSprite(bytes);
-            if (sprite == null)
-                onInvalidImage?.Invoke();
-            output(sprite);
+                var sprite = CreateSprite(bytes);
+                if (sprite == null)
+                    onInvalidImage?.Invoke();
+                output(sprite);
+            });
         }
 
         public static IEnumerator ReadImageFileBytes(string path, Action<byte[]> output)
