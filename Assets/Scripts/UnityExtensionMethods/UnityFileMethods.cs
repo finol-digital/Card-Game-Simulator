@@ -36,6 +36,7 @@ namespace UnityExtensionMethods
         public const string CgsGamesProxyPrefix = "https://cgs.games/api/proxy/";
         private const string HttpsPrefix = "https://";
         private const string HttpPrefix = "http://";
+        private const string ImageDecodeErrorMessage = "CreateSprite::DecodeFailed:";
 
         public static string ToCgsGamesProxyUrl(string url)
         {
@@ -543,7 +544,15 @@ namespace UnityExtensionMethods
             if (bytes is not { Length: > 0 })
                 return null;
 
-            return CreateSprite(IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes));
+            try
+            {
+                return CreateSprite(IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes));
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning(ImageDecodeErrorMessage + exception.Message);
+                return null;
+            }
         }
 
         private static Sprite CreateSprite(Texture2D texture)
@@ -604,8 +613,7 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
-            var texture = IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
-            var sprite = CreateSprite(texture);
+            var sprite = CreateSprite(bytes);
             if (sprite == null)
                 onInvalidImage?.Invoke();
             output(sprite);

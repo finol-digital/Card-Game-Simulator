@@ -31,13 +31,13 @@ namespace Tests.PlayMode
         private sealed class RetryQueue : ImageQueueService
         {
             public readonly List<string> RequestedUrls = new();
-            public string MissingFileUrl;
+            public string FirstResponseUrl;
             public string ImageFileUrl;
 
             protected override UnityWebRequest CreateImageRequest(string url)
             {
                 RequestedUrls.Add(url);
-                return UnityWebRequest.Get(RequestedUrls.Count == 1 ? MissingFileUrl : ImageFileUrl);
+                return UnityWebRequest.Get(RequestedUrls.Count == 1 ? FirstResponseUrl : ImageFileUrl);
             }
         }
 
@@ -168,6 +168,20 @@ namespace Tests.PlayMode
         [UnityTest]
         public IEnumerator FailedHttpsRequestUsesProxyAndCachesSuccessfulImage()
         {
+            yield return VerifyProxyFallback(new Uri(Path.Combine(_directory, "missing.png")).AbsoluteUri);
+        }
+
+        [UnityTest]
+        public IEnumerator MalformedWebpResponseUsesProxyAndCachesSuccessfulImage()
+        {
+            var malformedImage = Path.Combine(_directory, "malformed.webp");
+            File.WriteAllBytes(malformedImage, System.Text.Encoding.ASCII.GetBytes("RIFFxxxxWEBP"));
+            LogAssert.Expect(LogType.Error, "[WebPDecoderWrapper] Get file info failed");
+            yield return VerifyProxyFallback(new Uri(malformedImage).AbsoluteUri);
+        }
+
+        private IEnumerator VerifyProxyFallback(string firstResponseUrl)
+        {
             var game = new UnityCardGame(null, "ProxyCard-" + Guid.NewGuid().ToString("N"));
             var card = new UnityCard(game, "Card", "Card", "Set", null, false)
             {
@@ -179,7 +193,7 @@ namespace Tests.PlayMode
             UnityEngine.Object.Destroy(texture);
             var queue = new RetryQueue
             {
-                MissingFileUrl = new Uri(Path.Combine(_directory, "missing.png")).AbsoluteUri,
+                FirstResponseUrl = firstResponseUrl,
                 ImageFileUrl = new Uri(source).AbsoluteUri
             };
             try
