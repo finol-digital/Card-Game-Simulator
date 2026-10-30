@@ -525,10 +525,16 @@ namespace Cgs.Decks
 
             scrollRect.horizontal = IsHorizontalLayout;
             scrollRect.vertical = !IsHorizontalLayout;
-            if (scrollRect.horizontalScrollbar != null)
-                scrollRect.horizontalScrollbar.gameObject.SetActive(IsHorizontalLayout);
-            if (scrollRect.verticalScrollbar != null)
-                scrollRect.verticalScrollbar.gameObject.SetActive(!IsHorizontalLayout);
+            // ScrollRect only subscribes to enabled axes on enable or scrollbar assignment.
+            // Reassign after changing axes so the newly enabled scrollbar moves the content.
+            var horizontalScrollbar = scrollRect.horizontalScrollbar;
+            var verticalScrollbar = scrollRect.verticalScrollbar;
+            scrollRect.horizontalScrollbar = horizontalScrollbar;
+            scrollRect.verticalScrollbar = verticalScrollbar;
+            if (horizontalScrollbar != null)
+                horizontalScrollbar.gameObject.SetActive(IsHorizontalLayout);
+            if (verticalScrollbar != null)
+                verticalScrollbar.gameObject.SetActive(!IsHorizontalLayout);
 
             foreach (var verticalScrollArea in verticalScrollAreas)
                 verticalScrollArea.SetActive(!IsHorizontalLayout);
