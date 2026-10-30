@@ -180,12 +180,29 @@ namespace Tests.PlayMode
             yield return VerifyProxyFallback(new Uri(malformedImage).AbsoluteUri);
         }
 
-        private IEnumerator VerifyProxyFallback(string firstResponseUrl)
+        [UnityTest]
+        public IEnumerator HttpImageUrlUpgradesToHttpsBeforeProxyFallback()
+        {
+            yield return VerifyProxyFallback(new Uri(Path.Combine(_directory, "missing.png")).AbsoluteUri,
+                "http://images.example:80/card.png");
+        }
+
+        [UnityTest]
+        public IEnumerator UndecodableNonWebpResponseUsesProxyAndCachesSuccessfulImage()
+        {
+            var invalidImage = Path.Combine(_directory, "invalid.png");
+            File.WriteAllText(invalidImage, "not an image");
+            LogAssert.Expect(LogType.Warning, "CreateSprite::TextureNull");
+            yield return VerifyProxyFallback(new Uri(invalidImage).AbsoluteUri);
+        }
+
+        private IEnumerator VerifyProxyFallback(string firstResponseUrl,
+            string imageWebUrl = "https://images.example/card.png")
         {
             var game = new UnityCardGame(null, "ProxyCard-" + Guid.NewGuid().ToString("N"));
             var card = new UnityCard(game, "Card", "Card", "Set", null, false)
             {
-                ImageWebUrl = "https://images.example/card.png"
+                ImageWebUrl = imageWebUrl
             };
             var source = Path.Combine(_directory, "proxy.png");
             var texture = new Texture2D(3, 2);
@@ -203,7 +220,7 @@ namespace Tests.PlayMode
                 yield return (IEnumerator)loader.Invoke(queue, new object[] { card });
                 CollectionAssert.AreEqual(new[]
                 {
-                    card.ImageWebUrl, UnityFileMethods.ToCgsGamesProxyUrl(card.ImageWebUrl)
+                    "https://images.example/card.png", "https://cgs.games/api/proxy/images.example/card.png"
                 }, queue.RequestedUrls);
                 Assert.IsNotNull(card.ImageSprite);
                 CollectionAssert.AreEqual(File.ReadAllBytes(source), File.ReadAllBytes(card.ImageFilePath));

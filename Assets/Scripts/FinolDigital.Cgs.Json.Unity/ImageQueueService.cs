@@ -184,6 +184,8 @@ namespace FinolDigital.Cgs.Json.Unity
                     yield break;
                 }
 
+                if (uri.Scheme == Uri.UriSchemeHttp)
+                    uri = new UriBuilder(uri) { Scheme = Uri.UriSchemeHttps, Port = -1 }.Uri;
                 var url = uri.AbsoluteUri;
                 var canProxy = uri.Scheme == Uri.UriSchemeHttps &&
                                !url.StartsWith(UnityFileMethods.CgsGamesProxyPrefix, StringComparison.Ordinal);
