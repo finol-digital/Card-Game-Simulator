@@ -81,6 +81,8 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public bool IsLoadingImage { get; private set; }
 
+        public bool HasImageDisplays => DisplaysUsingImage.Count > 0;
+
         protected HashSet<ICardDisplay> DisplaysUsingImage { get; private set; }
 
         public UnityCard(UnityCardGame sourceGame, string id, string name, string setCode,
@@ -114,9 +116,9 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public void OnLoadImage(Sprite imageSprite)
         {
+            IsLoadingImage = false;
             if (imageSprite != null)
                 ImageSprite = imageSprite;
-            IsLoadingImage = false;
         }
 
         // Returns ImageSprite itself when its orientation already matches the game's card size
@@ -153,7 +155,10 @@ namespace FinolDigital.Cgs.Json.Unity
             cardDisplay.SetImageSprite(null);
             DisplaysUsingImage.Remove(cardDisplay);
             if (DisplaysUsingImage.Count < 1)
+            {
+                ImageQueueService.Instance.CancelPending(this);
                 ImageSprite = null;
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using WebP.Experiment.Animation;
 #if !UNITY_WEBGL
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -36,6 +37,11 @@ namespace UnityExtensionMethods
         public const string CgsGamesProxyPrefix = "https://cgs.games/api/proxy/";
         private const string HttpsPrefix = "https://";
         private const string HttpPrefix = "http://";
+        private const string ImageDecodeErrorMessage = "CreateSprite::DecodeFailed:";
+        private const string ImageReadErrorMessage = "ReadImageFileBytes::ReadFailed:";
+#if !UNITY_WEBGL
+        private static readonly SemaphoreSlim ImageFileReads = new(5);
+#endif
 
         public static string ToCgsGamesProxyUrl(string url)
         {
@@ -537,7 +543,33 @@ namespace UnityExtensionMethods
             return CreateSprite(texture);
         }
 
-        public static IEnumerator CreateSpriteFromFileAsync(string textureFilePath, Action<Sprite> output)
+        // Note: Memory Leak Potential
+        public static Sprite CreateSprite(byte[] bytes)
+        {
+            if (bytes is not { Length: > 0 })
+                return null;
+
+            try
+            {
+                return CreateSprite(IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes));
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning(ImageDecodeErrorMessage + exception.Message);
+                return null;
+            }
+        }
+
+        private static Sprite CreateSprite(Texture2D texture)
+        {
+            if (texture != null)
+                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            Debug.LogWarning("CreateSprite::TextureNull");
+            return null;
+        }
+
+        public static IEnumerator CreateSpriteFromFileAsync(string textureFilePath, Action<Sprite> output,
+            Action onInvalidImage = null)
         {
             if (output == null)
             {
@@ -552,33 +584,89 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
-            byte[] bytes;
-#if UNITY_WEBGL
-            bytes = File.ReadAllBytes(textureFilePath);
-#else
-            var loadTask = Task.Run(() => File.ReadAllBytes(textureFilePath));
-            while (!loadTask.IsCompleted)
-                yield return null;
-            if (loadTask.IsFaulted)
+            yield return ReadImageFileBytes(textureFilePath, bytes =>
             {
-                Debug.LogWarning("CreateSpriteFromFileAsync::ReadFailed:" + loadTask.Exception);
-                output(null);
-                yield break;
-            }
+                if (bytes == null)
+                {
+                    output(null);
+                    return;
+                }
 
-            bytes = loadTask.Result;
-#endif
+                if (bytes.Length == 0)
+                {
+                    Debug.LogWarning("CreateSpriteFromFileAsync::TextureFileEmpty:" + textureFilePath);
+                    onInvalidImage?.Invoke();
+                    output(null);
+                    return;
+                }
 
-            if (bytes is not { Length: > 0 })
-            {
-                Debug.LogWarning("CreateSpriteFromFileAsync::TextureFileEmpty:" + textureFilePath);
-                output(null);
-                yield break;
-            }
-
-            var texture = IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
-            output(CreateSprite(texture));
+                var sprite = CreateSprite(bytes);
+                if (sprite == null)
+                    onInvalidImage?.Invoke();
+                output(sprite);
+            });
         }
+
+        public static IEnumerator ReadImageFileBytes(string path, Action<byte[]> output)
+        {
+            if (output == null)
+                yield break;
+#if UNITY_WEBGL
+            byte[] bytes;
+            try
+            {
+                bytes = File.ReadAllBytes(path);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning(ImageReadErrorMessage + path + " " + exception.Message);
+                output(null);
+                yield break;
+            }
+            output(bytes);
+#else
+            using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+            var cancellationToken = cancellation.Token;
+            var loadTask = Task.Run(() => ReadImageFileAsync(path, cancellationToken), cancellationToken);
+            // Observe faults even if the caller leaves the page before the read finishes.
+            _ = loadTask.ContinueWith(task => { _ = task.Exception; }, CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
+            try
+            {
+                while (!loadTask.IsCompleted && !cancellation.IsCancellationRequested)
+                    yield return null;
+                if (loadTask.Status == TaskStatus.RanToCompletion)
+                    output(loadTask.Result);
+                else
+                {
+                    Debug.LogWarning(ImageReadErrorMessage + path + " " +
+                                     (loadTask.Exception?.Message ?? "Read cancelled or timed out."));
+                    output(null);
+                }
+            }
+            finally
+            {
+                // Leaving a page also cancels reads waiting for a physical I/O slot.
+                cancellation.Cancel();
+            }
+#endif
+        }
+
+#if !UNITY_WEBGL
+        private static async Task<byte[]> ReadImageFileAsync(string path, CancellationToken cancellationToken)
+        {
+            await ImageFileReads.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                return await File.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                ImageFileReads.Release();
+            }
+        }
+#endif
 
         // Some hosts serve webp bytes under a .jpg/.png url with a mismatched Content-Type,
         // so the file signature is checked instead of trusting the file extension
@@ -668,15 +756,9 @@ namespace UnityExtensionMethods
         {
             var texture2D = new Texture2D(2, 2);
             var didLoad = texture2D.LoadImage(bytes);
-            return didLoad ? texture2D : null;
-        }
-
-        // Note: Memory Leak Potential
-        private static Sprite CreateSprite(Texture2D texture)
-        {
-            if (texture != null)
-                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            Debug.LogWarning("CreateSprite::TextureNull");
+            if (didLoad)
+                return texture2D;
+            UnityEngine.Object.Destroy(texture2D);
             return null;
         }
 
