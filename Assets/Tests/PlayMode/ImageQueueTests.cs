@@ -18,7 +18,8 @@ namespace Tests.PlayMode
         private sealed class Display : ICardDisplay
         {
             public bool UsesOrientedImage => false;
-            public void SetImageSprite(Sprite imageSprite) { }
+            public Sprite Received { get; private set; }
+            public void SetImageSprite(Sprite imageSprite) => Received = imageSprite;
         }
 
         private sealed class ControlledQueue : ImageQueueService
@@ -27,11 +28,13 @@ namespace Tests.PlayMode
             public readonly HashSet<UnityCard> Finished = new();
             public readonly HashSet<UnityCard> Released = new();
             public UnityCard ThrowFor;
+            public Sprite ImageToDeliver;
 
             protected override IEnumerator LoadImageSprite(UnityCard card)
             {
                 Started.Add(card);
                 yield return WaitForImage(card);
+                card.OnLoadImage(ImageToDeliver);
             }
 
             private IEnumerator WaitForImage(UnityCard card)
@@ -184,6 +187,21 @@ namespace Tests.PlayMode
             _queue.Released.Add(card);
             yield return null;
             yield return null;
+            Assert.IsFalse(card.IsLoadingImage);
+        }
+
+        [UnityTest]
+        public IEnumerator CompletedLoadDeliversImageToTheRegisteredDisplay()
+        {
+            var card = Show("Loaded");
+            var texture = new Texture2D(2, 3);
+            var sprite = Sprite.Create(texture, new Rect(0, 0, 2, 3), Vector2.zero);
+            _queue.ImageToDeliver = sprite;
+            _queue.Released.Add(card);
+            _queue.ProcessQueue(_runner);
+            yield return null;
+            Assert.AreSame(sprite, _display.Received);
+            Assert.AreSame(sprite, card.ImageSprite);
             Assert.IsFalse(card.IsLoadingImage);
         }
     }

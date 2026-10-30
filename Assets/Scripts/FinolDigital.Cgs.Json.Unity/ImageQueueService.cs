@@ -145,15 +145,29 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 if (File.Exists(card.ImageFilePath))
                 {
-                    yield return UnityFileMethods.CreateSpriteFromFileAsync(card.ImageFilePath, value => sprite = value);
+                    var invalidImage = false;
+                    yield return UnityFileMethods.CreateSpriteFromFileAsync(card.ImageFilePath,
+                        value => sprite = value, () => invalidImage = true);
                     if (sprite != null)
                         yield break;
                     // Never retain a previous HTML error page or incomplete image as a cache hit.
-                    File.Delete(card.ImageFilePath);
+                    // A failed read alone does not mean a locally imported file is corrupt.
+                    if (invalidImage)
+                        TryDeleteCacheFile(card.ImageFilePath);
                 }
 
                 if (!Uri.TryCreate(card.ImageWebUrl, UriKind.Absolute, out var uri))
                     yield break;
+
+                if (uri.IsFile)
+                {
+                    // Browser imports live in the virtual filesystem, outside fetch's file: access.
+                    var bytes = File.ReadAllBytes(uri.LocalPath);
+                    sprite = UnityFileMethods.CreateSprite(bytes);
+                    if (sprite != null)
+                        CacheImage(card, bytes);
+                    yield break;
+                }
 
                 var url = uri.AbsoluteUri;
                 var canProxy = uri.Scheme == Uri.UriSchemeHttps &&
@@ -161,7 +175,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 for (var attempt = 0; attempt < (canProxy ? 2 : 1); attempt++)
                 {
                     var requestUrl = attempt == 0 ? url : UnityFileMethods.ToCgsGamesProxyUrl(url);
-                    using var request = UnityWebRequest.Get(requestUrl);
+                    using var request = CreateImageRequest(requestUrl);
                     request.timeout = RequestTimeoutSeconds;
                     try
                     {
@@ -193,19 +207,43 @@ namespace FinolDigital.Cgs.Json.Unity
             }
         }
 
+        protected virtual UnityWebRequest CreateImageRequest(string url) => UnityWebRequest.Get(url);
+
+        private static void TryDeleteCacheFile(string path)
+        {
+            try
+            {
+                File.Delete(path);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning(CacheErrorMessage + path + ": " + exception.Message);
+            }
+        }
+
         private static void CacheImage(UnityCard card, byte[] bytes)
         {
             if (bytes.Length > MaxImageFileSizeBytes)
                 Debug.LogWarning(string.Format(SizeWarningMessage, card.Name, card.Id));
+            var temporaryPath = card.ImageFilePath + "." + Guid.NewGuid().ToString("N") + ".tmp";
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(card.ImageFilePath));
-                File.WriteAllBytes(card.ImageFilePath, bytes);
+                File.WriteAllBytes(temporaryPath, bytes);
+                if (File.Exists(card.ImageFilePath))
+                    File.Replace(temporaryPath, card.ImageFilePath, null);
+                else
+                    File.Move(temporaryPath, card.ImageFilePath);
             }
             catch (Exception exception)
             {
                 // A full or unavailable cache must not prevent displaying a downloaded image.
                 Debug.LogWarning(CacheErrorMessage + card.Id + ": " + exception.Message);
+            }
+            finally
+            {
+                if (File.Exists(temporaryPath))
+                    TryDeleteCacheFile(temporaryPath);
             }
         }
     }

@@ -554,7 +554,8 @@ namespace UnityExtensionMethods
             return null;
         }
 
-        public static IEnumerator CreateSpriteFromFileAsync(string textureFilePath, Action<Sprite> output)
+        public static IEnumerator CreateSpriteFromFileAsync(string textureFilePath, Action<Sprite> output,
+            Action onInvalidImage = null)
         {
             if (output == null)
             {
@@ -571,7 +572,16 @@ namespace UnityExtensionMethods
 
             byte[] bytes;
 #if UNITY_WEBGL
-            bytes = File.ReadAllBytes(textureFilePath);
+            try
+            {
+                bytes = File.ReadAllBytes(textureFilePath);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("CreateSpriteFromFileAsync::ReadFailed:" + exception);
+                output(null);
+                yield break;
+            }
 #else
             var loadTask = Task.Run(() => File.ReadAllBytes(textureFilePath));
             while (!loadTask.IsCompleted)
@@ -589,12 +599,16 @@ namespace UnityExtensionMethods
             if (bytes is not { Length: > 0 })
             {
                 Debug.LogWarning("CreateSpriteFromFileAsync::TextureFileEmpty:" + textureFilePath);
+                onInvalidImage?.Invoke();
                 output(null);
                 yield break;
             }
 
             var texture = IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
-            output(CreateSprite(texture));
+            var sprite = CreateSprite(texture);
+            if (sprite == null)
+                onInvalidImage?.Invoke();
+            output(sprite);
         }
 
         // Some hosts serve webp bytes under a .jpg/.png url with a mismatched Content-Type,
