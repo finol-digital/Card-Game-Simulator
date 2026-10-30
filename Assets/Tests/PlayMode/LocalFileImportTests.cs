@@ -73,7 +73,6 @@ namespace Tests.PlayMode
             }
         }
 
-#if UNITY_WEBGL
         [UnityTest]
         public IEnumerator InvalidCachedCardImageFallsBackToItsUrl()
         {
@@ -93,10 +92,16 @@ namespace Tests.PlayMode
                 var loader = typeof(ImageQueueService).GetMethod("LoadImageSprite",
                     BindingFlags.Instance | BindingFlags.NonPublic);
                 yield return (IEnumerator)loader.Invoke(new ImageQueueService(), new object[] { card });
-                Assert.IsFalse(File.Exists(card.ImageFilePath), "The damaged cache entry must be discarded.");
+                CollectionAssert.AreEqual(File.ReadAllBytes(source), File.ReadAllBytes(card.ImageFilePath),
+                    "The damaged cache entry must be replaced with the downloaded image.");
                 Assert.IsNotNull(card.ImageSprite, "The fallback URL must still be loaded.");
                 Assert.AreEqual(3, card.ImageSprite.texture.width);
                 Assert.AreEqual(2, card.ImageSprite.texture.height);
+
+                card.ImageSprite = null;
+                File.Delete(source);
+                yield return (IEnumerator)loader.Invoke(new ImageQueueService(), new object[] { card });
+                Assert.IsNotNull(card.ImageSprite, "Revisiting must use the cache even if the source is unavailable.");
             }
             finally
             {
@@ -104,7 +109,6 @@ namespace Tests.PlayMode
                 Directory.Delete(game.GameDirectoryPath, true);
             }
         }
-#endif
 
         [UnityTest]
         public IEnumerator PreviewsSelectedImageFromLocalFileUri()

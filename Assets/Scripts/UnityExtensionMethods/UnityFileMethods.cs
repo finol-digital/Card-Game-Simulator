@@ -668,10 +668,21 @@ namespace UnityExtensionMethods
         {
             var texture2D = new Texture2D(2, 2);
             var didLoad = texture2D.LoadImage(bytes);
-            return didLoad ? texture2D : null;
+            if (didLoad)
+                return texture2D;
+            UnityEngine.Object.Destroy(texture2D);
+            return null;
         }
 
         // Note: Memory Leak Potential
+        public static Sprite CreateSprite(byte[] bytes)
+        {
+            if (bytes is not { Length: > 0 })
+                return null;
+
+            return CreateSprite(IsWebp(bytes) ? DecodeWebp(bytes) : CreateTexture2D(bytes));
+        }
+
         private static Sprite CreateSprite(Texture2D texture)
         {
             if (texture != null)
