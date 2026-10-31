@@ -1,0 +1,29 @@
+{
+  "hosting": {
+    "site": "cgs-beta",
+    "public": "public",
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "https://card-game-simulator--preview-58didt1c.web.app/",
+        "type": 302
+      },
+      {
+        "source": "/:path*",
+        "destination": "https://card-game-simulator--preview-58didt1c.web.app/:path*",
+        "type": 302
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      }
+    ]
+  }
+}
