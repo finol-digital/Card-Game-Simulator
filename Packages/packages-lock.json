@@ -445,28 +445,28 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "de7bbba0dbbdde9a87f0be0c504fc8ed81426a7f"
+      "hash": "f2347e789ccfe35655d2955ca7b4b21123143efd"
     },
     "com.yasirkula.nativegallery": {
       "version": "https://github.com/yasirkula/UnityNativeGallery.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e05fc5a14fe582e4938d2597fc1401ca3fceafb0"
+      "hash": "6fdfae30629814b22b971453d87665d10e1c2ed4"
     },
     "com.yasirkula.nativeshare": {
       "version": "https://github.com/yasirkula/UnityNativeShare.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "87dacbfa1d2123fe63706871ac56f161c3ba2f9d"
+      "hash": "5f3680e2938f59c87b3d01f052980381f62ed9d4"
     },
     "com.yasirkula.simplefilebrowser": {
       "version": "https://github.com/yasirkula/UnitySimpleFileBrowser.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e24fa529103603043f6dad1b66192ff72954ef6e"
+      "hash": "b9a2798fa5dbe92815dd6c9cb69e5c1ed69fff66"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
