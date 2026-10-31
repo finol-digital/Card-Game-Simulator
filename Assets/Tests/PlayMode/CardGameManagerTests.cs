@@ -239,10 +239,10 @@ namespace Tests.PlayMode
                                                      cardGame.GameBoardImageFileType)));
 
             return expectedImages
-                .Where(image => image.url != null && image.url.IsAbsoluteUri)
-                .Where(image => !File.Exists(image.filePath) ||
+                .Where(image => image.url != null)
+                .Where(image => !image.url.IsAbsoluteUri || !File.Exists(image.filePath) ||
                                 File.GetLastWriteTimeUtc(image.filePath) < downloadStart)
-                .Select(image => image.url.AbsoluteUri)
+                .Select(image => image.url.IsAbsoluteUri ? image.url.AbsoluteUri : image.url.OriginalString)
                 .ToList();
         }
 
