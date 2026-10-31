@@ -16,6 +16,7 @@ MonoBehaviour:
   m_currentHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
+  m_DisableWriteTypeTree: 0
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
