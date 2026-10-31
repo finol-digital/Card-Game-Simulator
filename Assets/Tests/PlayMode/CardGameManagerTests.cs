@@ -194,13 +194,16 @@ namespace Tests.PlayMode
             {
                 // Enable retry if there are a lot of tests to do
                 var maxAttempts = games.Count > 10 ? 5 : 1;
+                var missingImages = new List<string>();
                 for (var attempt = 1; attempt <= maxAttempts; attempt++)
                 {
                     Debug.Log($"Testing download for: {game.name}, attempt {attempt} of {maxAttempts}");
+                    var downloadStart = DateTime.UtcNow.AddSeconds(-2);
                     yield return CardGameManager.Instance.GetCardGame(game.autoUpdateUrl);
                     yield return new WaitForSeconds(1); // Wait to load set cards
+                    missingImages = MissingImages(CardGameManager.Current, downloadStart);
                     if (CardGameManager.Current.HasLoaded && string.IsNullOrEmpty(CardGameManager.Current.Error) &&
-                        CardGameManager.Current.Cards.Count > 0)
+                        CardGameManager.Current.Cards.Count > 0 && missingImages.Count == 0)
                         break;
                     yield return new WaitForSeconds(10 * attempt);
                 }
@@ -209,11 +212,38 @@ namespace Tests.PlayMode
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
                 Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
                 Assert.AreEqual(game.name, CardGameManager.Current.Name);
+                Assert.IsEmpty(missingImages,
+                    $"{game.name} failed to download: {string.Join(", ", missingImages)}");
             }
 
             // No need to wait for slow card loads
             CardGameManager.Instance.StopAllCoroutines();
             yield return new WaitForSeconds(1);
+        }
+
+        private static List<string> MissingImages(UnityCardGame cardGame, DateTime downloadStart)
+        {
+            var expectedImages = new List<(Uri url, string filePath)>
+            {
+                (cardGame.BannerImageUrl, cardGame.BannerImageFilePath),
+                (cardGame.CardBackImageUrl, cardGame.CardBackImageFilePath),
+                (cardGame.PlayMatImageUrl, cardGame.PlayMatImageFilePath)
+            };
+            expectedImages.AddRange(cardGame.CardBackFaceImageUrls
+                .Where(cardBack => !string.IsNullOrEmpty(cardBack.Id))
+                .Select(cardBack => (cardBack.Url, Path.Combine(cardGame.BacksDirectoryPath,
+                    cardBack.Id + "." + cardGame.CardBackImageFileType.ToLower()))));
+            expectedImages.AddRange(cardGame.GameBoardUrls
+                .Where(gameBoard => !string.IsNullOrEmpty(gameBoard.Id))
+                .Select(gameBoard => (gameBoard.Url, cardGame.GameBoardsDirectoryPath + "/" + gameBoard.Id + "." +
+                                                     cardGame.GameBoardImageFileType)));
+
+            return expectedImages
+                .Where(image => image.url != null)
+                .Where(image => !image.url.IsAbsoluteUri || !File.Exists(image.filePath) ||
+                                File.GetLastWriteTimeUtc(image.filePath) < downloadStart)
+                .Select(image => image.url.IsAbsoluteUri ? image.url.AbsoluteUri : image.url.OriginalString)
+                .ToList();
         }
 
         [UnityTest]
