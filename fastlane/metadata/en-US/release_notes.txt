@@ -1,3 +1,4 @@
 ## What's Changed
-* Warn when decks contain missing cards
-* Fix skipped cards when importing card sets
+* Improve card image loading
+* Fix Deck Editor scrolling after switching layouts 
+
