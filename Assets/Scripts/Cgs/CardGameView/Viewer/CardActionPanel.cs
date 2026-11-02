@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
+using Cgs.UI;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -49,10 +50,12 @@ namespace Cgs.CardGameView.Viewer
                                    || !_canvasGroup.interactable;
 
         private CanvasGroup _canvasGroup;
+        private ActionPanelViewportFit _viewportFit;
 
         protected void Awake()
         {
             _canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
+            _viewportFit = GetComponent<ActionPanelViewportFit>();
         }
 
         protected void OnEnable()
@@ -66,6 +69,10 @@ namespace Cgs.CardGameView.Viewer
 
         public void Show()
         {
+            if (_viewportFit != null)
+                _viewportFit.SetAvoidanceTarget(CardViewer.Instance.SelectedCardModel != null
+                    ? CardViewer.Instance.SelectedCardModel.transform as RectTransform
+                    : null);
             _canvasGroup.alpha = 1;
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
@@ -237,6 +244,8 @@ namespace Cgs.CardGameView.Viewer
 
         public void Hide()
         {
+            if (_viewportFit != null)
+                _viewportFit.SetAvoidanceTarget(null);
             _canvasGroup.alpha = 0;
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;

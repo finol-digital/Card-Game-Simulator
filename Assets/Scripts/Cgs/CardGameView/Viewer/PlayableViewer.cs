@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play;
+using Cgs.UI;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -48,6 +49,14 @@ namespace Cgs.CardGameView.Viewer
                     _selectedPlayable.HighlightMode = HighlightMode.Off;
 
                 _selectedPlayable = value;
+                _selectedPlayableVisual = null;
+                if (_selectedPlayable != null)
+                {
+                    _selectedPlayableVisual = _selectedPlayable.TryGetComponent<LocalPiecePresentation>(out var piece)
+                                              && piece.Visual != null
+                        ? piece.Visual.rectTransform
+                        : _selectedPlayable.transform as RectTransform;
+                }
 
                 if (_selectedPlayable == null && !EventSystem.current.alreadySelecting)
                     EventSystem.current.SetSelectedGameObject(null);
@@ -57,6 +66,7 @@ namespace Cgs.CardGameView.Viewer
         }
 
         private CgsNetPlayable _selectedPlayable;
+        private RectTransform _selectedPlayableVisual;
 
         private Die Dice => SelectedPlayable as Die;
         private CardStack Stack => SelectedPlayable as CardStack;
@@ -107,6 +117,16 @@ namespace Cgs.CardGameView.Viewer
                                              counterValueInputField.gameObject || counterValueInputField.isFocused;
 
         private InputAction _pageAction;
+        private ActionPanelViewportFit _dieViewportFit;
+        private ActionPanelViewportFit _stackViewportFit;
+        private ActionPanelViewportFit _counterViewportFit;
+
+        protected void Awake()
+        {
+            _dieViewportFit = dieActionPanel.GetComponent<ActionPanelViewportFit>();
+            _stackViewportFit = stackActionPanel.GetComponent<ActionPanelViewportFit>();
+            _counterViewportFit = counterActionPanel.GetComponent<ActionPanelViewportFit>();
+        }
 
         protected void OnEnable()
         {
@@ -214,6 +234,13 @@ namespace Cgs.CardGameView.Viewer
             counterActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Counter;
             counterActionPanel.blocksRaycasts =
                 PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Counter;
+
+            if (_dieViewportFit != null)
+                _dieViewportFit.SetAvoidanceTarget(dieActionPanel.interactable ? _selectedPlayableVisual : null);
+            if (_stackViewportFit != null)
+                _stackViewportFit.SetAvoidanceTarget(stackActionPanel.interactable ? _selectedPlayableVisual : null);
+            if (_counterViewportFit != null)
+                _counterViewportFit.SetAvoidanceTarget(counterActionPanel.interactable ? _selectedPlayableVisual : null);
 
             if (Dice != null)
                 RedisplayDie();
