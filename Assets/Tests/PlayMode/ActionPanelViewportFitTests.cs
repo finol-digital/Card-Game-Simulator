@@ -6,8 +6,14 @@
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using Cgs;
+using Cgs.CardGameView;
+using Cgs.CardGameView.Multiplayer;
+using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
+using Cgs.Play;
 using Cgs.UI;
+using FinolDigital.Cgs.Json.Unity;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -117,7 +123,28 @@ namespace Tests.PlayMode
                 AssertClearOfSelection(viewport, panel, target);
                 Assert.Less(panel.localScale.x, 1);
 
+                // With no useful horizontal strip, use the space above or below the selection.
+                foreach (var width in new[] { 740f, 800f, 1000f })
+                {
+                    target.sizeDelta = new Vector2(width, 200);
+                    yield return null;
+                    AssertClearOfSelection(viewport, panel, target);
+                    Assert.GreaterOrEqual(panel.localScale.x, 0.25f);
+                }
+
+                // No non-overlapping on-screen placement exists for a viewport-filling selection.
+                target.sizeDelta = viewport.sizeDelta * 2;
+                target.localPosition = viewport.rect.center;
+                yield return null;
+                var fallbackBounds = BoundsIn(viewport, panel);
+                Assert.GreaterOrEqual(panel.localScale.x, 0.25f, "Keep pointer actions reachable.");
+                Assert.GreaterOrEqual(fallbackBounds.xMin, viewport.rect.xMin - 0.1f);
+                Assert.LessOrEqual(fallbackBounds.xMax, viewport.rect.xMax + 0.1f);
+                Assert.GreaterOrEqual(fallbackBounds.yMin, viewport.rect.yMin + 20 - 0.1f);
+                Assert.LessOrEqual(fallbackBounds.yMax, viewport.rect.yMax - 160 + 0.1f);
+
                 viewport.sizeDelta = new Vector2(3200, 1800);
+                target.sizeDelta = new Vector2(400, 800);
                 fit.SetAvoidanceTarget(null);
                 yield return null;
                 Assert.AreEqual(preferred.x, panel.anchoredPosition.x, 0.1f);
@@ -164,6 +191,16 @@ namespace Tests.PlayMode
             var destination = new GameObject("Actions canvas", typeof(Canvas)).GetComponent<Canvas>();
             destination.transform.SetParent(_container.transform, false);
             destination.renderMode = RenderMode.WorldSpace;
+            var panelCameraObject = new GameObject("Actions camera", typeof(Camera));
+            panelCameraObject.transform.SetParent(_container.transform, false);
+            var panelCamera = panelCameraObject.GetComponent<Camera>();
+            panelCamera.enabled = false;
+            panelCamera.transform.localPosition = new Vector3(600, 450, -10);
+            panelCamera.orthographic = true;
+            panelCamera.orthographicSize = 450;
+            panelCamera.targetTexture = _cameraTarget;
+            panelCamera.aspect = 1200f / 900;
+            destination.worldCamera = panelCamera;
             var viewport = (RectTransform)destination.transform;
             viewport.sizeDelta = new Vector2(800, 600);
             viewport.localScale = Vector3.one * 1.5f;
@@ -179,17 +216,21 @@ namespace Tests.PlayMode
             Assert.Greater(panel.anchoredPosition.x, 0,
                 $"Move right when that is the closer free side. Selection screen position: {camera.WorldToScreenPoint(target.position)}; " +
                 $"panel position: {panel.position}; viewport: {viewport.rect}; camera pixels: {camera.pixelRect}.");
-            AssertScreenBoundsDoNotOverlap(panel, target, camera);
+            AssertScreenBoundsDoNotOverlap(panel, target, panelCamera, camera);
 
             target.localPosition = new Vector2(30, 0);
             yield return null;
             Assert.Less(panel.anchoredPosition.x, 0, "Move left when the selection crosses the preferred position.");
-            AssertScreenBoundsDoNotOverlap(panel, target, camera);
+            AssertScreenBoundsDoNotOverlap(panel, target, panelCamera, camera);
 
             source.transform.localScale = Vector3.one * 2;
             camera.orthographicSize = 300;
             yield return null;
-            AssertScreenBoundsDoNotOverlap(panel, target, camera);
+            AssertScreenBoundsDoNotOverlap(panel, target, panelCamera, camera);
+            panelCamera.transform.position += new Vector3(30, 0, 0);
+            panelCamera.orthographicSize = 600;
+            yield return null;
+            AssertScreenBoundsDoNotOverlap(panel, target, panelCamera, camera);
 
             camera.transform.position = new Vector3(0, -1000, -10);
             yield return null;
@@ -197,16 +238,102 @@ namespace Tests.PlayMode
                 "A selection outside the panel's vertical range must not displace the actions.");
         }
 
-        private static void AssertScreenBoundsDoNotOverlap(RectTransform panel, RectTransform target, Camera camera)
+        [UnityTest]
+        public IEnumerator ViewerSelectionsMoveTheirActionPanels()
+        {
+            var showActions = PlaySettings.ShowActionsMenu;
+            var previousGame = CardGameManager.Current;
+            var currentGameProperty = typeof(CardGameManager).GetProperty(nameof(CardGameManager.Current));
+            var testGame = new UnityCardGame(null, "action_panel_selection_test");
+            var texture = new Texture2D(2, 2);
+            var sprite = Sprite.Create(texture, new Rect(0, 0, 2, 2), Vector2.one * 0.5f);
+            var card = new UnityCard(testGame, System.Guid.NewGuid().ToString(),
+                "Action panel test card", string.Empty, new(), false) { ImageSprite = sprite };
+            try
+            {
+                currentGameProperty.SetValue(null, testGame);
+                testGame.Add(card, false);
+                PlaySettings.ShowActionsMenu = true;
+                foreach (var isCard in new[] { true, false })
+                {
+                    _container.SetActive(false);
+                    var viewer = CreateViewer(isCard ? "Card Viewer" : "Playable Viewer", true);
+                    var viewport = (RectTransform)viewer.transform;
+                    viewport.sizeDelta = new Vector2(3200, 1800);
+                    var panelName = isCard ? "Card Action Panel" : "Die Action Panel";
+                    var panel = viewer.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == panelName);
+                    panel.gameObject.SetActive(true);
+                    var prefabName = isCard ? "Card Model" : "Die";
+                    var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                        $"Assets/Prefabs/CardGameView/Multiplayer/{prefabName}.prefab");
+                    var selected = Object.Instantiate(prefab, viewport);
+                    foreach (var behaviour in selected.GetComponentsInChildren<MonoBehaviour>(true))
+                        behaviour.enabled = false;
+                    var selectedRect = (RectTransform)selected.transform;
+                    selectedRect.sizeDelta = new Vector2(240, 340);
+                    viewer.SetActive(true);
+                    selected.SetActive(true);
+                    _container.SetActive(true);
+                    yield return null;
+                    yield return null;
+                    var preferred = panel.anchoredPosition;
+                    selectedRect.localPosition = BoundsIn(viewport, panel).center;
+                    var visual = selectedRect;
+                    if (isCard)
+                    {
+                        var model = selected.GetComponent<CardModel>();
+                        model.Value = card;
+                        Assert.AreSame(viewer.GetComponent<CardViewer>(), CardViewer.Instance);
+                        CardViewer.Instance.IsActionable = true;
+                        CardViewer.Instance.SelectedCardModel = model;
+                    }
+                    else
+                    {
+                        visual = selected.GetComponent<LocalPiecePresentation>().Visual.rectTransform;
+                        visual.localScale = Vector3.one * 2;
+                        Assert.AreSame(viewer.GetComponent<PlayableViewer>(), PlayableViewer.Instance);
+                        PlayableViewer.Instance.SelectedPlayable = selected.GetComponent<Die>();
+                    }
+
+                    yield return null;
+                    Assert.IsTrue(panel.GetComponent<CanvasGroup>().interactable);
+                    Assert.AreEqual(1, panel.GetComponent<CanvasGroup>().alpha);
+                    AssertClearOfSelection(viewport, panel, visual);
+                    Assert.AreNotEqual(preferred.x, panel.anchoredPosition.x);
+                    if (isCard)
+                        CardViewer.Instance.SelectedCardModel = null;
+                    else
+                        PlayableViewer.Instance.SelectedPlayable = null;
+                    yield return null;
+                    Assert.IsFalse(panel.GetComponent<CanvasGroup>().interactable);
+                    Assert.AreEqual(preferred.x, panel.anchoredPosition.x, 0.1f);
+                    Object.DestroyImmediate(viewer);
+                }
+            }
+            finally
+            {
+                if (CardViewer.Instance != null)
+                    CardViewer.Instance.SelectedCardModel = null;
+                Object.DestroyImmediate(_container);
+                currentGameProperty.SetValue(null, previousGame);
+                PlaySettings.ShowActionsMenu = showActions;
+                Object.DestroyImmediate(sprite);
+                Object.DestroyImmediate(texture);
+            }
+        }
+
+        private static void AssertScreenBoundsDoNotOverlap(RectTransform panel, RectTransform target,
+            Camera panelCamera, Camera targetCamera)
         {
             var corners = new Vector3[4];
             target.GetWorldCorners(corners);
-            var points = corners.Select(camera.WorldToScreenPoint).ToArray();
+            var points = corners.Select(targetCamera.WorldToScreenPoint).ToArray();
             var selectedBounds = Rect.MinMaxRect(points.Min(p => p.x), points.Min(p => p.y),
                 points.Max(p => p.x), points.Max(p => p.y));
             panel.GetWorldCorners(corners);
-            var panelBounds = Rect.MinMaxRect(corners.Min(p => p.x), corners.Min(p => p.y),
-                corners.Max(p => p.x), corners.Max(p => p.y));
+            points = corners.Select(panelCamera.WorldToScreenPoint).ToArray();
+            var panelBounds = Rect.MinMaxRect(points.Min(p => p.x), points.Min(p => p.y),
+                points.Max(p => p.x), points.Max(p => p.y));
             Assert.IsFalse(panelBounds.Overlaps(selectedBounds), $"{panelBounds} covers {selectedBounds}");
         }
 
@@ -334,7 +461,7 @@ namespace Tests.PlayMode
             longTooltip.OnPointerExit(null);
         }
 
-        private GameObject CreateViewer(string prefabName)
+        private GameObject CreateViewer(string prefabName, bool keepSelectionBehaviour = false)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
                 $"Assets/Prefabs/CardGameView/Viewer/{prefabName}.prefab");
@@ -342,6 +469,12 @@ namespace Tests.PlayMode
             // Exercise the real UI assets without starting a game or connecting multiplayer.
             foreach (var behaviour in viewer.GetComponentsInChildren<MonoBehaviour>(true))
             {
+                if (keepSelectionBehaviour && behaviour is CardViewer or PlayableViewer or CardActionPanel)
+                {
+                    // Keep real selection/redisplay methods without starting a game or subscribing input.
+                    behaviour.enabled = false;
+                    continue;
+                }
                 if (behaviour is ToolTip || behaviour is ActionPanelViewportFit
                                         || behaviour is UnityEngine.EventSystems.UIBehaviour)
                     continue;

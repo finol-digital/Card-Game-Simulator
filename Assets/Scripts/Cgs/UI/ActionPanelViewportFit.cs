@@ -15,6 +15,7 @@ namespace Cgs.UI
         [SerializeField, Min(0)] float anchorGap = 20;
 
         private const float SelectionGap = 20;
+        private const float MinimumSelectionScale = 0.25f;
 
         private RectTransform _rectTransform;
         private RectTransform _viewport;
@@ -99,7 +100,11 @@ namespace Cgs.UI
                 positionY - height * _rectTransform.pivot.y, width, height);
             var position = new Vector2(positionX, positionY);
             if (targetBounds.HasValue && panelBounds.Overlaps(targetBounds.Value))
-                position = PositionBesideSelection(viewport, targetBounds.Value, panelBounds, ref scale);
+            {
+                var availableViewport = new Rect(viewport.xMin, viewport.yMin + bottomInset,
+                    viewport.width, availableHeight);
+                position = PositionBesideSelection(availableViewport, targetBounds.Value, panelBounds, ref scale);
+            }
 
             _rectTransform.localScale = new Vector3(scale, scale, 1);
             _rectTransform.anchoredPosition = position - new Vector2(anchorX, anchorY);
@@ -121,7 +126,11 @@ namespace Cgs.UI
             if (leftSpace < width && rightSpace < width)
             {
                 moveLeft = leftSpace >= rightSpace;
-                scale = Mathf.Min(scale, (moveLeft ? leftSpace : rightSpace) / _rectTransform.rect.width);
+                var sideScale = (moveLeft ? leftSpace : rightSpace) / _rectTransform.rect.width;
+                if (sideScale < Mathf.Min(scale, MinimumSelectionScale))
+                    return PositionAboveOrBelowSelection(viewport, target, panelBounds, ref scale);
+
+                scale = Mathf.Min(scale, sideScale);
                 width = _rectTransform.rect.width * scale;
                 height = _rectTransform.rect.height * scale;
                 // Keep the top of the actions fixed when shrinking beside a large selection.
@@ -132,6 +141,36 @@ namespace Cgs.UI
                 ? target.xMin - SelectionGap - width * (1 - _rectTransform.pivot.x)
                 : target.xMax + SelectionGap + width * _rectTransform.pivot.x;
             return new Vector2(positionX, positionY);
+        }
+
+        private Vector2 PositionAboveOrBelowSelection(Rect viewport, Rect target, Rect panelBounds, ref float scale)
+        {
+            var belowSpace = Mathf.Clamp(target.yMin - SelectionGap - viewport.yMin, 0, viewport.height);
+            var aboveSpace = Mathf.Clamp(viewport.yMax - target.yMax - SelectionGap, 0, viewport.height);
+            var position = panelBounds.min + Vector2.Scale(panelBounds.size, _rectTransform.pivot);
+            var belowY = target.yMin - SelectionGap - panelBounds.height * (1 - _rectTransform.pivot.y);
+            var aboveY = target.yMax + SelectionGap + panelBounds.height * _rectTransform.pivot.y;
+            var moveBelow = belowSpace >= panelBounds.height && (aboveSpace < panelBounds.height ||
+                Mathf.Abs(position.y - belowY) <= Mathf.Abs(position.y - aboveY));
+            if (belowSpace < panelBounds.height && aboveSpace < panelBounds.height)
+                moveBelow = belowSpace >= aboveSpace;
+
+            var verticalScale = Mathf.Min(scale,
+                (moveBelow ? belowSpace : aboveSpace) / _rectTransform.rect.height);
+            // A selection covering the entire available view cannot be avoided. Keep the
+            // normal on-screen controls reachable so the player can still act on it.
+            if (verticalScale < Mathf.Min(scale, MinimumSelectionScale))
+                return position;
+
+            scale = verticalScale;
+            var width = _rectTransform.rect.width * scale;
+            var height = _rectTransform.rect.height * scale;
+            position.x = Mathf.Clamp(position.x, viewport.xMin + width * _rectTransform.pivot.x,
+                viewport.xMax - width * (1 - _rectTransform.pivot.x));
+            position.y = moveBelow
+                ? target.yMin - SelectionGap - height * (1 - _rectTransform.pivot.y)
+                : target.yMax + SelectionGap + height * _rectTransform.pivot.y;
+            return position;
         }
 
         private Rect? GetTargetBounds()
