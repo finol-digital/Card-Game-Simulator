@@ -20,6 +20,7 @@ namespace Tests.PlayMode
     {
         private GameObject _container;
         private GameObject _eventSystem;
+        private RenderTexture _cameraTarget;
         private bool _tooltipsEnabled;
 
         [SetUp]
@@ -39,6 +40,8 @@ namespace Tests.PlayMode
             Object.DestroyImmediate(_container);
             if (_eventSystem != null)
                 Object.DestroyImmediate(_eventSystem);
+            if (_cameraTarget != null)
+                Object.DestroyImmediate(_cameraTarget);
             Settings.ButtonTooltipsEnabled = _tooltipsEnabled;
         }
 
@@ -60,24 +63,169 @@ namespace Tests.PlayMode
             yield return CheckPanel("Playable Viewer", "Stack Action Panel");
         }
 
+        [UnityTest]
+        public IEnumerator AllActionPanelsAvoidMovingAndRotatedSelections()
+        {
+            foreach (var entry in new[] { ("Card Viewer", "Card Action Panel"),
+                         ("Card Docked Viewer", "Card Action Panel"), ("Playable Viewer", "Stack Action Panel"),
+                         ("Playable Viewer", "Die Action Panel"), ("Playable Viewer", "Counter Action Panel") })
+            {
+                _container.SetActive(false);
+                var viewer = CreateViewer(entry.Item1);
+                var viewport = (RectTransform)viewer.transform;
+                viewport.sizeDelta = new Vector2(3200, 1800);
+                var panel = viewer.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == entry.Item2);
+                var fit = panel.GetComponent<ActionPanelViewportFit>();
+                Assert.IsNotNull(fit, entry.ToString());
+                panel.gameObject.SetActive(true);
+                var target = (RectTransform)new GameObject("Selected object", typeof(RectTransform)).transform;
+                target.SetParent(viewport, false);
+                target.sizeDelta = new Vector2(240, 340);
+                viewer.SetActive(true);
+                _container.SetActive(true);
+                yield return null;
+                yield return null;
+                var preferred = panel.anchoredPosition;
+                var preferredBounds = BoundsIn(viewport, panel);
+                target.localPosition = preferredBounds.center;
+                fit.SetAvoidanceTarget(target);
+                yield return null;
+                AssertClearOfSelection(viewport, panel, target);
+                Assert.AreEqual(preferred.y, panel.anchoredPosition.y, 0.1f, "Move horizontally only.");
+                Assert.AreEqual(Vector3.one, panel.localScale, "Do not shrink when a side has room.");
+
+                // Re-evaluate visual bounds after rotation, zoom, and movement without reselecting.
+                target.localRotation = Quaternion.Euler(0, 0, 45);
+                target.localScale = Vector3.one * 1.5f;
+                yield return null;
+                AssertClearOfSelection(viewport, panel, target);
+                target.localPosition = new Vector2(viewport.rect.xMin + 250, preferredBounds.center.y);
+                yield return null;
+                AssertClearOfSelection(viewport, panel, target);
+                target.localPosition = new Vector2(viewport.rect.xMax - 250, preferredBounds.center.y);
+                yield return null;
+                AssertClearOfSelection(viewport, panel, target);
+
+                // A wide selection on a narrow screen requires fitting the panel into a side strip.
+                viewport.sizeDelta = new Vector2(800, 1800);
+                target.localRotation = Quaternion.identity;
+                target.localScale = Vector3.one;
+                target.sizeDelta = new Vector2(400, 800);
+                target.localPosition = new Vector2(viewport.rect.center.x, preferredBounds.center.y);
+                yield return null;
+                yield return null;
+                AssertClearOfSelection(viewport, panel, target);
+                Assert.Less(panel.localScale.x, 1);
+
+                viewport.sizeDelta = new Vector2(3200, 1800);
+                fit.SetAvoidanceTarget(null);
+                yield return null;
+                Assert.AreEqual(preferred.x, panel.anchoredPosition.x, 0.1f);
+                Assert.AreEqual(preferred.y, panel.anchoredPosition.y, 0.1f);
+                Assert.AreEqual(Vector3.one, panel.localScale);
+
+                target.localPosition = preferredBounds.center;
+                fit.SetAvoidanceTarget(target);
+                yield return null;
+                AssertClearOfSelection(viewport, panel, target);
+                Object.DestroyImmediate(target.gameObject);
+                yield return null;
+                Assert.AreEqual(preferred.x, panel.anchoredPosition.x, 0.1f,
+                    "A deleted selection must release the panel.");
+                Object.DestroyImmediate(viewer);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator AvoidanceUsesScreenBoundsAcrossScaledCanvasesAndCameras()
+        {
+            var cameraObject = new GameObject("Selection camera", typeof(Camera));
+            cameraObject.transform.SetParent(_container.transform, false);
+            var camera = cameraObject.GetComponent<Camera>();
+            camera.enabled = false;
+            camera.transform.localPosition = new Vector3(0, 0, -10);
+            camera.orthographic = true;
+            camera.orthographicSize = 450;
+            _cameraTarget = new RenderTexture(1200, 900, 0);
+            camera.targetTexture = _cameraTarget;
+            camera.aspect = 1200f / 900;
+
+            var source = new GameObject("Play area canvas", typeof(Canvas)).GetComponent<Canvas>();
+            source.transform.SetParent(_container.transform, false);
+            source.renderMode = RenderMode.WorldSpace;
+            source.worldCamera = camera;
+            source.transform.localPosition = Vector3.zero;
+            source.transform.localScale = Vector3.one;
+            var target = (RectTransform)new GameObject("Selection", typeof(RectTransform)).transform;
+            target.SetParent(source.transform, false);
+            target.sizeDelta = new Vector2(90, 90);
+            target.localPosition = new Vector2(-30, 0);
+
+            var destination = new GameObject("Actions canvas", typeof(Canvas)).GetComponent<Canvas>();
+            destination.transform.SetParent(_container.transform, false);
+            destination.renderMode = RenderMode.WorldSpace;
+            var viewport = (RectTransform)destination.transform;
+            viewport.sizeDelta = new Vector2(800, 600);
+            viewport.localScale = Vector3.one * 1.5f;
+            viewport.localPosition = new Vector2(600, 450);
+            var panel = (RectTransform)new GameObject("Actions", typeof(RectTransform)).transform;
+            panel.SetParent(viewport, false);
+            panel.sizeDelta = new Vector2(120, 100);
+            var fit = panel.gameObject.AddComponent<ActionPanelViewportFit>();
+            fit.SetAvoidanceTarget(target);
+            _container.SetActive(true);
+            yield return null;
+            yield return null;
+            Assert.Greater(panel.anchoredPosition.x, 0,
+                $"Move right when that is the closer free side. Selection screen position: {camera.WorldToScreenPoint(target.position)}; " +
+                $"panel position: {panel.position}; viewport: {viewport.rect}; camera pixels: {camera.pixelRect}.");
+            AssertScreenBoundsDoNotOverlap(panel, target, camera);
+
+            target.localPosition = new Vector2(30, 0);
+            yield return null;
+            Assert.Less(panel.anchoredPosition.x, 0, "Move left when the selection crosses the preferred position.");
+            AssertScreenBoundsDoNotOverlap(panel, target, camera);
+
+            source.transform.localScale = Vector3.one * 2;
+            camera.orthographicSize = 300;
+            yield return null;
+            AssertScreenBoundsDoNotOverlap(panel, target, camera);
+
+            camera.transform.position = new Vector3(0, -1000, -10);
+            yield return null;
+            Assert.AreEqual(Vector2.zero, panel.anchoredPosition,
+                "A selection outside the panel's vertical range must not displace the actions.");
+        }
+
+        private static void AssertScreenBoundsDoNotOverlap(RectTransform panel, RectTransform target, Camera camera)
+        {
+            var corners = new Vector3[4];
+            target.GetWorldCorners(corners);
+            var points = corners.Select(camera.WorldToScreenPoint).ToArray();
+            var selectedBounds = Rect.MinMaxRect(points.Min(p => p.x), points.Min(p => p.y),
+                points.Max(p => p.x), points.Max(p => p.y));
+            panel.GetWorldCorners(corners);
+            var panelBounds = Rect.MinMaxRect(corners.Min(p => p.x), corners.Min(p => p.y),
+                corners.Max(p => p.x), corners.Max(p => p.y));
+            Assert.IsFalse(panelBounds.Overlaps(selectedBounds), $"{panelBounds} covers {selectedBounds}");
+        }
+
+        private static void AssertClearOfSelection(RectTransform viewport, RectTransform panel, RectTransform target)
+        {
+            var panelBounds = BoundsIn(viewport, panel);
+            var targetBounds = BoundsIn(viewport, target);
+            Assert.IsFalse(panelBounds.Overlaps(targetBounds), $"{panel.name}: {panelBounds} covers {targetBounds}");
+            Assert.GreaterOrEqual(panelBounds.xMin, viewport.rect.xMin - 0.1f);
+            Assert.LessOrEqual(panelBounds.xMax, viewport.rect.xMax + 0.1f);
+            Assert.GreaterOrEqual(panelBounds.yMin, viewport.rect.yMin + 20 - 0.1f);
+            Assert.LessOrEqual(panelBounds.yMax, viewport.rect.yMax - 160 + 0.1f);
+            Assert.Greater(panel.localScale.x, 0, "Actions must remain visible when there is space beside the selection.");
+        }
+
         private IEnumerator CheckPanel(string prefabName, string panelName)
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
-                $"Assets/Prefabs/CardGameView/Viewer/{prefabName}.prefab");
-            var viewer = Object.Instantiate(prefab, _container.transform);
-            // Exercise the real UI assets without starting a game or connecting multiplayer.
-            foreach (var behaviour in viewer.GetComponentsInChildren<MonoBehaviour>(true))
-            {
-                if (behaviour is ToolTip || behaviour is ActionPanelViewportFit
-                                        || behaviour is UnityEngine.EventSystems.UIBehaviour)
-                    continue;
-                Object.DestroyImmediate(behaviour);
-            }
-
-            viewer.GetComponent<UnityEngine.UI.CanvasScaler>().enabled = false;
-            viewer.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+            var viewer = CreateViewer(prefabName);
             var viewport = (RectTransform)viewer.transform;
-            viewport.localScale = Vector3.one;
             var panel = viewer.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == panelName);
             var preferredPositionX = panel.anchoredPosition.x;
             Assert.IsNotNull(panel.GetComponent<ActionPanelViewportFit>());
@@ -186,6 +334,27 @@ namespace Tests.PlayMode
             longTooltip.OnPointerExit(null);
         }
 
+        private GameObject CreateViewer(string prefabName)
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                $"Assets/Prefabs/CardGameView/Viewer/{prefabName}.prefab");
+            var viewer = Object.Instantiate(prefab, _container.transform);
+            // Exercise the real UI assets without starting a game or connecting multiplayer.
+            foreach (var behaviour in viewer.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (behaviour is ToolTip || behaviour is ActionPanelViewportFit
+                                        || behaviour is UnityEngine.EventSystems.UIBehaviour)
+                    continue;
+                Object.DestroyImmediate(behaviour);
+            }
+
+            viewer.GetComponent<UnityEngine.UI.CanvasScaler>().enabled = false;
+            viewer.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+            var viewport = (RectTransform)viewer.transform;
+            viewport.localScale = Vector3.one;
+            return viewer;
+        }
+
         private static void AssertSingleLine(GameObject tooltip)
         {
             var text = tooltip.GetComponentInChildren<UnityEngine.UI.Text>();
@@ -201,9 +370,9 @@ namespace Tests.PlayMode
         {
             var corners = new Vector3[4];
             target.GetWorldCorners(corners);
-            var bottomLeft = viewport.InverseTransformPoint(corners[0]);
-            var topRight = viewport.InverseTransformPoint(corners[2]);
-            return Rect.MinMaxRect(bottomLeft.x, bottomLeft.y, topRight.x, topRight.y);
+            var points = corners.Select(viewport.InverseTransformPoint).ToArray();
+            return Rect.MinMaxRect(points.Min(p => p.x), points.Min(p => p.y),
+                points.Max(p => p.x), points.Max(p => p.y));
         }
     }
 }

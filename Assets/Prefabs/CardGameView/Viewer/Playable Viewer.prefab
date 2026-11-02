@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 757014485118844539}
   - component: {fileID: 5529978864850883140}
   - component: {fileID: 198146522612501599}
+  - component: {fileID: 7262872674598383208}
   m_Layer: 5
   m_Name: Die Action Panel
   m_TagString: Untagged
@@ -362,6 +363,38 @@ MonoBehaviour:
   bottomInset: 20
   fitBelowAnchor: 0
   anchorGap: 20
+--- !u!114 &7262872674598383209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762042918788461496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa78bb978144462438e44023f42ab4d1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ActionPanelViewportFit
+  topInset: 160
+  bottomInset: 20
+  fitBelowAnchor: 0
+  anchorGap: 20
+--- !u!114 &7262872674598383208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3229226146847586547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa78bb978144462438e44023f42ab4d1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ActionPanelViewportFit
+  topInset: 160
+  bottomInset: 20
+  fitBelowAnchor: 0
+  anchorGap: 20
 --- !u!1 &4762042918788461496
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,6 +407,7 @@ GameObject:
   - component: {fileID: 9057480516217315255}
   - component: {fileID: 5440288174317396176}
   - component: {fileID: 2394856817997104161}
+  - component: {fileID: 7262872674598383209}
   m_Layer: 5
   m_Name: Counter Action Panel
   m_TagString: Untagged
