@@ -179,8 +179,7 @@ namespace Cgs.CardGameView.Viewer
                 _previewCard = null;
 
                 _previewCardModel = value;
-                preview.alpha = 0;
-                _hoverPreview?.Hide();
+                HidePreviewPresentation();
 
                 if (_previewCardModel == null)
                     return;
@@ -663,19 +662,37 @@ namespace Cgs.CardGameView.Viewer
             PreviewCardModel = null;
         }
 
+        private void HidePreviewPresentation()
+        {
+            preview.alpha = 0;
+            _hoverPreview?.Hide();
+        }
+
         protected void LateUpdate()
         {
             if (_previewCardModel == null || !_previewCardModel.isActiveAndEnabled || _previewCardModel.IsFacedown
-                || !Cgs.Menu.Settings.PreviewOnMouseOver || IsVisible || Zoom || CgsNetPlayable.IsAnyDragging
-                || (PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
-                || CardGameManager.Instance.ModalCanvas != null)
+                || IsVisible || Zoom || CgsNetPlayable.IsAnyDragging)
             {
-                if (preview.alpha > 0)
+                if (_previewCardModel != null || _previewCard != null || preview.alpha > 0)
                     HidePreview();
                 return;
             }
 
-            _hoverPreview?.Refresh();
+            if (!Cgs.Menu.Settings.PreviewOnMouseOver
+                || (PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
+                || CardGameManager.Instance.ModalCanvas != null)
+            {
+                HidePreviewPresentation();
+                return;
+            }
+
+            if (preview.alpha == 0)
+            {
+                preview.alpha = 1;
+                _hoverPreview?.Show(_previewCardModel.GetComponent<Image>());
+            }
+            else
+                _hoverPreview?.Refresh();
         }
 
         protected void OnDisable()

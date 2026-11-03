@@ -887,6 +887,8 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
                 CardViewer.Instance.SelectedCardModel == this)
                 CardViewer.Instance.SelectedCardModel = this;
+            if (CardViewer.Instance != null && CardViewer.Instance.PreviewCardModel == this)
+                CardViewer.Instance.PreviewCardModel = this;
         }
 
         private static bool IsFaceFlip(string oldId, string newId, out UnityCard oldCard)

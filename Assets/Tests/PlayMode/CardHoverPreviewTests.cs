@@ -22,6 +22,8 @@ namespace Tests.PlayMode
         private Image _source;
         private Image _overlay;
         private CardHoverPreview _preview;
+        private Sprite _sprite;
+        private Texture2D _texture;
 
         [SetUp]
         public void SetUp()
@@ -33,6 +35,9 @@ namespace Tests.PlayMode
             var sourceObject = new GameObject("Card", typeof(RectTransform), typeof(Image));
             sourceObject.transform.SetParent(_bounds, false);
             _source = sourceObject.GetComponent<Image>();
+            _texture = new Texture2D(2, 3);
+            _sprite = Sprite.Create(_texture, new Rect(0, 0, 2, 3), Vector2.one * 0.5f);
+            _source.sprite = _sprite;
             _source.rectTransform.sizeDelta = new Vector2(100, 140);
             _preview = new CardHoverPreview(_bounds);
             _overlay = _bounds.Find("Card Hover Preview").GetComponent<Image>();
@@ -44,6 +49,8 @@ namespace Tests.PlayMode
         {
             Object.DestroyImmediate(_canvasObject);
             Object.DestroyImmediate(_eventsObject);
+            Object.DestroyImmediate(_sprite);
+            Object.DestroyImmediate(_texture);
         }
 
         [UnityTest]
@@ -80,7 +87,7 @@ namespace Tests.PlayMode
         }
 
         [Test]
-        public void IdleViewerDoesNotClearPreviewBetweenPointerEvents()
+        public void UpdateDoesNotRedisplayAnAlreadyHiddenViewer()
         {
             var viewerObject = new GameObject("Idle viewer", typeof(RectTransform));
             viewerObject.SetActive(false);
@@ -92,12 +99,28 @@ namespace Tests.PlayMode
             typeof(CardViewer).GetField("preview", flags).SetValue(viewer, preview);
             typeof(CardViewer).GetField("zoomPanel", flags).SetValue(viewer, viewerObject.transform);
 
-            // Run an idle frame without invoking the scene/input initialization callbacks.
+            // Exercise Update alone; the live hover lifecycle is covered in CardViewerPreviewTests.
             typeof(CardViewer).GetMethod("Update", flags).Invoke(viewer, null);
 
-            Assert.AreEqual(1, preview.alpha, "An idle frame must leave the hover preview visible.");
+            Assert.AreEqual(1, preview.alpha, "Update must not redisplay an already hidden viewer.");
             Assert.IsFalse(viewer.IsVisible);
             Assert.IsNull(viewer.SelectedCardModel);
+        }
+
+        [Test]
+        public void MissingArtworkHidesOverlayUntilImageLoads()
+        {
+            _source.sprite = null;
+            _preview.Show(_source);
+            Assert.IsFalse(_overlay.enabled);
+            _source.sprite = _sprite;
+            _preview.Refresh();
+            Assert.IsTrue(_overlay.enabled);
+            Assert.AreSame(_sprite, _overlay.sprite);
+            _source.sprite = null;
+            _preview.Refresh();
+            Assert.IsFalse(_overlay.enabled);
+            Assert.IsNull(_overlay.sprite);
         }
 
         [TestCase(0)]

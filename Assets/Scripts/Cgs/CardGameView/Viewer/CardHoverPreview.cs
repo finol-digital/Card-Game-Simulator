@@ -49,6 +49,14 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
+            // Keep the source so an asynchronous image load can resume the preview.
+            if (_source.sprite == null)
+            {
+                _image.enabled = false;
+                _image.sprite = null;
+                return;
+            }
+
             var sourceCanvas = _source.canvas;
             var targetCanvas = _image.canvas;
             if (sourceCanvas == null || targetCanvas == null)
