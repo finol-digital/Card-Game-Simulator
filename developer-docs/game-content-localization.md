@@ -89,6 +89,7 @@ No library release, CGS release, or proxy deployment is established by these che
 | `GameContent` PlayMode filter | 23/23 passed | Canonical imports, control identities, live/hidden/pooled presentation, diagnostics, deck provenance, and real Unity Transport loopback tests |
 | `GameLocalization` PlayMode filter | 35/35 passed | Origins, portable caches, ordered catalog/image publication, package replacement, offline relocation, fallback and image lifetime |
 | `Image` PlayMode filter | 28/28 passed | Localized bindings plus existing image orientation, queue lifetime, local import, transport fallback and duplicate-image regressions |
+| `CardViewerPreviewTests` after merging current `main` | 6/6 passed | Both localization cleanup and the new hover-preview behavior retained; Editor recompilation passed |
 | `StackLoadingTests` | 13/13 passed | Existing stacking behavior, explicit authored labels, identical-name user stacks and rename revocation |
 | `GameManifestLocalizationTests` | 8/8 passed | Staged replacement/removal, failed reads/validation and ID/directory migration |
 | `LocalizedCardSearchTests` | 3/3 passed | Translated interactive search remains separate from canonical imports/queries |
