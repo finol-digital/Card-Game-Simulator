@@ -175,15 +175,20 @@ namespace Cgs.CardGameView.Viewer
             get => _previewCardModel;
             set
             {
-                if (_previewCardModel != null)
-                    _previewCardModel.Value.UnregisterDisplay(this);
+                _previewCard?.UnregisterDisplay(this);
+                _previewCard = null;
 
                 _previewCardModel = value;
+                preview.alpha = 0;
+                _hoverPreview?.Hide();
 
                 if (_previewCardModel == null)
                     return;
 
+                _hoverPreview ??= new CardHoverPreview((RectTransform)transform);
+                _hoverPreview.Show(_previewCardModel.GetComponent<Image>());
                 var card = _previewCardModel.Value;
+                _previewCard = card;
                 card.RegisterDisplay(this);
                 preview.alpha = 1;
                 foreach (var previewName in previewNameText)
@@ -194,6 +199,8 @@ namespace Cgs.CardGameView.Viewer
         }
 
         private CardModel _previewCardModel;
+        private UnityCard _previewCard;
+        private CardHoverPreview _hoverPreview;
 
         public CardModel SelectedCardModel
         {
@@ -289,7 +296,7 @@ namespace Cgs.CardGameView.Viewer
                 ZoomTime = 0;
             WasVisible = IsVisible;
 
-            if (_selectedCardModel == null)
+            if (_selectedCardModel == null && IsVisible)
                 IsVisible = false;
 
             if (IsBlocked)
@@ -653,11 +660,27 @@ namespace Cgs.CardGameView.Viewer
 
         public void HidePreview()
         {
-            preview.alpha = 0;
+            PreviewCardModel = null;
+        }
+
+        protected void LateUpdate()
+        {
+            if (_previewCardModel == null || !_previewCardModel.isActiveAndEnabled || _previewCardModel.IsFacedown
+                || !Cgs.Menu.Settings.PreviewOnMouseOver || IsVisible || Zoom || CgsNetPlayable.IsAnyDragging
+                || (PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
+                || CardGameManager.Instance.ModalCanvas != null)
+            {
+                if (preview.alpha > 0)
+                    HidePreview();
+                return;
+            }
+
+            _hoverPreview?.Refresh();
         }
 
         protected void OnDisable()
         {
+            HidePreview();
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.ViewerZoom).performed -= InputZoom;
