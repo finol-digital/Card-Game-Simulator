@@ -113,6 +113,17 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void PointerEnterStartsHoverPreview()
+        {
+            _viewer.HidePreview();
+            _model.OnPointerEnter(new PointerEventData(null));
+            Tick();
+            Assert.AreSame(_model, _viewer.PreviewCardModel);
+            Assert.AreEqual(1, _preview.alpha);
+            Assert.IsTrue(Overlay.enabled);
+        }
+
+        [Test]
         public void LiveHoverSurvivesUpdateAndLateUpdate()
         {
             Tick();
