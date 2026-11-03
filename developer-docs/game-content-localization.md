@@ -99,7 +99,7 @@ No library release, CGS release, or proxy deployment is established by these che
 | Companion proxy Jest suite (Node 24) | 538/538 passed, 36 suites | Redirect origin, spoof resistance, GET/HEAD, shared CORS exposure and cached response headers, plus existing regressions |
 | Companion proxy lint and TypeScript | Passed | `eslint`, `next typegen`, and `tsc --noEmit` |
 
-The library's separate verification passed 49 .NET tests and 6 schema tests, plus
+The library's separate verification passed 57 .NET tests and 6 schema tests, plus
 its Release build (six pre-existing warnings). DLL plugin GUID remains
 `ee4977a9cc95f7a42b04ec04513bfb9e`; the adopted hash is recorded in the adjacent
 library provenance file. Both OpenSpec changes passed strict validation, and
@@ -136,6 +136,23 @@ were changed.
   late join, reconnect, ownership changes, rename/despawn, actual network-ID reuse,
   spoofed senders and unknown-label canonical fallback. The parser accounts for
   NGO's already-consumed name hash by bounding `Length - Position`.
+
+### Library review corrections (2026-11-03)
+
+The bundled DLL now includes the fixes from library PR #28: unchanged localization
+metadata retains authored unknown/invalid content and duplicate members, while
+intentional model edits serialize the edited model. The converter uses the
+`JToken.WriteTo` overload available in Unity's bundled Newtonsoft version.
+The library has 57 passing tests, six schema checks with encoding warnings treated
+as errors, and unchanged generated schemas. The source commit and DLL hash are
+updated in the provenance file. Unity recompilation and all seven
+`GameContentLocalizationTests` pass with the refreshed DLL, including unchanged
+authored metadata and intentional edits under Unity's Newtonsoft runtime. Test-path assertions also cover symlinked temporary
+directories, and compatibility tests assert that translated names are actually used.
+
+The initial Unity PR quality gate reported 13 findings. They remain open and are
+not waived by the library fix or by the previous local test results. CI must rerun
+for the refreshed DLL before its artifacts are used for build validation.
 
 ### Remaining verification and release gates
 

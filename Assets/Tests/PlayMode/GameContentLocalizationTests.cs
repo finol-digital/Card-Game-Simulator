@@ -8,6 +8,7 @@ using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 
 namespace Tests.PlayMode
@@ -72,6 +73,25 @@ namespace Tests.PlayMode
             Assert.That(game.Localization.IsUsable, Is.False);
             Assert.That(new LocalizationContext(new LocalizationTargets(game, game.Cards.Values), "es").GameName,
                 Is.EqualTo("Base"));
+        }
+
+        [TestCase("42")]
+        [TestCase(@"{""defaultLocale"":""en"",""future"":{""version"":2}}")]
+        [TestCase(@"{""defaultLocale"":""en"",""locales"":{""es"":{""inline"":{""game"":{""name"":42}}}}}")]
+        public void SavingUnityGameRetainsUneditedAuthoredLocalization(string manifest)
+        {
+            var game = new UnityCardGame(null, "Base");
+            JsonConvert.PopulateObject("{\"name\":\"Base\",\"localization\":" + manifest + "}", game);
+            game.Copyright = "Edited owner";
+            var written = JObject.Parse(JsonConvert.SerializeObject(game, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            Assert.That(JToken.DeepEquals(written["localization"], JToken.Parse(manifest)), Is.True);
+            Assert.That(written["copyright"].Value<string>(), Is.EqualTo("Edited owner"));
+            game.Localization.DefaultLocale = "ja";
+            var edited = JObject.Parse(JsonConvert.SerializeObject(game));
+            Assert.That(edited["localization"]["defaultLocale"].Value<string>(), Is.EqualTo("ja"));
         }
     }
 }
