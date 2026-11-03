@@ -537,7 +537,7 @@ namespace Cgs.Play
                 if (!TryGetSeatSlotPosition(blockIndex, 0, out var newDeckPosition))
                     newDeckPosition = NewPlayablePosition;
                 List<CardStack> cardStacks = new();
-                CurrentDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, false, label: deckLabel);
+                CurrentDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, new CardStackCreationOptions { Label = deckLabel });
                 cardStacks.Add(CurrentDeckStack);
                 var i = 1;
                 foreach (var (groupName, cards) in extraGroups)
@@ -557,7 +557,10 @@ namespace Cgs.Play
                     }
 
                     var cardStack = CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position,
-                        Quaternion.identity, false, label: GameContentLabel.ForExtraGroup(CardGameManager.Current, groupName));
+                        Quaternion.identity, new CardStackCreationOptions
+                        {
+                            Label = GameContentLabel.ForExtraGroup(CardGameManager.Current, groupName)
+                        });
                     cardStacks.Add(cardStack);
                     i++;
                 }
@@ -595,12 +598,22 @@ namespace Cgs.Play
         }
 
         public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position,
-            Quaternion rotation, bool isFaceup, ulong? ownerClientId = null, bool? autoStackCards = null,
-            GameContentLabel label = null)
+            Quaternion rotation, bool isFaceup, ulong? ownerClientId = null, bool? autoStackCards = null)
         {
+            return CreateCardStack(stackName, cards, position, rotation, new CardStackCreationOptions
+            {
+                IsFaceup = isFaceup, OwnerClientId = ownerClientId, AutoStackCards = autoStackCards
+            });
+        }
+
+        public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position,
+            Quaternion rotation, CardStackCreationOptions options)
+        {
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
             // Loading a deck does not produce a drop event. Resolve overlaps before spawning so
             // the returned stack remains valid for drawing cards and multiplayer deck callbacks.
-            if ((autoStackCards ?? PlaySettings.AutoStackCards) && cards != null && cards.Count > 0)
+            if ((options.AutoStackCards ?? PlaySettings.AutoStackCards) && cards != null && cards.Count > 0)
             {
                 foreach (var existingStack in AllCardStacks)
                 {
@@ -617,8 +630,8 @@ namespace Cgs.Play
             var cardStack = Instantiate(cardStackPrefab, playAreaCardZone.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
             {
-                if (ownerClientId.HasValue)
-                    cardStack.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                if (options.OwnerClientId.HasValue)
+                    cardStack.MyNetworkObject.SpawnWithOwnership(options.OwnerClientId.Value);
                 else
                     cardStack.MyNetworkObject.Spawn();
             }
@@ -627,13 +640,13 @@ namespace Cgs.Play
                 cardStack.Name = stackName;
             if (cards != null)
                 cardStack.Cards = cards;
-            cardStack.SetContentLabel(label);
+            cardStack.SetContentLabel(options.Label);
             GameContentNetwork.Current?.Changed(cardStack);
 
             cardStack.Position = position;
             cardStack.Rotation = rotation;
 
-            if (isFaceup)
+            if (options.IsFaceup)
                 cardStack.IsTopFaceup = true;
 
             return cardStack;

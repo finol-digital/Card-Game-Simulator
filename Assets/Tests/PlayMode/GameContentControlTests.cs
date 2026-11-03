@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Cgs;
 using Cgs.Cards;
+using Cgs.Decks;
 using Cgs.CardGameView.Viewer;
 using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
@@ -42,6 +43,13 @@ namespace Tests.PlayMode
         {
             Current.SetValue(null, _previous);
             Object.DestroyImmediate(_root);
+        }
+
+        [Test]
+        public void NameChangeBeforeShowingADeckDoesNotAccessMissingDeckOrControls()
+        {
+            var menu = _root.AddComponent<DeckSaveMenu>();
+            Assert.DoesNotThrow(() => menu.ChangeName("New name"));
         }
 
         [Test]

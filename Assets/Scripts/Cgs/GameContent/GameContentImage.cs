@@ -84,7 +84,7 @@ namespace Cgs.GameContent
             if (loading)
                 GameContentPresentation.RefreshImage(_game, _path, () =>
                 {
-                    if (this != null && isActiveAndEnabled && refresh == _refresh)
+                    if (this && isActiveAndEnabled && refresh == _refresh)
                         ApplyAvailable(false);
                 });
         }

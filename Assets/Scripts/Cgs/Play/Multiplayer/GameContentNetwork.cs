@@ -144,9 +144,8 @@ namespace Cgs.Play.Multiplayer
 
         private void Clear()
         {
-            foreach (var stack in _observations.Keys.ToArray())
-                if (stack != null)
-                    stack.SetContentLabel(null);
+            foreach (var stack in _observations.Keys.Where(stack => stack != null).ToArray())
+                stack.SetContentLabel(null);
             _peers.Clear();
             _records.Clear();
             _observations.Clear();
@@ -194,7 +193,7 @@ namespace Cgs.Play.Multiplayer
                 return;
             if (_game != CardGameManager.Current || _definition != (_game?.DefinitionGeneration ?? -1))
                 ChangeGame();
-            if (!Localized)
+            if (_game == null || !Localized)
                 return;
             if (!_manager.IsServer && _offer != null && !_ready && Time.realtimeSinceStartup <= _offerDeadline &&
                 _offer.Game == _game.Id)
@@ -204,14 +203,11 @@ namespace Cgs.Play.Multiplayer
                 Send(NetworkManager.ServerClientId, Envelope("ack", _connection));
                 _offer = null;
             }
-            if (!_manager.IsServer && _ready)
+            if (!_manager.IsServer && _ready && Time.realtimeSinceStartup >= _nextRetry)
             {
-                if (Time.realtimeSinceStartup >= _nextRetry)
-                {
-                    _nextRetry = Time.realtimeSinceStartup + RetrySeconds;
-                    foreach (var packet in _pending.Values.ToArray())
-                        Send(NetworkManager.ServerClientId, packet);
-                }
+                _nextRetry = Time.realtimeSinceStartup + RetrySeconds;
+                foreach (var packet in _pending.Values.ToArray())
+                    Send(NetworkManager.ServerClientId, packet);
             }
         }
 
@@ -353,8 +349,11 @@ namespace Cgs.Play.Multiplayer
                 var stack = player.CreateCanonicalStack(packet.Name,
                     packet.Cards.Select(id => (CgsNetString)id).ToArray(), packet.Deck,
                     new Vector2(packet.X, packet.Y), new Quaternion(packet.Qx, packet.Qy, packet.Qz, packet.Qw),
-                    packet.Faceup, packet.AutoStack,
-                    packet.Label?.IsValid(_game, packet.Name) == true ? packet.Label : null);
+                    new CardStackCreationOptions
+                    {
+                        IsFaceup = packet.Faceup, AutoStackCards = packet.AutoStack,
+                        Label = packet.Label?.IsValid(_game, packet.Name) == true ? packet.Label : null
+                    });
                 result.Object = stack.NetworkObjectId;
             }
             finally
@@ -364,13 +363,13 @@ namespace Cgs.Play.Multiplayer
         }
 
         public bool TryCreate(CgsNetPlayer player, string name, CgsNetString[] cards, bool deck,
-            Vector2 position, Quaternion rotation, bool faceup, bool autoStack, GameContentLabel label)
+            Vector2 position, Quaternion rotation, CardStackCreationOptions options)
         {
-            if (!Localized || label?.IsValid(_game, name) != true || !player.IsOwner)
+            if (options == null || player == null || !Localized || options.Label?.IsValid(_game, name) != true || !player.IsOwner)
                 return false;
             if (_manager.IsServer)
             {
-                player.CreateCanonicalStack(name, cards, deck, position, rotation, faceup, autoStack, label);
+                player.CreateCanonicalStack(name, cards, deck, position, rotation, options);
                 return true;
             }
             if (!_ready)
@@ -383,7 +382,9 @@ namespace Cgs.Play.Multiplayer
             packet.Deck = deck;
             packet.X = position.x; packet.Y = position.y;
             packet.Qx = rotation.x; packet.Qy = rotation.y; packet.Qz = rotation.z; packet.Qw = rotation.w;
-            packet.Faceup = faceup; packet.AutoStack = autoStack; packet.Label = label;
+            packet.Faceup = options.IsFaceup;
+            packet.AutoStack = options.AutoStackCards ?? PlaySettings.AutoStackCards;
+            packet.Label = options.Label;
             // Size rejection occurs before sending, so the unchanged legacy path is safe.
             if (!Send(NetworkManager.ServerClientId, packet))
                 return false;

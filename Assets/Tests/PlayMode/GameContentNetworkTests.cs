@@ -267,12 +267,12 @@ namespace Tests.PlayMode
             var service = client.GetComponent<GameContentNetwork>();
             var reference = new GameContentLabel { Kind = "gamePlayDeckName", Key = "Deck" };
             Assert.That(service.TryCreate(player, "Deck", new CgsNetString[] { "first" }, true,
-                Vector2.zero, Quaternion.identity, false, false, reference), Is.True);
+                Vector2.zero, Quaternion.identity, new CardStackCreationOptions { AutoStackCards = false, Label = reference }), Is.True);
             var pending = (IDictionary)Field(service, "_pending");
             var retry = JObject.FromObject(pending.Values.Cast<object>().Single());
             Send(client, retry);
             Assert.That(service.TryCreate(player, "Deck", new CgsNetString[] { "first" }, false,
-                Vector2.right * 800, Quaternion.identity, false, false, reference), Is.True);
+                Vector2.right * 800, Quaternion.identity, new CardStackCreationOptions { AutoStackCards = false, Label = reference }), Is.True);
             CardStack[] HostStacks() => host.SpawnManager.SpawnedObjects.Values.Select(obj => obj.GetComponent<CardStack>())
                 .Where(stack => stack != null).ToArray();
             yield return Until(() => HostStacks().Length == 2 && pending.Count == 0);

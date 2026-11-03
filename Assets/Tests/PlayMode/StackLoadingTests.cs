@@ -79,7 +79,7 @@ namespace Tests.PlayMode
             game.Localization = LocalizationJson.ReadManifest(@"{""defaultLocale"":""es"",""locales"":{""es"":{""inline"":{""game"":{""gamePlayDeckName"":""Mazo""}}}}}").Value;
             var reference = new GameContentLabel { Kind = "gamePlayDeckName", Key = "Deck" };
             var authored = _controller.CreateCardStack("Deck", new[] { _firstCard }, Vector2.zero,
-                Quaternion.identity, false, autoStackCards: false, label: reference);
+                Quaternion.identity, new CardStackCreationOptions { AutoStackCards = false, Label = reference });
             var user = _controller.CreateCardStack("Deck", new[] { _firstCard }, Vector2.right * 600,
                 Quaternion.identity, false, autoStackCards: false);
             Assert.That(authored.DisplayName, Is.EqualTo("Mazo"));
@@ -98,7 +98,10 @@ namespace Tests.PlayMode
             game.Localization = LocalizationJson.ReadManifest(@"{""defaultLocale"":""es"",""locales"":{""es"":{""inline"":{""game"":{""gamePlayDeckName"":""Mazo""}}}}}").Value;
             var user = Load(_firstCard, Vector2.zero);
             var merged = _controller.CreateCardStack("Deck", new[] { _secondCard }, Vector2.zero,
-                Quaternion.identity, false, label: new GameContentLabel { Kind = "gamePlayDeckName", Key = "Deck" });
+                Quaternion.identity, new CardStackCreationOptions
+                {
+                    Label = new GameContentLabel { Kind = "gamePlayDeckName", Key = "Deck" }
+                });
             Assert.That(merged, Is.SameAs(user));
             Assert.That(merged.ContentLabel, Is.Null);
             Assert.That(merged.DisplayName, Is.EqualTo("Deck"));

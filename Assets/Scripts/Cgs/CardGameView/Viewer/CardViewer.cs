@@ -451,9 +451,8 @@ namespace Cgs.CardGameView.Viewer
             var display = GameContentPresentation.Context(game);
             for (var index = 2; index < PropertyPaths.Count; index++)
                 PropertyOptions[index].text = display.PropertyLabel(PropertyPaths[index], PropertyLabels[index]);
-            foreach (var selector in propertySelectors)
-                if (selector != null)
-                    selector.RefreshShownValue();
+            foreach (var selector in propertySelectors.Where(selector => selector != null))
+                selector.RefreshShownValue();
         }
 
         private void InputSelectPrevious(InputAction.CallbackContext callbackContext)

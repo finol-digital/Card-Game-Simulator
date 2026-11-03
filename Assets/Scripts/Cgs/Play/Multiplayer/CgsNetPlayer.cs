@@ -423,7 +423,10 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             var ids = cards.Select(card => (CgsNetString)card.Id).ToArray();
             if (GameContentNetwork.Current?.TryCreate(this, deckName, ids, true, position, DefaultRotation,
-                    isFaceup, PlaySettings.AutoStackCards, label) == true)
+                    new CardStackCreationOptions
+                    {
+                        IsFaceup = isFaceup, AutoStackCards = PlaySettings.AutoStackCards, Label = label
+                    }) == true)
                 return;
             CreateCardStackServerRpc(deckName, ids, true, position, DefaultRotation, isFaceup, PlaySettings.AutoStackCards);
         }
@@ -468,7 +471,10 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet Player] Requesting new card stack {stackName}...");
             var ids = cards.Select(card => (CgsNetString)card.Id).ToArray();
             if (GameContentNetwork.Current?.TryCreate(this, stackName, ids, false, position, rotation,
-                    isFaceup, PlaySettings.AutoStackCards, label) == true)
+                    new CardStackCreationOptions
+                    {
+                        IsFaceup = isFaceup, AutoStackCards = PlaySettings.AutoStackCards, Label = label
+                    }) == true)
                 return;
             CreateCardStackServerRpc(stackName, ids, false, position, rotation, isFaceup, PlaySettings.AutoStackCards);
         }
@@ -478,19 +484,24 @@ namespace Cgs.Play.Multiplayer
         private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
             Quaternion rotation, bool isFaceup, bool autoStackCards)
         {
-            CreateCanonicalStack(stackName, cardIds, isDeck, position, rotation, isFaceup, autoStackCards);
+            CreateCanonicalStack(stackName, cardIds, isDeck, position, rotation,
+                new CardStackCreationOptions { IsFaceup = isFaceup, AutoStackCards = autoStackCards });
         }
 
         internal CardStack CreateCanonicalStack(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
-            Quaternion rotation, bool isFaceup, bool autoStackCards, GameContentLabel label = null)
+            Quaternion rotation, CardStackCreationOptions options)
         {
             if (!IsServer)
                 throw new InvalidOperationException("Only the server creates replicated stacks.");
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
             // This owner-only RPC can only be requested by this player's OwnerClientId.
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
-                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup,
-                OwnerClientId, autoStackCards, label);
+                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation,
+                new CardStackCreationOptions
+                {
+                    IsFaceup = options.IsFaceup, AutoStackCards = options.AutoStackCards,
+                    OwnerClientId = OwnerClientId, Label = options.Label
+                });
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
             _cardStacks.Add(cardStack.gameObject);

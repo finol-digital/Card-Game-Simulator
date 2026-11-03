@@ -79,7 +79,9 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void ChangeName(string newName)
         {
-            if (_currentDeck != null && newName != _currentDeck.Name)
+            if (_currentDeck == null)
+                return;
+            if (newName != _currentDeck.Name)
                 _currentDeck.ClearAuthoredName();
             if (_nameChangeCallback != null)
                 newName = _nameChangeCallback(newName);

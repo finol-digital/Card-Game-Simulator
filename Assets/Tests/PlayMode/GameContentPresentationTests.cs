@@ -62,6 +62,30 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void FailingViewDoesNotBlockOtherRefreshSubscribers()
+        {
+            var game = Game("Subscriber isolation");
+            GameContentPresentation.Context(game);
+            var observed = false;
+            void Fail(UnityCardGame changed) => throw new InvalidOperationException("Broken view");
+            void Observe(UnityCardGame changed) => observed = changed == game;
+            GameContentPresentation.Changed += Fail;
+            GameContentPresentation.Changed += Observe;
+            try
+            {
+                LogAssert.Expect(LogType.Warning, "Game-content binding refresh failed: Broken view");
+                typeof(UnityCardGame).GetMethod("NotifyContentChanged",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(game, null);
+                Assert.That(observed, Is.True);
+            }
+            finally
+            {
+                GameContentPresentation.Changed -= Fail;
+                GameContentPresentation.Changed -= Observe;
+            }
+        }
+
+        [Test]
         public void RefreshObserversCaptureTheFinalSelectionGeneration()
         {
             var game = Game("generation-" + Guid.NewGuid().ToString("N"));

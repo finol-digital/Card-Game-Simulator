@@ -150,9 +150,25 @@ updated in the provenance file. Unity recompilation and all seven
 authored metadata and intentional edits under Unity's Newtonsoft runtime. Test-path assertions also cover symlinked temporary
 directories, and compatibility tests assert that translated names are actually used.
 
-The initial Unity PR quality gate reported 13 findings. They remain open and are
-not waived by the library fix or by the previous local test results. CI must rerun
-for the refreshed DLL before its artifacts are used for build validation.
+The initial Unity PR quality gate reported 13 findings. Follow-up changes add
+explicit deck/game null guards, preserve Unity's destroyed-object check in image
+callbacks, and group local stack-creation settings in `CardStackCreationOptions`.
+The original seven-argument RPC and all named-message fields remain unchanged;
+server creation still supplies the authenticated player's ownership. Explicit
+subscriber storage retains per-view exception isolation. Remaining findings cover
+loop simplification and a nested method name. The CI gate must verify the fixes.
+
+The local analyzer helper skipped because Unity generated a `.slnx` while the
+helper expects `.sln`. A direct analyzer build was then stopped under memory/swap
+pressure before completing the application project; it is not a passing analysis.
+The affected Unity tests are rerun independently of that build. Unity compilation
+and all 28 game-content tests passed after the corrections, including capability
+negotiation, idempotent creation, ownership/ID-reuse snapshots, early deck-name
+callbacks, and subscriber exception isolation. All 13 stack-loading and seven
+localized asset/rulebook tests also passed after the refactor. A direct comparison
+confirmed the legacy stack RPC signature and named-message packet fields are
+unchanged. No `.github` files were modified. The authoritative Sonar/CI result
+for this follow-up is still pending.
 
 ### Remaining verification and release gates
 

@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cgs.Localization;
@@ -94,7 +95,7 @@ namespace Cgs.GameContent
                 return _context;
             }
 
-            public IReadOnlyList<GameContentDiagnostics.CatalogReport> Diagnostics()
+            public IReadOnlyList<GameContentDiagnostics.CatalogReport> InspectCatalogs()
             {
                 Get(CgsLocalization.CurrentLocale);
                 var documents = new Dictionary<string, LocalizationCatalogDocument>(StringComparer.OrdinalIgnoreCase);
@@ -134,14 +135,19 @@ namespace Cgs.GameContent
         private static ConditionalWeakTable<UnityCardGame, Entry> _entries = new();
         private static UnityCardGame _selectedGame;
         private static int _selection;
-        public static event Action<UnityCardGame> Changed;
+        private static Action<UnityCardGame> _changed;
+        public static event Action<UnityCardGame> Changed
+        {
+            add => _changed += value;
+            remove => _changed -= value;
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reset()
         {
             CgsLocalization.Changed -= OnLocaleChanged;
             _entries = new ConditionalWeakTable<UnityCardGame, Entry>();
-            Changed = null;
+            _changed = null;
             AssetsChanged = null;
             _selectedGame = null;
             _selection++;
@@ -173,9 +179,11 @@ namespace Cgs.GameContent
 
         private static void NotifyChanged(UnityCardGame game)
         {
-            if (Changed == null)
+            var handlers = _changed?.GetInvocationList();
+            if (handlers == null)
                 return;
-            foreach (Action<UnityCardGame> handler in Changed.GetInvocationList())
+            // Isolate subscribers so one broken view cannot prevent the others refreshing.
+            foreach (var handler in handlers.Cast<Action<UnityCardGame>>())
             {
                 try
                 {
@@ -231,17 +239,15 @@ namespace Cgs.GameContent
         public static Uri RulesUri(UnityCardGame game)
         {
             // External rulebook sites are links; never crawl or mirror them into a package.
-            foreach (var candidate in Context(game).AssetCandidates("rulesUrl"))
-                if (!candidate.Uri.IsFile || File.Exists(candidate.Uri.LocalPath))
-                    return candidate.Uri;
-            return game.RulesUrl;
+            return Context(game).AssetCandidates("rulesUrl").Select(candidate => candidate.Uri)
+                .FirstOrDefault(uri => !uri.IsFile || File.Exists(uri.LocalPath)) ?? game.RulesUrl;
         }
 
         public static IReadOnlyList<GameContentDiagnostics.CatalogReport> Diagnostics(UnityCardGame game)
         {
             if (game == null)
                 throw new ArgumentNullException(nameof(game));
-            return _entries.GetValue(game, value => new Entry(value)).Diagnostics();
+            return _entries.GetValue(game, value => new Entry(value)).InspectCatalogs();
         }
 
         public static LocalizationContext Context(UnityCardGame game) => Context(game, CgsLocalization.CurrentLocale);
