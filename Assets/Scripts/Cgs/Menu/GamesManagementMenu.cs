@@ -279,7 +279,8 @@ namespace Cgs.Menu
                     CardGameManager.Instance.UpdateCardGame(CardGameManager.Current));
             }
             else
-                CardGameManager.Instance.Messenger.Show(UiMessage.With("games.sync.unavailable", NoSyncMessage, ("gameName", CardGameManager.Current.Name)));
+                CardGameManager.Instance.Messenger.Show(Cgs.GameContent.GameContentMessage.Create(CardGameManager.Current, display =>
+                    UiMessage.With("games.sync.unavailable", NoSyncMessage, ("gameName", display.GameName))));
 
             Hide();
         }

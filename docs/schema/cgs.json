@@ -13,6 +13,17 @@
       "type": "string",
       "description": "The name of the custom card game as it appears to the user. This name is required for the *Game:Id*."
     },
+    "localization": {
+      "description": "Optional authored game-content translations; canonical game data remains unchanged.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/GameLocalization"
+        }
+      ]
+    },
     "allCardsUrl": {
       "type": [
         "null",
@@ -490,6 +501,241 @@
     }
   },
   "definitions": {
+    "GameLocalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultLocale": {
+          "type": "string"
+        },
+        "locales": {
+          "$ref": "#/definitions/LocalizationMapOfLocalizationSource"
+        }
+      },
+      "required": [
+        "defaultLocale"
+      ]
+    },
+    "LocalizationMapOfLocalizationSource": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/LocalizationSource"
+      }
+    },
+    "LocalizationSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        },
+        "inline": {
+          "$ref": "#/definitions/LocalizationCatalog"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "url"
+          ]
+        },
+        {
+          "required": [
+            "inline"
+          ]
+        }
+      ]
+    },
+    "LocalizationCatalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "game": {
+          "$ref": "#/definitions/LocalizedGame"
+        },
+        "cards": {
+          "$ref": "#/definitions/LocalizationMapOfLocalizedCard"
+        },
+        "cardNames": {
+          "$ref": "#/definitions/LocalizationMapOfString"
+        },
+        "sets": {
+          "$ref": "#/definitions/LocalizationMapOfLocalizedName"
+        },
+        "decks": {
+          "$ref": "#/definitions/LocalizationMapOfLocalizedName"
+        },
+        "properties": {
+          "$ref": "#/definitions/LocalizationMapOfLocalizedProperty"
+        },
+        "enums": {
+          "$ref": "#/definitions/LocalizationMapOfLocalizationMapOfString"
+        },
+        "extraGroups": {
+          "$ref": "#/definitions/LocalizationMapOfString"
+        },
+        "zones": {
+          "$ref": "#/definitions/LocalizationMapOfString"
+        },
+        "boards": {
+          "$ref": "#/definitions/LocalizationMapOfLocalizedName"
+        },
+        "cardBacks": {
+          "$ref": "#/definitions/LocalizationMapOfLocalizedName"
+        },
+        "assets": {
+          "$ref": "#/definitions/LocalizedAssets"
+        }
+      }
+    },
+    "LocalizedGame": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "copyright": {
+          "type": "string"
+        },
+        "gamePlayDeckName": {
+          "type": "string"
+        },
+        "setNameDefault": {
+          "type": "string"
+        }
+      }
+    },
+    "LocalizationMapOfLocalizedCard": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/LocalizedCard"
+      }
+    },
+    "LocalizedCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "properties": {
+          "$ref": "#/definitions/LocalizationMapOfString"
+        }
+      }
+    },
+    "LocalizationMapOfString": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "LocalizationMapOfLocalizedName": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/LocalizedName"
+      }
+    },
+    "LocalizedName": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "LocalizationMapOfLocalizedProperty": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/LocalizedProperty"
+      }
+    },
+    "LocalizedProperty": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "display": {
+          "type": "string"
+        },
+        "displayEmpty": {
+          "type": "string"
+        },
+        "booleanValues": {
+          "$ref": "#/definitions/LocalizedBoolean"
+        }
+      }
+    },
+    "LocalizedBoolean": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "true": {
+          "type": "string"
+        },
+        "false": {
+          "type": "string"
+        }
+      }
+    },
+    "LocalizationMapOfLocalizationMapOfString": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/LocalizationMapOfString"
+      }
+    },
+    "LocalizedAssets": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cardImages": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "uri-reference",
+            "minLength": 1
+          }
+        },
+        "cardBacks": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "uri-reference",
+            "minLength": 1
+          }
+        },
+        "boards": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "uri-reference",
+            "minLength": 1
+          }
+        },
+        "bannerImageUrl": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        },
+        "cardBackImageUrl": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        },
+        "playMatImageUrl": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        },
+        "rulesUrl": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        }
+      }
+    },
     "CardBackFaceImageUrl": {
       "type": "object",
       "additionalProperties": false,

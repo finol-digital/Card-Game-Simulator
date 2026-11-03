@@ -327,7 +327,11 @@ namespace Cgs.CardGameView.Viewer
                 _ => null
             };
             foreach (var valueText in valueTexts)
-                if (message == null)
+                if (playable is CardStack stack)
+                    Cgs.GameContent.GameContentText.Set(valueText, CardGameManager.Current, stack.ResolveDisplayName);
+                else if (playable is CardModel card)
+                    Cgs.GameContent.GameContentText.Set(valueText, card.Value.Game, display => display.CardName(card.Value));
+                else if (message == null)
                     Cgs.Localization.LocalizedUiText.SetLiteral(valueText, value);
                 else
                     Cgs.Localization.LocalizedUiText.Set(valueText, message);

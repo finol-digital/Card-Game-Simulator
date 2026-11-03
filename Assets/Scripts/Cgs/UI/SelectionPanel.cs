@@ -73,7 +73,7 @@ namespace Cgs.UI
         }
 
         protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select,
-            TKey current, Func<TValue, UiMessage> label = null)
+            TKey current, Func<TValue, UiMessage> label = null, Action<Text, TKey, TValue> bindLabel = null)
         {
             if (toggleGroup != null)
                 toggleGroup.allowSwitchOff = true;
@@ -90,7 +90,9 @@ namespace Cgs.UI
                 toggle.gameObject.SetActive(true);
                 toggle.transform.localScale = Vector3.one;
                 var text = toggle.GetComponentsInChildren<Text>().Last();
-                if (label == null)
+                if (bindLabel != null)
+                    bindLabel(text, option.Key, option.Value);
+                else if (label == null)
                     LocalizedUiText.SetLiteral(text, option.Value.ToString());
                 else
                     LocalizedUiText.Set(text, label(option.Value));

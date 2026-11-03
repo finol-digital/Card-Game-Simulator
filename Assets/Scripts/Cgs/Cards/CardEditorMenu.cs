@@ -173,7 +173,8 @@ namespace Cgs.Cards
                 var newTransform = Instantiate(cardPropertyTemplate.gameObject, scrollRectContent)
                     .transform;
                 newTransform.gameObject.SetActive(true);
-                Cgs.Localization.LocalizedUiText.SetLiteral(newTransform.GetComponentInChildren<Text>(), propertyDef.Display);
+                Cgs.GameContent.GameContentText.Set(newTransform.GetComponentInChildren<Text>(), CardGameManager.Current,
+                    display => display.PropertyLabel(propertyDef.Name, propertyDef.Display));
                 _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
             }
 
@@ -229,7 +230,8 @@ namespace Cgs.Cards
                 var newTransform = Instantiate(cardPropertyTemplate.gameObject, scrollRectContent)
                     .transform;
                 newTransform.gameObject.SetActive(true);
-                Cgs.Localization.LocalizedUiText.SetLiteral(newTransform.GetComponentInChildren<Text>(), propertyDef.Display);
+                Cgs.GameContent.GameContentText.Set(newTransform.GetComponentInChildren<Text>(), CardGameManager.Current,
+                    display => display.PropertyLabel(propertyDef.Name, propertyDef.Display));
                 _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
                 _inputFields.Last().text = unityCard.GetPropertyValueString(propertyDef.Name);
             }

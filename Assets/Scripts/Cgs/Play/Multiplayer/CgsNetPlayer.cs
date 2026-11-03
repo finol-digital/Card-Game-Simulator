@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Localization;
+using Cgs.GameContent;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -417,11 +418,14 @@ namespace Cgs.Play.Multiplayer
 
         #region CardStacks
 
-        public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards, Vector2 position, bool isFaceup)
+        public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards, Vector2 position, bool isFaceup, GameContentLabel label = null)
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
-            CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
-                position, DefaultRotation, isFaceup, PlaySettings.AutoStackCards);
+            var ids = cards.Select(card => (CgsNetString)card.Id).ToArray();
+            if (GameContentNetwork.Current?.TryCreate(this, deckName, ids, true, position, DefaultRotation,
+                    isFaceup, PlaySettings.AutoStackCards, label) == true)
+                return;
+            CreateCardStackServerRpc(deckName, ids, true, position, DefaultRotation, isFaceup, PlaySettings.AutoStackCards);
         }
 
         public void RequestSetCurrentDeck(NetworkObject deck)
@@ -459,11 +463,14 @@ namespace Cgs.Play.Multiplayer
         }
 
         public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position,
-            Quaternion rotation, bool isFaceup)
+            Quaternion rotation, bool isFaceup, GameContentLabel label = null)
         {
             Debug.Log($"[CgsNet Player] Requesting new card stack {stackName}...");
-            CreateCardStackServerRpc(stackName, cards.Select(card => (CgsNetString) card.Id).ToArray(), false,
-                position, rotation, isFaceup, PlaySettings.AutoStackCards);
+            var ids = cards.Select(card => (CgsNetString)card.Id).ToArray();
+            if (GameContentNetwork.Current?.TryCreate(this, stackName, ids, false, position, rotation,
+                    isFaceup, PlaySettings.AutoStackCards, label) == true)
+                return;
+            CreateCardStackServerRpc(stackName, ids, false, position, rotation, isFaceup, PlaySettings.AutoStackCards);
         }
 
         [ServerRpc]
@@ -471,15 +478,24 @@ namespace Cgs.Play.Multiplayer
         private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
             Quaternion rotation, bool isFaceup, bool autoStackCards)
         {
+            CreateCanonicalStack(stackName, cardIds, isDeck, position, rotation, isFaceup, autoStackCards);
+        }
+
+        internal CardStack CreateCanonicalStack(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
+            Quaternion rotation, bool isFaceup, bool autoStackCards, GameContentLabel label = null)
+        {
+            if (!IsServer)
+                throw new InvalidOperationException("Only the server creates replicated stacks.");
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
             // This owner-only RPC can only be requested by this player's OwnerClientId.
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
                 cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup,
-                OwnerClientId, autoStackCards);
+                OwnerClientId, autoStackCards, label);
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
             _cardStacks.Add(cardStack.gameObject);
             Debug.Log($"[CgsNet Player] Created new card stack {stackName}!");
+            return cardStack;
         }
 
         private void RequestSharedDeck()

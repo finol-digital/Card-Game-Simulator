@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Localization;
+using Cgs.GameContent;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
     }
 
-    public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler, ICardContainer
+    public class CardStack : CgsNetPlayable, ICardDisplay, ICardPresentationDisplay, ICardDropHandler, IStackDropHandler, ICardContainer
     {
         private const float DragHoldTime = 0.5f;
         public const string ShuffleText = "Shuffled!";
@@ -62,7 +63,9 @@ namespace Cgs.CardGameView.Multiplayer
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string SavePrompt => $"Save {deckLabel.text}?";
         public override string DeletePrompt => $"Delete {deckLabel.text}?";
-        protected override UiMessage LocalizedDeletePrompt => UiMessage.With("play.delete.named", DeletePrompt, ("name", deckLabel.text));
+        protected override UiMessage LocalizedDeletePrompt => GameContentMessage.Create(CardGameManager.Current,
+            display => UiMessage.With("play.delete.named", "Delete " + ResolveDisplayName(display) + "?",
+                ("name", ResolveDisplayName(display))));
 
         private bool IsDraggingCard => HoldTime < DragHoldTime && PointerPositions.Count == 1 &&
                                        CurrentPointerEventData != null &&
@@ -101,11 +104,11 @@ namespace Cgs.CardGameView.Multiplayer
             get => IsSpawned ? _nameNetworkVariable.Value : _name;
             set
             {
-                var oldValue = _name;
+                var oldValue = Name;
                 _name = value;
                 if (IsSpawned)
                     _nameNetworkVariable.Value = value;
-                else if (oldValue != _name)
+                if (!IsSpawned || oldValue == value)
                     OnChangeName(oldValue, _name);
             }
         }
@@ -113,7 +116,37 @@ namespace Cgs.CardGameView.Multiplayer
         private string _name = string.Empty;
         private NetworkVariable<CgsNetString> _nameNetworkVariable;
 
-        public override string ViewValue => Name;
+        private GameContentLabel _contentLabel;
+        private UnityCardGame _contentLabelGame;
+        private long _contentLabelGeneration;
+        public GameContentLabel ContentLabel
+        {
+            get
+            {
+                if (_contentLabelGame != CardGameManager.Current || _contentLabelGame == null)
+                    return null;
+                if (_contentLabel != null && _contentLabelGeneration != _contentLabelGame.DefinitionGeneration)
+                {
+                    _contentLabelGeneration = _contentLabelGame.DefinitionGeneration;
+                    if (!_contentLabel.IsValid(_contentLabelGame, Name))
+                        _contentLabel = null;
+                }
+                return _contentLabel;
+            }
+        }
+        public string DisplayName => ResolveDisplayName(GameContentPresentation.Context(CardGameManager.Current));
+        public string ResolveDisplayName(FinolDigital.Cgs.Json.LocalizationContext context) =>
+            ContentLabel != null && ContentLabel.Key == Name ? ContentLabel.Resolve(context, Name) : Name;
+        public override string ViewValue => DisplayName;
+
+        public void SetContentLabel(GameContentLabel label)
+        {
+            _contentLabelGame = CardGameManager.Current;
+            _contentLabelGeneration = _contentLabelGame?.DefinitionGeneration ?? -1;
+            _contentLabel = label?.IsValid(_contentLabelGame, Name) == true
+                ? new GameContentLabel { Kind = label.Kind, Key = label.Key } : null;
+            GameContentText.Set(deckLabel, CardGameManager.Current, ResolveDisplayName);
+        }
 
         [NotNull]
         public IReadOnlyList<UnityCard> Cards
@@ -242,6 +275,13 @@ namespace Cgs.CardGameView.Multiplayer
                 _isDeckSharedNetworkVariable.Value = _isDeckShared;
             _isDeckShared = _isDeckSharedNetworkVariable.Value;
             _isTopFaceup = _isTopFaceupNetworkVariable.Value;
+            GameContentNetwork.For(NetworkManager)?.Observe(this);
+        }
+
+        protected override void OnOwnershipChanged(ulong previous, ulong current)
+        {
+            base.OnOwnershipChanged(previous, current);
+            GameContentNetwork.For(NetworkManager)?.Changed(this);
         }
 
         // A joining client may spawn card stacks before it finishes downloading and loading the host's card game,
@@ -282,7 +322,7 @@ namespace Cgs.CardGameView.Multiplayer
             _cards = new List<UnityCard>();
             foreach (var cardId in _cardIds)
                 _cards.Add(LookupCard(cardId));
-            topCard.sprite = CardBackImageSprite;
+            SetBackImage();
             if (IsTopFaceup)
                 TopCard?.RegisterDisplay(this);
             SyncView();
@@ -301,11 +341,10 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.localScale = Vector3.one;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
-            if (!IsOwner)
-                Cgs.Localization.LocalizedUiText.SetLiteral(deckLabel, Name);
+            GameContentText.Set(deckLabel, CardGameManager.Current, ResolveDisplayName);
             Cgs.Localization.LocalizedUiText.SetNumber(countLabel, Cards.Count);
 
-            topCard.sprite = CardBackImageSprite;
+            SetBackImage();
             if (IsTopFaceup)
                 TopCard?.RegisterDisplay(this);
 
@@ -314,22 +353,36 @@ namespace Cgs.CardGameView.Multiplayer
                 RequestDelete();
         }
 
+        private UnityCard _imageCard;
+        public void SetImageCard(UnityCard card)
+        {
+            _imageCard = card;
+            SetImageSprite(card?.OrientedImageSprite);
+        }
+
         public bool UsesOrientedImage => true;
 
         public void SetImageSprite(Sprite imageSprite)
         {
-            if (imageSprite == null)
+            if (_imageCard == null)
             {
                 RemoveImageSprite();
                 return;
             }
-
-            topCard.sprite = imageSprite;
+            GameContentImage.Set(topCard, _imageCard.Game, imageSprite != null ? imageSprite : CardBackImageSprite,
+                true, "cardImages", _imageCard.Id);
         }
 
         private void RemoveImageSprite()
         {
-            topCard.sprite = CardBackImageSprite;
+            SetBackImage();
+        }
+
+        private void SetBackImage()
+        {
+            var backId = TopCard?.BackFaceId;
+            var path = !string.IsNullOrEmpty(backId) ? new[] { "cardBacks", backId } : new[] { "cardBackImageUrl" };
+            GameContentImage.Set(topCard, CardGameManager.Current, CardBackImageSprite, true, path);
         }
 
         protected override void OnUpdatePlayable()
@@ -435,7 +488,9 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeName(CgsNetString oldName, CgsNetString newName)
         {
-            Cgs.Localization.LocalizedUiText.SetLiteral(deckLabel, newName);
+            _name = newName;
+            SetContentLabel(null);
+            GameContentNetwork.For(NetworkManager)?.Changed(this);
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -623,7 +678,8 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void PromptShuffle()
         {
-            CardGameManager.Instance.Messenger.Prompt(UiMessage.With("play.stack.shuffle", ShufflePrompt, ("name", deckLabel.text)), Shuffle);
+            CardGameManager.Instance.Messenger.Prompt(GameContentMessage.Create(CardGameManager.Current, display => UiMessage.With("play.stack.shuffle",
+                "Shuffle " + ResolveDisplayName(display) + "?", ("name", ResolveDisplayName(display)))), Shuffle);
         }
 
         private void Shuffle()
@@ -675,7 +731,8 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void PromptSave()
         {
-            CardGameManager.Instance.Messenger.Prompt(UiMessage.With("play.stack.save", SavePrompt, ("name", deckLabel.text)), Save);
+            CardGameManager.Instance.Messenger.Prompt(GameContentMessage.Create(CardGameManager.Current, display => UiMessage.With("play.stack.save",
+                "Save " + ResolveDisplayName(display) + "?", ("name", ResolveDisplayName(display)))), Save);
         }
 
         private void Save()
@@ -686,7 +743,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 if (!Directory.Exists(CardGameManager.Current.DecksDirectoryPath))
                     Directory.CreateDirectory(CardGameManager.Current.DecksDirectoryPath);
-                File.WriteAllText(unityDeck.FilePath, unityDeck.ToString());
+                AuthoredDeckFiles.WriteUserFile(CardGameManager.Current, unityDeck.FilePath, unityDeck.ToString());
 
                 _actionText.Value = SaveText;
                 _actionTime.Value = 1;
@@ -705,6 +762,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void OnNetworkDespawn()
         {
+            GameContentNetwork.For(NetworkManager)?.Despawned(this);
             if (IsServer)
                 foreach (var player in FindObjectsByType<CgsNetPlayer>(FindObjectsSortMode.None))
                     player.ClearCurrentDeck(NetworkObjectId);
@@ -713,7 +771,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void OnDestroy()
         {
-            TopCard?.UnregisterDisplay(this);
+            TopCard?.UnregisterDisplay(this, false);
 
             if (Viewer != null)
                 Viewer.Close();
