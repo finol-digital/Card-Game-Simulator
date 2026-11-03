@@ -175,15 +175,19 @@ namespace Cgs.CardGameView.Viewer
             get => _previewCardModel;
             set
             {
-                if (_previewCardModel != null)
-                    _previewCardModel.Value.UnregisterDisplay(this);
+                _previewCard?.UnregisterDisplay(this);
+                _previewCard = null;
 
                 _previewCardModel = value;
+                HidePreviewPresentation();
 
                 if (_previewCardModel == null)
                     return;
 
+                _hoverPreview ??= new CardHoverPreview((RectTransform)transform);
+                _hoverPreview.Show(_previewCardModel.GetComponent<Image>());
                 var card = _previewCardModel.Value;
+                _previewCard = card;
                 card.RegisterDisplay(this);
                 preview.alpha = 1;
                 foreach (var previewName in previewNameText)
@@ -194,6 +198,8 @@ namespace Cgs.CardGameView.Viewer
         }
 
         private CardModel _previewCardModel;
+        private UnityCard _previewCard;
+        private CardHoverPreview _hoverPreview;
 
         public CardModel SelectedCardModel
         {
@@ -289,7 +295,7 @@ namespace Cgs.CardGameView.Viewer
                 ZoomTime = 0;
             WasVisible = IsVisible;
 
-            if (_selectedCardModel == null)
+            if (_selectedCardModel == null && IsVisible)
                 IsVisible = false;
 
             if (IsBlocked)
@@ -653,11 +659,45 @@ namespace Cgs.CardGameView.Viewer
 
         public void HidePreview()
         {
+            PreviewCardModel = null;
+        }
+
+        private void HidePreviewPresentation()
+        {
             preview.alpha = 0;
+            _hoverPreview?.Hide();
+        }
+
+        protected void LateUpdate()
+        {
+            if (_previewCardModel == null || !_previewCardModel.isActiveAndEnabled || _previewCardModel.IsFacedown
+                || IsVisible || Zoom || CgsNetPlayable.IsAnyDragging)
+            {
+                if (_previewCardModel != null || _previewCard != null || preview.alpha > 0)
+                    HidePreview();
+                return;
+            }
+
+            if (!Cgs.Menu.Settings.PreviewOnMouseOver
+                || (PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
+                || CardGameManager.Instance.ModalCanvas != null)
+            {
+                HidePreviewPresentation();
+                return;
+            }
+
+            if (preview.alpha == 0)
+            {
+                preview.alpha = 1;
+                _hoverPreview?.Show(_previewCardModel.GetComponent<Image>());
+            }
+            else
+                _hoverPreview?.Refresh();
         }
 
         protected void OnDisable()
         {
+            HidePreview();
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.ViewerZoom).performed -= InputZoom;

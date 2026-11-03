@@ -349,7 +349,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (Settings.PreviewOnMouseOver && !CardViewer.Instance.IsVisible
                                             && !(PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
-                                            && CurrentDragPhase != DragPhase.Drag && !IsFacedown)
+                                            && !CardViewer.Instance.Zoom && !IsAnyDragging && !IsFacedown)
                 CardViewer.Instance.PreviewCardModel = this;
         }
 
@@ -358,9 +358,8 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance == null)
                 return;
 
-            CardViewer.Instance.HidePreview();
             if (CardViewer.Instance.PreviewCardModel == this)
-                CardViewer.Instance.PreviewCardModel = null;
+                CardViewer.Instance.HidePreview();
         }
 
         protected override void OnSelectPlayable(BaseEventData eventData)
@@ -888,6 +887,8 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
                 CardViewer.Instance.SelectedCardModel == this)
                 CardViewer.Instance.SelectedCardModel = this;
+            if (CardViewer.Instance != null && CardViewer.Instance.PreviewCardModel == this)
+                CardViewer.Instance.PreviewCardModel = this;
         }
 
         private static bool IsFaceFlip(string oldId, string newId, out UnityCard oldCard)
