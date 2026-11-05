@@ -290,3 +290,23 @@ The 13 legacy stack-loading tests pass as well: 86 focused Unity tests in total.
 Fresh PR CI must confirm the quality gate and platform builds. iOS/Android/IL2CPP
 and full platform walkthroughs remain unverified; these local tests are not a
 substitute for the user's CI build validation.
+
+
+## Library re-review follow-up
+
+The bundled library now scans manifest tokens before parsing duplicate members.
+Duplicates below an inline catalog quarantine only that catalog; duplicates in
+the manifest or source declaration remain fatal to localization. Valid siblings
+and default-locale fallback survive, and unchanged serialization preserves the
+authored duplicate members. Relative resource fragments (including a fragment-only
+reference to the containing document) are supported. Schema validation rejects
+empty HTTP authorities and trailing newlines; runtime URI validation may reject
+further invalid authority/port combinations, as the author guide now states.
+Coverage credits exact translations for every printing toward the shared-name
+target, and the author guide describes metadata loss after validated model edits.
+
+Library validation: 80 .NET tests and all six URI-aware schema tests pass. Unity
+compilation and all 16 localization boundary smoke tests pass against the shipped
+DLL, including duplicate-member isolation and remote/bundled fragment references.
+All 25 website/Worker checks and strict OpenSpec validation pass. Fresh platform
+CI builds and the user's device validation remain pending.

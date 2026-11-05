@@ -530,7 +530,7 @@
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         },
         "inline": {
           "$ref": "#/definitions/LocalizationCatalog"
@@ -697,7 +697,7 @@
             "type": "string",
             "format": "uri-reference",
             "minLength": 1,
-            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
           }
         },
         "cardBacks": {
@@ -706,7 +706,7 @@
             "type": "string",
             "format": "uri-reference",
             "minLength": 1,
-            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
           }
         },
         "boards": {
@@ -715,32 +715,32 @@
             "type": "string",
             "format": "uri-reference",
             "minLength": 1,
-            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
           }
         },
         "bannerImageUrl": {
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         },
         "cardBackImageUrl": {
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         },
         "playMatImageUrl": {
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         },
         "rulesUrl": {
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         }
       }
     },

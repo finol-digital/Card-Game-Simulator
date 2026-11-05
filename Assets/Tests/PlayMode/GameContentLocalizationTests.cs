@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using FinolDigital.Cgs.Json;
@@ -26,6 +28,55 @@ namespace Tests.PlayMode
             game.Add(new UnityCard(game, "2", "Ash", "BASE", new Dictionary<string, PropertyDefValuePair>(), false), false);
             JsonConvert.PopulateObject(@"{""name"":""Localization boundary"",""localization"":{""defaultLocale"":""en"",""locales"":{""es"":{""inline"":{""game"":{""name"":""Juego""},""cardNames"":{""Flame"":""Ash"",""Ash"":""Ceniza""}}}}}}", game);
             return game;
+        }
+
+        [Test]
+        public void DuplicateInlineMembersKeepSiblingTranslationsAndAuthoredSourceInUnity()
+        {
+            const string broken = @"{""game"":{""name"":""a"",""name"":""b""}}";
+            var game = new UnityCardGame(null, "Base");
+            JsonConvert.PopulateObject("{\"name\":\"Base\",\"localization\":{\"defaultLocale\":\"es\",\"locales\":{\"es\":{\"inline\":{\"game\":{\"name\":\"Juego\"}}},\"fr\":{\"inline\":" + broken + "}}}}", game);
+            Assert.That(game.Localization.IsUsable, Is.True);
+            var display = new LocalizationContext(new LocalizationTargets(game, game.Cards.Values), "fr");
+            Assert.That(display.GameName, Is.EqualTo("Juego"));
+            Assert.That(JsonConvert.SerializeObject(game), Does.Contain(broken));
+        }
+
+        [TestCase("rules.html#setup", "https://example.invalid/game/rules.html#setup")]
+        [TestCase("#setup", "https://example.invalid/game/cgs.json#setup")]
+        [TestCase("rules.html?lang=es#setup", "https://example.invalid/game/rules.html?lang=es#setup")]
+        public void UnityResolvesRelativeFragments(string reference, string expected)
+        {
+            var origin = LocalizationOrigin.Remote(new Uri("https://example.invalid/game/cgs.json"));
+            Assert.That(LocalizationOrigin.Resolve(reference, origin)?.AbsoluteUri, Is.EqualTo(expected));
+        }
+
+        [TestCase("a\n")]
+        [TestCase("http:///foo")]
+        [TestCase("https://?x")]
+        [TestCase("http://example.invalid:99999/x")]
+        public void UnityRejectsMalformedResourceReferences(string reference)
+        {
+            var origin = LocalizationOrigin.Remote(new Uri("https://example.invalid/game/cgs.json"));
+            Assert.That(LocalizationOrigin.Resolve(reference, origin), Is.Null);
+        }
+
+        [Test]
+        public void UnityBundledFragmentsRetainTheContainingFile()
+        {
+            var root = Path.Combine(Path.GetTempPath(), "cgs-fragment-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(root);
+            try
+            {
+                var document = Path.Combine(root, "cgs.json");
+                File.WriteAllText(document, "{}");
+                var origin = LocalizationOrigin.Bundled(root, document,
+                    path => LocalizationFiles.ExistingPhysicalPath(path, root));
+                var resolved = LocalizationOrigin.Resolve("#setup", origin);
+                Assert.That(resolved.LocalPath, Is.EqualTo(document));
+                Assert.That(resolved.Fragment, Is.EqualTo("#setup"));
+            }
+            finally { Directory.Delete(root, true); }
         }
 
         [TestCase(DeckFileType.Txt)]
