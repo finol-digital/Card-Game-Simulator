@@ -79,6 +79,29 @@ namespace Tests.PlayMode
             finally { Directory.Delete(root, true); }
         }
 
+        [TestCase("https:es.json")]
+        [TestCase("HTTPS:es.json")]
+        [TestCase("https:/es.json")]
+        [TestCase("https:?x")]
+        [TestCase("https:#x")]
+        [TestCase("http:es.json")]
+        [TestCase("1a:b")]
+        public void UnityRejectsSchemeLikeRelativeReferences(string reference)
+        {
+            var manifest = LocalizationJson.ReadManifest("{\"defaultLocale\":\"en\",\"locales\":{\"es\":{\"url\":\"" + reference + "\"}}}");
+            Assert.That(manifest.IsValid, Is.False);
+            var game = CreateGame();
+            JsonConvert.PopulateObject("{\"name\":\"Base\",\"localization\":{\"defaultLocale\":\"es\",\"locales\":{\"es\":{\"inline\":{\"assets\":{\"rulesUrl\":\"" + reference + "\"}}}}}}", game);
+            foreach (var scheme in new[] { "http", "https" })
+            {
+                var origin = LocalizationOrigin.Remote(new Uri(scheme + "://cdn.example/g/cgs.json"));
+                Assert.That(LocalizationOrigin.Resolve(reference, origin), Is.Null);
+                var display = new LocalizationContext(new LocalizationTargets(game, game.Cards.Values), "es",
+                    definitionOrigin: origin);
+                Assert.That(display.AssetCandidates("rulesUrl"), Is.Empty);
+            }
+        }
+
         [TestCase(DeckFileType.Txt)]
         [TestCase(DeckFileType.Dec)]
         public void DisplayCollisionDoesNotChangeActualDeckImportsOrCanonicalQueries(DeckFileType format)

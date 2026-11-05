@@ -150,7 +150,7 @@
             "type": "string",
             "format": "uri-reference",
             "minLength": 1,
-            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[^/?#]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
           }
         },
         "cardBacks": {
@@ -159,7 +159,7 @@
             "type": "string",
             "format": "uri-reference",
             "minLength": 1,
-            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[^/?#]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
           }
         },
         "boards": {
@@ -168,32 +168,32 @@
             "type": "string",
             "format": "uri-reference",
             "minLength": 1,
-            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[^/?#]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
           }
         },
         "bannerImageUrl": {
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[^/?#]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         },
         "cardBackImageUrl": {
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[^/?#]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         },
         "playMatImageUrl": {
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[^/?#]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         },
         "rulesUrl": {
           "type": "string",
           "format": "uri-reference",
           "minLength": 1,
-          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://(?=[^/?#])|(?!(?:[^/?#]*:|/)))(?!.*[\\\\{}])[!-~]+(?![\\s\\S])"
         }
       }
     }

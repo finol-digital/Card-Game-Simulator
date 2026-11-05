@@ -310,3 +310,20 @@ compilation and all 16 localization boundary smoke tests pass against the shippe
 DLL, including duplicate-member isolation and remote/bundled fragment references.
 All 25 website/Worker checks and strict OpenSpec validation pass. Fresh platform
 CI builds and the user's device validation remain pending.
+
+## Scheme-like relative resource regression
+
+The library rejects colons in the first relative path segment, including malformed
+references such as `https:es.json`, before they can be interpreted differently
+against HTTP and HTTPS origins. Remote URI combination uses `Uri.TryCreate` so an
+unresolvable reference returns no candidate instead of throwing. The schema uses
+the same first-segment restriction; later path segments, queries, and fragments
+may still contain colons. Tests cover manifest rejection, direct resolution, and
+localized asset fallback for both origin schemes.
+
+Validation: all 91 .NET tests, seven URI-aware schema tests, and 25 website/Worker
+checks pass. The bundled DLL and schemas are rebuilt from the recorded source
+commit in `game-content-localization-library.json`.
+Unity compilation and all 23 localization boundary PlayMode tests pass, including
+the seven malformed-reference cases against both HTTP and HTTPS origins.
+Platform CI and the user's device validation remain pending.
