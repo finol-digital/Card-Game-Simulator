@@ -56,6 +56,26 @@ namespace Tests.PlayMode
         private void Install() => Run(AuthoredDeckFiles.Download(_game, "Starter", Source, _path, Download));
 
         [Test]
+        public void NestedDeckDownloadsRemainCanonicalAndEscapingPathsAreSkipped()
+        {
+            var calls = 0;
+            IEnumerator DownloadNested(string source, string path, Action<FileDownloadResult> complete)
+            {
+                calls++;
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                yield return Download(source, path, complete);
+            }
+            var nested = Path.Combine(_game.DecksDirectoryPath, "Starter", "Red.txt");
+            Run(AuthoredDeckFiles.Download(_game, "Starter/Red", Source, nested, DownloadNested));
+            Assert.That(File.ReadAllText(nested), Is.EqualTo(DeckText));
+            Assert.That(File.Exists(Path.Combine(_game.GameDirectoryPath, "localization", "provenance.json")), Is.False);
+            Run(AuthoredDeckFiles.Download(_game, "../escape", Source,
+                Path.Combine(_game.DecksDirectoryPath, "..", "escape.txt"), DownloadNested));
+            Assert.That(calls, Is.EqualTo(1));
+            Assert.That(File.Exists(Path.Combine(_game.GameDirectoryPath, "escape.txt")), Is.False);
+        }
+
+        [Test]
         public void FirstAuthoredInstallCreatesDeckDirectoryAndInventoryFromSidecar()
         {
             Directory.Delete(_game.DecksDirectoryPath);

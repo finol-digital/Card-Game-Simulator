@@ -33,6 +33,33 @@ namespace Tests.PlayMode
             game.ReadProperties();
             Assert.That(LocalizationOrigin.Resolve("locales/es.json", game.DefinitionOrigin), Is.Null);
         }
+        [Test]
+        public void TrustedRootBelowLinkedStorageAncestorSupportsOriginsAndCaches()
+        {
+            var physical = Game().GameDirectoryPath;
+            var container = Game().GameDirectoryPath;
+            var alias = Path.Combine(container, "linked-storage");
+            Assert.That(CreateSymbolicLink(physical, alias), Is.Zero);
+            var root = Path.Combine(alias, "game");
+            Directory.CreateDirectory(root);
+            var document = Path.Combine(root, "cgs.json");
+            File.WriteAllText(document, "{}");
+            var remote = FileDownloadResult.FromResponse("https://example.invalid/game/cgs.json", false);
+            Assert.That(LocalizationFiles.RecordDefinitionOrigin(root, document, remote), Is.True);
+            Assert.That(LocalizationFiles.ReadDefinitionOrigin(root, document).RemoteUrl, Is.EqualTo(remote.FinalDocumentUri));
+            var cache = new LocalizationCache(root, "game");
+            var request = cache.Begin("es", new Uri("https://example.invalid/es.json"));
+            Assert.That(cache.Publish(request, new byte[] { 1 }, null, bytes => bytes.Length > 0), Is.True);
+            Assert.That(cache.Read(request).Payload, Is.EqualTo(new byte[] { 1 }));
+            File.WriteAllText(Path.Combine(root, "es.json"), "{}");
+            var bundled = LocalizationOrigin.Bundled(root, document, path => LocalizationFiles.ExistingPhysicalPath(path, root));
+            Assert.That(LocalizationOrigin.Resolve("es.json", bundled), Is.Not.Null);
+            Assert.That(CreateSymbolicLink(physical, Path.Combine(root, "escape")), Is.Zero);
+            Assert.That(LocalizationFiles.ConfinedPath(Path.Combine(root, "escape", "new.json"), root), Is.Null);
+            Directory.Delete(Path.Combine(root, "escape"));
+            Directory.Delete(alias);
+        }
+
 #endif
 
         private UnityCardGame Game()
@@ -192,6 +219,22 @@ namespace Tests.PlayMode
             game.ReadProperties();
             Assert.That(LocalizationOrigin.Resolve("es.json", game.DefinitionOrigin).LocalPath,
                 Is.EqualTo(Path.Combine(game.GameDirectoryPath, "es.json")));
+        }
+
+        [Test]
+        public void OriginWriteFailureStillInstallsBaseDefinitionWithoutGuessingAnOrigin()
+        {
+            var game = Game();
+            File.WriteAllText(Path.Combine(game.GameDirectoryPath, "localization"), "blocks optional metadata directory");
+            var downloaded = Download(game);
+            Assert.That(game.InstallDownloadedDefinition(downloaded,
+                FileDownloadResult.FromResponse("https://example.invalid/game/cgs.json", false)), Is.True);
+            Assert.That(File.Exists(game.GameFilePath), Is.True);
+            game.ReadProperties();
+            _directories.Add(game.GameDirectoryPath);
+            Assert.That(game.HasReadProperties, Is.True, game.Error);
+            Assert.That(game.DefinitionOrigin, Is.Null);
+            Assert.That(LocalizationFiles.ReadDefinitionOrigin(game.GameDirectoryPath, game.GameFilePath), Is.Null);
         }
 
         [Test]

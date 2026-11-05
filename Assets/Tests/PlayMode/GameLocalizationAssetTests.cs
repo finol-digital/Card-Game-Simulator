@@ -135,6 +135,32 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void ZeroDayPolicyRefreshesOncePerSelectionCycleAndAfterDefinitionReload()
+        {
+            var context = Manifest(Source);
+            _game.AutoUpdate = 0;
+            var requests = 0;
+            IEnumerator Download(string source, string path, Action<FileDownloadResult> completed)
+            {
+                requests++;
+                File.WriteAllBytes(path, ImageBytes(2, 3));
+                completed(new FileDownloadResult(true, new Uri(source), true));
+                yield break;
+            }
+            var assets = new GameLocalizationAssets(_game, new LocalizationCache(_game.GameDirectoryPath, _game.Id), Download);
+            for (var page = 0; page < 5; page++)
+                Run(assets.Refresh(context.AssetCandidates("bannerImageUrl"), Target, null));
+            Assert.That(requests, Is.EqualTo(1));
+            assets.BeginRefreshCycle();
+            Run(assets.Refresh(context.AssetCandidates("bannerImageUrl"), Target, null));
+            Assert.That(requests, Is.EqualTo(2));
+            context = Manifest(Source);
+            _game.AutoUpdate = 0;
+            Run(assets.Refresh(context.AssetCandidates("bannerImageUrl"), Target, null));
+            Assert.That(requests, Is.EqualTo(3));
+        }
+
+        [Test]
         public void ActiveImageBindingReturnsToOriginalOnFeatureRemovalWithoutChangingRect()
         {
             File.WriteAllBytes(Path.Combine(_game.GameDirectoryPath, "es.png"), ImageBytes(4, 2));

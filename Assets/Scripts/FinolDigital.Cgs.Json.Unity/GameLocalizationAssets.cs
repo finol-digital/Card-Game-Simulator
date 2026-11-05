@@ -20,6 +20,14 @@ namespace FinolDigital.Cgs.Json.Unity
         private readonly LocalizationCache _cache;
         private readonly Func<string, string, Action<FileDownloadResult>, IEnumerator> _download;
         private readonly HashSet<string> _pending = new();
+        private readonly HashSet<string> _attempted = new();
+        private int _refreshCycle;
+
+        public void BeginRefreshCycle()
+        {
+            _refreshCycle++;
+            _attempted.Clear();
+        }
 
         public GameLocalizationAssets(UnityCardGame game, LocalizationCache cache,
             Func<string, string, Action<FileDownloadResult>, IEnumerator> download = null)
@@ -41,7 +49,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 try
                 {
                     var bytes = candidate.Uri.IsFile
-                        ? LocalizationFiles.ExistingPhysicalPath(candidate.Uri.LocalPath) == null ? null : File.ReadAllBytes(candidate.Uri.LocalPath)
+                        ? LocalizationFiles.ExistingPhysicalPath(candidate.Uri.LocalPath, _root) == null ? null : File.ReadAllBytes(candidate.Uri.LocalPath)
                         : _cache.Read(_cache.Begin(candidate.Locale, candidate.Uri, target))?.Payload;
                     if (bytes == null)
                         continue;
@@ -60,13 +68,14 @@ namespace FinolDigital.Cgs.Json.Unity
         public IEnumerator Refresh(IReadOnlyList<LocalizationResourceCandidate> candidates, string target, Action published)
         {
             var definition = _game.DefinitionGeneration;
+            var cycle = _refreshCycle;
             foreach (var candidate in candidates)
             {
                 if (_game.AutoUpdate < 0 || _game.DefinitionGeneration != definition || _root != _game.GameDirectoryPath)
                     yield break;
                 if (candidate.Uri.IsFile)
                     continue;
-                var identity = target + "\n" + candidate.Locale + "\n" + candidate.Uri.AbsoluteUri + "\n" + definition;
+                var identity = target + "\n" + candidate.Locale + "\n" + candidate.Uri.AbsoluteUri + "\n" + definition + "\n" + cycle;
                 if (!_pending.Add(identity))
                 {
                     // A second view shares the in-flight result but must not report
@@ -77,6 +86,8 @@ namespace FinolDigital.Cgs.Json.Unity
                 }
                 try
                 {
+                    if (_game.AutoUpdate == 0 && !_attempted.Add(identity))
+                        continue;
                     var request = Begin(candidate, target);
                     if (request == null)
                         continue;
@@ -120,11 +131,13 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             try
             {
-                if (LocalizationFiles.ExistingPhysicalPath(_root) == null)
+                if (LocalizationFiles.ExistingPhysicalPath(_root, _root) == null)
                     return null;
                 var directory = Path.Combine(_root, "localization", "staging");
+                if (LocalizationFiles.ConfinedPath(directory, _root) == null)
+                    return null;
                 Directory.CreateDirectory(directory);
-                return LocalizationFiles.ExistingPhysicalPath(directory) == null ? null :
+                return LocalizationFiles.ExistingPhysicalPath(directory, _root) == null ? null :
                     Path.Combine(directory, Guid.NewGuid().ToString("N") + ".download");
             }
             catch (Exception error)

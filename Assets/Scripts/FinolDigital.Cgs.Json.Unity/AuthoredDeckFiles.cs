@@ -42,7 +42,7 @@ namespace FinolDigital.Cgs.Json.Unity
         private static JObject ReadState(string root, string gameId)
         {
             var path = Path.Combine(root, "localization", "provenance.json");
-            if (LocalizationFiles.ExistingPhysicalPath(path) != null)
+            if (LocalizationFiles.ExistingPhysicalPath(path, root) != null)
             {
                 try
                 {
@@ -62,11 +62,13 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             var path = StatePath(game);
             var directory = Path.GetDirectoryName(path);
-            if (LocalizationFiles.ExistingPhysicalPath(game.GameDirectoryPath) == null)
+            if (LocalizationFiles.ExistingPhysicalPath(game.GameDirectoryPath, game.GameDirectoryPath) == null)
                 throw new IOException("The installed game directory is unavailable.");
+            if (LocalizationFiles.ConfinedPath(directory, game.GameDirectoryPath) == null)
+                throw new IOException("Authored deck provenance cannot follow filesystem links.");
             Directory.CreateDirectory(directory);
-            if (LocalizationFiles.ExistingPhysicalPath(directory) == null ||
-                (File.Exists(path) && LocalizationFiles.ExistingPhysicalPath(path) == null))
+            if (LocalizationFiles.ExistingPhysicalPath(directory, game.GameDirectoryPath) == null ||
+                (File.Exists(path) && LocalizationFiles.ExistingPhysicalPath(path, game.GameDirectoryPath) == null))
                 throw new IOException("Authored deck provenance cannot follow filesystem links.");
             LocalizationFiles.WriteAtomically(path, state.ToString(Formatting.None));
         }
@@ -98,7 +100,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 try
                 {
                     var key = Key(root, path);
-                    if (LocalizationFiles.ExistingPhysicalPath(path) == null)
+                    if (LocalizationFiles.ExistingPhysicalPath(path, root) == null)
                         return null;
                     var entry = (ReadState(root, gameId)["decks"] as JObject)?[key] as JObject;
                     if (entry == null || !Guid.TryParseExact(entry.Value<string>("generation"), "N", out _) ||
@@ -157,8 +159,21 @@ namespace FinolDigital.Cgs.Json.Unity
             }
             var definition = game.DefinitionGeneration;
             var root = game.GameDirectoryPath;
-            var key = Key(game, path);
-            var full = Path.GetFullPath(path);
+            var full = LocalizationFiles.ConfinedPath(path, root);
+            if (full == null || !full.StartsWith(Path.GetFullPath(game.DecksDirectoryPath) + Path.DirectorySeparatorChar,
+                Path.DirectorySeparatorChar == '\\' ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            {
+                Debug.LogWarning("Authored deck path escapes the deck directory or follows a filesystem link.");
+                yield break;
+            }
+            // Legacy definitions may put decks in subdirectories. Keep downloading
+            // those safely, but never infer a direct-file provenance binding for them.
+            if (Path.GetDirectoryName(full) != Path.GetFullPath(game.DecksDirectoryPath))
+            {
+                yield return download == null ? UnityFileMethods.SaveUrlToFile(source, full) : download(source, full, _ => { });
+                yield break;
+            }
+            var key = Key(game, full);
             var installation = LocalizationFiles.Installation(root);
             long version;
             lock (Mutations)
@@ -194,10 +209,12 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             try
             {
-                if (LocalizationFiles.ExistingPhysicalPath(root) == null)
+                if (LocalizationFiles.ExistingPhysicalPath(root, root) == null)
+                    return false;
+                if (LocalizationFiles.ConfinedPath(directory, root) == null)
                     return false;
                 Directory.CreateDirectory(directory);
-                return LocalizationFiles.ExistingPhysicalPath(directory) != null;
+                return LocalizationFiles.ExistingPhysicalPath(directory, root) != null;
             }
             catch (Exception error)
             {
@@ -230,14 +247,14 @@ namespace FinolDigital.Cgs.Json.Unity
                     if (version != expectedVersion || LocalizationFiles.Installation(game.GameDirectoryPath) != installation)
                         return;
                 }
-                if (LocalizationFiles.ExistingPhysicalPath(temporary) == null ||
-                    (File.Exists(path) && LocalizationFiles.ExistingPhysicalPath(path) == null))
+                if (LocalizationFiles.ExistingPhysicalPath(temporary, game.GameDirectoryPath) == null ||
+                    (File.Exists(path) && LocalizationFiles.ExistingPhysicalPath(path, game.GameDirectoryPath) == null))
                     return;
                 var payload = File.ReadAllBytes(temporary);
                 if (payload.Length == 0)
                     return;
                 Directory.CreateDirectory(game.DecksDirectoryPath);
-                if (LocalizationFiles.ExistingPhysicalPath(game.DecksDirectoryPath) == null)
+                if (LocalizationFiles.ExistingPhysicalPath(game.DecksDirectoryPath, game.GameDirectoryPath) == null)
                     return;
                 // Revoke first: interruption cannot leave stale provenance on new bytes.
                 Revoke(game, path);

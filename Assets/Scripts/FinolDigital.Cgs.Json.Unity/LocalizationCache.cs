@@ -113,7 +113,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         !name.StartsWith(request.Key + ".", StringComparison.Ordinal) || !name.EndsWith(".data", StringComparison.Ordinal))
                         return null;
                     var path = Path.Combine(DirectoryPath, request.Category, name);
-                    if (LocalizationFiles.ExistingPhysicalPath(path) == null)
+                    if (LocalizationFiles.ExistingPhysicalPath(path, _root) == null)
                         return null;
                     var bytes = File.ReadAllBytes(path);
                     if (Hash(bytes) != metadata.Value<string>("sha256"))
@@ -151,18 +151,21 @@ namespace FinolDigital.Cgs.Json.Unity
                     return false;
                 lock (_gate)
                 {
-                    if (!IsCurrent() || LocalizationFiles.ExistingPhysicalPath(_root) == null)
+                    if (!IsCurrent() || LocalizationFiles.ExistingPhysicalPath(_root, _root) == null)
                         return false;
-                    if (File.Exists(StatePath) && LocalizationFiles.ExistingPhysicalPath(StatePath) == null)
+                    if (File.Exists(StatePath) && LocalizationFiles.ExistingPhysicalPath(StatePath, _root) == null)
                         return false;
                     var state = ReadState();
                     var entries = state["entries"] as JObject ?? new JObject();
+                    var previousFile = entries[request.Key]?.Value<string>("file");
                     var published = entries[request.Key]?.Value<long?>("ticket") ?? 0;
                     if (request.Ticket <= published)
                         return false;
                     var directory = Path.Combine(DirectoryPath, request.Category);
+                    if (LocalizationFiles.ConfinedPath(directory, _root) == null)
+                        return false;
                     Directory.CreateDirectory(directory);
-                    if (LocalizationFiles.ExistingPhysicalPath(directory) == null)
+                    if (LocalizationFiles.ExistingPhysicalPath(directory, _root) == null)
                         return false;
                     var name = request.Key + "." + Guid.NewGuid().ToString("N") + ".data";
                     var path = Path.Combine(directory, name);
@@ -184,6 +187,12 @@ namespace FinolDigital.Cgs.Json.Unity
                         File.Delete(path);
                         throw;
                     }
+                    if (previousFile != null && previousFile == Path.GetFileName(previousFile) &&
+                        previousFile.StartsWith(request.Key + ".", StringComparison.Ordinal) && previousFile.EndsWith(".data", StringComparison.Ordinal))
+                    {
+                        try { File.Delete(Path.Combine(directory, previousFile)); }
+                        catch (Exception error) { Debug.LogWarning("Superseded localization cache cleanup failed: " + error.Message); }
+                    }
                     return true;
                 }
             }
@@ -196,7 +205,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
         private JObject ReadState()
         {
-            if (LocalizationFiles.ExistingPhysicalPath(StatePath) != null)
+            if (LocalizationFiles.ExistingPhysicalPath(StatePath, _root) != null)
             {
                 try
                 {

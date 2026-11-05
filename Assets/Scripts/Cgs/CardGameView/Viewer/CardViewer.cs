@@ -634,7 +634,7 @@ namespace Cgs.CardGameView.Viewer
             GameContentText.SetMessage(setText, SelectedCardModel.Value.Game, display =>
             {
                 var card = SelectedCardModel.Value;
-                var setName = card.Game.Sets.TryGetValue(card.SetCode, out var set) ? display.SetName(set) : card.SetCode;
+                var setName = card.Game.Sets.TryGetValue(card.SetCode, out var set) ? GameContentPresentation.SetDescription(display, set) : card.SetCode;
                 return UiMessage.With("cards.set", SetLabel + Delimiter + setName, ("setName", setName));
             });
             foreach (var propertyText in PropertyTexts)
@@ -676,7 +676,7 @@ namespace Cgs.CardGameView.Viewer
                         return display.PropertyValue(card, path);
                     if (propertyIndex == 1)
                         return card.Id;
-                    return card.Game.Sets.TryGetValue(card.SetCode, out var set) ? display.SetName(set) : string.Empty;
+                    return card.Game.Sets.TryGetValue(card.SetCode, out var set) ? GameContentPresentation.SetDescription(display, set) : string.Empty;
                 });
         }
 

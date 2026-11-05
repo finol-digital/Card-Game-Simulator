@@ -87,6 +87,25 @@ namespace Tests.PlayMode
             Assert.That(Directory.GetFiles(_relocated, "*.download", SearchOption.AllDirectories), Is.Empty);
         }
 
+        [TestCase(null)]
+        [TestCase("/assets/bannerImageUrl")]
+        public void SuccessfulReplacementDeletesOldPayloadAndExportsOnlyPublishedEntries(string target)
+        {
+            var cache = new LocalizationCache(_root, "game");
+            var first = cache.Begin("es", Source, target);
+            Assert.That(cache.Publish(first, Bytes("first"), Source, Usable), Is.True);
+            var previous = cache.Read(first).FilePath;
+            var next = cache.Begin("es", Source, target);
+            Assert.That(cache.Publish(next, Bytes("second"), Source, Usable), Is.True);
+            Assert.That(File.Exists(previous), Is.False);
+            var current = cache.Read(next).FilePath;
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(current), "orphan.data"), "interrupted old publication");
+            LocalizationFiles.CopyPackageSnapshot(_root, _relocated);
+            Assert.That(Directory.GetFiles(_relocated, "*.data", SearchOption.AllDirectories).Length, Is.EqualTo(1));
+            var imported = new LocalizationCache(_relocated, "game");
+            Assert.That(Encoding.UTF8.GetString(imported.Read(imported.Begin("es", Source, target)).Payload), Is.EqualTo("second"));
+        }
+
         [Test]
         public void FailedNewerRequestDoesNotSuppressOlderSuccessOrReplaceLastGood()
         {

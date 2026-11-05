@@ -336,8 +336,8 @@ namespace FinolDigital.Cgs.Json.Unity
             return staged;
         }
 
-        // Validate and record the source before replacing the installed document.
-        // A failed origin write must not install a new document with an old origin.
+        // Validate before replacing the installed document. Optional localization
+        // metadata failures preserve base-game availability with an unknown origin.
         public bool InstallDownloadedDefinition(string downloadedPath, FileDownloadResult result)
         {
             if (result == null || !result.Succeeded)
@@ -348,7 +348,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 var hasOriginRecord = File.Exists(Path.Combine(GameDirectoryPath, "localization", "state.json"));
                 if ((staged.Localization != null || hasOriginRecord) &&
                     !LocalizationFiles.RecordDefinitionOrigin(GameDirectoryPath, downloadedPath, result))
-                    return false;
+                    LocalizationFiles.RecordUnavailableOrigin(GameDirectoryPath, downloadedPath);
                 if (File.Exists(GameFilePath))
                     File.Replace(downloadedPath, GameFilePath, null);
                 else

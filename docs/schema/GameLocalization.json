@@ -149,7 +149,8 @@
           "additionalProperties": {
             "type": "string",
             "format": "uri-reference",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
           }
         },
         "cardBacks": {
@@ -157,7 +158,8 @@
           "additionalProperties": {
             "type": "string",
             "format": "uri-reference",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
           }
         },
         "boards": {
@@ -165,28 +167,33 @@
           "additionalProperties": {
             "type": "string",
             "format": "uri-reference",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
           }
         },
         "bannerImageUrl": {
           "type": "string",
           "format": "uri-reference",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
         },
         "cardBackImageUrl": {
           "type": "string",
           "format": "uri-reference",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
         },
         "playMatImageUrl": {
           "type": "string",
           "format": "uri-reference",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
         },
         "rulesUrl": {
           "type": "string",
           "format": "uri-reference",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^(?:[Hh][Tt][Tt][Pp][Ss]?://|(?!(?:[A-Za-z][A-Za-z0-9+.-]*:|/)))[^\\s\\\\{}\\u007F-\\uFFFF]+$"
         }
       }
     }

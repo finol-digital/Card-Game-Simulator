@@ -126,7 +126,7 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator CapableClientNegotiatesWhileLegacyIgnoresOfferAndTimesOut()
+        public IEnumerator CapableClientNegotiatesAndLateAcknowledgementUpgradesCanonicalFallback()
         {
             Localize();
             var host = Manager(true, true);
@@ -144,10 +144,35 @@ namespace Tests.PlayMode
             Assert.That(Ready(Peers(host)[legacy.LocalClientId]), Is.False);
             yield return new WaitForSecondsRealtime(6);
             Send(legacy, Ack(host, legacy));
-            yield return null;
-            yield return null;
-            Assert.That(Ready(Peers(host)[legacy.LocalClientId]), Is.False, "Late acknowledgement must retain fallback.");
+            yield return Until(() => Ready(Peers(host)[legacy.LocalClientId]));
             Assert.That(legacy.IsConnectedClient, Is.True, "An unknown named message must not break legacy connectivity.");
+        }
+
+        [UnityTest]
+        public IEnumerator OfferSurvivesClientGameSwitchAndSameGameReload()
+        {
+            Localize();
+            var host = Manager(true, true);
+            var client = Manager(true);
+            var extension = client.GetComponent<GameContentNetwork>();
+            yield return Until(() => (bool)Field(extension, "_ready"));
+            var scope = Connection(Peers(host)[client.LocalClientId]);
+            var offeredGame = _game;
+            var otherGame = new UnityCardGame(null, "Other game");
+            // Each real process has its own Current. Change only the client's state
+            // synchronously here, before the host can observe the temporary selection.
+            typeof(CardGameManager).GetProperty(nameof(CardGameManager.Current)).SetValue(null, otherGame);
+            extension.GetType().GetMethod("ChangeGame", Private).Invoke(extension, null);
+            Assert.That(Field(extension, "_offer"), Is.Not.Null);
+            Assert.That(Field(extension, "_ready"), Is.False);
+            typeof(CardGameManager).GetProperty(nameof(CardGameManager.Current)).SetValue(null, offeredGame);
+            yield return Until(() => (bool)Field(extension, "_ready"));
+            Assert.That(Connection(Peers(host)[client.LocalClientId]), Is.EqualTo(scope));
+            // A local definition reload must re-probe in the same authenticated scope.
+            extension.GetType().GetMethod("ChangeGame", Private).Invoke(extension, null);
+            Assert.That(Field(extension, "_ready"), Is.False);
+            yield return Until(() => (bool)Field(extension, "_ready"));
+            Assert.That(Connection(Peers(host)[client.LocalClientId]), Is.EqualTo(scope));
         }
 
         [UnityTest]

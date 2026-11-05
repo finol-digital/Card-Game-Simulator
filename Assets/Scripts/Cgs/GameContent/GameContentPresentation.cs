@@ -27,6 +27,7 @@ namespace Cgs.GameContent
             private long _dataGeneration = -1;
             private long _definitionGeneration = -1;
             private GameLocalizationCatalogs _catalogs;
+            private bool _awaitingLoad;
 
             public Entry(UnityCardGame game)
             {
@@ -59,26 +60,55 @@ namespace Cgs.GameContent
                 if (_game.CoroutineRunner == null || _game.AutoUpdate < 0 || _game.Localization == null ||
                     !_game.Localization.IsUsable)
                     return;
+                Catalogs.Images.BeginRefreshCycle();
                 _game.CoroutineRunner.StartCoroutine(Catalogs.Refresh(locale, () =>
                 {
                     // Cache publication has its own ticket/incarnation guard. A cache
                     // success alone never authorizes updating a stale view selection.
                     if (_selectedGame == _game && _selection == selection &&
                         _game.DefinitionGeneration == definition && CgsLocalization.CurrentLocale == locale)
-                        Invalidate(_game);
+                    {
+                        _context = null;
+                        NotifyChanged(_game);
+                    }
                 }));
             }
 
             private void Invalidate(UnityCardGame game)
             {
+                if (game.IsLoading && game.CoroutineRunner != null && game.CoroutineRunner.isActiveAndEnabled)
+                {
+                    if (!_awaitingLoad)
+                    {
+                        _awaitingLoad = true;
+                        game.CoroutineRunner.StartCoroutine(RefreshAfterLoad());
+                    }
+                    return;
+                }
                 _targets = null;
                 _context = null;
                 NotifyChanged(game);
             }
 
+            private IEnumerator RefreshAfterLoad()
+            {
+                try
+                {
+                    while (_game.IsLoading)
+                        yield return null;
+                }
+                finally
+                {
+                    _awaitingLoad = false;
+                    _targets = null;
+                    _context = null;
+                    NotifyChanged(_game);
+                }
+            }
+
             public LocalizationContext Get(string locale)
             {
-                if (_targets == null || _dataGeneration != _game.ContentGeneration ||
+                if (_targets == null || (!_game.IsLoading && _dataGeneration != _game.ContentGeneration) ||
                     _definitionGeneration != _game.DefinitionGeneration)
                 {
                     _targets = BuildTargets();
@@ -99,7 +129,7 @@ namespace Cgs.GameContent
             {
                 Get(CgsLocalization.CurrentLocale);
                 var documents = new Dictionary<string, LocalizationCatalogDocument>(StringComparer.OrdinalIgnoreCase);
-                if (_game.Localization?.IsUsable == true)
+                if (_game.Localization?.IsUsable == true && _game.Localization.Locales != null)
                     foreach (var locale in _game.Localization.Locales.Keys)
                         foreach (var document in Catalogs.Available(locale))
                             documents[document.Key] = document.Value;
@@ -234,6 +264,12 @@ namespace Cgs.GameContent
                     completed?.Invoke();
             }
             game.CoroutineRunner.StartCoroutine(Refresh());
+        }
+
+        public static string SetDescription(LocalizationContext display, Set set)
+        {
+            var name = display.SetName(set);
+            return name == set.Code ? name : name + " (" + set.Code + ")";
         }
 
         public static Uri RulesUri(UnityCardGame game)

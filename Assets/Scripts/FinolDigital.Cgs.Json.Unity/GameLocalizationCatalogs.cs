@@ -62,10 +62,10 @@ namespace FinolDigital.Cgs.Json.Unity
                     LocalizationOrigin origin;
                     if (uri.IsFile)
                     {
-                        if (LocalizationFiles.ExistingPhysicalPath(uri.LocalPath) == null)
+                        if (LocalizationFiles.ExistingPhysicalPath(uri.LocalPath, _root) == null)
                             continue;
                         bytes = File.ReadAllBytes(uri.LocalPath);
-                        origin = LocalizationOrigin.Bundled(_root, uri.LocalPath, LocalizationFiles.ExistingPhysicalPath);
+                        origin = LocalizationOrigin.Bundled(_root, uri.LocalPath, path => LocalizationFiles.ExistingPhysicalPath(path, _root));
                     }
                     else
                     {
@@ -107,7 +107,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     (DateTime.UtcNow - cached.PublishedUtc).TotalDays < _game.AutoUpdate)
                     continue;
                 var stagingDirectory = Path.Combine(_root, "localization", "staging");
-                if (LocalizationFiles.ExistingPhysicalPath(_root) == null)
+                if (LocalizationFiles.ExistingPhysicalPath(_root, _root) == null)
                     yield break;
                 if (!CreateStaging(stagingDirectory))
                     yield break;
@@ -142,12 +142,14 @@ namespace FinolDigital.Cgs.Json.Unity
             }
         }
 
-        private static bool CreateStaging(string directory)
+        private bool CreateStaging(string directory)
         {
             try
             {
+                if (LocalizationFiles.ConfinedPath(directory, _root) == null)
+                    return false;
                 Directory.CreateDirectory(directory);
-                return LocalizationFiles.ExistingPhysicalPath(directory) != null;
+                return LocalizationFiles.ExistingPhysicalPath(directory, _root) != null;
             }
             catch (Exception error)
             {

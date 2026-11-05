@@ -252,3 +252,41 @@ tests. A complete player/UI walkthrough and published-build compatibility matrix
 remain release requirements. Session-save files are not part of this procedure: CGS
 has no full-session save/load feature, and session sidecars are conditional on
 that future feature.
+
+## Claude review follow-up
+
+The review of library `7cbffdf` and Unity `b0c7902` identified installation,
+negotiation, compatibility, cache, and validation defects. The follow-up:
+
+- Checks filesystem links below the trusted game root, allowing platform-managed
+  links above it. A failed origin-state write installs the base definition with a
+  digest-bound `cgs.json.origin-unavailable` marker instead of guessing an origin.
+- Retains authenticated offers while a client switches/downloads the host game.
+  Late acknowledgements and local definition reloads can negotiate in the same
+  live connection/session. Earlier legacy creations are never replayed; pending
+  negotiated requests retain their idempotency IDs during same-game reloads.
+- Handles a valid manifest without `locales` in editor diagnostics and preserves
+  the legacy `Name (CODE)` set description, translating only the name.
+- Keeps safe nested deck downloads canonical without direct-file provenance;
+  rejects escaped or linked destinations before downloading.
+- Removes superseded cache payloads after atomic publication and excludes orphan
+  payloads from package snapshots. With `autoUpdate: 0`, images refresh once per
+  target per selection/definition cycle, not on every content notification.
+- Coalesces inventory refreshes during asynchronous paged loads; catalog-only
+  publication no longer rebuilds canonical inventories. Coverage uses set lookup
+  rather than repeatedly removing names from a list.
+- Adopts the updated library: malformed inline catalogs do not disable other
+  locales. Resource schemas match runtime restrictions; international paths use
+  percent-encoded URI references, as documented for authors.
+
+Library validation: 62 .NET tests, six schema tests with an active URI format
+checker, Release build, and strict OpenSpec validation pass. Unity compilation
+passes. The 40 localization runtime tests and 25 website/Worker checks pass.
+The legacy stack-creation RPC code and named-message packet fields are unchanged.
+All 33 game-content presentation/provenance/multiplayer tests also pass, including
+late negotiation, game-switch/reload recovery, source-only manifest diagnostics,
+set-code preservation, nested deck downloads, and coalesced inventory refreshes.
+The 13 legacy stack-loading tests pass as well: 86 focused Unity tests in total.
+Fresh PR CI must confirm the quality gate and platform builds. iOS/Android/IL2CPP
+and full platform walkthroughs remain unverified; these local tests are not a
+substitute for the user's CI build validation.

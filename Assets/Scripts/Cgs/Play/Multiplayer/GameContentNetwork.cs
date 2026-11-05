@@ -22,7 +22,6 @@ namespace Cgs.Play.Multiplayer
     {
         private const string Channel = "game-content-labels-v1";
         private const int MaxMessageBytes = 512 * 1024;
-        private const float NegotiationSeconds = 5;
         private const float RetrySeconds = 2;
         private static readonly JsonSerializerSettings JsonSettings = new()
         {
@@ -54,7 +53,6 @@ namespace Cgs.Play.Multiplayer
         private sealed class Peer
         {
             public string Connection = Guid.NewGuid().ToString("N");
-            public float Deadline;
             public bool Ready;
             // Retain request outcomes for the entire connection, including despawned results.
             public readonly Dictionary<string, Packet> Results = new(StringComparer.Ordinal);
@@ -82,7 +80,6 @@ namespace Cgs.Play.Multiplayer
         private string _session;
         private string _connection;
         private Packet _offer;
-        private float _offerDeadline;
         private bool _ready;
         private bool _registered;
         private float _nextRetry;
@@ -160,7 +157,16 @@ namespace Cgs.Play.Multiplayer
 
         private void ChangeGame()
         {
+            // An authenticated host offer belongs to the connection, not the client's
+            // loading state. Retain it while downloading/switching to the offered game.
+            var offer = _manager.IsServer ? null : _offer;
+            var pending = !_manager.IsServer && _game?.Id == CardGameManager.Current?.Id
+                ? _pending.ToArray() : Array.Empty<KeyValuePair<string, Packet>>();
             Clear();
+            _offer = offer;
+            foreach (var request in pending)
+                _pending[request.Key] = request.Value;
+            _nextRetry = 0;
             _game = CardGameManager.Current;
             _definition = _game?.DefinitionGeneration ?? -1;
             if (!_manager.IsServer || !Localized)
@@ -174,7 +180,7 @@ namespace Cgs.Play.Multiplayer
         {
             if (!_manager.IsServer || !Localized || client == NetworkManager.ServerClientId)
                 return;
-            var peer = new Peer { Deadline = Time.realtimeSinceStartup + NegotiationSeconds };
+            var peer = new Peer();
             _peers[client] = peer;
             Send(client, Envelope("offer", peer.Connection));
         }
@@ -195,13 +201,13 @@ namespace Cgs.Play.Multiplayer
                 ChangeGame();
             if (_game == null || !Localized)
                 return;
-            if (!_manager.IsServer && _offer != null && !_ready && Time.realtimeSinceStartup <= _offerDeadline &&
+            if (!_manager.IsServer && _offer != null && !_ready && Time.realtimeSinceStartup >= _nextRetry &&
                 _offer.Game == _game.Id)
             {
                 _session = _offer.Session;
                 _connection = _offer.Connection;
                 Send(NetworkManager.ServerClientId, Envelope("ack", _connection));
-                _offer = null;
+                _nextRetry = Time.realtimeSinceStartup + RetrySeconds;
             }
             if (!_manager.IsServer && _ready && Time.realtimeSinceStartup >= _nextRetry)
             {
@@ -263,7 +269,7 @@ namespace Cgs.Play.Multiplayer
             if (!Localized || !_peers.TryGetValue(sender, out var peer) || packet.Session != _session ||
                 packet.Connection != peer.Connection || packet.Game != _game.Id)
                 return;
-            if (packet.Type == "ack" && (peer.Ready || Time.realtimeSinceStartup <= peer.Deadline))
+            if (packet.Type == "ack")
             {
                 peer.Ready = true;
                 Send(sender, Envelope("ready", peer.Connection));
@@ -288,7 +294,7 @@ namespace Cgs.Play.Multiplayer
             {
                 Clear();
                 _offer = packet;
-                _offerDeadline = Time.realtimeSinceStartup + NegotiationSeconds;
+                _nextRetry = 0;
                 return;
             }
             if (!Localized || packet.Game != _game.Id || packet.Session != _session || packet.Connection != _connection)

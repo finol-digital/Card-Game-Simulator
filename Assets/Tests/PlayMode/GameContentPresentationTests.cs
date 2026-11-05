@@ -39,6 +39,31 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void SourceOnlyManifestHasSafeDiagnostics()
+        {
+            var game = new UnityCardGame(null, "No catalogs")
+            {
+                Localization = LocalizationJson.ReadManifest(@"{""defaultLocale"":""en""}").Value
+            };
+            Assert.That(game.Localization.IsUsable, Is.True);
+            Assert.DoesNotThrow(() => GameContentPresentation.Diagnostics(game));
+        }
+
+        [Test]
+        public void SetDescriptionsKeepLegacyCodesAndTranslateOnlyNames()
+        {
+            var game = new UnityCardGame(null, "Sets");
+            var set = new Set("C", "Core");
+            var unnamed = new Set("X", "X");
+            var canonical = GameContentPresentation.Context(game, "es");
+            Assert.That(GameContentPresentation.SetDescription(canonical, set), Is.EqualTo(set.ToString()));
+            Assert.That(GameContentPresentation.SetDescription(canonical, unnamed), Is.EqualTo(unnamed.ToString()));
+            game.Localization = LocalizationJson.ReadManifest(@"{""defaultLocale"":""es"",""locales"":{""es"":{""inline"":{""sets"":{""C"":{""name"":""Básico""}}}}}}").Value;
+            var translated = new LocalizationContext(new LocalizationTargets(game, Array.Empty<Card>(), new[] { set }), "es");
+            Assert.That(GameContentPresentation.SetDescription(translated, set), Is.EqualTo("Básico (C)"));
+        }
+
+        [Test]
         public void ContextsReuseInventoryAndInvalidateWhenCanonicalCardsChange()
         {
             var game = Game("Base");
@@ -59,6 +84,42 @@ namespace Tests.PlayMode
             while (!condition() && Time.realtimeSinceStartup < deadline)
                 yield return null;
             Assert.That(condition(), Is.True, "Presentation did not settle within 15 seconds.");
+        }
+
+        [UnityTest]
+        public IEnumerator PageLoadsCoalesceInventoryRefreshUntilLoadingFinishes()
+        {
+            var game = Game("Paged load");
+            var node = new GameObject("Load runner", typeof(GameContentImage));
+            game.CoroutineRunner = node.GetComponent<GameContentImage>();
+            var loading = typeof(UnityCardGame).GetProperty(nameof(UnityCardGame.IsLoading));
+            var notify = typeof(UnityCardGame).GetMethod("NotifyContentChanged",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var before = GameContentPresentation.Context(game, "es");
+            var refreshes = 0;
+            void Changed(UnityCardGame changed) { if (changed == game) refreshes++; }
+            GameContentPresentation.Changed += Changed;
+            try
+            {
+                loading.SetValue(game, true);
+                for (var page = 0; page < 3; page++)
+                {
+                    game.Add(new UnityCard(game, page.ToString(), "Card " + page, "BASE", new Dictionary<string, PropertyDefValuePair>(), false), false);
+                    notify.Invoke(game, null);
+                    Assert.That(GameContentPresentation.Context(game, "es"), Is.SameAs(before));
+                    yield return null;
+                }
+                Assert.That(refreshes, Is.Zero);
+                loading.SetValue(game, false);
+                yield return Until(() => refreshes == 1);
+                Assert.That(GameContentPresentation.Context(game, "es"), Is.Not.SameAs(before));
+            }
+            finally
+            {
+                loading.SetValue(game, false);
+                GameContentPresentation.Changed -= Changed;
+                Object.DestroyImmediate(node);
+            }
         }
 
         [Test]
