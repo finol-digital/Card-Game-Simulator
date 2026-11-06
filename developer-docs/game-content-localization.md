@@ -327,3 +327,20 @@ commit in `game-content-localization-library.json`.
 Unity compilation and all 23 localization boundary PlayMode tests pass, including
 the seven malformed-reference cases against both HTTP and HTTPS origins.
 Platform CI and the user's device validation remain pending.
+
+## Encoded bundled filename CI regression
+
+CI run 41993612145 passed the quality check but failed
+`OlderBundledGameUsesActualLocationAndConfinesDecodedPaths`, preventing platform
+builds. The failure also reproduced locally: Mono's HTTP-context syntax check
+rejects an encoded `#` adjacent to encoded Unicode in a valid relative filename.
+The library now masks complete percent triplets only while checking syntax,
+preserving the original resource URI for resolution. Incomplete or invalid
+escapes still fail validation. Regression coverage includes `es # 日本語.json`,
+remote resolution, malformed escapes, and bundled confinement. All 94 .NET tests
+pass with the rebuilt library.
+Unity compilation, all 20 origin tests, and all 26 localization boundary tests
+pass, including the CI failure. A standalone Mono public-API probe also confirms
+the filename resolves while malformed escapes and paths outside the package are
+rejected. A broader `Localization` filter run stopped producing results and was
+cancelled; it is not counted as passing. Fresh full CI remains required.

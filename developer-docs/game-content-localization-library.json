@@ -2,7 +2,7 @@
   "status": "unreleased local development build",
   "libraryBranch": "feature/game-content-localization",
   "libraryBaseCommit": "86d9f79178d8914dc65323459bac631ea475dd80",
-  "sourceFilesSha256": "d4c0e1e1bb3bb942e427e39aafc0f8305306dd58483db794e65d48ed7759dda9",
+  "sourceFilesSha256": "75a21087960ef3338742c48892ba7a42cc69c18d138eafc54432e8cd4d009788",
   "sourceFiles": {
     "FinolDigital.Cgs.Json/Card.cs": "db4767f10c60ebe5f28037cdc7aac070cdb4f74c8864a5c1184e481fd84d426c",
     "FinolDigital.Cgs.Json/CardAction.cs": "107c699d48827c9fc546315038fc9cb92371b1272d2170ef7c24dd697469abff",
@@ -22,7 +22,7 @@
     "FinolDigital.Cgs.Json/GamePlayZone.cs": "64aa59f27e5f6cab1d7ec4aa825d4d1fbe74fd710136d792c6b27408935c9764",
     "FinolDigital.Cgs.Json/GamePlayZoneType.cs": "eab6e9fed9a0cbeae8c8901a984ea596f4c0b382c35c5546695a90289f06ed98",
     "FinolDigital.Cgs.Json/LocalizationContext.cs": "5808037432fd3147cda4da58f539495a4fe559cf26b24b58a04f0b1ce8229d02",
-    "FinolDigital.Cgs.Json/LocalizationJson.cs": "337de5a427f03f36c10da0309234e240698de7832adf80657a000254b316852c",
+    "FinolDigital.Cgs.Json/LocalizationJson.cs": "7022fe38ae8fc278cace9adf5c8e06dade79ec732e8fbd200e6016e158815f4a",
     "FinolDigital.Cgs.Json/LocalizationLocale.cs": "0baefc73e623a310926700fddfc8a8e1dd1a249ed641dd50fec9f1ffbe869f45",
     "FinolDigital.Cgs.Json/LocalizationModels.cs": "67f6f0419c9a881e8194dbf6954def4b8514a8e910fe3dce3b21a237b1d3cc31",
     "FinolDigital.Cgs.Json/LocalizationOrigin.cs": "21414709caaf227d7f4e4a3acc0a8b3dc564f08ba80ed82730cb2696f4fb4f58",
@@ -32,7 +32,7 @@
     "FinolDigital.Cgs.Json/SharePreference.cs": "492534fa384d4ca770517f8068ec52f1acedc9b8bdd24421f6014d518ae406ef",
     "FinolDigital.Cgs.Json/FinolDigital.Cgs.Json.csproj": "c2a01820da9519f9607b49109cda9c44f37698d232b390b6f4742abc73d6f1e1"
   },
-  "dllSha256": "e180d611d2c1737ad5f004c96cd19c56517afa920c75563e17a6432342d7aa8f",
+  "dllSha256": "b3009a50ae793288371868c72953fed828f7c3237918960084c5289e1be8dac0",
   "buildCommand": "dotnet build FinolDigital.Cgs.Json/FinolDigital.Cgs.Json.csproj --configuration Release",
   "targetFramework": "netstandard2.1",
   "assemblyVersion": "1.0.0.0",
@@ -41,7 +41,7 @@
     "cgs.json": "2e902cd993a4ac022e9e228f0657907a3de131de75f5a9a9702adda09c260e8d",
     "GameLocalization.json": "07671f6e944af0675845e10ad0b42e31db7e54e50d3df2c77d49d8d4fdbafebe"
   },
-  "librarySourceCommit": "7c52440eac42dc8247d52b12af469417a00d8bbb",
+  "librarySourceCommit": "c2c281b563a84e5120adab33941fd1e5e675bae4",
   "libraryPullRequest": "https://github.com/finol-digital/FinolDigital.Cgs.Json/pull/28",
   "sourceFilesHashFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><relative path><LF>, sorted by relative path"
 }

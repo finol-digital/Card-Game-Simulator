@@ -45,6 +45,7 @@ namespace Tests.PlayMode
         [TestCase("rules.html#setup", "https://example.invalid/game/rules.html#setup")]
         [TestCase("#setup", "https://example.invalid/game/cgs.json#setup")]
         [TestCase("rules.html?lang=es#setup", "https://example.invalid/game/rules.html?lang=es#setup")]
+        [TestCase("es%20%23%20%E6%97%A5%E6%9C%AC%E8%AA%9E.json", "https://example.invalid/game/es%20%23%20%E6%97%A5%E6%9C%AC%E8%AA%9E.json")]
         public void UnityResolvesRelativeFragments(string reference, string expected)
         {
             var origin = LocalizationOrigin.Remote(new Uri("https://example.invalid/game/cgs.json"));
@@ -55,6 +56,8 @@ namespace Tests.PlayMode
         [TestCase("http:///foo")]
         [TestCase("https://?x")]
         [TestCase("http://example.invalid:99999/x")]
+        [TestCase("es%2.json")]
+        [TestCase("es%GG.json")]
         public void UnityRejectsMalformedResourceReferences(string reference)
         {
             var origin = LocalizationOrigin.Remote(new Uri("https://example.invalid/game/cgs.json"));

@@ -187,6 +187,7 @@ namespace Tests.PlayMode
             File.WriteAllText(catalog, "{}");
             game.ReadProperties();
             var uri = LocalizationOrigin.Resolve("es%20%23%20%E6%97%A5%E6%9C%AC%E8%AA%9E.json", game.DefinitionOrigin);
+            Assert.That(uri, Is.Not.Null, "A percent-encoded filename must remain valid beside encoded Unicode.");
             Assert.That(uri.LocalPath, Is.EqualTo(catalog));
             Assert.That(LocalizationOrigin.Resolve("%2e%2e/outside.json", game.DefinitionOrigin), Is.Null);
             Assert.That(LocalizationOrigin.Resolve("file:///tmp/private.json", game.DefinitionOrigin), Is.Null);
