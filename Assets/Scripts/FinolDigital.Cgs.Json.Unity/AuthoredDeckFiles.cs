@@ -32,6 +32,9 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             var full = Path.GetFullPath(path);
             var directory = Path.GetFullPath(Path.Combine(root, "decks"));
+            var defaults = Path.GetFullPath(Path.Combine(root, "localization", "default-decks"));
+            if (Path.GetDirectoryName(full) == defaults)
+                return "defaults/" + Path.GetFileName(full);
             if (Path.GetDirectoryName(full) != directory)
                 throw new ArgumentException("Authored deck artifacts must be direct children of the game's deck directory.", nameof(path));
             return Path.GetFileName(full);
@@ -152,6 +155,8 @@ namespace FinolDigital.Cgs.Json.Unity
         public static IEnumerator Download(UnityCardGame game, string name, string source, string path,
             Func<string, string, Action<FileDownloadResult>, IEnumerator> download = null)
         {
+            if (BuiltInGameContent.DeckPath(game, name, source) != null)
+                yield break;
             if (game.Localization?.IsUsable != true)
             {
                 yield return UnityFileMethods.SaveUrlToFile(source, path);
@@ -220,6 +225,31 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 Debug.LogWarning("Authored deck staging unavailable: " + error.Message);
                 return false;
+            }
+        }
+
+        internal static void InstallBundled(UnityCardGame game, string name, string source, byte[] payload, string path)
+        {
+            var root = game.GameDirectoryPath;
+            var directory = Path.GetDirectoryName(path);
+            var staging = Path.Combine(root, "localization", "staging");
+            if (!BuiltInGameContent.IsManagedDeck(game, path) || LocalizationFiles.ConfinedPath(path, root) == null ||
+                !PrepareStaging(root, staging))
+                return;
+            Directory.CreateDirectory(directory);
+            var temporary = Path.Combine(staging, Guid.NewGuid().ToString("N") + ".download");
+            try
+            {
+                File.WriteAllBytes(temporary, payload);
+                long version;
+                lock (Mutations)
+                    Mutations.TryGetValue(path, out version);
+                Install(game, name, source, temporary, path, Key(game, path), version, LocalizationFiles.Installation(root));
+            }
+            finally
+            {
+                if (File.Exists(temporary))
+                    File.Delete(temporary);
             }
         }
 

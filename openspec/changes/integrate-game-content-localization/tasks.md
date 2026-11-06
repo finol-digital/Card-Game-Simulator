@@ -22,6 +22,8 @@ This change implements upstream tasks 4–5 from FinolDigital.Cgs.Json's `add-ga
 - [x] 3.3 Add a dedicated interactive translated-search adapter and wire only the search screen; test translated/canonical name collisions against canonical deck imports and automated card queries, and unchanged typed filters. Maps to upstream 4.6.
 - [x] 3.4 Add reachability/coverage diagnostics using actual selectable languages plus default fallback; verify unreachable es-ES/zh-CN catalogs warn without rejection/sibling matching, and report orphan and duplicate labels. Maps to upstream 4.11.
 
+- [x] 3.5 Ship synchronized offline catalogs for all ten UI languages for Standard Playing Cards, Mahjong, and Dominoes; verify all authored labels, alternate backs, live switches, old-manifest fallback, explicit-null opt-out, and separately proven built-in decks without overwriting or reclassifying legacy/user files.
+
 ## 4. Preserve authored provenance across disk and network boundaries
 
 - [x] 4.1 Establish versioned authored-deck sidecars only on authored install; test identical name/content user replacement, rename/save-as, external mutation, legacy files, package import, and standalone deck import. Maps to upstream 4.7.

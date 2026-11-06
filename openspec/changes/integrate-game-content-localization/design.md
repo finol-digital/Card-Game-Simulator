@@ -32,7 +32,7 @@ Active views subscribe/unsubscribe at their existing lifecycle boundary. Hidden/
 
 ### Staged definitions and independent generation checks
 
-Deserialize into a staged definition with localization reset, validate installability, then publish definition fields/localization and advance the generation on the main thread. Retain the last-good state/generation on failure. Clear old localization immediately on a successful absent/null reload. Preserve existing parser initialization and ID/directory migration semantics. Presentation invalidation cannot reset gameplay objects, filter choices, or deck edits.
+Deserialize into a staged definition with localization reset, validate installability, then publish definition fields/localization and advance the generation on the main thread. Retain the last-good state/generation on failure. Clear old localization immediately on a successful absent/null reload, subject to the explicit default-game fallback rule below. Preserve existing parser initialization and ID/directory migration semantics. Presentation invalidation cannot reset gameplay objects, filter choices, or deck edits.
 
 ### Explicit origins and portable ordered caches
 
@@ -77,4 +77,12 @@ Use Unity CLI compilation and focused EditMode/PlayMode suites, then supported p
 2. Implement staged loading/cache/refresh, display bindings, assets, and interactive search.
 3. Implement and verify authored provenance and negotiated networking before enabling shared authored-stack translations.
 4. Complete offline/rollback, device-layout, and mixed-capability/player verification; update both repositories' task status only against evidence.
-5. Release the companion library and then CGS support. Existing games require no edits. Removing/nulling localization on a successful reload returns all presentation to canonical values while inert sidecars remain harmless.
+5. Release the companion library and then CGS support. Existing games require no edits. Removing localization from custom games, or explicitly nulling it for any game, returns presentation to canonical values on a successful reload while inert sidecars remain harmless. The three default games receive bundled catalogs when metadata is absent.
+
+### Shipped default-game catalogs and upgrade behavior
+
+Standard Playing Cards, Mahjong, and Dominoes are first-party authored content and ship complete inline catalogs for the ten UI locales. Keep website manifests, StreamingAssets manifests, and Resources fallback packages synchronized from one maintained authoring table. Resources packages include canonical authored deck payloads so WebGL and older installations can use the feature before website deployment and without translation downloads. This is authored content, not runtime machine translation.
+
+The exact shipped name plus canonical update URL identifies the three fallback packages. On staged load, absent metadata receives the bundled catalog; any explicit localization member, including null, wins. This narrowly scoped default-game upgrade is the exception to absent-metadata rollback; custom games keep the existing contract. Optional package failures cannot prevent base-game loading.
+
+Fresh StreamingAssets decks include portable installation sidecars. Never infer legacy/user deck provenance from matching names or content. Where no valid authored artifact exists, install a separate canonical copy under `localization/default-decks/` with a `defaults/<filename>` sidecar key. Lists and startup deck loading use the proven artifact; existing user files retain their names and bytes. Managed copies are read-only originals; editing/saving creates a user deck through the existing path, which revokes any user-path binding. Locale switches do not reinstall decks or change generations. Explicit null hides the managed authored choices and returns to canonical behavior.

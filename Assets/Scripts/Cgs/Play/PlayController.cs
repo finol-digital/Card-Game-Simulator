@@ -407,8 +407,9 @@ namespace Cgs.Play
                     continue;
                 }
 
-                var deckFilePath = Path.Combine(CardGameManager.Current.DecksDirectoryPath,
-                    deckUrl.Name + "." + CardGameManager.Current.DeckFileType.ToString().ToLower());
+                var deckFilePath = BuiltInGameContent.DeckPath(CardGameManager.Current, deckUrl.Name, deckUrl.Url?.IsAbsoluteUri == true ? deckUrl.Url.AbsoluteUri : null) ??
+                    Path.Combine(CardGameManager.Current.DecksDirectoryPath,
+                        deckUrl.Name + "." + CardGameManager.Current.DeckFileType.ToString().ToLower());
 
                 if (!File.Exists(deckFilePath))
                 {

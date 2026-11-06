@@ -297,6 +297,15 @@ namespace FinolDigital.Cgs.Json.Unity
 
             try
             {
+                BuiltInGameContent.EnsureDecks(this);
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Built-in authored decks unavailable: " + error.Message);
+            }
+
+            try
+            {
                 // We're being greedy about loading these now, since these could be shown before the game is selected
                 if (File.Exists(BannerImageFilePath))
                     BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
@@ -331,7 +340,9 @@ namespace FinolDigital.Cgs.Json.Unity
             JsonConvert.PopulateObject(JsonConvert.SerializeObject(this), staged);
             staged.ClearDefinitionLists();
             staged.Localization = null;
-            JsonConvert.PopulateObject(File.ReadAllText(filePath), staged);
+            var authoredJson = File.ReadAllText(filePath);
+            JsonConvert.PopulateObject(authoredJson, staged);
+            BuiltInGameContent.ApplyCatalog(staged, JObject.Parse(authoredJson));
             staged.RefreshId();
             return staged;
         }

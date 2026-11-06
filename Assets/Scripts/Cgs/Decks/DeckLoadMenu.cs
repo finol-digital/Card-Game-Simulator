@@ -170,6 +170,9 @@ namespace Cgs.Decks
                 if (GetFileTypeFromPath(filePath) == CardGameManager.Current.DeckFileType)
                     _deckFiles[filePath] = GetNameFromPath(filePath);
 
+            foreach (var filePath in BuiltInGameContent.DeckPaths(CardGameManager.Current))
+                _deckFiles[filePath] = GetNameFromPath(filePath);
+
             var game = CardGameManager.Current;
             Rebuild(_deckFiles, SelectFile, _selectedFilePath, bindLabel: (label, path, name) =>
                 GameContentText.Set(label, game, display =>
@@ -180,7 +183,7 @@ namespace Cgs.Decks
 
             editFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
             shareFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
-            deleteFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
+            deleteFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath) && !BuiltInGameContent.IsManagedDeck(game, _selectedFilePath);
             loadFromFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
         }
 
@@ -202,7 +205,7 @@ namespace Cgs.Decks
                 _selectedFilePath = deckFilePath;
                 editFileButton.interactable = true;
                 shareFileButton.interactable = true;
-                deleteFileButton.interactable = true;
+                deleteFileButton.interactable = !BuiltInGameContent.IsManagedDeck(CardGameManager.Current, deckFilePath);
                 loadFromFileButton.interactable = true;
             }
             else if (toggle != null && !toggle.group.AnyTogglesOn() && _selectedFilePath.Equals(deckFilePath))
@@ -251,6 +254,8 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void DeleteFile()
         {
+            if (BuiltInGameContent.IsManagedDeck(CardGameManager.Current, _selectedFilePath))
+                return;
             try
             {
                 AuthoredDeckFiles.Revoke(CardGameManager.Current, _selectedFilePath);

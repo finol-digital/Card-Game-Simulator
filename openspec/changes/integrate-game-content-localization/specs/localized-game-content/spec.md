@@ -182,3 +182,24 @@ Consumers SHALL render game text through supported locale font/layout handling, 
 #### Scenario: Non-Latin and multiline content
 - **WHEN** supported Japanese content and longer Spanish labels are shown in card viewers, deck lists, filters, and game dialogs
 - **THEN** glyphs and authored line breaks render correctly and controls keep their normal wrapping, scrolling, or other access to the complete text
+
+### Requirement: Default games ship complete offline language catalogs
+CGS SHALL ship authored presentation catalogs for Standard Playing Cards, Mahjong, and Dominoes in all ten selectable languages: `en`, `es`, `fr`, `de`, `it`, `ja`, `ko`, `pt-BR`, `ru`, and `zh-Hans`. Catalogs SHALL cover game, card, deck, set, property, enum, and applicable card-back labels without changing canonical identifiers, card/deck bytes, or artwork. Numeric domino names MAY remain identical across locales.
+
+#### Scenario: Default content follows the language picker offline
+- **WHEN** a player selects any supported UI language with a default game installed
+- **THEN** built-in card and authored-deck labels SHALL use that language, including generated alternate-back cards
+- **AND** catalogs SHALL be available from the build without requiring a website deployment or translation download
+- **AND** controls SHALL retain canonical keys while visible labels refresh
+
+#### Scenario: An existing default installation predates localization metadata
+- **WHEN** a definition with the exact shipped name and canonical update URL lacks a localization member
+- **THEN** CGS SHALL supply the corresponding bundled catalog
+- **AND** explicitly authored localization, including null, SHALL take precedence
+- **AND** other games without metadata SHALL retain canonical behavior
+
+#### Scenario: Legacy deck files are not evidence of authorship
+- **WHEN** a default game has existing deck files without valid provenance, even with identical names and bytes
+- **THEN** CGS SHALL preserve those files and their unproven status
+- **AND** separately install bundled authored decks with provenance so translated built-in choices remain available
+- **AND** fresh packaged authored files with valid sidecars SHALL not produce duplicate built-in choices

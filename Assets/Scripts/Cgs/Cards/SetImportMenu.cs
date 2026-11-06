@@ -93,13 +93,7 @@ namespace Cgs.Cards
 
         [UsedImplicitly] public int Back { get; set; }
 
-        private string BackFace => Back < BackFaceOptions.Count ? BackFaceOptions[Back].text : string.Empty;
-
-        private List<Dropdown.OptionData> BackFaceOptions { get; } = new();
-
-        private string BackFaceId => CardGameManager.Current.CardBackFaceImageSprites.ContainsKey(BackFace)
-            ? BackFace
-            : string.Empty;
+        private string BackFaceId => Cgs.GameContent.GameContentBackOptions.SelectedKey(backSelector);
 
         private UnityAction _onCreationCallback;
 
@@ -114,12 +108,7 @@ namespace Cgs.Cards
         {
             Show();
 
-            BackFaceOptions.Clear();
-            BackFaceOptions.Add(new Dropdown.OptionData() { text = string.Empty });
-            foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
-                BackFaceOptions.Add(new Dropdown.OptionData() { text = backFaceKey });
-            backSelector.options = BackFaceOptions;
-            backSelector.value = 0;
+            Cgs.GameContent.GameContentBackOptions.Bind(backSelector, CardGameManager.Current);
 
             _onCreationCallback = onCreationCallback;
         }

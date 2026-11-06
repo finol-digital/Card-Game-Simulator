@@ -11,7 +11,7 @@ CGS's language selector translates application UI but still renders game-authore
 - Add staged manifest reload, recorded document origins, portable ordered caches, offline fallback, and live refresh without canonical dataset reloads.
 - Separate interactive translated search from deck import and automated gameplay queries; identify controls by canonical keys.
 - Record authored-deck provenance separately from deck files; add an optional negotiated stack-creation/label channel with ownership, retry, revision, and legacy-peer safeguards.
-- Preserve user-entered text, original definitions, save/deck formats, existing RPC signatures, and canonical IDs. Games without metadata retain their existing behavior.
+- Preserve user-entered text, original definitions, save/deck formats, existing RPC signatures, and canonical IDs. Custom games without metadata retain their existing behavior; the three shipped defaults receive bundled catalogs.
 
 ## Capabilities
 
@@ -32,3 +32,5 @@ CGS's language selector translates application UI but still renders game-authore
 - Add focused Unity regression tests plus player and mixed-capability multiplayer verification. No `.github` changes are part of this change.
 
 Upstream contract: [FinolDigital.Cgs.Json PR #27](https://github.com/finol-digital/FinolDigital.Cgs.Json/pull/27), with implementation tasks 4–5 tracked in that repository. The schema and resolver alone do not complete the user-facing feature.
+
+Built-in content scope: ship complete offline catalogs for all ten UI languages for Standard Playing Cards, Mahjong, and Dominoes, including safe upgrades of existing installs and separately proven authored decks without modifying user files.
