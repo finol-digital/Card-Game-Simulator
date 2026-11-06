@@ -29,7 +29,7 @@ the former retain their saved names. Editing and saving an original makes a user
 deck through the normal save path. Locale changes never reinstall the originals.
 
 Explicit `localization: null` disables fallback and hides managed originals.
-Ordinary deck files remain available. Re-enabling catalogs reuses valid bindings.
+The updated editor and staged loader preserve the explicit-null presence flag through saves and reloads. Ordinary deck files remain available. Re-enabling catalogs reuses valid bindings.
 Sidecars and managed files travel with whole-game exports, not standalone deck
 exports. Canonical card/deck data, IDs, enum flags, and saved user text are unchanged.
 
@@ -39,7 +39,7 @@ exports. Canonical card/deck data, IDs, enum flags, and saved user text are unch
   alternate-back cards, sets/properties/enums and Mahjong text ranks, canonical
   imports, live language-picker refresh, old-manifest staging, explicit-null
   opt-out, packaged sidecars, and preservation of identical legacy/user files.
-- Existing `GameContentProvenanceTests` and `GameManifestLocalizationTests` (8/8 each) cover
+- Existing `GameContentProvenanceTests` and `GameManifestLocalizationTests` (8/8 provenance, 9/9 reload) cover
   replacement/revocation, package relocation, and generic absent/null reloads.
 - Python catalog tests check complete targets and synchronized generated files;
   the six generated manifests pass the library schema with URI checking enabled.

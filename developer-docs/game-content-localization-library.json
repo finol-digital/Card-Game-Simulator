@@ -2,12 +2,12 @@
   "status": "unreleased local development build",
   "libraryBranch": "feature/game-content-localization",
   "libraryBaseCommit": "86d9f79178d8914dc65323459bac631ea475dd80",
-  "sourceFilesSha256": "75a21087960ef3338742c48892ba7a42cc69c18d138eafc54432e8cd4d009788",
+  "sourceFilesSha256": "fd3899df44847468d78a803aa767f77cbecf224ec1df35ef274cfce9e01d4dfc",
   "sourceFiles": {
     "FinolDigital.Cgs.Json/Card.cs": "db4767f10c60ebe5f28037cdc7aac070cdb4f74c8864a5c1184e481fd84d426c",
     "FinolDigital.Cgs.Json/CardAction.cs": "107c699d48827c9fc546315038fc9cb92371b1272d2170ef7c24dd697469abff",
     "FinolDigital.Cgs.Json/CardBackFaceImageUrl.cs": "fe71c329dd5477e41767f383ff6726e5478c459cdac21c1344d672f1189739df",
-    "FinolDigital.Cgs.Json/CardGame.cs": "d15daf44d1889fe4357124bec6f6ac917f6745c299cfab1248244364fd3040e9",
+    "FinolDigital.Cgs.Json/CardGame.cs": "9356193e4a172bcd85457e73976a75214bae36a0175daeb7174e8469a1ae2de6",
     "FinolDigital.Cgs.Json/CardSearchFilters.cs": "c50fdcd69a208039dac553b436b39ebf65fb0e16ef18fba295a398e3bedaeace",
     "FinolDigital.Cgs.Json/Deck.cs": "3423954e185b311784dd2ecb0b9387ab47be687fb78dffabd5ec2486e87dcbb4",
     "FinolDigital.Cgs.Json/DeckPlayCard.cs": "8f6f6ee0345255b108852ba9cecc67907595a6cefb2d12f52ed1a0db4b3899f1",
@@ -32,7 +32,7 @@
     "FinolDigital.Cgs.Json/SharePreference.cs": "492534fa384d4ca770517f8068ec52f1acedc9b8bdd24421f6014d518ae406ef",
     "FinolDigital.Cgs.Json/FinolDigital.Cgs.Json.csproj": "c2a01820da9519f9607b49109cda9c44f37698d232b390b6f4742abc73d6f1e1"
   },
-  "dllSha256": "b3009a50ae793288371868c72953fed828f7c3237918960084c5289e1be8dac0",
+  "dllSha256": "bac9af2fc6196d503d734389c7563e31044c9dc9de03af7d367c0e90cbd1ee44",
   "buildCommand": "dotnet build FinolDigital.Cgs.Json/FinolDigital.Cgs.Json.csproj --configuration Release",
   "targetFramework": "netstandard2.1",
   "assemblyVersion": "1.0.0.0",
@@ -41,7 +41,7 @@
     "cgs.json": "2e902cd993a4ac022e9e228f0657907a3de131de75f5a9a9702adda09c260e8d",
     "GameLocalization.json": "07671f6e944af0675845e10ad0b42e31db7e54e50d3df2c77d49d8d4fdbafebe"
   },
-  "librarySourceCommit": "c2c281b563a84e5120adab33941fd1e5e675bae4",
+  "librarySourceCommit": "d880518a0f2e37d332a6997bcccdcc83180e2571",
   "libraryPullRequest": "https://github.com/finol-digital/FinolDigital.Cgs.Json/pull/28",
   "sourceFilesHashFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><relative path><LF>, sorted by relative path"
 }

@@ -81,13 +81,15 @@ For each external catalog/image cache key, successful results SHALL be ordered b
 - **AND** concurrent requests for different locale/source/asset keys do not suppress one another's valid cache publications
 
 ### Requirement: Manifest replacement invalidates presentation bindings
-Every successful manifest reload SHALL replace localization state and advance its binding generation, even at an unchanged URL. Changed inline content SHALL be visible immediately. Missing/null localization SHALL disable localization immediately; old values SHALL NOT survive an in-place reload. A failed manifest load SHALL preserve the last successfully installed state.
+Successful manifest reloads SHALL replace localization and advance binding generation, even at the same URL. Inline changes SHALL appear immediately. Explicit null SHALL disable bindings; missing metadata SHALL disable them for custom games and select shipped catalogs for recognized defaults. Stale bindings SHALL NOT survive successful reloads. Failed loads SHALL preserve the last installed state.
 
 #### Scenario: Inline update and feature removal without restart
 - **WHEN** a game reloads a manifest whose inline Spanish name changed at the same source URL
 - **THEN** the new name replaces the old binding and earlier callbacks cannot restore it
-- **WHEN** the next successful reload removes or nulls localization
+- **WHEN** the next successful reload removes localization from a custom game, or explicitly nulls it for any game
 - **THEN** every game-content binding returns to canonical presentation without a restart, including bindings in already open views
+- **WHEN** a recognized default game reloads without localization metadata
+- **THEN** the bundled catalog replaces the previous manifest bindings without a restart
 
 ### Requirement: Offline caches survive game export and import
 Downloaded catalogs, images, recorded origins, and local cache mappings SHALL reside within the game directory and travel with game-package exports. Consumers SHALL resolve imported cache mappings relative to the new installation while preserving remote origin semantics. Missing caches or unsupported metadata SHALL fall back to canonical content without preventing import or play.
@@ -203,3 +205,9 @@ CGS SHALL ship authored presentation catalogs for Standard Playing Cards, Mahjon
 - **THEN** CGS SHALL preserve those files and their unproven status
 - **AND** separately install bundled authored decks with provenance so translated built-in choices remain available
 - **AND** fresh packaged authored files with valid sidecars SHALL not produce duplicate built-in choices
+
+#### Scenario: An explicit default-game opt-out survives an editor save
+- **WHEN** a definition containing `localization: null` is loaded, edited, saved, and reloaded
+- **THEN** the explicit null SHALL remain present and bundled catalog/deck fallback SHALL remain disabled
+- **AND** definitions that never contained localization SHALL continue to omit it when saved
+- **AND** assigning the model's localization property to null SHALL retain its existing member-clearing behavior; callers requesting an explicit opt-out SHALL also retain or set the presence flag

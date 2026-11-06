@@ -55,6 +55,27 @@ namespace Tests.PlayMode
             _directories.Clear();
         }
 
+        [Test]
+        public void PublishedExplicitNullSurvivesSavingAndReloading()
+        {
+            var game = CreateGame();
+            var manifest = Manifest(game, "Uno");
+            manifest["localization"] = null;
+            File.WriteAllText(game.GameFilePath, manifest.ToString());
+            game.ReadProperties();
+            Assert.That(game.Localization, Is.Null);
+            Assert.That(game.LocalizationSpecified, Is.True);
+            File.WriteAllText(game.GameFilePath, Newtonsoft.Json.JsonConvert.SerializeObject(game));
+            game.ReadProperties();
+            Assert.That(game.LocalizationSpecified, Is.True);
+            Assert.That(JObject.Parse(File.ReadAllText(game.GameFilePath))["localization"].Type, Is.EqualTo(JTokenType.Null));
+            manifest.Remove("localization");
+            File.WriteAllText(game.GameFilePath, manifest.ToString());
+            game.ReadProperties();
+            Assert.That(game.LocalizationSpecified, Is.False);
+            Assert.That(JObject.Parse(Newtonsoft.Json.JsonConvert.SerializeObject(game))["localization"], Is.Null);
+        }
+
         [TestCase(false)]
         [TestCase(true)]
         public void SameSourceReloadReplacesInlineAndAbsentOrNullRemovesLocalization(bool explicitNull)

@@ -174,6 +174,21 @@ namespace Tests.PlayMode
             File.WriteAllText(file, definition.ToString());
             staged = (UnityCardGame)stage.Invoke(game, new object[] { file });
             Assert.That(staged.Localization, Is.Null);
+            Assert.That(staged.LocalizationSpecified, Is.True);
+            // The editor copies both parts of the optional member to its edit model.
+            var edited = new UnityCardGame(null, staged.Id)
+            {
+                AutoUpdateUrl = staged.AutoUpdateUrl,
+                Localization = staged.Localization,
+                LocalizationSpecified = staged.LocalizationSpecified
+            };
+            var saved = JsonConvert.SerializeObject(edited);
+            Assert.That(JObject.Parse(saved)["localization"].Type, Is.EqualTo(JTokenType.Null));
+            File.WriteAllText(file, saved);
+            staged = (UnityCardGame)stage.Invoke(game, new object[] { file });
+            Assert.That(staged.Localization, Is.Null);
+            Assert.That(staged.LocalizationSpecified, Is.True);
+            Assert.That(BuiltInGameContent.DeckPaths(staged), Is.Empty);
         }
 
         [Test]

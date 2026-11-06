@@ -223,6 +223,7 @@ namespace Cgs.Menu
                 AutoUpdate = CardGameManager.Current.AutoUpdate,
                 AutoUpdateUrl = CardGameManager.Current.AutoUpdateUrl,
                 Localization = CardGameManager.Current.Localization,
+                LocalizationSpecified = CardGameManager.Current.LocalizationSpecified,
                 CardSize = CardGameManager.Current.CardSize,
                 BannerImageFileType = CardGameManager.Current.BannerImageFileType,
                 BannerImageUrl = CardGameManager.Current.BannerImageUrl,

@@ -344,3 +344,16 @@ pass, including the CI failure. A standalone Mono public-API probe also confirms
 the filename resolves while malformed escapes and paths outside the package are
 rejected. A broader `Localization` filter run stopped producing results and was
 cancelled; it is not counted as passing. Fresh full CI remains required.
+
+
+### Explicit-null opt-out follow-up
+
+Library source `eede5fb` preserves authored `localization: null` through
+serialization using a presence flag, while absent legacy fields and direct
+property clearing still omit metadata. Unity copies this flag during staged
+publication and game-editor model creation. Updated default-game tests verify
+an edited opt-out remains disabled, and reload tests distinguish absent custom
+metadata from explicit null. The library's 97 tests and seven URI-aware schema
+tests pass; generated schemas are unchanged. Unity's 38 default-game and nine
+manifest-reload tests pass with the rebuilt DLL. The provenance file records
+its source and binary hashes. Player CI remains a separate verification step.

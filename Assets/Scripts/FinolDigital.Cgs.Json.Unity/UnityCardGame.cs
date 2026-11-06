@@ -270,6 +270,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 var contract = (JsonObjectContract)new DefaultContractResolver().ResolveContract(typeof(CardGame));
                 foreach (var property in contract.Properties.Where(property => !property.Ignored && property.Writable))
                     property.ValueProvider.SetValue(this, property.ValueProvider.GetValue(staged));
+                LocalizationSpecified = staged.LocalizationSpecified;
                 RefreshId();
                 _warnedCardImageUrlProperties.Clear();
                 DefinitionOrigin = LocalizationFiles.ReadDefinitionOrigin(GameDirectoryPath, GameFilePath);
