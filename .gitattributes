@@ -140,3 +140,4 @@
 *.tar lfs-file
 # Portable authored-deck fingerprints must match on every build host.
 Assets/StreamingAssets/**/decks/*.txt text eol=lf
+docs/games/**/decks/*.txt text eol=lf

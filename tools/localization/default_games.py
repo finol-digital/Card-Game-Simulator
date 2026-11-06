@@ -836,16 +836,15 @@ def outputs():
                 "source": d["source"],
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             }
-        yield (
-            bundled / "localization/provenance.json",
-            render(
-                {
-                    "version": 1,
-                    "game": manifest["name"] + "@www.cardgamesimulator.com",
-                    "decks": entries,
-                }
-            ),
+        provenance = render(
+            {
+                "version": 1,
+                "game": manifest["name"] + "@www.cardgamesimulator.com",
+                "decks": entries,
+            }
         )
+        yield bundled / "localization/provenance.json", provenance
+        yield site / "localization/provenance.json", provenance
 
 
 def main():

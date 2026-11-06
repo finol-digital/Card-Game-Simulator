@@ -19,7 +19,7 @@ Only the exact shipped game names and canonical update URLs receive fallback
 catalogs when localization metadata is absent. Explicit metadata (including null)
 wins. Custom games keep the original opt-in and absent/null rollback semantics.
 
-Fresh bundled decks include portable provenance sidecars. Existing user or
+Fresh bundled decks include portable provenance sidecars, mirrored in the website game packages by the same generator. Existing user or
 legacy deck files are never overwritten or classified by name/content matches.
 If no proven authored deck exists, CGS installs a separate read-only original in
 `localization/default-decks`, recorded as `defaults/<filename>` in the sidecar.
