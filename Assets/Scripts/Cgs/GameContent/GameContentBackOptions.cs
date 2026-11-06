@@ -30,6 +30,8 @@ namespace Cgs.GameContent
 
         public static string SelectedKey(Dropdown dropdown)
         {
+            if (dropdown == null)
+                return "";
             var binding = dropdown.GetComponent<GameContentBackOptions>();
             return binding != null && dropdown.value < binding._keys.Count ? binding._keys[dropdown.value] : "";
         }
