@@ -166,14 +166,13 @@ namespace Cgs.Decks
             var filePaths = Directory.Exists(CardGameManager.Current.DecksDirectoryPath)
                 ? Directory.GetFiles(CardGameManager.Current.DecksDirectoryPath)
                 : Array.Empty<string>();
-            foreach (var filePath in filePaths)
-                if (GetFileTypeFromPath(filePath) == CardGameManager.Current.DeckFileType)
-                    _deckFiles[filePath] = GetNameFromPath(filePath);
-
-            foreach (var filePath in BuiltInGameContent.DeckPaths(CardGameManager.Current))
+            var game = CardGameManager.Current;
+            foreach (var filePath in BuiltInGameContent.DeckChoices(game,
+                         filePaths.Where(path => GetFileTypeFromPath(path) == game.DeckFileType)))
                 _deckFiles[filePath] = GetNameFromPath(filePath);
 
-            var game = CardGameManager.Current;
+            if (!_deckFiles.ContainsKey(_selectedFilePath))
+                _selectedFilePath = string.Empty;
             Rebuild(_deckFiles, SelectFile, _selectedFilePath, bindLabel: (label, path, name) =>
                 GameContentText.Set(label, game, display =>
                 {

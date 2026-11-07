@@ -89,6 +89,45 @@ namespace FinolDigital.Cgs.Json.Unity
             }
         }
 
+        internal static bool IsPackagedDeck(UnityCardGame game, string path) =>
+            Path.GetDirectoryName(Path.GetFullPath(path)) == Path.GetFullPath(game.DecksDirectoryPath) &&
+            Path.GetExtension(path) == ".txt" && Package(game)?["decks"]?[Path.GetFileNameWithoutExtension(path)] is JObject;
+
+        // Present the proven original once; do not change the legacy file or grant it provenance.
+        public static IEnumerable<string> DeckChoices(UnityCardGame game, IEnumerable<string> savedPaths)
+        {
+            var originals = DeckPaths(game).ToArray();
+            foreach (var path in savedPaths)
+                if (!originals.Contains(path) && !DuplicatesOriginal(game, path, originals))
+                    yield return path;
+            foreach (var path in originals)
+                yield return path;
+        }
+
+        private static bool DuplicatesOriginal(UnityCardGame game, string path, IEnumerable<string> originals)
+        {
+            try
+            {
+                if (!IsPackagedDeck(game, path) || AuthoredDeckFiles.IsUserFile(game, path) ||
+                    LocalizationFiles.ExistingPhysicalPath(path, game.GameDirectoryPath) == null)
+                    return false;
+                var original = originals.FirstOrDefault(value => IsManagedDeck(game, value) &&
+                    Path.GetFileName(value) == Path.GetFileName(path));
+                if (original == null)
+                    return false;
+                var packagedBytes = Encoding.UTF8.GetBytes(Package(game)["decks"][Path.GetFileNameWithoutExtension(path)]
+                    .Value<string>("text"));
+                return new FileInfo(path).Length == packagedBytes.Length &&
+                    File.ReadAllBytes(path).SequenceEqual(packagedBytes) &&
+                    File.ReadAllBytes(original).SequenceEqual(packagedBytes);
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Default deck comparison unavailable: " + error.Message);
+                return false;
+            }
+        }
+
         internal static void EnsureDecks(UnityCardGame game)
         {
             if (game.Localization?.IsUsable != true || Package(game)?["decks"] is not JObject decks)

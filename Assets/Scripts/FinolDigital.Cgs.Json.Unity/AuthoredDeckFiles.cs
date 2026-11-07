@@ -123,7 +123,9 @@ namespace FinolDigital.Cgs.Json.Unity
         }
 
         // Must complete before user writes/deletes, even when the bytes are identical.
-        public static void Revoke(UnityCardGame game, string path)
+        public static void Revoke(UnityCardGame game, string path) => Revoke(game, path, true);
+
+        private static void Revoke(UnityCardGame game, string path, bool userChange)
         {
             lock (LocalizationFiles.Gate(game.GameDirectoryPath))
             {
@@ -134,12 +136,25 @@ namespace FinolDigital.Cgs.Json.Unity
                     Mutations.TryGetValue(full, out var version);
                     Mutations[full] = checked(version + 1);
                 }
-                if (!File.Exists(StatePath(game)))
+                var rememberUserFile = userChange && BuiltInGameContent.IsPackagedDeck(game, path);
+                if (!rememberUserFile && !File.Exists(StatePath(game)))
                     return;
                 var state = ReadState(game);
                 (state["decks"] as JObject)?.Remove(key);
+                if (rememberUserFile)
+                {
+                    var userDecks = state["userDecks"] as JObject ?? new JObject();
+                    userDecks[key] = true;
+                    state["userDecks"] = userDecks;
+                }
                 WriteState(game, state);
             }
+        }
+
+        internal static bool IsUserFile(UnityCardGame game, string path)
+        {
+            lock (LocalizationFiles.Gate(game.GameDirectoryPath))
+                return (ReadState(game)["userDecks"] as JObject)?[Key(game, path)] != null;
         }
 
         public static void WriteUserFile(UnityCardGame game, string path, string text)
@@ -287,7 +302,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (LocalizationFiles.ExistingPhysicalPath(game.DecksDirectoryPath, game.GameDirectoryPath) == null)
                     return;
                 // Revoke first: interruption cannot leave stale provenance on new bytes.
-                Revoke(game, path);
+                Revoke(game, path, false);
                 if (File.Exists(path))
                     File.Replace(temporary, path, null);
                 else
@@ -300,6 +315,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     ["source"] = source, ["sha256"] = Fingerprint(payload)
                 };
                 state["decks"] = decks;
+                (state["userDecks"] as JObject)?.Remove(key);
                 WriteState(game, state);
                 game.NotifyContentChanged();
             }

@@ -159,6 +159,88 @@ namespace Tests.PlayMode
             Assert.That(BuiltInGameContent.DeckPaths(game), Is.Empty);
         }
 
+        [TestCase("Standard", 4)]
+        [TestCase("Mahjong", 1)]
+        [TestCase("Dominoes", 2)]
+        public void UpgradedDeckPickerShowsEachBuiltInOnceWithoutChangingLegacyFiles(string key, int count)
+        {
+            var game = Game(key, false);
+            Directory.CreateDirectory(game.DecksDirectoryPath);
+            foreach (var deck in ((JObject)Package(key)["decks"]).Properties())
+                File.WriteAllText(Path.Combine(game.DecksDirectoryPath, deck.Name + ".txt"), deck.Value.Value<string>("text"));
+            var saved = Directory.GetFiles(game.DecksDirectoryPath);
+            var before = saved.ToDictionary(path => path, File.ReadAllBytes);
+            Apply(game, new JObject());
+            Install(game);
+            foreach (var locale in Locales)
+            {
+                var choices = BuiltInGameContent.DeckChoices(game, saved).ToArray();
+                Assert.That(choices, Has.Length.EqualTo(count));
+                Assert.That(choices, Is.EquivalentTo(BuiltInGameContent.DeckPaths(game)));
+                var display = GameContentPresentation.Context(game, locale);
+                foreach (var path in choices)
+                {
+                    var binding = AuthoredDeckFiles.ReadBinding(game, path);
+                    Assert.That(binding, Is.Not.Null);
+                    Assert.That(display.DeckName(binding.Name, true),
+                        Is.EqualTo(game.Localization.Locales[locale].Inline.Decks[binding.Name].Name));
+                }
+            }
+            foreach (var path in saved)
+            {
+                Assert.That(File.ReadAllBytes(path), Is.EqualTo(before[path]));
+                Assert.That(AuthoredDeckFiles.ReadBinding(game, path), Is.Null);
+            }
+            // Opting out restores the ordinary entries, without needing to recover any deleted files.
+            game.Localization = null;
+            Assert.That(BuiltInGameContent.DeckChoices(game, saved), Is.EquivalentTo(saved));
+        }
+
+        [TestCase("Standard")]
+        [TestCase("Mahjong")]
+        [TestCase("Dominoes")]
+        public void ExplicitUserSaveBeforeFirstCatalogInstallStaysVisible(string key)
+        {
+            var game = Game(key, false);
+            var deck = game.DeckUrls[0];
+            var path = Path.Combine(game.DecksDirectoryPath, deck.Name + ".txt");
+            var text = Package(key)["decks"][deck.Name].Value<string>("text");
+            AuthoredDeckFiles.WriteUserFile(game, path, text);
+            Apply(game, new JObject());
+            Install(game);
+            Assert.That(BuiltInGameContent.DeckChoices(game, new[] { path }), Does.Contain(path));
+            Assert.That(AuthoredDeckFiles.ReadBinding(game, path), Is.Null);
+        }
+
+        [TestCase("Standard")]
+        [TestCase("Mahjong")]
+        [TestCase("Dominoes")]
+        public void DeckPickerKeepsModifiedRenamedAndExplicitlySavedCopies(string key)
+        {
+            var game = Game(key, false);
+            var deck = game.DeckUrls[0];
+            var text = Package(key)["decks"][deck.Name].Value<string>("text");
+            var path = Path.Combine(game.DecksDirectoryPath, deck.Name + ".txt");
+            Directory.CreateDirectory(game.DecksDirectoryPath);
+            File.WriteAllText(path, text + "\n");
+            var renamed = Path.Combine(game.DecksDirectoryPath, "My deck.txt");
+            File.WriteAllText(renamed, text);
+            Apply(game, new JObject());
+            Install(game);
+            var saved = new[] { path, renamed };
+            Assert.That(BuiltInGameContent.DeckChoices(game, saved), Does.Contain(path).And.Contain(renamed));
+            File.WriteAllText(path, text);
+            Assert.That(BuiltInGameContent.DeckChoices(game, saved), Does.Not.Contain(path));
+            // Saving the same bytes is an explicit user action, including while catalogs are disabled.
+            game.Localization = null;
+            AuthoredDeckFiles.WriteUserFile(game, path, text);
+            Apply(game, new JObject());
+            Install(game);
+            Assert.That(BuiltInGameContent.DeckChoices(game, saved), Does.Contain(path).And.Contain(renamed));
+            Assert.That(AuthoredDeckFiles.ReadBinding(game, path), Is.Null);
+            Assert.That(File.ReadAllText(path), Is.EqualTo(text));
+        }
+
         [Test]
         public void StagedOlderManifestReceivesFallbackAndExplicitNullDisablesIt()
         {

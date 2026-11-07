@@ -206,6 +206,13 @@ CGS SHALL ship authored presentation catalogs for Standard Playing Cards, Mahjon
 - **AND** separately install bundled authored decks with provenance so translated built-in choices remain available
 - **AND** fresh packaged authored files with valid sidecars SHALL not produce duplicate built-in choices
 
+#### Scenario: An upgrade does not duplicate unchanged built-in deck choices
+- **GIVEN** a default game's unmarked legacy deck has the canonical filename and exactly the bundled bytes
+- **WHEN** a separately proven managed original is available
+- **THEN** the picker SHALL show only the proven original while preserving the legacy file and its unproven status
+- **AND** modified, renamed, or explicitly user-saved copies SHALL remain separate; user writes SHALL persist that intent even when localization is disabled
+- **AND** disabling localization SHALL restore ordinary-file choices without requiring recovery of deleted data
+
 #### Scenario: An explicit default-game opt-out survives an editor save
 - **WHEN** a definition containing `localization: null` is loaded, edited, saved, and reloaded
 - **THEN** the explicit null SHALL remain present and bundled catalog/deck fallback SHALL remain disabled
