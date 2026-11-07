@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "game": "Mahjong@www.cardgamesimulator.com",
+  "decks": {
+    "Traditional Mahjong Deck.txt": {
+      "generation": "ce71de56c0ef5ce8a7ecf5b192358ed9",
+      "name": "Traditional Mahjong Deck",
+      "source": "https://www.cardgamesimulator.com/games/Mahjong/decks/Traditional%20Mahjong%20Deck.txt",
+      "sha256": "9b8d2417688a72a96d001598f5697eeaf889ecc4a8680e1ea8be9c037320eabb"
+    }
+  }
+}

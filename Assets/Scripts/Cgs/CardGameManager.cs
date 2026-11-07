@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Localization;
+using Cgs.GameContent;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -377,6 +378,7 @@ namespace Cgs
                 }
 
                 var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
+                LocalizationCache.Invalidate(targetGameDirectory);
                 if (Directory.Exists(targetGameDirectory))
                     Directory.Delete(targetGameDirectory, true);
 
@@ -431,6 +433,7 @@ namespace Cgs
                       string.IsNullOrEmpty(currentGame.Error)
                 ? currentGame
                 : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
+            GameContentPresentation.Select(Current);
         }
 
         private void CheckDeepLinks()
@@ -634,6 +637,7 @@ namespace Cgs
 
                 try
                 {
+                    LocalizationCache.Invalidate(cardGame.GameDirectoryPath);
                     Directory.Delete(cardGame.GameDirectoryPath, true);
                 }
                 catch (Exception ex)
@@ -690,14 +694,16 @@ namespace Cgs
                 cardGame.LoadCards(page);
                 if (page == cardGame.AllCardsUrlPageCountStartIndex &&
                     cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
-                    Messenger.Show(UiMessage.With("games.cards.loading", string.Format(CardsLoadingMessage, cardGame.Name), ("gameName", cardGame.Name)));
+                    Messenger.Show(GameContentMessage.Create(cardGame, display => UiMessage.With("games.cards.loading",
+                        string.Format(CardsLoadingMessage, display.GameName), ("gameName", display.GameName))));
                 yield return null;
             }
 
             if (!string.IsNullOrEmpty(cardGame.Error))
                 Debug.LogError(LoadErrorMessage + cardGame.Error);
             else if (cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
-                Messenger.Show(UiMessage.With("games.cards.loaded", string.Format(CardsLoadedMessage, cardGame.Name), ("gameName", cardGame.Name)));
+                Messenger.Show(GameContentMessage.Create(cardGame, display => UiMessage.With("games.cards.loaded",
+                    string.Format(CardsLoadedMessage, display.GameName), ("gameName", display.GameName))));
         }
 
 #pragma warning disable S2325
@@ -739,6 +745,7 @@ namespace Cgs
 
             // Immediately set current so UI can update without waiting for heavy load work
             Current = game;
+            GameContentPresentation.Select(game);
             // Start an async reset so heavy load work doesn't block the main thread/UI animation
             StartCoroutine(ResetGameSceneAsync(game, ++_selectionVersion));
         }
@@ -830,7 +837,7 @@ namespace Cgs
 
             var subContainer = Path.Combine(container, UnityFileMethods.GetSafeFileName(Current.Id));
             Debug.Log("CGS Share::subContainer: " + subContainer);
-            UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
+            LocalizationFiles.CopyPackageSnapshot(Current.GameDirectoryPath, subContainer);
 
             var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + CgsZipExtension);
             Debug.Log("CGS Share::zipFileName: " + zipFileName);
@@ -919,6 +926,7 @@ namespace Cgs
 
             try
             {
+                LocalizationCache.Invalidate(Current.GameDirectoryPath);
                 Directory.Delete(Current.GameDirectoryPath, true);
                 AllCardGames.Remove(Current.Id);
                 ResetCurrentToDefault();

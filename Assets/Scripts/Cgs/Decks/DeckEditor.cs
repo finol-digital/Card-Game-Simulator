@@ -433,6 +433,8 @@ namespace Cgs.Decks
         {
             newName ??= string.Empty;
             newName = UnityFileMethods.GetSafeFileName(newName);
+            if (SavedDeck is UnityDeck authored && newName != authored.Name)
+                authored.ClearAuthoredName();
             Cgs.Localization.LocalizedUiText.SetLiteral(nameText, newName + (HasChanged ? ChangeIndicator : string.Empty));
             return newName;
         }
@@ -443,7 +445,13 @@ namespace Cgs.Decks
             var deckName = Deck.DefaultName;
             if (SavedDeck != null)
                 deckName = SavedDeck.Name;
-            Cgs.Localization.LocalizedUiText.SetLiteral(nameText, deckName + (HasChanged ? ChangeIndicator : string.Empty));
+            var canonicalName = deckName;
+            Cgs.GameContent.GameContentText.Set(nameText, CardGameManager.Current, display =>
+            {
+                var authoredName = (SavedDeck as UnityDeck)?.AuthoredName;
+                return display.DeckName(authoredName ?? canonicalName, authoredName != null) +
+                    (HasChanged ? ChangeIndicator : string.Empty);
+            });
             Cgs.Localization.LocalizedUiText.SetNumber(countText, CurrentDeck.Cards.Count);
         }
 

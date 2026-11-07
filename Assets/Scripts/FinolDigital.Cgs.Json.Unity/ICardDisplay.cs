@@ -6,6 +6,11 @@ using UnityEngine;
 
 namespace FinolDigital.Cgs.Json.Unity
 {
+    public interface ICardPresentationDisplay
+    {
+        void SetImageCard(UnityCard card);
+    }
+
     public interface ICardDisplay
     {
         // Displays that size themselves to the game's card size should use the oriented image,

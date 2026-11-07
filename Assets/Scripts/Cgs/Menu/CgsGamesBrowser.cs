@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.UI;
+using Cgs.GameContent;
+using Cgs.Localization;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -136,9 +138,20 @@ namespace Cgs.Menu
             else if (!filteredGameOptions.ContainsKey(_selectedGameId))
                 _selectedGameId = filteredGameOptions.Keys.OrderBy(key => key).First();
 
-            Rebuild(filteredGameOptions, SelectGame, _selectedGameId, game => Cgs.Localization.UiMessage.With(
-                "games.browser.credit", game.ToString(), ("gameName", game.Name),
-                ("copyright", game.Copyright), ("author", game.Username)));
+            Rebuild(filteredGameOptions, SelectGame, _selectedGameId, GameLabel);
+        }
+
+        private static UiMessage GameLabel(CgsGame game)
+        {
+            // Bind only an installed identity, never a coincidentally matching name.
+            var installed = CardGameManager.Instance.AllCardGames.Values.FirstOrDefault(candidate =>
+                candidate.AutoUpdateUrl?.AbsoluteUri == game.AutoUpdateUrl);
+            if (installed == null)
+                return UiMessage.With("games.browser.credit", game.ToString(), ("gameName", game.Name),
+                    ("copyright", game.Copyright), ("author", game.Username));
+            return GameContentMessage.Create(installed, display => UiMessage.With("games.browser.credit",
+                $"{display.GameName}\nCopyright of {display.Copyright} and Uploaded by {game.Username}",
+                ("gameName", display.GameName), ("copyright", display.Copyright), ("author", game.Username)));
         }
 
         [UsedImplicitly]

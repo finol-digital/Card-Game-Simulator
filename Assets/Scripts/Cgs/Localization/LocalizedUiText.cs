@@ -64,6 +64,8 @@ namespace Cgs.Localization
 
         private static void DisableAuthoredBinding(Component target)
         {
+            foreach (var binding in target.GetComponents<ILiteralTextBinding>())
+                binding.ReleaseForAssignment();
             var authored = target.GetComponent<LocalizeStringEvent>();
             if (authored != null)
                 authored.enabled = false;
@@ -80,7 +82,7 @@ namespace Cgs.Localization
             _binding = null;
             if (_message != null)
             {
-                Apply(_message.English);
+                Apply(_message.Resolve().English);
                 if (isActiveAndEnabled)
                     _binding = new LocalizedMessageBinding(_message, Apply);
             }

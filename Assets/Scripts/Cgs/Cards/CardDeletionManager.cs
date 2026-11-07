@@ -55,7 +55,9 @@ namespace Cgs.Cards
             var prompt = DeletePrompt.Replace("{}", cardName);
             var message = string.IsNullOrEmpty(toDelete.Name)
                 ? new Cgs.Localization.UiMessage("cards.delete.unnamed", prompt)
-                : Cgs.Localization.UiMessage.With("cards.delete.named", prompt, ("cardName", cardName));
+                : Cgs.GameContent.GameContentMessage.Create(CardGameManager.Current, display =>
+                    Cgs.Localization.UiMessage.With("cards.delete.named", prompt,
+                        ("cardName", "'" + display.CardName(toDelete) + "'")));
             CardGameManager.Instance.Messenger.Prompt(message, Delete);
         }
 

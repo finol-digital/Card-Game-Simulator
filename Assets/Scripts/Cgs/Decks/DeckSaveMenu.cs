@@ -79,6 +79,10 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void ChangeName(string newName)
         {
+            if (_currentDeck == null)
+                return;
+            if (newName != _currentDeck.Name)
+                _currentDeck.ClearAuthoredName();
             if (_nameChangeCallback != null)
                 newName = _nameChangeCallback(newName);
             if (!string.IsNullOrEmpty(newName))
@@ -232,7 +236,8 @@ namespace Cgs.Decks
             {
                 if (!Directory.Exists(CardGameManager.Current.DecksDirectoryPath))
                     Directory.CreateDirectory(CardGameManager.Current.DecksDirectoryPath);
-                File.WriteAllText(deck.FilePath, deck.ToString());
+                deck.ClearAuthoredName();
+                AuthoredDeckFiles.WriteUserFile(CardGameManager.Current, deck.FilePath, deck.ToString());
             }
             catch (Exception e)
             {

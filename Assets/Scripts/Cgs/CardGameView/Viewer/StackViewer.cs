@@ -107,7 +107,7 @@ namespace Cgs.CardGameView.Viewer
         public void Sync(CardStack stack)
         {
             _cardStack = stack;
-            Cgs.Localization.LocalizedUiText.SetLiteral(nameLabel, _cardStack.Name);
+            Cgs.GameContent.GameContentText.Set(nameLabel, CardGameManager.Current, _cardStack.ResolveDisplayName);
 
             contentCardZone.transform.DestroyAllChildren();
             var cards = _cardStack.Cards.Reverse().ToList();

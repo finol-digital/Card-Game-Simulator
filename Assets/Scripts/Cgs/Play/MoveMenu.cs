@@ -170,7 +170,22 @@ namespace Cgs.Play
             if (currentCardContainer != null)
                 cardContainerOptions.Remove(currentCardContainer);
 
-            Rebuild(cardContainerOptions, SelectCardContainer, _selectedCardContainer);
+            Rebuild(cardContainerOptions, SelectCardContainer, _selectedCardContainer,
+                bindLabel: (text, container, fallback) =>
+                {
+                    if (container is CardStack stack)
+                        Cgs.GameContent.GameContentText.Set(text, CardGameManager.Current, display =>
+                        {
+                            var owner = GetOwnerName(stack);
+                            var name = stack.ResolveDisplayName(display);
+                            return string.IsNullOrEmpty(owner) ? name : $"{name} ({owner})";
+                        });
+                    else if (container is CardZone zone && !string.IsNullOrEmpty(zone.Name))
+                        Cgs.GameContent.GameContentText.Set(text, CardGameManager.Current,
+                            display => display.ZoneName(zone.Name));
+                    else
+                        Cgs.Localization.LocalizedUiText.SetLiteral(text, fallback);
+                });
         }
 
         private static string GetOwnerName(CardStack cardStack)

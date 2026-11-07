@@ -264,7 +264,7 @@ namespace UnityExtensionMethods
         }
 
         public static IEnumerator SaveUrlToFile(string url, string filePath, string postJsonBody = null,
-            Dictionary<string, string> headers = null)
+            Dictionary<string, string> headers = null, Action<FileDownloadResult> completed = null)
         {
             if (string.IsNullOrEmpty(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
@@ -308,6 +308,7 @@ namespace UnityExtensionMethods
                     Directory.CreateDirectory(directory);
                     if (Path.GetFullPath(uri.LocalPath) != Path.GetFullPath(filePath))
                         File.Copy(uri.LocalPath, filePath, true);
+                    completed?.Invoke(new FileDownloadResult(true, null, false));
                 }
                 catch (Exception exception)
                 {
@@ -317,6 +318,7 @@ namespace UnityExtensionMethods
             }
 
             var unityWebRequest = CreateUnityWebRequest(uri, postJsonBody, headers);
+            var usedProxy = uri.AbsoluteUri.StartsWith(CgsGamesProxyPrefix, StringComparison.Ordinal);
 
             var success = false;
             for (var retryCount = 0; retryCount < MaxRetries && !success; retryCount++)
@@ -340,6 +342,7 @@ namespace UnityExtensionMethods
                 && !uri.AbsoluteUri.StartsWith(CgsGamesProxyPrefix))
             {
                 var proxyUri = new Uri(ToCgsGamesProxyUrl(uri.AbsoluteUri));
+                usedProxy = true;
                 Debug.Log("SaveUrlToFile::ProxyFallback:" + proxyUri);
                 unityWebRequest.Dispose();
                 unityWebRequest = CreateUnityWebRequest(proxyUri, null, null);
@@ -362,10 +365,31 @@ namespace UnityExtensionMethods
                 foreach (var responseHeader in unityWebRequest.GetResponseHeaders())
                     headers.Add(responseHeader.Key, responseHeader.Value);
 
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            File.WriteAllBytes(directory + DirectorySeparator + fileName, unityWebRequest.downloadHandler.data);
+            var installed = false;
+            try
+            {
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                File.WriteAllBytes(directory + DirectorySeparator + fileName, unityWebRequest.downloadHandler.data);
+                installed = true;
+            }
+            catch (Exception error)
+            {
+                if (completed == null)
+                {
+                    unityWebRequest.Dispose();
+                    throw;
+                }
+                Debug.LogWarning("SaveUrlToFile::WriteFailed:" + error.Message);
+            }
+            // url follows native redirects. A proxy response identifies the transport,
+            // not the upstream document; never infer its origin from the requested URL.
+            var downloaded = FileDownloadResult.FromResponse(unityWebRequest.url,
+                usedProxy ||
+                unityWebRequest.url.StartsWith(CgsGamesProxyPrefix, StringComparison.Ordinal),
+                unityWebRequest.GetResponseHeader(FileDownloadResult.FinalUrlHeader));
             unityWebRequest.Dispose();
+            completed?.Invoke(installed ? downloaded : new FileDownloadResult(false, null, true));
         }
 
         private static UnityWebRequest CreateUnityWebRequest(Uri uri, string postJsonBody = null,

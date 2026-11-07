@@ -100,9 +100,9 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void ViewRules()
         {
-            if (CardGameManager.Current.RulesUrl != null &&
-                CardGameManager.Current.RulesUrl.IsWellFormedOriginalString())
-                Application.OpenURL(CardGameManager.Current.RulesUrl.OriginalString);
+            var rules = Cgs.GameContent.GameContentPresentation.RulesUri(CardGameManager.Current);
+            if (rules != null && rules.IsWellFormedOriginalString())
+                Application.OpenURL(rules.OriginalString);
             else
                 CardGameManager.Instance.Messenger.Show(new UiMessage("play.no.rules", NoRulesErrorMessage));
         }

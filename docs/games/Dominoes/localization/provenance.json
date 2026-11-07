@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "game": "Dominoes@www.cardgamesimulator.com",
+  "decks": {
+    "Double Six Dominoes.txt": {
+      "generation": "c96e8e64911953228f6e350017e5ad50",
+      "name": "Double Six Dominoes",
+      "source": "https://www.cardgamesimulator.com/games/Dominoes/decks/Double%20Six%20Dominoes.txt",
+      "sha256": "1ecab66ed683b3a22246841ad2cd70221e1b4c00a2d213d1f19d9e9249395a57"
+    },
+    "Double Nine Dominoes.txt": {
+      "generation": "158fb5e28032544c8e7c2eadc9270e2f",
+      "name": "Double Nine Dominoes",
+      "source": "https://www.cardgamesimulator.com/games/Dominoes/decks/Double%20Nine%20Dominoes.txt",
+      "sha256": "5da9a98161035c061c3561a45fb1b448ab67bbbdd644a59773079b83a9678a2c"
+    }
+  }
+}
