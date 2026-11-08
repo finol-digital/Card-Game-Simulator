@@ -1,0 +1,48 @@
+{
+  "name": "CGS Localization Verification",
+  "autoUpdate": -1,
+  "autoUpdateUrl": "https://example.invalid/localization-verification/cgs.json",
+  "allCardsUrl": "https://example.invalid/localization-verification/AllCards.json",
+  "allSetsUrl": "https://example.invalid/localization-verification/AllSets.json",
+  "bannerImageUrl": "https://example.invalid/localization-verification/Banner.png",
+  "cardBackImageUrl": "https://example.invalid/localization-verification/CardBack.png",
+  "cardImageUrl": "https://example.invalid/localization-verification/sets/{cardSet}/{cardId}.png",
+  "deckUrls": [
+    {
+      "name": "Verification deck",
+      "url": "https://example.invalid/localization-verification/decks/Verification%20deck.txt"
+    }
+  ],
+  "cardProperties": [
+    {
+      "name": "suit",
+      "display": "Suit",
+      "type": "stringEnum"
+    },
+    {
+      "name": "rules",
+      "display": "Rules",
+      "type": "string"
+    }
+  ],
+  "enums": [
+    {
+      "property": "suit",
+      "values": {
+        "clubs": "Clubs",
+        "spades": "Spades"
+      }
+    }
+  ],
+  "localization": {
+    "defaultLocale": "en",
+    "locales": {
+      "es": {
+        "url": "locales/es.json"
+      },
+      "ja": {
+        "url": "locales/ja.json"
+      }
+    }
+  }
+}

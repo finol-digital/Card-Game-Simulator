@@ -6,10 +6,13 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
+using System.Linq;
+using Cgs.GameContent;
 using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using UnityEngine;
 using UnityExtensionMethods;
 
 namespace Tests.PlayMode
@@ -45,6 +48,66 @@ namespace Tests.PlayMode
             }.ToString());
             _game.ReadProperties();
             Assert.That(_game.HasReadProperties, Is.True, _game.Error);
+        }
+
+        [Test]
+        public void CompleteVerificationFixtureLoadsExternalCatalogsAndRollsBackWithoutChangingCards()
+        {
+            var fixture = Path.GetFullPath(Path.Combine(Application.dataPath,
+                "../developer-docs/fixtures/localization-verification"));
+            LocalizationFiles.CopyPackageSnapshot(fixture, _game.GameDirectoryPath);
+            var manifest = JObject.Parse(File.ReadAllText(_game.GameFilePath));
+            // Keep the test's isolated installation identity; never touch a player's fixture install.
+            manifest["name"] = _game.Name;
+            manifest.Remove("autoUpdateUrl");
+            File.WriteAllText(_game.GameFilePath, manifest.ToString());
+            var provenancePath = Path.Combine(_game.GameDirectoryPath, "localization/provenance.json");
+            var provenance = JObject.Parse(File.ReadAllText(provenancePath));
+            provenance["game"] = _game.Id;
+            File.WriteAllText(provenancePath, provenance.ToString());
+            _game.ReadProperties();
+            Assert.That(_game.HasReadProperties, Is.True, _game.Error);
+            foreach (var definition in _game.Enums)
+                definition.InitializeLookups();
+            _game.LoadSets();
+            _game.LoadCards(_game.CardsFilePath, _game.SetCodeDefault);
+            Assert.That(_game.Cards.Count, Is.EqualTo(2));
+            var canonical = File.ReadAllBytes(_game.CardsFilePath);
+            var club = _game.Cards["ace_of_clubs"];
+            var spade = _game.Cards["ace_of_spades"];
+            var spanish = GameContentPresentation.Context(_game, "es");
+            Assert.That(spanish.GameName, Is.EqualTo("Verificación de idiomas"));
+            Assert.That(spanish.CardName(club), Is.EqualTo("As de tréboles"));
+            Assert.That(spanish.PropertyValue(club, "rules"), Does.Contain("\n"));
+            var back = spanish.AssetCandidates("cardBackImageUrl").Single().Uri.LocalPath;
+            Assert.That(File.Exists(back), Is.True);
+            Assert.That(File.ReadAllBytes(back), Is.Not.EqualTo(File.ReadAllBytes(_game.CardBackImageFilePath)));
+            var japanese = GameContentPresentation.Context(_game, "ja");
+            Assert.That(japanese.CardName(club), Is.EqualTo("クラブのエース"));
+            Assert.That(japanese.CardName(spade), Is.EqualTo("Ace of Spades"), "Partial catalogs must fall back per leaf.");
+            var deckPath = Path.Combine(_game.DecksDirectoryPath, "Verification deck.txt");
+            var deck = UnityDeck.LoadFile(_game, deckPath, "Verification deck");
+            Assert.That(deck.MissingCards, Is.Empty);
+            Assert.That(deck.Cards.Count(), Is.EqualTo(2));
+            Assert.That(deck.AuthoredName, Is.EqualTo("Verification deck"));
+            Assert.That(spanish.DeckName(deck.AuthoredName, true), Is.EqualTo("Baraja de verificación"));
+            foreach (var explicitNull in new[] { false, true })
+            {
+                File.WriteAllText(_game.GameFilePath, manifest.ToString());
+                _game.ReadProperties();
+                Assert.That(GameContentPresentation.Context(_game, "es").CardName(club), Is.EqualTo("As de tréboles"));
+                var removed = (JObject)manifest.DeepClone();
+                if (explicitNull)
+                    removed["localization"] = null;
+                else
+                    removed.Remove("localization");
+                File.WriteAllText(_game.GameFilePath, removed.ToString());
+                _game.ReadProperties();
+                Assert.That(GameContentPresentation.Context(_game, "es").CardName(club), Is.EqualTo(club.Name));
+                Assert.That(_game.LocalizationSpecified, Is.EqualTo(explicitNull));
+                Assert.That(File.ReadAllBytes(_game.CardsFilePath), Is.EqualTo(canonical));
+                Assert.That(UnityDeck.LoadFile(_game, deckPath, "Verification deck").AuthoredName, Is.Null);
+            }
         }
 
         [Test]

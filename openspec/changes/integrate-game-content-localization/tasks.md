@@ -27,7 +27,7 @@ This change implements upstream tasks 4–5 from FinolDigital.Cgs.Json's `add-ga
 ## 4. Preserve authored provenance across disk and network boundaries
 
 - [x] 4.1 Establish versioned authored-deck sidecars only on authored install; test identical name/content user replacement, rename/save-as, external mutation, legacy files, package import, and standalone deck import. Maps to upstream 4.7.
-- [ ] 4.2 Implement capability offers/acknowledgements and idempotent negotiated creation preserving owner-only checks and canonical creation side effects; test duplicate names, spoofed senders, retries, five-second timeout, unsupported/mismatched versions, no legacy double-send, and unlocalized games. Maps to upstream 4.8.
+- [x] 4.2 Implement capability offers/acknowledgements and idempotent negotiated creation preserving owner-only checks and canonical creation side effects; test duplicate names, spoofed senders, retries, five-second timeout, unsupported/mismatched versions, no legacy double-send, and unlocalized games. Maps to upstream 4.8.
 - [x] 4.3 Add authoritative revision/incarnation snapshots; test late join/reconnect, rename/despawn races, invalid references, and ownership changes. Session-sidecar implementation and matching/mismatched saved-document tests are conditional on a future session save/load feature and are not a current release gate. Maps to upstream 4.9.
 - [ ] 4.4 Validate named-message dispatch and canonical replication using supported legacy and capable host/client builds; record the tested compatibility matrix and architectural review before release. Maps to upstream 4.8 and 5.2.
 

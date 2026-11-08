@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Linq;
 using Cgs.GameContent;
+using Cgs.Localization;
 using Cgs.Play;
 using Cgs.CardGameView.Multiplayer;
 using UnityEngine.UI;
@@ -25,6 +26,7 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.Localization.Settings;
 using Object = UnityEngine.Object;
 
 namespace Tests.PlayMode
@@ -256,6 +258,70 @@ namespace Tests.PlayMode
             return label;
         }
 
+        private IEnumerator VerifyLocaleChangesDoNotSendProvenance(NetworkManager host, NetworkManager client,
+            Func<CardStack[]> stacks)
+        {
+            var hadPreference = PlayerPrefs.HasKey(CgsLocaleSelector.PreferenceKey);
+            var preference = PlayerPrefs.GetString(CgsLocaleSelector.PreferenceKey);
+            CgsLocalization.Initialize();
+            yield return LocalizationSettings.InitializationOperation;
+            var originalLocale = CgsLocalization.CurrentLocale;
+            var receivers = new Dictionary<NetworkManager, CustomMessagingManager.HandleNamedMessageDelegate>();
+            var received = 0;
+            foreach (var manager in new[] { host, client })
+            {
+                var extension = manager.GetComponent<GameContentNetwork>();
+                var receiver = (CustomMessagingManager.HandleNamedMessageDelegate)Delegate.CreateDelegate(
+                    typeof(CustomMessagingManager.HandleNamedMessageDelegate), extension,
+                    typeof(GameContentNetwork).GetMethod("Receive", Private));
+                receivers.Add(manager, receiver);
+                manager.CustomMessagingManager.RegisterNamedMessageHandler("game-content-labels-v1", (sender, reader) =>
+                {
+                    received++;
+                    receiver(sender, reader);
+                });
+            }
+            try
+            {
+                // Drain creation/snapshot traffic before observing locale-only changes.
+                yield return new WaitForSecondsRealtime(1);
+                var before = received;
+                var state = stacks().Select(stack => new
+                {
+                    stack.NetworkObjectId, stack.Name, stack.OwnerClientId,
+                    Cards = string.Join(",", stack.Cards.Select(card => card.Id)),
+                    Position = stack.transform.position,
+                    Label = Newtonsoft.Json.JsonConvert.SerializeObject(stack.ContentLabel)
+                }).ToArray();
+                foreach (var locale in new[] { "es", "ja", "en" })
+                {
+                    CgsLocalization.SelectLanguage(locale);
+                    yield return Until(() => CgsLocalization.CurrentLocale == locale);
+                    yield return new WaitForSecondsRealtime(1);
+                    Assert.That(received, Is.EqualTo(before), "Locale-only changes must not send provenance packets.");
+                    Assert.That(stacks().Select(stack => new
+                    {
+                        stack.NetworkObjectId, stack.Name, stack.OwnerClientId,
+                        Cards = string.Join(",", stack.Cards.Select(card => card.Id)),
+                        Position = stack.transform.position,
+                        Label = Newtonsoft.Json.JsonConvert.SerializeObject(stack.ContentLabel)
+                    }).ToArray(), Is.EqualTo(state), "Locale-only changes must preserve canonical stack state.");
+                }
+            }
+            finally
+            {
+                foreach (var pair in receivers)
+                    pair.Key.CustomMessagingManager.RegisterNamedMessageHandler("game-content-labels-v1", pair.Value);
+                CgsLocalization.SelectLanguage(originalLocale);
+                if (hadPreference)
+                    PlayerPrefs.SetString(CgsLocaleSelector.PreferenceKey, preference);
+                else
+                    PlayerPrefs.DeleteKey(CgsLocaleSelector.PreferenceKey);
+                PlayerPrefs.Save();
+            }
+            yield return Until(() => CgsLocalization.CurrentLocale == originalLocale);
+        }
+
         [UnityTest]
         public IEnumerator SuccessfulCreationPreservesCanonicalStateAndSnapshotsFollowRenameAndLateJoin()
         {
@@ -308,6 +374,7 @@ namespace Tests.PlayMode
                 ? obj.GetComponent<CardStack>() : null;
             yield return Until(() => Replica(client)?.ContentLabel != null);
             Assert.That(Replica(client).DisplayName, Is.EqualTo("Mazo"));
+            yield return VerifyLocaleChangesDoNotSendProvenance(host, client, HostStacks);
             var observation = ((IDictionary)Field(service, "_observations"))[Replica(client)];
             var stale = Ack(host, client);
             stale["Type"] = "state";

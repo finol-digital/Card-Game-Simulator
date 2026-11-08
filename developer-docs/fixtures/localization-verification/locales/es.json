@@ -1,0 +1,43 @@
+{
+  "game": {
+    "name": "Verificación de idiomas"
+  },
+  "cardNames": {
+    "Ace of Clubs": "As de tréboles",
+    "Ace of Spades": "As de picas"
+  },
+  "decks": {
+    "Verification deck": {
+      "name": "Baraja de verificación"
+    }
+  },
+  "sets": {
+    "STD_FR": {
+      "name": "Conjunto de verificación"
+    }
+  },
+  "properties": {
+    "suit": {
+      "display": "Palo"
+    },
+    "rules": {
+      "display": "Reglas"
+    }
+  },
+  "enums": {
+    "suit": {
+      "clubs": "Tréboles",
+      "spades": "Picas"
+    }
+  },
+  "cards": {
+    "ace_of_clubs": {
+      "properties": {
+        "rules": "Roba una carta.\nConserva la identidad original."
+      }
+    }
+  },
+  "assets": {
+    "cardBackImageUrl": "images/SpanishBack.png"
+  }
+}

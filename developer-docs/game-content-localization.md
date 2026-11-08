@@ -9,6 +9,201 @@ Rebuild from the recorded source file hashes with the recorded command and verif
 the DLL/schema hashes. Replace that provenance with the reviewed source commit and
 release before shipping. Preserve the existing plugin `.meta` GUID.
 
+## Current player verification checklist (2026-11-07)
+
+Use this section for current release decisions. The dated records below remain
+historical evidence; their older statements that CI and device validation are
+pending do not override this section. Do not mark an entire OpenSpec task complete
+when only part of its verification has been observed.
+
+### Confirmed evidence
+
+| Check | Result and scope |
+| --- | --- |
+| Android and Windows, all three default games | User reports successful testing on both platforms. Exact app build identifiers were not supplied. |
+| Language switching | User reports success. The exact set of languages tested was not specified; this is not a claim of human review of every translation. |
+| Duplicate default-deck choices | User reports success on Android and Windows. |
+| Offline use and whole-game transfer | User reports success, including the subsequent offline export/import, restart, and language-switch check. |
+| Latest candidate CI | Unity `c69d428394aea7b1a202107f01848939e834556f`: [run 42322729318](https://github.com/finol-digital/Card-Game-Simulator/actions/runs/42322729318) passed tests, quality checks, and all platform builds. |
+| Focused duplicate-deck regression checks | 47 default-game tests and 8 provenance tests passed locally before the candidate push. These include all ten locales, unchanged legacy files, modified/renamed/user-saved copies, and explicit-null opt-out. |
+| Companion PRs | Library #28 at `ba566e4` and proxy #559 at `2e3834a` passed their checks. A green proxy PR does not establish deployment or browser header access. |
+
+### Player verification results
+
+On 2026-11-07 the user reported “All passed” in response to the four player
+checks summarized in the handoff: user-deck preservation, different-language
+multiplayer in both host directions, offline whole-game transfer, and layout.
+The passes below record that reported scope on Android and Windows. They do not
+establish the separate older-client or instrumented engineering checks.
+
+- [x] **P1 — Preserve user decks.** Save an edited deck under a unique name such
+  as `My verification deck`, switch languages, and restart. Its name and contents
+  remain unchanged while built-in decks translate. **Result: user-reported pass.**
+- [x] **P2 — Layout.** Check long Spanish/German labels and Japanese/Korean/Chinese
+  characters in card properties, filters, and deck dialogs on Android and Windows.
+  **Result: user-reported pass.** This does not claim linguistic review of every
+  translation or a complete inventory of every UI surface.
+- [x] **P3 — Two current builds, different languages.** Connect Android and
+  Windows using different languages. Load, draw, move, rename, and reconnect,
+  then repeat with the other device hosting. Cards and moves agree; user-entered
+  names remain literal. **Result: user-reported pass.**
+- [ ] **P4 — Current and supported older builds.** Use an older CGS version that
+  can already connect under the existing multiplayer version rules, in a separate
+  installation/profile. Test old host/new client and new host/old client, including
+  deck load, moves, rename, and reconnect. Gameplay must work without duplicate
+  creation or disconnects. With a legacy host, shared stack names stay canonical.
+  Legacy peers always see canonical shared names; modern peers translate only
+  where negotiated provenance exists. If existing version rules prevent the
+  connection, record the version and mark this combination blocked, not passed.
+- [x] **P5 — Offline whole-game transfer.** Export a whole localized game package
+  (not just a deck) from one installation. Import into a disposable, clean profile
+  or second installation while offline, then restart and switch language. Cards,
+  bundled/cached translations and artwork, and proven authored-deck labels should
+  survive. **Result: user-reported pass for the player transfer check.**
+  User deck names remain literal. External rulebook websites are not
+  promised offline. Start with a default game, but complete E1 with an external
+  catalog too: default games can obtain catalogs from application resources and
+  therefore do not prove that a remote cache travelled in the package.
+
+### Integration checks requiring a fixture or tooling
+
+These are remaining engineering checks, not a request for the player to diagnose
+network headers or edit their only copy of an installed game.
+
+- [ ] **E1 — Real native/WebGL origin and cache test.** Prepare a complete custom
+  test game with working cards/artwork, an external relative catalog, and a
+  manifest URL that redirects into a different directory. Use a partial catalog
+  to exercise fallback and a localized image to exercise resource resolution.
+  The proxy change must be available at the endpoint the WebGL build trusts;
+  do not substitute an arbitrary untrusted proxy. Verify the browser can read
+  `X-CGS-Final-URL`, catalogs resolve from the final manifest URL, and images from
+  the final catalog URL. Reload/restart and then export/import offline into a
+  clean installation. Cached text/images must survive; a failed refresh must
+  retain last-good content. Check missing/invalid-header canonical fallback too.
+  Library `examples/localization` contains placeholders and is not a runnable
+  player fixture without this preparation. Keep this blocked until the fixture
+  and proxy endpoint are available; testing default games alone cannot pass it.
+- [ ] **E2 — Rollback and original-game compatibility.** On disposable fixtures,
+  successfully reload a custom game after removing `localization`, then after
+  setting it to null: presentation must return to its canonical source language.
+  For a default game, use explicit null; absence deliberately restores bundled
+  catalogs. Save/reopen through the updated game editor and confirm null persists.
+  A malformed replacement must retain the previous usable state. Include original
+  English-, Spanish-, and Japanese-authored games with no localization metadata;
+  their content must keep its authored language and their decks/imports still work.
+- [ ] **E3 — Verify network invariants.** Supplement P3/P4 with logs or transport
+  instrumentation: locale-only changes must send no gameplay/provenance mutations;
+  compare canonical cards, identifiers, and equivalent saved-deck contents across
+  languages. Existing loopback tests cover ordering, retries, ownership, and
+  snapshots, but do not replace the supported released-client matrix. No session
+  save/load testing is required: that feature remains outside this change.
+
+- [ ] **E4 — Complete the remaining surface and transition inventory.** Verify
+  installed-game metadata, import/save dialogs, alternate backs, and language
+  switches with selected filters and unsaved edits. Confirm explicit identical
+  user saves stay separate from built-in decks. In multiplayer, switch language
+  during play and join while the client starts on a different game; after the
+  game switch/download, newly created authored stacks should translate. Existing
+  automated tests cover parts of these cases, but the four reported player checks
+  do not independently establish every extended case. Earlier legacy creations
+  need not be retroactively translated.
+
+### OpenSpec completion and release mapping
+
+| Evidence | Downstream tasks it helps complete | Upstream tasks it helps complete |
+| --- | --- | --- |
+| Confirmed smoke tests + P1/P2 + E4 and the surface inventory | 3.1, 3.2, 5.2 | 4.5, 5.1 |
+| P3/P4 + E3 and the recorded protocol review | 4.2, 4.4, 5.3 | 4.8, 5.2 |
+| P5 + E1/E2 and existing cache/rollback tests | 2.3, 5.1, 5.4 | 4.3, 4.10, 5.3 |
+
+The referenced tasks include additional clauses: reconcile each complete task
+against its evidence before checking it off. Record the tested build identifiers,
+finish any findings, and replace development dependency provenance with the
+reviewed library release before shipping. Merge/release the library and deploy
+the proxy before the dependent Unity release. Archive both OpenSpec changes only
+after the remaining requirements are satisfied; a build or this checklist alone
+does not close them.
+
+### Engineering follow-up results (2026-11-07)
+
+- `GameContentNetworkTests`: **5/5 passed**. The real Unity Transport test now
+  wraps both peers' named-message receivers after creation traffic settles.
+  Switching Spanish/Japanese/English produced zero additional provenance messages
+  and preserved stack IDs, canonical names/cards, ownership, positions, and label
+  references. Creation retries, spoofed ownership, late acknowledgements,
+  game-switch/reload recovery, reconnect, and unlocalized peers also passed.
+  This is an instrumented Editor test, not a released legacy-player matrix or
+  a capture of every gameplay RPC. Downstream task 4.2 is complete; task 4.4 and
+  upstream task 4.8 remain open for supported legacy/capable player verification.
+- `GameLocalizationCatalogTests`: **5/5 passed**, including the complete fixture
+  below through Unity's actual loader and presentation context. Spanish names,
+  multiline rules, the alternate card-back resource, Japanese per-leaf fallback,
+  and a two-card authored deck resolve correctly. Removing localization and
+  explicitly nulling it both return the custom fixture to canonical names without
+  changing card bytes. This adds runtime evidence for E2; it does not replace its
+  remaining player/editor walkthrough and original-game cases.
+- The fixture manifest and both catalogs pass the shipped schemas with URI format
+  checking enabled. The **2 fixture packaging tests pass** and compare the generated
+  files to the maintained fixture and every archive entry, including real images.
+- Production proxy GET and HEAD probes of
+  `https://cgs.games/api/proxy/www.cardgamesimulator.com/games/Standard/cgs.json`
+  returned HTTP 200, but neither included `X-CGS-Final-URL`; neither CORS exposure
+  list contained it. **E1 remains blocked on proxy deployment and a hosted redirect
+  fixture.** This probe establishes header absence, not browser behavior.
+
+Current implementation progress: **downstream 12/20; upstream 21/28**. No required
+player matrix, release dependency, or production deployment is inferred from
+these local results. The remaining surface checks in E4 remain open.
+
+### Complete verification fixture
+
+The maintained [fixture directory](fixtures/localization-verification/cgs.json)
+contains two canonical cards, actual Standard Playing Cards artwork, a deck with
+portable authored provenance, external Spanish/Japanese catalogs, and a Spanish
+card-back image relative to the catalog. It is a separate custom game; it cannot
+use the built-in default-game catalog fallback. Artwork is copied unchanged from
+the repository's Standard game, whose notices and licensing still apply.
+
+Generate an importable package in a new output directory:
+
+```sh
+python3 tools/localization/verification_fixture.py --output Temp/localization-verification
+```
+
+Import `CGS Localization Verification@example.invalid.cgs.zip` using CGS's normal
+whole-game import. This package is deliberately offline-only (`autoUpdate: -1`);
+its `example.invalid` URL fields identify the fixture and are not live endpoints.
+All canonical cards, artwork, external catalogs, and the authored deck are bundled.
+Do not reuse the identity for a real game. Use a separate installation/profile for
+repeat import/replacement tests.
+
+Expected results:
+
+- Spanish: game `Verificación de idiomas`, cards `As de tréboles`/`As de picas`,
+  deck `Baraja de verificación`, translated rules with a line break, and the dark
+  alternate card back. Canonical deck contents remain two English card names.
+- Japanese: game `言語の検証` and club `クラブのエース`; the untranslated spade,
+  deck, properties, and artwork fall back to their English/canonical values.
+- English: canonical names and artwork. Language changes never add/remove cards.
+- Export/import offline preserves the external catalog files and authored deck
+  binding. This checks bundled external catalogs; a hosted download/cache round
+  trip still requires the next step.
+
+For the remote/proxy test, regenerate with the actual final HTTPS hosting directory:
+
+```sh
+python3 tools/localization/verification_fixture.py --output Temp/localization-hosted --base-url https://YOUR-HOST/final/game/
+```
+
+Serve the generated game directory's contents at that URL and configure an entry
+URL in a different directory to redirect to `final/game/cgs.json`. The generator
+sets all legacy URLs absolute and enables automatic refresh; localization URLs
+stay relative. Load the entry URL as a new hosted game, without pre-importing its
+offline zip, so the test actually downloads catalogs and records origins. Verify
+the proxy/browser header behavior, restart, and export/import of downloaded caches
+as described in E1. The command does not host files, configure redirects, or deploy
+the proxy. Do not claim the hosted check passed from importing the offline zip.
+
 ## Presentation surfaces and source boundaries
 
 Paths below are relative to `Assets/Scripts/`. “Pending” means inspected and assigned,
@@ -240,8 +435,10 @@ and the final-origin proxy header is not yet deployed.
 5. External rulebook websites remain links. A cached catalog containing such a
    URL is not an offline copy of the website. Bundle a supported local resource
    when offline availability is needed.
-6. To roll back presentation, remove `localization` or set it to null and reload
-   the valid manifest. The successful staged reload returns to canonical content;
+6. To roll back a custom game's presentation, remove `localization` or set it to
+   null and reload the valid manifest. For the three default games, use explicit
+   null: absent metadata deliberately enables bundled fallback catalogs.
+   The successful staged reload returns to canonical content;
    a malformed replacement leaves the previous installed state active. Inert
    caches/sidecars do not enable localization on their own. Keep authoring sources:
    older CGS editors can read base content but discard unknown metadata on save.

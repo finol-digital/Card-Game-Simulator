@@ -1,0 +1,16 @@
+[
+  {
+    "id": "ace_of_clubs",
+    "name": "Ace of Clubs",
+    "set": "STD_FR",
+    "suit": "clubs",
+    "rules": "Draw one card.\nKeep the canonical identity."
+  },
+  {
+    "id": "ace_of_spades",
+    "name": "Ace of Spades",
+    "set": "STD_FR",
+    "suit": "spades",
+    "rules": ""
+  }
+]

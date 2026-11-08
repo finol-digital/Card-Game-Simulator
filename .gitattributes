@@ -141,3 +141,5 @@
 # Portable authored-deck fingerprints must match on every build host.
 Assets/StreamingAssets/**/decks/*.txt text eol=lf
 docs/games/**/decks/*.txt text eol=lf
+developer-docs/fixtures/localization-verification/**/*.txt text eol=lf
+developer-docs/fixtures/localization-verification/**/*.json text eol=lf
