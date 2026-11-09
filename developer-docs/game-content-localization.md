@@ -47,7 +47,7 @@ establish the separate older-client or instrumented engineering checks.
   Windows using different languages. Load, draw, move, rename, and reconnect,
   then repeat with the other device hosting. Cards and moves agree; user-entered
   names remain literal. **Result: user-reported pass.**
-- [ ] **P4 — Current and supported older builds.** Use an older CGS version that
+- [x] **P4 — Current and supported older builds.** Use an older CGS version that
   can already connect under the existing multiplayer version rules, in a separate
   installation/profile. Test old host/new client and new host/old client, including
   deck load, moves, rename, and reconnect. Gameplay must work without duplicate
@@ -55,6 +55,9 @@ establish the separate older-client or instrumented engineering checks.
   Legacy peers always see canonical shared names; modern peers translate only
   where negotiated provenance exists. If existing version rules prevent the
   connection, record the version and mark this combination blocked, not passed.
+  **Result: user-reported pass for Windows v1.170 host/Android PR client and
+  Android PR host/Windows v1.170 client, including load, moves, rename, reconnect,
+  and expected canonical shared names.**
 - [x] **P5 — Offline whole-game transfer.** Export a whole localized game package
   (not just a deck) from one installation. Import into a disposable, clean profile
   or second installation while offline, then restart and switch language. Cards,
@@ -151,7 +154,7 @@ does not close them.
   list contained it. **E1 remains blocked on proxy deployment and a hosted redirect
   fixture.** This probe establishes header absence, not browser behavior.
 
-Current implementation progress: **downstream 12/20; upstream 21/28**. No required
+Current implementation progress: **downstream 13/20; upstream 22/28**. No required
 player matrix, release dependency, or production deployment is inferred from
 these local results. The remaining surface checks in E4 remain open.
 
@@ -230,11 +233,28 @@ transfer. This confirms the hosted fixture's browser/cache-transfer walkthrough,
 not a cold offline launch of the WebGL application shell. A fresh redirected
 download in a native player and the remaining E1 fault cases are separate evidence.
 
-The next player check is P4 with released **v1.170** versus the PR build. The tag
+The user reported P4 **passed** with released **v1.170** versus the PR build. The tag
 (`c24e3e7f3eee9122f4bdf4fd484c5c3218f26cac`) contains neither `GameContentNetwork`
 nor the game-content presentation directory, making it a genuine pre-feature
-client. Record both host directions and any pre-existing version/connection
-restriction; no released-client compatibility result has been claimed yet.
+client. The recorded player matrix is:
+
+| Host | Client | Result |
+| --- | --- | --- |
+| Windows released v1.170 | Android PR build | User-reported pass: load, draw/move, rename, reconnect; canonical shared names |
+| Android PR build | Windows released v1.170 | User-reported pass: same gameplay flows; legacy client retains canonical labels |
+| Windows PR build | Android PR build | Previously reported pass with different languages |
+| Android PR build | Windows PR build | Previously reported pass with different languages |
+
+Focused architecture audit: comparison with v1.170 confirms the existing
+`[ServerRpc]` attribute and seven-parameter `CreateCardStackServerRpc` signature
+are unchanged. The optional named-message path checks the authenticated sender
+against the player object's owner, reuses the server-only canonical creation
+routine, and records request outcomes before creation so retries cannot duplicate
+stacks. The canonical path still sets `CurrentDeck` and the player's stack list;
+the client returns after negotiated creation instead of also sending the legacy
+RPC. Combined with the five passing transport tests and this released-player
+matrix, downstream 4.4 and upstream 4.8 are complete. This does not waive the
+separately tracked save/export and locale-invariant requirements.
 
 The [hosted fixture](fixtures/localization-hosted/cgs.json) is generated with real
 GitHub raw URLs and `autoUpdate: 0`. It uses the same two cards and catalogs as the
