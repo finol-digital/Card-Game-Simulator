@@ -97,13 +97,7 @@ namespace Cgs.Cards
 
         [UsedImplicitly] public int Back { get; set; }
 
-        private string BackFace => Back < BackFaceOptions.Count ? BackFaceOptions[Back].text : string.Empty;
-
-        private List<Dropdown.OptionData> BackFaceOptions { get; } = new();
-
-        private string BackFaceId => CardGameManager.Current.CardBackFaceImageSprites.ContainsKey(BackFace)
-            ? BackFace
-            : string.Empty;
+        private string BackFaceId => Cgs.GameContent.GameContentBackOptions.SelectedKey(backSelector);
 
         private Uri CardImageUri
         {
@@ -155,12 +149,7 @@ namespace Cgs.Cards
             CardId = string.Empty;
             SetCode = string.Concat(CardGameManager.Current.Name.Where(char.IsLetterOrDigit));
 
-            BackFaceOptions.Clear();
-            BackFaceOptions.Add(new Dropdown.OptionData() { text = string.Empty });
-            foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
-                BackFaceOptions.Add(new Dropdown.OptionData() { text = backFaceKey });
-            backSelector.options = BackFaceOptions;
-            backSelector.value = 0;
+            Cgs.GameContent.GameContentBackOptions.Bind(backSelector, CardGameManager.Current);
 
             cardImage.sprite = CardImageSprite != null ? CardImageSprite : CardGameManager.Current.CardBackImageSprite;
 
@@ -173,7 +162,8 @@ namespace Cgs.Cards
                 var newTransform = Instantiate(cardPropertyTemplate.gameObject, scrollRectContent)
                     .transform;
                 newTransform.gameObject.SetActive(true);
-                Cgs.Localization.LocalizedUiText.SetLiteral(newTransform.GetComponentInChildren<Text>(), propertyDef.Display);
+                Cgs.GameContent.GameContentText.Set(newTransform.GetComponentInChildren<Text>(), CardGameManager.Current,
+                    display => display.PropertyLabel(propertyDef.Name, propertyDef.Display));
                 _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
             }
 
@@ -188,20 +178,7 @@ namespace Cgs.Cards
             CardId = unityCard.Id;
             SetCode = unityCard.SetCode;
 
-            BackFaceOptions.Clear();
-            BackFaceOptions.Add(new Dropdown.OptionData() { text = string.Empty });
-            var backIndex = 0;
-            var index = 1;
-            foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
-            {
-                BackFaceOptions.Add(new Dropdown.OptionData() { text = backFaceKey });
-                if (string.Equals(unityCard.BackFaceId, backFaceKey))
-                    backIndex = index;
-                index++;
-            }
-
-            backSelector.options = BackFaceOptions;
-            backSelector.value = backIndex;
+            Cgs.GameContent.GameContentBackOptions.Bind(backSelector, CardGameManager.Current, unityCard.BackFaceId);
 
             if (Uri.IsWellFormedUriString(unityCard.ImageWebUrl, UriKind.Absolute))
                 CardImageUri = new Uri(unityCard.ImageWebUrl);
@@ -229,7 +206,8 @@ namespace Cgs.Cards
                 var newTransform = Instantiate(cardPropertyTemplate.gameObject, scrollRectContent)
                     .transform;
                 newTransform.gameObject.SetActive(true);
-                Cgs.Localization.LocalizedUiText.SetLiteral(newTransform.GetComponentInChildren<Text>(), propertyDef.Display);
+                Cgs.GameContent.GameContentText.Set(newTransform.GetComponentInChildren<Text>(), CardGameManager.Current,
+                    display => display.PropertyLabel(propertyDef.Name, propertyDef.Display));
                 _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
                 _inputFields.Last().text = unityCard.GetPropertyValueString(propertyDef.Name);
             }

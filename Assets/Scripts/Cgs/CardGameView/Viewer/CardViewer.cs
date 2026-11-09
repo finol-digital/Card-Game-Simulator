@@ -5,6 +5,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.GameContent;
+using Cgs.Localization;
 using Cgs.Play;
 using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
@@ -24,7 +26,7 @@ namespace Cgs.CardGameView.Viewer
         Maximal = 2
     }
 
-    public class CardViewer : MonoBehaviour, ICardDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
+    public class CardViewer : MonoBehaviour, ICardDisplay, ICardPresentationDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
         private const string SetLabel = "Set";
         private const string IdLabel = "Id";
@@ -102,7 +104,8 @@ namespace Cgs.CardGameView.Viewer
 
         private List<Text> PropertyTexts { get; } = new();
         private List<Dropdown.OptionData> PropertyOptions { get; } = new();
-        private Dictionary<string, string> DisplayNameLookup { get; } = new();
+        private List<string> PropertyPaths { get; } = new();
+        private List<string> PropertyLabels { get; } = new();
 
         private int PrimaryPropertyIndex
         {
@@ -110,8 +113,7 @@ namespace Cgs.CardGameView.Viewer
             {
                 var primaryPropertyIndex = 0;
                 for (var i = 0; i < PropertyOptions.Count; i++)
-                    if (DisplayNameLookup.TryGetValue(PropertyOptions[i].text, out var propertyName)
-                        && propertyName.Equals(CardGameManager.Current.CardPrimaryProperty))
+                    if (i < PropertyPaths.Count && PropertyPaths[i].Equals(CardGameManager.Current.CardPrimaryProperty))
                         primaryPropertyIndex = i;
                 return primaryPropertyIndex;
             }
@@ -128,26 +130,11 @@ namespace Cgs.CardGameView.Viewer
                         selectedName = IdLabel;
                         break;
                     case > 1 when SelectedPropertyIndex < PropertyOptions.Count:
-                        DisplayNameLookup.TryGetValue(SelectedPropertyDisplay, out selectedName);
+                        selectedName = PropertyPaths[SelectedPropertyIndex];
                         break;
                 }
 
                 return selectedName;
-            }
-        }
-
-        private string SelectedPropertyDisplay
-        {
-            get
-            {
-                var selectedDisplay = SelectedPropertyIndex switch
-                {
-                    1 => IdLabel,
-                    > 1 when SelectedPropertyIndex < PropertyOptions.Count => PropertyOptions[SelectedPropertyIndex]
-                        .text,
-                    _ => SetLabel
-                };
-                return selectedDisplay;
             }
         }
 
@@ -191,7 +178,7 @@ namespace Cgs.CardGameView.Viewer
                 card.RegisterDisplay(this);
                 preview.alpha = 1;
                 foreach (var previewName in previewNameText)
-                    Cgs.Localization.LocalizedUiText.SetLiteral(previewName, card.Name);
+                    GameContentText.Set(previewName, card.Game, display => display.CardName(card));
                 foreach (var previewId in previewIdText)
                     Cgs.Localization.LocalizedUiText.SetLiteral(previewId, card.Id);
             }
@@ -270,6 +257,7 @@ namespace Cgs.CardGameView.Viewer
 
         protected void OnEnable()
         {
+            GameContentPresentation.Changed += RefreshPropertyLabels;
             CardGameManager.Instance.OnSceneActions.Add(ResetInfo);
 
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
@@ -279,6 +267,7 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.ViewerMore).performed += InputMore;
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
+            RefreshPropertyLabels(null);
         }
 
         protected void Start()
@@ -410,13 +399,20 @@ namespace Cgs.CardGameView.Viewer
             PropertyOptions.Clear();
             PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
             PropertyOptions.Add(new Dropdown.OptionData() { text = IdLabel });
-            DisplayNameLookup.Clear();
+            PropertyPaths.Clear();
+            PropertyLabels.Clear();
+            PropertyPaths.Add(SetLabel);
+            PropertyPaths.Add(IdLabel);
+            PropertyLabels.Add(SetLabel);
+            PropertyLabels.Add(IdLabel);
             foreach (var propertyDef in CardGameManager.Current.CardProperties)
                 AddProperty(propertyDef);
+            RefreshPropertyLabels(null);
 
             foreach (var propertySelector in propertySelectors)
             {
                 propertySelector.options = PropertyOptions;
+                propertySelector.GetComponent<LocalizedDropdown>()?.RefreshBindings();
                 propertySelector.value = PrimaryPropertyIndex;
                 propertySelector.onValueChanged.Invoke(propertySelector.value);
             }
@@ -442,8 +438,21 @@ namespace Cgs.CardGameView.Viewer
             {
                 var displayName = !string.IsNullOrEmpty(propertyDef.Display) ? propertyDef.Display : propertyDef.Name;
                 PropertyOptions.Add(new Dropdown.OptionData() { text = displayName });
-                DisplayNameLookup[displayName] = parentPrefix + propertyDef.Name;
+                PropertyPaths.Add(parentPrefix + propertyDef.Name);
+                PropertyLabels.Add(displayName);
             }
+        }
+
+        private void RefreshPropertyLabels(UnityCardGame changedGame)
+        {
+            var game = CardGameManager.Current;
+            if (game == null || (changedGame != null && changedGame != game) || PropertyPaths.Count < 2)
+                return;
+            var display = GameContentPresentation.Context(game);
+            for (var index = 2; index < PropertyPaths.Count; index++)
+                PropertyOptions[index].text = display.PropertyLabel(PropertyPaths[index], PropertyLabels[index]);
+            foreach (var selector in propertySelectors.Where(selector => selector != null))
+                selector.RefreshShownValue();
         }
 
         private void InputSelectPrevious(InputAction.CallbackContext callbackContext)
@@ -475,12 +484,25 @@ namespace Cgs.CardGameView.Viewer
         }
 
         // The preview and zoom show the card image as it is, without rotating it to the game's card orientation
+        private UnityCard _imageCard;
+        public void SetImageCard(UnityCard card)
+        {
+            _imageCard = card;
+            SetImageSprite(card?.ImageSprite);
+        }
+
         public bool UsesOrientedImage => false;
 
         public void SetImageSprite(Sprite imageSprite)
         {
             foreach (var cardImage in cardImages.Where(cardImage => cardImage != null))
-                cardImage.sprite = imageSprite ? imageSprite : CardGameManager.Current.CardBackImageSprite;
+                if (_imageCard != null)
+                    GameContentImage.Set(cardImage, _imageCard.Game,
+                        imageSprite != null ? imageSprite : CardGameManager.Current.CardBackImageSprite,
+                        false, "cardImages", _imageCard.Id);
+                else
+                    GameContentImage.Set(cardImage, CardGameManager.Current, CardGameManager.Current.CardBackImageSprite,
+                        false, "cardBackImageUrl");
             ResetTexts();
         }
 
@@ -604,17 +626,17 @@ namespace Cgs.CardGameView.Viewer
             }
 
             foreach (var nameText in nameTexts)
-                Cgs.Localization.LocalizedUiText.SetLiteral(nameText, SelectedCardModel.Value.Name);
+                GameContentText.Set(nameText, SelectedCardModel.Value.Game, display => display.CardName(SelectedCardModel.Value));
             foreach (var uniqueIdText in uniqueIdTexts)
                 Cgs.Localization.LocalizedUiText.SetLiteral(uniqueIdText, SelectedCardModel.Id);
             Cgs.Localization.LocalizedUiText.Set(idText, Cgs.Localization.UiMessage.With("cards.id",
                 IdLabel + Delimiter + SelectedCardModel.Id, ("cardId", SelectedCardModel.Id)));
-            var setName = CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode,
-                                        out var currentSet)
-                                        ? currentSet.ToString()
-                                        : SelectedCardModel.Value.SetCode;
-            Cgs.Localization.LocalizedUiText.Set(setText, Cgs.Localization.UiMessage.With("cards.set",
-                SetLabel + Delimiter + setName, ("setName", setName)));
+            GameContentText.SetMessage(setText, SelectedCardModel.Value.Game, display =>
+            {
+                var card = SelectedCardModel.Value;
+                var setName = card.Game.Sets.TryGetValue(card.SetCode, out var set) ? GameContentPresentation.SetDescription(display, set) : card.SetCode;
+                return UiMessage.With("cards.set", SetLabel + Delimiter + setName, ("setName", setName));
+            });
             foreach (var propertyText in PropertyTexts)
                 Destroy(propertyText.gameObject);
             PropertyTexts.Clear();
@@ -623,12 +645,11 @@ namespace Cgs.CardGameView.Viewer
                 var newPropertyText = Instantiate(propertyTextTemplate.gameObject, maximalScrollRect.content)
                     .GetComponent<Text>();
                 newPropertyText.gameObject.SetActive(true);
-                Cgs.Localization.LocalizedUiText.SetLiteral(newPropertyText, PropertyOptions[i].text + Delimiter
-                                                               + (DisplayNameLookup.TryGetValue(PropertyOptions[i].text,
-                                                                   out var propertyName)
-                                                                   ? SelectedCardModel.Value.GetPropertyValueString(
-                                                                       propertyName)
-                                                                   : string.Empty));
+                var path = PropertyPaths[i];
+                var label = PropertyLabels[i];
+                var card = SelectedCardModel.Value;
+                GameContentText.Set(newPropertyText, card.Game, display =>
+                    display.PropertyLabel(path, label) + Delimiter + display.PropertyValue(card, path));
                 PropertyTexts.Add(newPropertyText);
             }
 
@@ -645,16 +666,18 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            var newContentTextValue = string.Empty;
-            if (SelectedPropertyIndex > 1)
-                newContentTextValue = SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName);
-            else if (SelectedPropertyIndex == 1)
-                newContentTextValue = SelectedCardModel.Id;
-            else if (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out var currentSet))
-                newContentTextValue = currentSet.ToString();
-
+            var card = SelectedCardModel.Value;
+            var propertyIndex = SelectedPropertyIndex;
+            var path = SelectedPropertyName;
             foreach (var propertyValueText in propertyValueTexts)
-                Cgs.Localization.LocalizedUiText.SetLiteral(propertyValueText, newContentTextValue);
+                GameContentText.Set(propertyValueText, card.Game, display =>
+                {
+                    if (propertyIndex > 1)
+                        return display.PropertyValue(card, path);
+                    if (propertyIndex == 1)
+                        return card.Id;
+                    return card.Game.Sets.TryGetValue(card.SetCode, out var set) ? GameContentPresentation.SetDescription(display, set) : string.Empty;
+                });
         }
 
         public void HidePreview()
@@ -697,6 +720,7 @@ namespace Cgs.CardGameView.Viewer
 
         protected void OnDisable()
         {
+            GameContentPresentation.Changed -= RefreshPropertyLabels;
             HidePreview();
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

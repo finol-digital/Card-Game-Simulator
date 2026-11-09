@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Localization;
+using Cgs.GameContent;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -165,15 +166,23 @@ namespace Cgs.Decks
             var filePaths = Directory.Exists(CardGameManager.Current.DecksDirectoryPath)
                 ? Directory.GetFiles(CardGameManager.Current.DecksDirectoryPath)
                 : Array.Empty<string>();
-            foreach (var filePath in filePaths)
-                if (GetFileTypeFromPath(filePath) == CardGameManager.Current.DeckFileType)
-                    _deckFiles[filePath] = GetNameFromPath(filePath);
+            var game = CardGameManager.Current;
+            foreach (var filePath in BuiltInGameContent.DeckChoices(game,
+                         filePaths.Where(path => GetFileTypeFromPath(path) == game.DeckFileType)))
+                _deckFiles[filePath] = GetNameFromPath(filePath);
 
-            Rebuild(_deckFiles, SelectFile, _selectedFilePath);
+            if (!_deckFiles.ContainsKey(_selectedFilePath))
+                _selectedFilePath = string.Empty;
+            Rebuild(_deckFiles, SelectFile, _selectedFilePath, bindLabel: (label, path, name) =>
+                GameContentText.Set(label, game, display =>
+                {
+                    var authored = AuthoredDeckFiles.AuthoredName(game, path);
+                    return display.DeckName(authored ?? name, authored != null);
+                }));
 
             editFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
             shareFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
-            deleteFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
+            deleteFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath) && !BuiltInGameContent.IsManagedDeck(game, _selectedFilePath);
             loadFromFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
         }
 
@@ -195,7 +204,7 @@ namespace Cgs.Decks
                 _selectedFilePath = deckFilePath;
                 editFileButton.interactable = true;
                 shareFileButton.interactable = true;
-                deleteFileButton.interactable = true;
+                deleteFileButton.interactable = !BuiltInGameContent.IsManagedDeck(CardGameManager.Current, deckFilePath);
                 loadFromFileButton.interactable = true;
             }
             else if (toggle != null && !toggle.group.AnyTogglesOn() && _selectedFilePath.Equals(deckFilePath))
@@ -244,8 +253,11 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void DeleteFile()
         {
+            if (BuiltInGameContent.IsManagedDeck(CardGameManager.Current, _selectedFilePath))
+                return;
             try
             {
+                AuthoredDeckFiles.Revoke(CardGameManager.Current, _selectedFilePath);
                 File.Delete(_selectedFilePath);
             }
             catch (Exception e)
@@ -318,9 +330,7 @@ namespace Cgs.Decks
         {
             try
             {
-                var deckText = File.ReadAllText(_selectedFilePath);
-                var newDeck = UnityDeck.Parse(CardGameManager.Current, _deckFiles[_selectedFilePath],
-                    CardGameManager.Current.DeckFileType, deckText);
+                var newDeck = UnityDeck.LoadFile(CardGameManager.Current, _selectedFilePath, _deckFiles[_selectedFilePath]);
                 ShowMissingCardsWarning(newDeck);
                 _loadCallback?.Invoke(newDeck);
                 Hide();
@@ -342,9 +352,10 @@ namespace Cgs.Decks
             var missingCards = string.Join("\n", missing.Select(card => $"{card.Value} × {card.Key}"));
             var loadedCount = deck.Cards.Count;
             var message = string.Format(MissingCardsMessage, deck.Name, loadedCount, missingCount, missingCards);
-            CardGameManager.Instance.Messenger.Show(UiMessage.With("decks.load.missing", message,
-                ("deckName", deck.Name), ("loadedCount", loadedCount),
-                ("missingCount", missingCount), ("cards", missingCards)));
+            CardGameManager.Instance.Messenger.Show(GameContentMessage.Create(CardGameManager.Current, display =>
+                UiMessage.With("decks.load.missing", message,
+                    ("deckName", display.DeckName(deck.Name, deck.AuthoredName != null)), ("loadedCount", loadedCount),
+                    ("missingCount", missingCount), ("cards", missingCards))));
         }
 
         private void InputDecksNew(InputAction.CallbackContext callbackContext)
@@ -462,7 +473,7 @@ namespace Cgs.Decks
             {
                 if (!Directory.Exists(CardGameManager.Current.DecksDirectoryPath))
                     Directory.CreateDirectory(CardGameManager.Current.DecksDirectoryPath);
-                File.WriteAllText(filePathFinder.FilePath, textInputField.text);
+                AuthoredDeckFiles.WriteUserFile(CardGameManager.Current, filePathFinder.FilePath, textInputField.text);
                 _selectedFilePath = filePathFinder.FilePath;
 
                 HideNewDeckPanel();

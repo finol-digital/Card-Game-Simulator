@@ -93,5 +93,1320 @@
   ],
   "gameStartHandCount": 2,
   "name": "Standard Playing Cards",
-  "rulesUrl": "https://www.bicyclecards.com/rules/"
+  "rulesUrl": "https://www.bicyclecards.com/rules/",
+  "localization": {
+    "defaultLocale": "en",
+    "locales": {
+      "en": {
+        "inline": {
+          "game": {
+            "name": "Standard Playing Cards",
+            "gamePlayDeckName": "Deck",
+            "setNameDefault": "All Cards"
+          },
+          "cardNames": {
+            "Ace of Clubs": "Ace of Clubs",
+            "Ace of Diamonds": "Ace of Diamonds",
+            "Ace of Hearts": "Ace of Hearts",
+            "Ace of Spades": "Ace of Spades",
+            "2 of Clubs": "2 of Clubs",
+            "2 of Diamonds": "2 of Diamonds",
+            "2 of Hearts": "2 of Hearts",
+            "2 of Spades": "2 of Spades",
+            "3 of Clubs": "3 of Clubs",
+            "3 of Diamonds": "3 of Diamonds",
+            "3 of Hearts": "3 of Hearts",
+            "3 of Spades": "3 of Spades",
+            "4 of Clubs": "4 of Clubs",
+            "4 of Diamonds": "4 of Diamonds",
+            "4 of Hearts": "4 of Hearts",
+            "4 of Spades": "4 of Spades",
+            "5 of Clubs": "5 of Clubs",
+            "5 of Diamonds": "5 of Diamonds",
+            "5 of Hearts": "5 of Hearts",
+            "5 of Spades": "5 of Spades",
+            "6 of Clubs": "6 of Clubs",
+            "6 of Diamonds": "6 of Diamonds",
+            "6 of Hearts": "6 of Hearts",
+            "6 of Spades": "6 of Spades",
+            "7 of Clubs": "7 of Clubs",
+            "7 of Diamonds": "7 of Diamonds",
+            "7 of Hearts": "7 of Hearts",
+            "7 of Spades": "7 of Spades",
+            "8 of Clubs": "8 of Clubs",
+            "8 of Diamonds": "8 of Diamonds",
+            "8 of Hearts": "8 of Hearts",
+            "8 of Spades": "8 of Spades",
+            "9 of Clubs": "9 of Clubs",
+            "9 of Diamonds": "9 of Diamonds",
+            "9 of Hearts": "9 of Hearts",
+            "9 of Spades": "9 of Spades",
+            "10 of Clubs": "10 of Clubs",
+            "10 of Diamonds": "10 of Diamonds",
+            "10 of Hearts": "10 of Hearts",
+            "10 of Spades": "10 of Spades",
+            "Jack of Clubs": "Jack of Clubs",
+            "Jack of Diamonds": "Jack of Diamonds",
+            "Jack of Hearts": "Jack of Hearts",
+            "Jack of Spades": "Jack of Spades",
+            "Queen of Clubs": "Queen of Clubs",
+            "Queen of Diamonds": "Queen of Diamonds",
+            "Queen of Hearts": "Queen of Hearts",
+            "Queen of Spades": "Queen of Spades",
+            "King of Clubs": "King of Clubs",
+            "King of Diamonds": "King of Diamonds",
+            "King of Hearts": "King of Hearts",
+            "King of Spades": "King of Spades",
+            "Black Joker": "Black Joker",
+            "Red Joker": "Red Joker"
+          },
+          "properties": {
+            "rank": {
+              "display": "Rank",
+              "displayEmpty": "(Empty)"
+            },
+            "suit": {
+              "display": "Suit",
+              "displayEmpty": "(Empty)"
+            },
+            "color": {
+              "display": "Color",
+              "displayEmpty": "(Empty)"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "Ace",
+              "11": "Jack",
+              "12": "Queen",
+              "13": "King",
+              "0": "Joker"
+            },
+            "suit": {
+              "clubs": "Clubs",
+              "diamonds": "Diamonds",
+              "hearts": "Hearts",
+              "spades": "Spades"
+            },
+            "color": {
+              "black": "Black",
+              "red": "Red"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "CGS Standard French-Suited Playing Cards"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "Standard 52-card Deck"
+            },
+            "Standard Deck with Jokers": {
+              "name": "Standard Deck with Jokers"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "Standard with Dark Back 52-card Deck"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "Standard with Dark Back Deck with Jokers"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "Dark Back"
+            }
+          }
+        }
+      },
+      "es": {
+        "inline": {
+          "game": {
+            "name": "Baraja francesa",
+            "gamePlayDeckName": "Mazo",
+            "setNameDefault": "Todas las cartas"
+          },
+          "cardNames": {
+            "Ace of Clubs": "As de tréboles",
+            "Ace of Diamonds": "As de diamantes",
+            "Ace of Hearts": "As de corazones",
+            "Ace of Spades": "As de picas",
+            "2 of Clubs": "2 de tréboles",
+            "2 of Diamonds": "2 de diamantes",
+            "2 of Hearts": "2 de corazones",
+            "2 of Spades": "2 de picas",
+            "3 of Clubs": "3 de tréboles",
+            "3 of Diamonds": "3 de diamantes",
+            "3 of Hearts": "3 de corazones",
+            "3 of Spades": "3 de picas",
+            "4 of Clubs": "4 de tréboles",
+            "4 of Diamonds": "4 de diamantes",
+            "4 of Hearts": "4 de corazones",
+            "4 of Spades": "4 de picas",
+            "5 of Clubs": "5 de tréboles",
+            "5 of Diamonds": "5 de diamantes",
+            "5 of Hearts": "5 de corazones",
+            "5 of Spades": "5 de picas",
+            "6 of Clubs": "6 de tréboles",
+            "6 of Diamonds": "6 de diamantes",
+            "6 of Hearts": "6 de corazones",
+            "6 of Spades": "6 de picas",
+            "7 of Clubs": "7 de tréboles",
+            "7 of Diamonds": "7 de diamantes",
+            "7 of Hearts": "7 de corazones",
+            "7 of Spades": "7 de picas",
+            "8 of Clubs": "8 de tréboles",
+            "8 of Diamonds": "8 de diamantes",
+            "8 of Hearts": "8 de corazones",
+            "8 of Spades": "8 de picas",
+            "9 of Clubs": "9 de tréboles",
+            "9 of Diamonds": "9 de diamantes",
+            "9 of Hearts": "9 de corazones",
+            "9 of Spades": "9 de picas",
+            "10 of Clubs": "10 de tréboles",
+            "10 of Diamonds": "10 de diamantes",
+            "10 of Hearts": "10 de corazones",
+            "10 of Spades": "10 de picas",
+            "Jack of Clubs": "Jota de tréboles",
+            "Jack of Diamonds": "Jota de diamantes",
+            "Jack of Hearts": "Jota de corazones",
+            "Jack of Spades": "Jota de picas",
+            "Queen of Clubs": "Reina de tréboles",
+            "Queen of Diamonds": "Reina de diamantes",
+            "Queen of Hearts": "Reina de corazones",
+            "Queen of Spades": "Reina de picas",
+            "King of Clubs": "Rey de tréboles",
+            "King of Diamonds": "Rey de diamantes",
+            "King of Hearts": "Rey de corazones",
+            "King of Spades": "Rey de picas",
+            "Black Joker": "Comodín negro",
+            "Red Joker": "Comodín rojo"
+          },
+          "properties": {
+            "rank": {
+              "display": "Valor",
+              "displayEmpty": "(Vacío)"
+            },
+            "suit": {
+              "display": "Palo",
+              "displayEmpty": "(Vacío)"
+            },
+            "color": {
+              "display": "Color",
+              "displayEmpty": "(Vacío)"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "As",
+              "11": "Jota",
+              "12": "Reina",
+              "13": "Rey",
+              "0": "Comodín"
+            },
+            "suit": {
+              "clubs": "Tréboles",
+              "diamonds": "Diamantes",
+              "hearts": "Corazones",
+              "spades": "Picas"
+            },
+            "color": {
+              "black": "Negro",
+              "red": "Rojo"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "Baraja francesa estándar de CGS"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "Baraja estándar de 52 cartas"
+            },
+            "Standard Deck with Jokers": {
+              "name": "Baraja estándar con comodines"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "Baraja de 52 cartas con reverso oscuro"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "Baraja con comodines y reverso oscuro"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "Reverso oscuro"
+            }
+          }
+        }
+      },
+      "fr": {
+        "inline": {
+          "game": {
+            "name": "Jeu de cartes classique",
+            "gamePlayDeckName": "Pioche",
+            "setNameDefault": "Toutes les cartes"
+          },
+          "cardNames": {
+            "Ace of Clubs": "As de trèfle",
+            "Ace of Diamonds": "As de carreau",
+            "Ace of Hearts": "As de cœur",
+            "Ace of Spades": "As de pique",
+            "2 of Clubs": "2 de trèfle",
+            "2 of Diamonds": "2 de carreau",
+            "2 of Hearts": "2 de cœur",
+            "2 of Spades": "2 de pique",
+            "3 of Clubs": "3 de trèfle",
+            "3 of Diamonds": "3 de carreau",
+            "3 of Hearts": "3 de cœur",
+            "3 of Spades": "3 de pique",
+            "4 of Clubs": "4 de trèfle",
+            "4 of Diamonds": "4 de carreau",
+            "4 of Hearts": "4 de cœur",
+            "4 of Spades": "4 de pique",
+            "5 of Clubs": "5 de trèfle",
+            "5 of Diamonds": "5 de carreau",
+            "5 of Hearts": "5 de cœur",
+            "5 of Spades": "5 de pique",
+            "6 of Clubs": "6 de trèfle",
+            "6 of Diamonds": "6 de carreau",
+            "6 of Hearts": "6 de cœur",
+            "6 of Spades": "6 de pique",
+            "7 of Clubs": "7 de trèfle",
+            "7 of Diamonds": "7 de carreau",
+            "7 of Hearts": "7 de cœur",
+            "7 of Spades": "7 de pique",
+            "8 of Clubs": "8 de trèfle",
+            "8 of Diamonds": "8 de carreau",
+            "8 of Hearts": "8 de cœur",
+            "8 of Spades": "8 de pique",
+            "9 of Clubs": "9 de trèfle",
+            "9 of Diamonds": "9 de carreau",
+            "9 of Hearts": "9 de cœur",
+            "9 of Spades": "9 de pique",
+            "10 of Clubs": "10 de trèfle",
+            "10 of Diamonds": "10 de carreau",
+            "10 of Hearts": "10 de cœur",
+            "10 of Spades": "10 de pique",
+            "Jack of Clubs": "Valet de trèfle",
+            "Jack of Diamonds": "Valet de carreau",
+            "Jack of Hearts": "Valet de cœur",
+            "Jack of Spades": "Valet de pique",
+            "Queen of Clubs": "Dame de trèfle",
+            "Queen of Diamonds": "Dame de carreau",
+            "Queen of Hearts": "Dame de cœur",
+            "Queen of Spades": "Dame de pique",
+            "King of Clubs": "Roi de trèfle",
+            "King of Diamonds": "Roi de carreau",
+            "King of Hearts": "Roi de cœur",
+            "King of Spades": "Roi de pique",
+            "Black Joker": "Joker noir",
+            "Red Joker": "Joker rouge"
+          },
+          "properties": {
+            "rank": {
+              "display": "Valeur",
+              "displayEmpty": "(Vide)"
+            },
+            "suit": {
+              "display": "Enseigne",
+              "displayEmpty": "(Vide)"
+            },
+            "color": {
+              "display": "Couleur",
+              "displayEmpty": "(Vide)"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "As",
+              "11": "Valet",
+              "12": "Dame",
+              "13": "Roi",
+              "0": "Joker"
+            },
+            "suit": {
+              "clubs": "Trèfle",
+              "diamonds": "Carreau",
+              "hearts": "Cœur",
+              "spades": "Pique"
+            },
+            "color": {
+              "black": "Noir",
+              "red": "Rouge"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "Cartes classiques à enseignes françaises CGS"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "Jeu classique de 52 cartes"
+            },
+            "Standard Deck with Jokers": {
+              "name": "Jeu classique avec jokers"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "Jeu de 52 cartes à dos sombre"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "Jeu avec jokers à dos sombre"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "Dos sombre"
+            }
+          }
+        }
+      },
+      "de": {
+        "inline": {
+          "game": {
+            "name": "Standard-Spielkarten",
+            "gamePlayDeckName": "Stapel",
+            "setNameDefault": "Alle Karten"
+          },
+          "cardNames": {
+            "Ace of Clubs": "Kreuz-Ass",
+            "Ace of Diamonds": "Karo-Ass",
+            "Ace of Hearts": "Herz-Ass",
+            "Ace of Spades": "Pik-Ass",
+            "2 of Clubs": "Kreuz-2",
+            "2 of Diamonds": "Karo-2",
+            "2 of Hearts": "Herz-2",
+            "2 of Spades": "Pik-2",
+            "3 of Clubs": "Kreuz-3",
+            "3 of Diamonds": "Karo-3",
+            "3 of Hearts": "Herz-3",
+            "3 of Spades": "Pik-3",
+            "4 of Clubs": "Kreuz-4",
+            "4 of Diamonds": "Karo-4",
+            "4 of Hearts": "Herz-4",
+            "4 of Spades": "Pik-4",
+            "5 of Clubs": "Kreuz-5",
+            "5 of Diamonds": "Karo-5",
+            "5 of Hearts": "Herz-5",
+            "5 of Spades": "Pik-5",
+            "6 of Clubs": "Kreuz-6",
+            "6 of Diamonds": "Karo-6",
+            "6 of Hearts": "Herz-6",
+            "6 of Spades": "Pik-6",
+            "7 of Clubs": "Kreuz-7",
+            "7 of Diamonds": "Karo-7",
+            "7 of Hearts": "Herz-7",
+            "7 of Spades": "Pik-7",
+            "8 of Clubs": "Kreuz-8",
+            "8 of Diamonds": "Karo-8",
+            "8 of Hearts": "Herz-8",
+            "8 of Spades": "Pik-8",
+            "9 of Clubs": "Kreuz-9",
+            "9 of Diamonds": "Karo-9",
+            "9 of Hearts": "Herz-9",
+            "9 of Spades": "Pik-9",
+            "10 of Clubs": "Kreuz-10",
+            "10 of Diamonds": "Karo-10",
+            "10 of Hearts": "Herz-10",
+            "10 of Spades": "Pik-10",
+            "Jack of Clubs": "Kreuz-Bube",
+            "Jack of Diamonds": "Karo-Bube",
+            "Jack of Hearts": "Herz-Bube",
+            "Jack of Spades": "Pik-Bube",
+            "Queen of Clubs": "Kreuz-Dame",
+            "Queen of Diamonds": "Karo-Dame",
+            "Queen of Hearts": "Herz-Dame",
+            "Queen of Spades": "Pik-Dame",
+            "King of Clubs": "Kreuz-König",
+            "King of Diamonds": "Karo-König",
+            "King of Hearts": "Herz-König",
+            "King of Spades": "Pik-König",
+            "Black Joker": "Schwarzer Joker",
+            "Red Joker": "Roter Joker"
+          },
+          "properties": {
+            "rank": {
+              "display": "Wert",
+              "displayEmpty": "(Leer)"
+            },
+            "suit": {
+              "display": "Kartenfarbe",
+              "displayEmpty": "(Leer)"
+            },
+            "color": {
+              "display": "Farbe",
+              "displayEmpty": "(Leer)"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "Ass",
+              "11": "Bube",
+              "12": "Dame",
+              "13": "König",
+              "0": "Joker"
+            },
+            "suit": {
+              "clubs": "Kreuz",
+              "diamonds": "Karo",
+              "hearts": "Herz",
+              "spades": "Pik"
+            },
+            "color": {
+              "black": "Schwarz",
+              "red": "Rot"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "CGS-Standardkarten mit französischem Blatt"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "Standardblatt mit 52 Karten"
+            },
+            "Standard Deck with Jokers": {
+              "name": "Standardblatt mit Jokern"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "52 Karten mit dunkler Rückseite"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "Blatt mit Jokern und dunkler Rückseite"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "Dunkle Rückseite"
+            }
+          }
+        }
+      },
+      "it": {
+        "inline": {
+          "game": {
+            "name": "Carte da gioco francesi",
+            "gamePlayDeckName": "Mazzo",
+            "setNameDefault": "Tutte le carte"
+          },
+          "cardNames": {
+            "Ace of Clubs": "Asso di fiori",
+            "Ace of Diamonds": "Asso di quadri",
+            "Ace of Hearts": "Asso di cuori",
+            "Ace of Spades": "Asso di picche",
+            "2 of Clubs": "2 di fiori",
+            "2 of Diamonds": "2 di quadri",
+            "2 of Hearts": "2 di cuori",
+            "2 of Spades": "2 di picche",
+            "3 of Clubs": "3 di fiori",
+            "3 of Diamonds": "3 di quadri",
+            "3 of Hearts": "3 di cuori",
+            "3 of Spades": "3 di picche",
+            "4 of Clubs": "4 di fiori",
+            "4 of Diamonds": "4 di quadri",
+            "4 of Hearts": "4 di cuori",
+            "4 of Spades": "4 di picche",
+            "5 of Clubs": "5 di fiori",
+            "5 of Diamonds": "5 di quadri",
+            "5 of Hearts": "5 di cuori",
+            "5 of Spades": "5 di picche",
+            "6 of Clubs": "6 di fiori",
+            "6 of Diamonds": "6 di quadri",
+            "6 of Hearts": "6 di cuori",
+            "6 of Spades": "6 di picche",
+            "7 of Clubs": "7 di fiori",
+            "7 of Diamonds": "7 di quadri",
+            "7 of Hearts": "7 di cuori",
+            "7 of Spades": "7 di picche",
+            "8 of Clubs": "8 di fiori",
+            "8 of Diamonds": "8 di quadri",
+            "8 of Hearts": "8 di cuori",
+            "8 of Spades": "8 di picche",
+            "9 of Clubs": "9 di fiori",
+            "9 of Diamonds": "9 di quadri",
+            "9 of Hearts": "9 di cuori",
+            "9 of Spades": "9 di picche",
+            "10 of Clubs": "10 di fiori",
+            "10 of Diamonds": "10 di quadri",
+            "10 of Hearts": "10 di cuori",
+            "10 of Spades": "10 di picche",
+            "Jack of Clubs": "Fante di fiori",
+            "Jack of Diamonds": "Fante di quadri",
+            "Jack of Hearts": "Fante di cuori",
+            "Jack of Spades": "Fante di picche",
+            "Queen of Clubs": "Regina di fiori",
+            "Queen of Diamonds": "Regina di quadri",
+            "Queen of Hearts": "Regina di cuori",
+            "Queen of Spades": "Regina di picche",
+            "King of Clubs": "Re di fiori",
+            "King of Diamonds": "Re di quadri",
+            "King of Hearts": "Re di cuori",
+            "King of Spades": "Re di picche",
+            "Black Joker": "Jolly nero",
+            "Red Joker": "Jolly rosso"
+          },
+          "properties": {
+            "rank": {
+              "display": "Valore",
+              "displayEmpty": "(Vuoto)"
+            },
+            "suit": {
+              "display": "Seme",
+              "displayEmpty": "(Vuoto)"
+            },
+            "color": {
+              "display": "Colore",
+              "displayEmpty": "(Vuoto)"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "Asso",
+              "11": "Fante",
+              "12": "Regina",
+              "13": "Re",
+              "0": "Jolly"
+            },
+            "suit": {
+              "clubs": "Fiori",
+              "diamonds": "Quadri",
+              "hearts": "Cuori",
+              "spades": "Picche"
+            },
+            "color": {
+              "black": "Nero",
+              "red": "Rosso"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "Carte francesi standard CGS"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "Mazzo standard da 52 carte"
+            },
+            "Standard Deck with Jokers": {
+              "name": "Mazzo standard con jolly"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "Mazzo da 52 carte con dorso scuro"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "Mazzo con jolly e dorso scuro"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "Dorso scuro"
+            }
+          }
+        }
+      },
+      "ja": {
+        "inline": {
+          "game": {
+            "name": "トランプ",
+            "gamePlayDeckName": "山札",
+            "setNameDefault": "すべてのカード"
+          },
+          "cardNames": {
+            "Ace of Clubs": "クラブのエース",
+            "Ace of Diamonds": "ダイヤのエース",
+            "Ace of Hearts": "ハートのエース",
+            "Ace of Spades": "スペードのエース",
+            "2 of Clubs": "クラブの2",
+            "2 of Diamonds": "ダイヤの2",
+            "2 of Hearts": "ハートの2",
+            "2 of Spades": "スペードの2",
+            "3 of Clubs": "クラブの3",
+            "3 of Diamonds": "ダイヤの3",
+            "3 of Hearts": "ハートの3",
+            "3 of Spades": "スペードの3",
+            "4 of Clubs": "クラブの4",
+            "4 of Diamonds": "ダイヤの4",
+            "4 of Hearts": "ハートの4",
+            "4 of Spades": "スペードの4",
+            "5 of Clubs": "クラブの5",
+            "5 of Diamonds": "ダイヤの5",
+            "5 of Hearts": "ハートの5",
+            "5 of Spades": "スペードの5",
+            "6 of Clubs": "クラブの6",
+            "6 of Diamonds": "ダイヤの6",
+            "6 of Hearts": "ハートの6",
+            "6 of Spades": "スペードの6",
+            "7 of Clubs": "クラブの7",
+            "7 of Diamonds": "ダイヤの7",
+            "7 of Hearts": "ハートの7",
+            "7 of Spades": "スペードの7",
+            "8 of Clubs": "クラブの8",
+            "8 of Diamonds": "ダイヤの8",
+            "8 of Hearts": "ハートの8",
+            "8 of Spades": "スペードの8",
+            "9 of Clubs": "クラブの9",
+            "9 of Diamonds": "ダイヤの9",
+            "9 of Hearts": "ハートの9",
+            "9 of Spades": "スペードの9",
+            "10 of Clubs": "クラブの10",
+            "10 of Diamonds": "ダイヤの10",
+            "10 of Hearts": "ハートの10",
+            "10 of Spades": "スペードの10",
+            "Jack of Clubs": "クラブのジャック",
+            "Jack of Diamonds": "ダイヤのジャック",
+            "Jack of Hearts": "ハートのジャック",
+            "Jack of Spades": "スペードのジャック",
+            "Queen of Clubs": "クラブのクイーン",
+            "Queen of Diamonds": "ダイヤのクイーン",
+            "Queen of Hearts": "ハートのクイーン",
+            "Queen of Spades": "スペードのクイーン",
+            "King of Clubs": "クラブのキング",
+            "King of Diamonds": "ダイヤのキング",
+            "King of Hearts": "ハートのキング",
+            "King of Spades": "スペードのキング",
+            "Black Joker": "黒のジョーカー",
+            "Red Joker": "赤のジョーカー"
+          },
+          "properties": {
+            "rank": {
+              "display": "ランク",
+              "displayEmpty": "（なし）"
+            },
+            "suit": {
+              "display": "スート",
+              "displayEmpty": "（なし）"
+            },
+            "color": {
+              "display": "色",
+              "displayEmpty": "（なし）"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "エース",
+              "11": "ジャック",
+              "12": "クイーン",
+              "13": "キング",
+              "0": "ジョーカー"
+            },
+            "suit": {
+              "clubs": "クラブ",
+              "diamonds": "ダイヤ",
+              "hearts": "ハート",
+              "spades": "スペード"
+            },
+            "color": {
+              "black": "黒",
+              "red": "赤"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "CGS標準トランプ"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "標準52枚のトランプ"
+            },
+            "Standard Deck with Jokers": {
+              "name": "ジョーカー入りトランプ"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "裏面が暗い52枚のトランプ"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "裏面が暗いジョーカー入りトランプ"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "暗い裏面"
+            }
+          }
+        }
+      },
+      "ko": {
+        "inline": {
+          "game": {
+            "name": "플레잉 카드",
+            "gamePlayDeckName": "카드 더미",
+            "setNameDefault": "모든 카드"
+          },
+          "cardNames": {
+            "Ace of Clubs": "클로버 에이스",
+            "Ace of Diamonds": "다이아몬드 에이스",
+            "Ace of Hearts": "하트 에이스",
+            "Ace of Spades": "스페이드 에이스",
+            "2 of Clubs": "클로버 2",
+            "2 of Diamonds": "다이아몬드 2",
+            "2 of Hearts": "하트 2",
+            "2 of Spades": "스페이드 2",
+            "3 of Clubs": "클로버 3",
+            "3 of Diamonds": "다이아몬드 3",
+            "3 of Hearts": "하트 3",
+            "3 of Spades": "스페이드 3",
+            "4 of Clubs": "클로버 4",
+            "4 of Diamonds": "다이아몬드 4",
+            "4 of Hearts": "하트 4",
+            "4 of Spades": "스페이드 4",
+            "5 of Clubs": "클로버 5",
+            "5 of Diamonds": "다이아몬드 5",
+            "5 of Hearts": "하트 5",
+            "5 of Spades": "스페이드 5",
+            "6 of Clubs": "클로버 6",
+            "6 of Diamonds": "다이아몬드 6",
+            "6 of Hearts": "하트 6",
+            "6 of Spades": "스페이드 6",
+            "7 of Clubs": "클로버 7",
+            "7 of Diamonds": "다이아몬드 7",
+            "7 of Hearts": "하트 7",
+            "7 of Spades": "스페이드 7",
+            "8 of Clubs": "클로버 8",
+            "8 of Diamonds": "다이아몬드 8",
+            "8 of Hearts": "하트 8",
+            "8 of Spades": "스페이드 8",
+            "9 of Clubs": "클로버 9",
+            "9 of Diamonds": "다이아몬드 9",
+            "9 of Hearts": "하트 9",
+            "9 of Spades": "스페이드 9",
+            "10 of Clubs": "클로버 10",
+            "10 of Diamonds": "다이아몬드 10",
+            "10 of Hearts": "하트 10",
+            "10 of Spades": "스페이드 10",
+            "Jack of Clubs": "클로버 잭",
+            "Jack of Diamonds": "다이아몬드 잭",
+            "Jack of Hearts": "하트 잭",
+            "Jack of Spades": "스페이드 잭",
+            "Queen of Clubs": "클로버 퀸",
+            "Queen of Diamonds": "다이아몬드 퀸",
+            "Queen of Hearts": "하트 퀸",
+            "Queen of Spades": "스페이드 퀸",
+            "King of Clubs": "클로버 킹",
+            "King of Diamonds": "다이아몬드 킹",
+            "King of Hearts": "하트 킹",
+            "King of Spades": "스페이드 킹",
+            "Black Joker": "검정 조커",
+            "Red Joker": "빨강 조커"
+          },
+          "properties": {
+            "rank": {
+              "display": "숫자",
+              "displayEmpty": "(없음)"
+            },
+            "suit": {
+              "display": "무늬",
+              "displayEmpty": "(없음)"
+            },
+            "color": {
+              "display": "색상",
+              "displayEmpty": "(없음)"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "에이스",
+              "11": "잭",
+              "12": "퀸",
+              "13": "킹",
+              "0": "조커"
+            },
+            "suit": {
+              "clubs": "클로버",
+              "diamonds": "다이아몬드",
+              "hearts": "하트",
+              "spades": "스페이드"
+            },
+            "color": {
+              "black": "검정",
+              "red": "빨강"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "CGS 표준 플레잉 카드"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "표준 52장 카드 덱"
+            },
+            "Standard Deck with Jokers": {
+              "name": "조커 포함 카드 덱"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "어두운 뒷면의 52장 카드 덱"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "어두운 뒷면의 조커 포함 덱"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "어두운 뒷면"
+            }
+          }
+        }
+      },
+      "pt-BR": {
+        "inline": {
+          "game": {
+            "name": "Baralho padrão",
+            "gamePlayDeckName": "Monte",
+            "setNameDefault": "Todas as cartas"
+          },
+          "cardNames": {
+            "Ace of Clubs": "Ás de paus",
+            "Ace of Diamonds": "Ás de ouros",
+            "Ace of Hearts": "Ás de copas",
+            "Ace of Spades": "Ás de espadas",
+            "2 of Clubs": "2 de paus",
+            "2 of Diamonds": "2 de ouros",
+            "2 of Hearts": "2 de copas",
+            "2 of Spades": "2 de espadas",
+            "3 of Clubs": "3 de paus",
+            "3 of Diamonds": "3 de ouros",
+            "3 of Hearts": "3 de copas",
+            "3 of Spades": "3 de espadas",
+            "4 of Clubs": "4 de paus",
+            "4 of Diamonds": "4 de ouros",
+            "4 of Hearts": "4 de copas",
+            "4 of Spades": "4 de espadas",
+            "5 of Clubs": "5 de paus",
+            "5 of Diamonds": "5 de ouros",
+            "5 of Hearts": "5 de copas",
+            "5 of Spades": "5 de espadas",
+            "6 of Clubs": "6 de paus",
+            "6 of Diamonds": "6 de ouros",
+            "6 of Hearts": "6 de copas",
+            "6 of Spades": "6 de espadas",
+            "7 of Clubs": "7 de paus",
+            "7 of Diamonds": "7 de ouros",
+            "7 of Hearts": "7 de copas",
+            "7 of Spades": "7 de espadas",
+            "8 of Clubs": "8 de paus",
+            "8 of Diamonds": "8 de ouros",
+            "8 of Hearts": "8 de copas",
+            "8 of Spades": "8 de espadas",
+            "9 of Clubs": "9 de paus",
+            "9 of Diamonds": "9 de ouros",
+            "9 of Hearts": "9 de copas",
+            "9 of Spades": "9 de espadas",
+            "10 of Clubs": "10 de paus",
+            "10 of Diamonds": "10 de ouros",
+            "10 of Hearts": "10 de copas",
+            "10 of Spades": "10 de espadas",
+            "Jack of Clubs": "Valete de paus",
+            "Jack of Diamonds": "Valete de ouros",
+            "Jack of Hearts": "Valete de copas",
+            "Jack of Spades": "Valete de espadas",
+            "Queen of Clubs": "Dama de paus",
+            "Queen of Diamonds": "Dama de ouros",
+            "Queen of Hearts": "Dama de copas",
+            "Queen of Spades": "Dama de espadas",
+            "King of Clubs": "Rei de paus",
+            "King of Diamonds": "Rei de ouros",
+            "King of Hearts": "Rei de copas",
+            "King of Spades": "Rei de espadas",
+            "Black Joker": "Coringa preto",
+            "Red Joker": "Coringa vermelho"
+          },
+          "properties": {
+            "rank": {
+              "display": "Valor",
+              "displayEmpty": "(Vazio)"
+            },
+            "suit": {
+              "display": "Naipe",
+              "displayEmpty": "(Vazio)"
+            },
+            "color": {
+              "display": "Cor",
+              "displayEmpty": "(Vazio)"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "Ás",
+              "11": "Valete",
+              "12": "Dama",
+              "13": "Rei",
+              "0": "Coringa"
+            },
+            "suit": {
+              "clubs": "Paus",
+              "diamonds": "Ouros",
+              "hearts": "Copas",
+              "spades": "Espadas"
+            },
+            "color": {
+              "black": "Preto",
+              "red": "Vermelho"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "Baralho francês padrão CGS"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "Baralho padrão de 52 cartas"
+            },
+            "Standard Deck with Jokers": {
+              "name": "Baralho padrão com coringas"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "Baralho de 52 cartas com verso escuro"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "Baralho com coringas e verso escuro"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "Verso escuro"
+            }
+          }
+        }
+      },
+      "ru": {
+        "inline": {
+          "game": {
+            "name": "Стандартные игральные карты",
+            "gamePlayDeckName": "Колода",
+            "setNameDefault": "Все карты"
+          },
+          "cardNames": {
+            "Ace of Clubs": "Туз треф",
+            "Ace of Diamonds": "Туз бубен",
+            "Ace of Hearts": "Туз червей",
+            "Ace of Spades": "Туз пик",
+            "2 of Clubs": "2 треф",
+            "2 of Diamonds": "2 бубен",
+            "2 of Hearts": "2 червей",
+            "2 of Spades": "2 пик",
+            "3 of Clubs": "3 треф",
+            "3 of Diamonds": "3 бубен",
+            "3 of Hearts": "3 червей",
+            "3 of Spades": "3 пик",
+            "4 of Clubs": "4 треф",
+            "4 of Diamonds": "4 бубен",
+            "4 of Hearts": "4 червей",
+            "4 of Spades": "4 пик",
+            "5 of Clubs": "5 треф",
+            "5 of Diamonds": "5 бубен",
+            "5 of Hearts": "5 червей",
+            "5 of Spades": "5 пик",
+            "6 of Clubs": "6 треф",
+            "6 of Diamonds": "6 бубен",
+            "6 of Hearts": "6 червей",
+            "6 of Spades": "6 пик",
+            "7 of Clubs": "7 треф",
+            "7 of Diamonds": "7 бубен",
+            "7 of Hearts": "7 червей",
+            "7 of Spades": "7 пик",
+            "8 of Clubs": "8 треф",
+            "8 of Diamonds": "8 бубен",
+            "8 of Hearts": "8 червей",
+            "8 of Spades": "8 пик",
+            "9 of Clubs": "9 треф",
+            "9 of Diamonds": "9 бубен",
+            "9 of Hearts": "9 червей",
+            "9 of Spades": "9 пик",
+            "10 of Clubs": "10 треф",
+            "10 of Diamonds": "10 бубен",
+            "10 of Hearts": "10 червей",
+            "10 of Spades": "10 пик",
+            "Jack of Clubs": "Валет треф",
+            "Jack of Diamonds": "Валет бубен",
+            "Jack of Hearts": "Валет червей",
+            "Jack of Spades": "Валет пик",
+            "Queen of Clubs": "Дама треф",
+            "Queen of Diamonds": "Дама бубен",
+            "Queen of Hearts": "Дама червей",
+            "Queen of Spades": "Дама пик",
+            "King of Clubs": "Король треф",
+            "King of Diamonds": "Король бубен",
+            "King of Hearts": "Король червей",
+            "King of Spades": "Король пик",
+            "Black Joker": "Чёрный джокер",
+            "Red Joker": "Красный джокер"
+          },
+          "properties": {
+            "rank": {
+              "display": "Достоинство",
+              "displayEmpty": "(Пусто)"
+            },
+            "suit": {
+              "display": "Масть",
+              "displayEmpty": "(Пусто)"
+            },
+            "color": {
+              "display": "Цвет",
+              "displayEmpty": "(Пусто)"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "Туз",
+              "11": "Валет",
+              "12": "Дама",
+              "13": "Король",
+              "0": "Джокер"
+            },
+            "suit": {
+              "clubs": "Трефы",
+              "diamonds": "Бубны",
+              "hearts": "Червы",
+              "spades": "Пики"
+            },
+            "color": {
+              "black": "Чёрный",
+              "red": "Красный"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "Стандартные карты CGS с французскими мастями"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "Стандартная колода из 52 карт"
+            },
+            "Standard Deck with Jokers": {
+              "name": "Стандартная колода с джокерами"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "52 карты с тёмной рубашкой"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "Колода с джокерами и тёмной рубашкой"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "Тёмная рубашка"
+            }
+          }
+        }
+      },
+      "zh-Hans": {
+        "inline": {
+          "game": {
+            "name": "标准扑克牌",
+            "gamePlayDeckName": "牌堆",
+            "setNameDefault": "所有牌"
+          },
+          "cardNames": {
+            "Ace of Clubs": "梅花A",
+            "Ace of Diamonds": "方块A",
+            "Ace of Hearts": "红桃A",
+            "Ace of Spades": "黑桃A",
+            "2 of Clubs": "梅花2",
+            "2 of Diamonds": "方块2",
+            "2 of Hearts": "红桃2",
+            "2 of Spades": "黑桃2",
+            "3 of Clubs": "梅花3",
+            "3 of Diamonds": "方块3",
+            "3 of Hearts": "红桃3",
+            "3 of Spades": "黑桃3",
+            "4 of Clubs": "梅花4",
+            "4 of Diamonds": "方块4",
+            "4 of Hearts": "红桃4",
+            "4 of Spades": "黑桃4",
+            "5 of Clubs": "梅花5",
+            "5 of Diamonds": "方块5",
+            "5 of Hearts": "红桃5",
+            "5 of Spades": "黑桃5",
+            "6 of Clubs": "梅花6",
+            "6 of Diamonds": "方块6",
+            "6 of Hearts": "红桃6",
+            "6 of Spades": "黑桃6",
+            "7 of Clubs": "梅花7",
+            "7 of Diamonds": "方块7",
+            "7 of Hearts": "红桃7",
+            "7 of Spades": "黑桃7",
+            "8 of Clubs": "梅花8",
+            "8 of Diamonds": "方块8",
+            "8 of Hearts": "红桃8",
+            "8 of Spades": "黑桃8",
+            "9 of Clubs": "梅花9",
+            "9 of Diamonds": "方块9",
+            "9 of Hearts": "红桃9",
+            "9 of Spades": "黑桃9",
+            "10 of Clubs": "梅花10",
+            "10 of Diamonds": "方块10",
+            "10 of Hearts": "红桃10",
+            "10 of Spades": "黑桃10",
+            "Jack of Clubs": "梅花J",
+            "Jack of Diamonds": "方块J",
+            "Jack of Hearts": "红桃J",
+            "Jack of Spades": "黑桃J",
+            "Queen of Clubs": "梅花Q",
+            "Queen of Diamonds": "方块Q",
+            "Queen of Hearts": "红桃Q",
+            "Queen of Spades": "黑桃Q",
+            "King of Clubs": "梅花K",
+            "King of Diamonds": "方块K",
+            "King of Hearts": "红桃K",
+            "King of Spades": "黑桃K",
+            "Black Joker": "小王",
+            "Red Joker": "大王"
+          },
+          "properties": {
+            "rank": {
+              "display": "点数",
+              "displayEmpty": "（无）"
+            },
+            "suit": {
+              "display": "花色",
+              "displayEmpty": "（无）"
+            },
+            "color": {
+              "display": "颜色",
+              "displayEmpty": "（无）"
+            }
+          },
+          "enums": {
+            "rank": {
+              "2": "2",
+              "3": "3",
+              "4": "4",
+              "5": "5",
+              "6": "6",
+              "7": "7",
+              "8": "8",
+              "9": "9",
+              "10": "10",
+              "1": "A",
+              "11": "J",
+              "12": "Q",
+              "13": "K",
+              "0": "鬼牌"
+            },
+            "suit": {
+              "clubs": "梅花",
+              "diamonds": "方块",
+              "hearts": "红桃",
+              "spades": "黑桃"
+            },
+            "color": {
+              "black": "黑色",
+              "red": "红色"
+            }
+          },
+          "sets": {
+            "STD_FR": {
+              "name": "CGS标准法式花色扑克牌"
+            }
+          },
+          "decks": {
+            "Standard 52-card Deck": {
+              "name": "标准52张扑克牌"
+            },
+            "Standard Deck with Jokers": {
+              "name": "含大小王的标准扑克牌"
+            },
+            "Standard with Dark Back 52-card Deck": {
+              "name": "深色牌背的52张扑克牌"
+            },
+            "Standard with Dark Back Deck with Jokers": {
+              "name": "深色牌背且含大小王的扑克牌"
+            }
+          },
+          "cardBacks": {
+            "DARK_BACK": {
+              "name": "深色牌背"
+            }
+          }
+        }
+      }
+    }
+  }
 }

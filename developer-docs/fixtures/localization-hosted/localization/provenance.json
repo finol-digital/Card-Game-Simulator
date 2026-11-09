@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "game": "CGS Localization Verification@raw.githubusercontent.com",
+  "decks": {
+    "Verification deck.txt": {
+      "generation": "5a8cd1a8fedaf2a623991de2fbf2717a",
+      "name": "Verification deck",
+      "source": "https://raw.githubusercontent.com/finol-digital/Card-Game-Simulator/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/decks/Verification%20deck.txt",
+      "sha256": "5a8cd1a8fedaf2a623991de2fbf2717ab4a35f38cb9afc2cc73ec7dbcb94e2b3"
+    }
+  }
+}

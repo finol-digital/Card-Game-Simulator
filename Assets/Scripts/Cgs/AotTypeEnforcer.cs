@@ -23,6 +23,20 @@ namespace Cgs
 #pragma warning restore S2325
         {
             AotHelper.EnsureType<StringEnumConverter>();
+            AotHelper.EnsureDictionary<string, LocalizationSource>();
+            AotHelper.EnsureDictionary<string, LocalizedCard>();
+            AotHelper.EnsureDictionary<string, LocalizedName>();
+            AotHelper.EnsureDictionary<string, LocalizedProperty>();
+            AotHelper.EnsureDictionary<string, LocalizationMap<string>>();
+            AotHelper.Ensure(() =>
+            {
+                _ = new LocalizationMap<LocalizationSource>();
+                _ = new LocalizationMap<LocalizedCard>();
+                _ = new LocalizationMap<LocalizedName>();
+                _ = new LocalizationMap<LocalizedProperty>();
+                _ = new LocalizationMap<LocalizationMap<string>>();
+                _ = new LocalizationMap<string>();
+            });
             AotHelper.Ensure(() =>
             {
                 var cardGame = new UnityCardGame(null);

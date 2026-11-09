@@ -175,6 +175,8 @@ namespace Cgs.Play
             var online = IsOnline;
             RefreshRoomLabels(online, online ? CardGameManager.Current.Name : null,
                 online ? CgsNetManager.Instance.RoomIdIp : null);
+            if (online)
+                Cgs.GameContent.GameContentText.Set(roomNameText, CardGameManager.Current, display => display.GameName);
 
             var scores = GameObject.FindGameObjectsWithTag("Player")
                 .Select(player => player.GetComponent<CgsNetPlayer>()).Select(cgsNetPlayer =>

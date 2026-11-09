@@ -340,6 +340,9 @@ namespace Tests.PlayMode
                     EventSystem.current.SetSelectedGameObject(null);
                     InputSystem.QueueStateEvent(gamepad, new GamepadState { leftStick = Vector2.down });
                     yield return null;
+                    // One press, not a held stick: slow/background Editor frames can
+                    // otherwise cross the UI's repeat delay before the assertion.
+                    InputSystem.QueueStateEvent(gamepad, new GamepadState());
                     yield return null;
                     Assert.AreEqual(dropdown.gameObject, EventSystem.current.currentSelectedGameObject,
                         "Initial gamepad navigation must focus Language. Selected="

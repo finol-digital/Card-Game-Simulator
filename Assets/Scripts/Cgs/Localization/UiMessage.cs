@@ -9,9 +9,32 @@ namespace Cgs.Localization
 {
     public sealed class UiMessage
     {
-        public string Key { get; }
-        public string English { get; }
-        public IList<object> Arguments { get; }
+        private readonly Func<UiMessage> _resolve;
+        private readonly Func<Action, IDisposable> _observe;
+
+        // Re-evaluate authored arguments without replacing a dialog or its actions.
+        public static UiMessage Live(Func<UiMessage> resolve, Func<Action, IDisposable> observe)
+        {
+            if (resolve == null)
+                throw new ArgumentNullException(nameof(resolve));
+            return new UiMessage(resolve, observe);
+        }
+
+        private UiMessage(Func<UiMessage> resolve, Func<Action, IDisposable> observe)
+        {
+            _resolve = resolve;
+            _observe = observe;
+        }
+
+        internal UiMessage Resolve() => _resolve == null ? this : _resolve();
+        internal IDisposable Observe(Action changed) => _observe?.Invoke(changed);
+
+        private readonly string _key;
+        private readonly string _english;
+        private readonly IList<object> _arguments;
+        public string Key => _resolve == null ? _key : Resolve().Key;
+        public string English => _resolve == null ? _english : Resolve().English;
+        public IList<object> Arguments => _resolve == null ? _arguments : Resolve().Arguments;
 
         public static UiMessage With(string key, string english, params (string name, object value)[] arguments)
         {
@@ -26,9 +49,9 @@ namespace Cgs.Localization
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentException("A localized message requires a semantic key.", nameof(key));
-            Key = key;
-            English = english ?? string.Empty;
-            Arguments = arguments == null ? Array.Empty<object>() : new object[] { new Dictionary<string, object>(arguments) };
+            _key = key;
+            _english = english ?? string.Empty;
+            _arguments = arguments == null ? Array.Empty<object>() : new object[] { new Dictionary<string, object>(arguments) };
         }
     }
 }

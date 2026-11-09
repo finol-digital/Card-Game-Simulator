@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Cgs;
 using Cgs.Cards;
+using Cgs.GameContent;
 using Cgs.Menu;
 using FinolDigital.Cgs.Json.Unity;
 using Newtonsoft.Json.Linq;
@@ -168,8 +169,9 @@ namespace Tests.PlayMode
         public void ExistingImageIsPreservedWhenDifferentIdResolvesToSamePath(bool imageBelongsToCard)
         {
             _game.CardBackFaceImageSprites["Blue"] = null;
-            var backs = (IList)typeof(SetImportMenu).GetProperty("BackFaceOptions", PrivateInstance).GetValue(_menu);
-            backs.Add(new Dropdown.OptionData("Blue"));
+            var selector = AddChild<Dropdown>(_root);
+            typeof(SetImportMenu).GetField("backSelector", PrivateInstance).SetValue(_menu, selector);
+            GameContentBackOptions.Bind(selector, _game, "Blue");
             var original = new UnityCard(_game, "A", "Original", Path.GetFileName(_folder), null, false,
                 false, "Blue");
             Directory.CreateDirectory(Path.GetDirectoryName(original.ImageFilePath));

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "game": "Standard Playing Cards@www.cardgamesimulator.com",
+  "decks": {
+    "Standard 52-card Deck.txt": {
+      "generation": "5bd6c7dc7d855c0a89e7c6eace42bb1d",
+      "name": "Standard 52-card Deck",
+      "source": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%2052-card%20Deck.txt",
+      "sha256": "1ed46eae7f3a68cf561e483c0ea33f4001e7326e98205e80cdf19303ed32cfe1"
+    },
+    "Standard Deck with Jokers.txt": {
+      "generation": "ff77e46f17e251738d2336f465d1ed74",
+      "name": "Standard Deck with Jokers",
+      "source": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%20Deck%20with%20Jokers.txt",
+      "sha256": "4ae509766c45444bb10bcd2052f35570ec2f249f9968e8604291eac66cfc08cb"
+    },
+    "Standard with Dark Back 52-card Deck.txt": {
+      "generation": "995f9731439f5b28aa39959cc784e69e",
+      "name": "Standard with Dark Back 52-card Deck",
+      "source": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%20with%20Dark%20Back%2052-card%20Deck.txt",
+      "sha256": "9f242405de60fdcaf912326fc5c4ba926ee0c58599cb02eba7bff27da6b9b883"
+    },
+    "Standard with Dark Back Deck with Jokers.txt": {
+      "generation": "bff88d0f485b5351b7e53aba9099e24b",
+      "name": "Standard with Dark Back Deck with Jokers",
+      "source": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%20with%20Dark%20Back%20Deck%20with%20Jokers.txt",
+      "sha256": "472833ebc3a53c6f9b7a02be02a65a4c2b501bc28ffa40505667206e32154fa0"
+    }
+  }
+}

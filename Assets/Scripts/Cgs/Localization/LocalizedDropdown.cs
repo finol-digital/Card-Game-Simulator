@@ -23,6 +23,13 @@ namespace Cgs.Localization
         [SerializeField] Option[] options = Array.Empty<Option>();
         private readonly List<LocalizedMessageBinding> _bindings = new();
 
+        public void RefreshBindings()
+        {
+            OnDisable();
+            if (isActiveAndEnabled)
+                OnEnable();
+        }
+
         private void OnEnable()
         {
             var dropdown = GetComponent<Dropdown>();

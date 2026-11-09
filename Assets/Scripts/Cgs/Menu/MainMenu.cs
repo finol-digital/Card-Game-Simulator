@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Localization;
+using Cgs.GameContent;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using PrimeTween;
@@ -89,8 +90,8 @@ namespace Cgs.Menu
 
         private void SetCopyright()
         {
-            var copyright = CardGameManager.Current.Copyright;
-            Cgs.Localization.LocalizedUiText.SetLiteral(copyrightText, string.IsNullOrWhiteSpace(copyright) ? FinolDigitalLlc : copyright);
+            GameContentText.Set(copyrightText, CardGameManager.Current, display =>
+                string.IsNullOrWhiteSpace(display.Copyright) ? FinolDigitalLlc : display.Copyright);
         }
 
         protected void Start()
@@ -187,11 +188,11 @@ namespace Cgs.Menu
 
         private void ResetGameSelectionCarousel()
         {
-            Cgs.Localization.LocalizedUiText.SetLiteral(currentGameNameText, CardGameManager.Current.Name);
-            currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
-            currentCardImage.sprite = CardGameManager.Current.CardBackImageSprite;
-            previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
-            nextCardImage.sprite = CardGameManager.Instance.Next.CardBackImageSprite;
+            GameContentText.Set(currentGameNameText, CardGameManager.Current, display => display.GameName);
+            GameContentImage.Set(currentBannerImage, CardGameManager.Current, CardGameManager.Current.BannerImageSprite, false, "bannerImageUrl");
+            GameContentImage.Set(currentCardImage, CardGameManager.Current, CardGameManager.Current.CardBackImageSprite, false, "cardBackImageUrl");
+            GameContentImage.Set(previousCardImage, CardGameManager.Instance.Previous, CardGameManager.Instance.Previous.CardBackImageSprite, false, "cardBackImageUrl");
+            GameContentImage.Set(nextCardImage, CardGameManager.Instance.Next, CardGameManager.Instance.Next.CardBackImageSprite, false, "cardBackImageUrl");
         }
 
         private void InputSelectPrevious(InputAction.CallbackContext context)
@@ -208,13 +209,17 @@ namespace Cgs.Menu
 
             // Create duplicate cards to animate
             var offLeft = Instantiate(offLeftImage.gameObject, offLeftImage.transform.parent);
-            offLeft.GetOrAddComponent<Image>().sprite = CardGameManager.Instance.Previous2.CardBackImageSprite;
+            GameContentImage.Set(offLeft.GetOrAddComponent<Image>(), CardGameManager.Instance.Previous2,
+                CardGameManager.Instance.Previous2.CardBackImageSprite, false, "cardBackImageUrl");
             var left = Instantiate(previousCardImage.gameObject, previousCardImage.transform.parent);
             Destroy(left.GetComponent<Button>());
+            GameContentImage.Set(left.GetComponent<Image>(), CardGameManager.Instance.Previous, CardGameManager.Instance.Previous.CardBackImageSprite, false, "cardBackImageUrl");
             var middle = Instantiate(currentCardImage.gameObject, currentCardImage.transform.parent);
             Destroy(middle.GetComponent<Button>());
+            GameContentImage.Set(middle.GetComponent<Image>(), CardGameManager.Current, CardGameManager.Current.CardBackImageSprite, false, "cardBackImageUrl");
             var right = Instantiate(nextCardImage.gameObject, nextCardImage.transform.parent);
             Destroy(right.GetComponent<Button>());
+            GameContentImage.Set(right.GetComponent<Image>(), CardGameManager.Instance.Next, CardGameManager.Instance.Next.CardBackImageSprite, false, "cardBackImageUrl");
 
             // Do selection and hide originals
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
@@ -272,13 +277,17 @@ namespace Cgs.Menu
 
             // Create duplicate cards to animate
             var offRight = Instantiate(offRightImage.gameObject, nextCardImage.transform.parent);
-            offRight.GetOrAddComponent<Image>().sprite = CardGameManager.Instance.Next2.CardBackImageSprite;
+            GameContentImage.Set(offRight.GetOrAddComponent<Image>(), CardGameManager.Instance.Next2,
+                CardGameManager.Instance.Next2.CardBackImageSprite, false, "cardBackImageUrl");
             var right = Instantiate(nextCardImage.gameObject, nextCardImage.transform.parent);
             Destroy(right.GetComponent<Button>());
+            GameContentImage.Set(right.GetComponent<Image>(), CardGameManager.Instance.Next, CardGameManager.Instance.Next.CardBackImageSprite, false, "cardBackImageUrl");
             var middle = Instantiate(currentCardImage.gameObject, currentCardImage.transform.parent);
             Destroy(middle.GetComponent<Button>());
+            GameContentImage.Set(middle.GetComponent<Image>(), CardGameManager.Current, CardGameManager.Current.CardBackImageSprite, false, "cardBackImageUrl");
             var left = Instantiate(previousCardImage.gameObject, previousCardImage.transform.parent);
             Destroy(left.GetComponent<Button>());
+            GameContentImage.Set(left.GetComponent<Image>(), CardGameManager.Instance.Previous, CardGameManager.Instance.Previous.CardBackImageSprite, false, "cardBackImageUrl");
 
             // Do selection and hide originals
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);

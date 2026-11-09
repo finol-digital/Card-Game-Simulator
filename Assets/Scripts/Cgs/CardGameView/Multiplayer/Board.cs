@@ -53,11 +53,8 @@ namespace Cgs.CardGameView.Multiplayer
                 ? UnityFileMethods.CreateSprite(boardFilepath)
                 : null;
             Debug.Log($"boardImage: {GameBoardId} {boardImageSprite != null}");
-            if (boardImageSprite != null)
-            {
-                var image = gameObject.GetOrAddComponent<Image>();
-                image.sprite = boardImageSprite;
-            }
+            var image = gameObject.GetOrAddComponent<Image>();
+            Cgs.GameContent.GameContentImage.Set(image, CardGameManager.Current, boardImageSprite, false, "boards", GameBoardId);
 
             rectTransform.localScale = Vector3.one;
         }
