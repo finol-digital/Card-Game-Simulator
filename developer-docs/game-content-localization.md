@@ -250,8 +250,16 @@ and the separate `CGS Localization Verification@example.invalid` packages:
 
 These are whole-game replacement and editor-persistence checks on the custom
 fixture. The five passing catalog tests separately cover same-instance reload.
-They do not establish default-game opt-out or the original Spanish/Japanese games;
-those remain covered by their own tests or pending verification in E2.
+Default-game opt-out is a separate automated test; the original Spanish/Japanese
+game walkthrough is recorded below.
+
+The user reported **Suma o Muere and Hokuto no Ken Card Battle both passed**
+the original-language compatibility walkthrough on a PR build: import/open and
+deck loading, UI switches among English/Spanish/Japanese, preserved authored
+content language and card rendering, loading/drawing, and restart. The device
+and exact build were not specified for this check. This records the player
+compatibility result; it is not an independent inspection of their current
+hosted manifests or a claim that new translations were added to those games.
 
 The user reported **both extended multiplayer transition checks passed** with
 PR builds on both devices:
