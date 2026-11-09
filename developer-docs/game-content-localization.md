@@ -253,6 +253,19 @@ fixture. The five passing catalog tests separately cover same-instance reload.
 They do not establish default-game opt-out or the original Spanish/Japanese games;
 those remain covered by their own tests or pending verification in E2.
 
+The user reported **both extended multiplayer transition checks passed** with
+PR builds on both devices:
+
+- An English host selected Standard Playing Cards; the Spanish client started on
+  Mahjong. Joining switched the client to Standard, and a newly loaded built-in
+  deck displayed its label in each player's language.
+- Switching one device's language during play refreshed its local labels while
+  preserving cards, positions, deck contents, and user-entered names, with no
+  duplicate creations or disconnects.
+
+This closes the player-reported multiplayer-transition portion of E4; its
+remaining presentation/dialog/filter/unsaved-edit cases are tracked separately.
+
 The user reported P4 **passed** with released **v1.170** versus the PR build. The tag
 (`c24e3e7f3eee9122f4bdf4fd484c5c3218f26cac`) contains neither `GameContentNetwork`
 nor the game-content presentation directory, making it a genuine pre-feature
