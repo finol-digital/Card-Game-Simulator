@@ -222,7 +222,19 @@ The user subsequently reported **all four online WebGL checks passed** on the
 linked PR build: downloading the hosted game, Spanish card/deck/artwork display,
 intentional Japanese per-leaf fallback, and repeating the language switches after
 an online browser reload. Offline switching and transfer of the downloaded caches
-remain unconfirmed; this report does not close the full E1 requirement.
+were subsequently reported **passed**: switching Spanish/Japanese/English with
+the loaded WebGL app offline, whole-game export/import into a native PR build
+without internet access, and repeating the switches after an offline native
+restart. The user did not identify which native device was used for this final
+transfer. This confirms the hosted fixture's browser/cache-transfer walkthrough,
+not a cold offline launch of the WebGL application shell. A fresh redirected
+download in a native player and the remaining E1 fault cases are separate evidence.
+
+The next player check is P4 with released **v1.170** versus the PR build. The tag
+(`c24e3e7f3eee9122f4bdf4fd484c5c3218f26cac`) contains neither `GameContentNetwork`
+nor the game-content presentation directory, making it a genuine pre-feature
+client. Record both host directions and any pre-existing version/connection
+restriction; no released-client compatibility result has been claimed yet.
 
 The [hosted fixture](fixtures/localization-hosted/cgs.json) is generated with real
 GitHub raw URLs and `autoUpdate: 0`. It uses the same two cards and catalogs as the
