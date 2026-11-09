@@ -10,6 +10,26 @@ import verification_fixture as fixture
 
 
 class VerificationFixtureTests(unittest.TestCase):
+    def test_published_hosted_fixture_matches_generator(self):
+        maintained = fixture.ROOT / "developer-docs/fixtures/localization-hosted"
+        manifest = json.loads((maintained / "cgs.json").read_text(encoding="utf-8"))
+        base = manifest["autoUpdateUrl"].removesuffix("cgs.json")
+        with tempfile.TemporaryDirectory() as temporary:
+            game, _ = fixture.build(Path(temporary) / "published", base)
+            actual = {
+                path.relative_to(game) for path in game.rglob("*") if path.is_file()
+            }
+            expected = {
+                path.relative_to(maintained)
+                for path in maintained.rglob("*")
+                if path.is_file()
+            }
+            self.assertEqual(actual, expected)
+            for path in actual:
+                self.assertEqual(
+                    (game / path).read_bytes(), (maintained / path).read_bytes()
+                )
+
     def test_offline_package_matches_maintained_fixture_and_zip(self):
         with tempfile.TemporaryDirectory() as temporary:
             game, archive = fixture.build(Path(temporary) / "offline")

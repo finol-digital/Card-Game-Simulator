@@ -143,3 +143,5 @@ Assets/StreamingAssets/**/decks/*.txt text eol=lf
 docs/games/**/decks/*.txt text eol=lf
 developer-docs/fixtures/localization-verification/**/*.txt text eol=lf
 developer-docs/fixtures/localization-verification/**/*.json text eol=lf
+developer-docs/fixtures/localization-hosted/**/*.txt text eol=lf
+developer-docs/fixtures/localization-hosted/**/*.json text eol=lf

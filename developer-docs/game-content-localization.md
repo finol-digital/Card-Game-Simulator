@@ -204,6 +204,51 @@ the proxy/browser header behavior, restart, and export/import of downloaded cach
 as described in E1. The command does not host files, configure redirects, or deploy
 the proxy. Do not claim the hosted check passed from importing the offline zip.
 
+## Hosted player test handoff (2026-11-08)
+
+Proxy PR #559 was merged as `9c3bb4c555537a8df08b4d8d130335e2b6d5ed54`.
+Firebase reports a successful production rollout. The live proxy now returns
+`X-CGS-Final-URL` and includes it in `Access-Control-Expose-Headers`. The deployment
+prerequisite is satisfied; the full E1 player/cache walkthrough remains open.
+
+The [hosted fixture](fixtures/localization-hosted/cgs.json) is generated with real
+GitHub raw URLs and `autoUpdate: 0`. It uses the same two cards and catalogs as the
+offline fixture. Its identity ends in `@raw.githubusercontent.com`, so it is
+separate from the offline example. These are review-branch URLs, not permanent
+production game URLs; regenerate if the branch is renamed/deleted.
+
+1. Open the [tested WebGL build](https://card-game-simulator--preview-58didt1c.web.app)
+   on Windows in Chrome or Edge. This is the successful `16383eee` CI build;
+   later fixture/documentation changes do not require another player binary.
+   The Firebase preview channel can expire; obtain a fresh preview if unavailable.
+2. In game management, choose Import, then **Download from Web AutoUpdate URL**.
+   Paste this redirecting entry URL, rather than importing the offline zip:
+
+   ```text
+   https://github.com/finol-digital/Card-Game-Simulator/raw/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/cgs.json
+   ```
+
+   GitHub redirects to `raw.githubusercontent.com`; the production proxy must
+   retain that final origin. Catalogs resolve under `locales/`, and the Spanish
+   card-back image resolves under `locales/images/`, relative to its catalog.
+3. Wait for both cards to load. Select Spanish: expect `Verificación de idiomas`,
+   `As de tréboles`, `As de picas`, `Baraja de verificación`, and the dark card back.
+   Select Japanese: expect `言語の検証`, `クラブのエース`, but canonical English
+   `Ace of Spades` and `Verification deck`. That partial fallback is intentional.
+4. Reload the browser while online and repeat the language switch. Then keep the
+   loaded app open, set browser DevTools Network to **Offline**, and switch between
+   Spanish/Japanese/English again. Cached translations and card backs should work.
+   Restore network access afterward. This is not a claim that the WebGL application
+   shell itself can cold-start offline; testing a reload with normal network access
+   alone also does not prove that cached game content works offline.
+5. Export the whole hosted game from WebGL. Import that package into a separate
+   native installation/profile while offline, restart, and switch languages. This
+   verifies downloaded caches travel with the package. A standalone deck export
+   or the prebundled offline fixture cannot substitute for this check.
+
+Record download, Spanish, Japanese fallback, reload, offline switch, and package
+transfer separately. Do not close E1 if only the online language checks pass.
+
 ## Presentation surfaces and source boundaries
 
 Paths below are relative to `Assets/Scripts/`. “Pending” means inspected and assigned,

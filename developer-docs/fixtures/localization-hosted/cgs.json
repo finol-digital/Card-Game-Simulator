@@ -1,0 +1,48 @@
+{
+  "name": "CGS Localization Verification",
+  "autoUpdate": 0,
+  "autoUpdateUrl": "https://raw.githubusercontent.com/finol-digital/Card-Game-Simulator/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/cgs.json",
+  "allCardsUrl": "https://raw.githubusercontent.com/finol-digital/Card-Game-Simulator/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/AllCards.json",
+  "allSetsUrl": "https://raw.githubusercontent.com/finol-digital/Card-Game-Simulator/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/AllSets.json",
+  "bannerImageUrl": "https://raw.githubusercontent.com/finol-digital/Card-Game-Simulator/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/Banner.png",
+  "cardBackImageUrl": "https://raw.githubusercontent.com/finol-digital/Card-Game-Simulator/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/CardBack.png",
+  "cardImageUrl": "https://raw.githubusercontent.com/finol-digital/Card-Game-Simulator/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/sets/{cardSet}/{cardId}.png",
+  "deckUrls": [
+    {
+      "name": "Verification deck",
+      "url": "https://raw.githubusercontent.com/finol-digital/Card-Game-Simulator/refs/heads/feature/game-content-localization/developer-docs/fixtures/localization-hosted/decks/Verification%20deck.txt"
+    }
+  ],
+  "cardProperties": [
+    {
+      "name": "suit",
+      "display": "Suit",
+      "type": "stringEnum"
+    },
+    {
+      "name": "rules",
+      "display": "Rules",
+      "type": "string"
+    }
+  ],
+  "enums": [
+    {
+      "property": "suit",
+      "values": {
+        "clubs": "Clubs",
+        "spades": "Spades"
+      }
+    }
+  ],
+  "localization": {
+    "defaultLocale": "en",
+    "locales": {
+      "es": {
+        "url": "locales/es.json"
+      },
+      "ja": {
+        "url": "locales/ja.json"
+      }
+    }
+  }
+}
