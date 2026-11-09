@@ -9,7 +9,7 @@ Ensure application-owned interface text refreshes consistently in every shipped 
 
 CGS SHALL localize its authored and dynamically produced interface text across TitleScreen, MainMenu, Settings, CardsExplorer, DeckEditor, PlayGame, and their shared or instantiated UI. This includes labels, buttons, dropdown options, input placeholders, tooltips, help, dialog prompts, loading/progress text, status messages, and user-facing errors. A coverage inventory SHALL identify each text source as localized or excluded with a reason.
 
-User-entered text, chat, canonical names, game/card definitions, URLs, identifiers, native OS controls, and developer-only logs SHALL retain their original values. Opt-in authored game-content translations and asset variants SHALL affect only presentation under the localized-game-content contract; games without localization metadata SHALL retain original presentation. CGS-provided titles/prompts passed to native dialogs SHALL use the current language when opened.
+User-entered text, chat, canonical names, game/card definitions, URLs, identifiers, native OS controls, and developer-only logs SHALL retain their original values. Opt-in authored game-content translations and asset variants SHALL affect only presentation under the localized-game-content contract; games with neither authored localization metadata nor an applicable bundled default catalog SHALL retain original presentation. CGS-provided titles/prompts passed to native dialogs SHALL use the current language when opened.
 
 #### Scenario: Traverse the application in a non-English language
 - **WHEN** the player visits all six shipped scenes and opens their menus/dialogs in a supported non-English language
