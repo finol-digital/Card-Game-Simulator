@@ -36,4 +36,15 @@ This change implements upstream tasks 4–5 from FinolDigital.Cgs.Json's `add-ga
 - [x] 5.1 Document author installation, provenance, cache/rulebook boundaries, old-editor behavior, and successful-reload rollback; verify examples and package relocation instructions against actual behavior. Maps to upstream 4.10.
 - [x] 5.2 Exercise original English/Spanish/Japanese games and complete/partial catalogs across supported desktop/mobile/WebGL layouts; record Unicode, long-label, multiline, startup, repeated-switch, and offline results against the inventory. Maps to upstream 5.1.
 - [x] 5.3 Verify mixed-language and mixed-capability deck loading, gameplay, and deck saving preserve canonical state and locale switches send no gameplay/provenance mutations. Maps to upstream 5.2.
-- [ ] 5.4 Verify removal/null rollback, offline relocation, unselected-game refresh, unchanged legacy files/exports/assets, and the reviewed library release dependency before shipping; reconcile both task lists from test evidence. Maps to upstream 5.3.
+- [x] 5.4 Verify removal/null rollback, offline relocation, unselected-game refresh, unchanged legacy files/exports/assets, and the reviewed library release dependency before shipping; reconcile both task lists from test evidence. Maps to upstream 5.3.
+
+## Completion evidence (2026-11-09)
+
+The final dependency is published library v1.15.0, recorded in
+`developer-docs/game-content-localization-library.json`. Full CI run 42680518155
+passed unit tests, quality checks, and all platform builds on `e0c77bad` before
+PR #600 merged as `bf4452590317b985d2a446913cc01452c8d72d33`. The complete player
+and automated verification mapping remains in `developer-docs/game-content-localization.md`.
+Proxy #559 is deployed, and Pages run 42672193735 succeeded on its second attempt.
+All required implementation tasks are complete; publishing a new public CGS app
+release remains a separate release-management operation.

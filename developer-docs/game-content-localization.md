@@ -21,7 +21,12 @@ DLL, SHA-256 `238b76da2bb7ce09b86b5359e1831eb1a1d2258d2f840340f8af8c213426fd68`.
 Both schemas match the release artifacts byte for byte. The release package's
 DLL also matches the standalone workflow DLL. No runtime source changes are
 needed for this adoption. Release metadata supersedes earlier development-only
-provenance; final integration validation and feature merge are still pending.
+provenance; [full CI run 42680518155](https://github.com/finol-digital/Card-Game-Simulator/actions/runs/42680518155)
+passed tests, quality checks, and every platform build at `e0c77bad`. PR #600
+merged as `bf4452590317b985d2a446913cc01452c8d72d33`. Pages run 42672193735 also
+passed on rerun. The attempted local Editor smoke run did not complete because
+its Pipeline connection dropped during reload; release validation is supplied by
+the successful full CI run, not an inferred local pass.
 
 ## Current player verification checklist (reconciled 2026-11-08)
 
@@ -170,10 +175,11 @@ does not close them.
   list contained it. **E1 remains blocked on proxy deployment and a hosted redirect
   fixture.** This probe establishes header absence, not browser behavior.
 
-Current implementation progress: **downstream 19/20; upstream 27/28**.
-Only downstream 5.4/upstream 5.3 remain open for the reviewed library release
-and final dependency adoption. Functional completion combines the dated local/CI
-results with the subsequent player reports; it does not infer a published release.
+Current implementation progress: **downstream 20/20; upstream 28/28**.
+Downstream 5.4/upstream 5.3 are complete following published v1.15.0 adoption,
+successful full CI, and the feature merge recorded above. Functional completion combines the dated local/CI results with the subsequent
+player reports. The published library dependency is recorded above; a public
+CGS app release remains separate.
 
 ### Verification reconciliation (2026-11-08)
 
@@ -192,9 +198,10 @@ coverage is Android and Windows plus the reported WebGL walkthrough; this does
 not claim iOS device testing, a cold offline WebGL shell, or human linguistic
 review of every translation. Those limits do not erase the automated coverage.
 
-Before shipping: merge/release the reviewed library, adopt and validate that
-release in Unity, then merge/release CGS and archive both completed changes.
-Proxy #559 is already deployed. Neither remaining PR has been merged here.
+Library v1.15.0 and the Unity implementation are merged; both completed changes
+are archived with their requirements synced into the main specs. Proxy #559 is
+deployed. Publishing a new public CGS app release remains a separate release
+operation; this archive does not claim production app-store rollout.
 
 ### Complete verification fixture
 
@@ -585,7 +592,7 @@ remaining OpenSpec tasks unchecked until those results are recorded.
 
 ## Installation and rollback procedure
 
-The library is released as v1.15.0; the CGS feature is awaiting its final merge.
+The library is released as v1.15.0; the CGS feature is merged in PR #600.
 Proxy #559 is deployed and its final-origin header was verified from WebGL.
 
 1. Keep the original manifest/cards/sets/decks and add the optional `localization`
@@ -732,3 +739,15 @@ metadata from explicit null. The library's 97 tests and seven URI-aware schema
 tests pass; generated schemas are unchanged. Unity's 38 default-game and nine
 manifest-reload tests pass with the rebuilt DLL. The provenance file records
 its source and binary hashes. Player CI remains a separate verification step.
+
+## OpenSpec archive validation (2026-11-09)
+
+Both localization changes are complete and archived under `2026-11-09-*`;
+their requirements are synced into the main specs. The library's two specs and
+Unity's new `localized-game-content` spec pass strict validation. Unity's complete
+spec set passes normal validation with four pre-existing warning categories:
+placeholder purposes in `card-back-persistence` and `schema-validation-test-mode`,
+and overlong requirement descriptions in `localized-interface` and
+`translation-contributions`. The existing UI-localization requirement was merged
+without dropping scenarios or splitting its established contract. Those unrelated
+purpose/structure cleanups are not part of this feature archive.
