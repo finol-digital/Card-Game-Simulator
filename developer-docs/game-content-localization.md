@@ -238,6 +238,21 @@ fallback, and repeating language switches after restarting CGS. The requested
 platform was Android or Windows; the user did not specify which was used for this
 check. The remaining E1 fault cases are separate evidence.
 
+The user reported **all three rollback checks passed** using the Windows PR build
+and the separate `CGS Localization Verification@example.invalid` packages:
+
+- Importing the localized baseline showed Spanish presentation.
+- Replacing it with the package omitting `localization` returned game, card, and
+  deck names to canonical English while the application UI remained Spanish.
+- Restoring the localized baseline and then importing explicit `localization: null`
+  returned those names to English; saving through the game editor and restarting
+  preserved that opt-out.
+
+These are whole-game replacement and editor-persistence checks on the custom
+fixture. The five passing catalog tests separately cover same-instance reload.
+They do not establish default-game opt-out or the original Spanish/Japanese games;
+those remain covered by their own tests or pending verification in E2.
+
 The user reported P4 **passed** with released **v1.170** versus the PR build. The tag
 (`c24e3e7f3eee9122f4bdf4fd484c5c3218f26cac`) contains neither `GameContentNetwork`
 nor the game-content presentation directory, making it a genuine pre-feature
