@@ -1,5 +1,5 @@
 {
-  "status": "unreleased local development build",
+  "status": "published release",
   "libraryBranch": "feature/game-content-localization",
   "libraryBaseCommit": "86d9f79178d8914dc65323459bac631ea475dd80",
   "sourceFilesSha256": "fd3899df44847468d78a803aa767f77cbecf224ec1df35ef274cfce9e01d4dfc",
@@ -32,16 +32,19 @@
     "FinolDigital.Cgs.Json/SharePreference.cs": "492534fa384d4ca770517f8068ec52f1acedc9b8bdd24421f6014d518ae406ef",
     "FinolDigital.Cgs.Json/FinolDigital.Cgs.Json.csproj": "c2a01820da9519f9607b49109cda9c44f37698d232b390b6f4742abc73d6f1e1"
   },
-  "dllSha256": "bac9af2fc6196d503d734389c7563e31044c9dc9de03af7d367c0e90cbd1ee44",
-  "buildCommand": "dotnet build FinolDigital.Cgs.Json/FinolDigital.Cgs.Json.csproj --configuration Release",
+  "dllSha256": "238b76da2bb7ce09b86b5359e1831eb1a1d2258d2f840340f8af8c213426fd68",
+  "buildCommand": "dotnet build --configuration Release /p:Version=1.15.0",
   "targetFramework": "netstandard2.1",
-  "assemblyVersion": "1.0.0.0",
-  "sdk": "10.0.403",
+  "assemblyVersion": "1.15.0.0",
   "schemas": {
     "cgs.json": "2e902cd993a4ac022e9e228f0657907a3de131de75f5a9a9702adda09c260e8d",
     "GameLocalization.json": "07671f6e944af0675845e10ad0b42e31db7e54e50d3df2c77d49d8d4fdbafebe"
   },
-  "librarySourceCommit": "d880518a0f2e37d332a6997bcccdcc83180e2571",
+  "librarySourceCommit": "f44e4176da5511439ead5cdbac40e92cb88c17f6",
   "libraryPullRequest": "https://github.com/finol-digital/FinolDigital.Cgs.Json/pull/28",
-  "sourceFilesHashFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><relative path><LF>, sorted by relative path"
+  "sourceFilesHashFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><relative path><LF>, sorted by relative path",
+  "releaseTag": "v1.15.0",
+  "releaseUrl": "https://github.com/finol-digital/FinolDigital.Cgs.Json/releases/tag/v1.15.0",
+  "releaseWorkflowRun": "https://github.com/finol-digital/FinolDigital.Cgs.Json/actions/runs/42570234520",
+  "dependencyPullRequest": "https://github.com/finol-digital/Card-Game-Simulator/pull/602"
 }

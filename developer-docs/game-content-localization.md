@@ -4,10 +4,24 @@ This is the downstream implementation record for `integrate-game-content-localiz
 The companion contract is FinolDigital.Cgs.Json `add-game-content-localization`
 ([proposal PR #27](https://github.com/finol-digital/FinolDigital.Cgs.Json/pull/27)).
 The dependency build is recorded in [game-content-localization-library.json](game-content-localization-library.json).
-It is an **unreleased local development build**, not a published library version.
-Rebuild from the recorded source file hashes with the recorded command and verify
-the DLL/schema hashes. Replace that provenance with the reviewed source commit and
-release before shipping. Preserve the existing plugin `.meta` GUID.
+It is the published **v1.15.0** release from the successful
+[release workflow](https://github.com/finol-digital/FinolDigital.Cgs.Json/actions/runs/42570234520).
+The DLL matches the NuGet package and the artifact adopted by dependency PR #602;
+the recorded source-file and schema hashes match the previously tested build.
+Assembly version is `1.15.0.0`; the existing plugin `.meta` GUID is preserved.
+The dated development-build records below describe earlier validation stages.
+
+## Released dependency adoption (2026-11-09)
+
+Library PR #28 is merged and v1.15.0 was published from
+`f44e4176da5511439ead5cdbac40e92cb88c17f6`. Dependency PR #602 merged into CGS main
+as `3e3c718d294f84139951fc51a230fa8d2d08f8d1`. Unity feature PR #600 remained open;
+its update from main resolves the binary conflict in favor of the exact release
+DLL, SHA-256 `238b76da2bb7ce09b86b5359e1831eb1a1d2258d2f840340f8af8c213426fd68`.
+Both schemas match the release artifacts byte for byte. The release package's
+DLL also matches the standalone workflow DLL. No runtime source changes are
+needed for this adoption. Release metadata supersedes earlier development-only
+provenance; final integration validation and feature merge are still pending.
 
 ## Current player verification checklist (reconciled 2026-11-08)
 
@@ -571,7 +585,7 @@ remaining OpenSpec tasks unchecked until those results are recorded.
 
 ## Installation and rollback procedure
 
-This is development-build guidance. The library and CGS changes are not released.
+The library is released as v1.15.0; the CGS feature is awaiting its final merge.
 Proxy #559 is deployed and its final-origin header was verified from WebGL.
 
 1. Keep the original manifest/cards/sets/decks and add the optional `localization`
