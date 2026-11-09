@@ -216,7 +216,13 @@ the GitHub redirect returned HTTP 200 with a JavaScript-readable final raw URL;
 the Spanish catalog resolved relative to that URL and returned HTTP 200; its
 relative card-back image returned HTTP 200, `image/png`, and 15,741 bytes.
 This verifies deployed redirect/CORS/resource transport, not Unity's in-app
-rendering, persistence, or offline cache export. Those player steps remain below.
+rendering, persistence, or offline cache export.
+
+The user subsequently reported **all four online WebGL checks passed** on the
+linked PR build: downloading the hosted game, Spanish card/deck/artwork display,
+intentional Japanese per-leaf fallback, and repeating the language switches after
+an online browser reload. Offline switching and transfer of the downloaded caches
+remain unconfirmed; this report does not close the full E1 requirement.
 
 The [hosted fixture](fixtures/localization-hosted/cgs.json) is generated with real
 GitHub raw URLs and `autoUpdate: 0`. It uses the same two cards and catalogs as the
