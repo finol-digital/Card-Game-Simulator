@@ -121,7 +121,7 @@ namespace Cgs.Play.Drawer
             {
                 var allCardStacks = PlayController.Instance.AllCardStacks.ToList();
                 var currentCount = allCardStacks.Count;
-                var currentNames = string.Join(",", allCardStacks.Select(s => s.Name));
+                var currentNames = string.Join(",", allCardStacks.Select(s => s.DisplayName));
                 if (currentCount != _previousCardStackCount || currentNames != _previousCardStackNames)
                     RefreshCardStackDropdown();
             }
@@ -228,10 +228,10 @@ namespace Cgs.Play.Drawer
 
             var allCardStacks = PlayController.Instance.AllCardStacks.ToList();
             _previousCardStackCount = allCardStacks.Count;
-            _previousCardStackNames = string.Join(",", allCardStacks.Select(s => s.Name));
+            _previousCardStackNames = string.Join(",", allCardStacks.Select(s => s.DisplayName));
 
             cardStackDropdown.ClearOptions();
-            cardStackDropdown.AddOptions(allCardStacks.Select(s => s.Name).ToList());
+            cardStackDropdown.AddOptions(allCardStacks.Select(s => s.DisplayName).ToList());
 
             var selectedIndex = -1;
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline &&

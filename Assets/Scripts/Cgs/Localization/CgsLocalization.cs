@@ -24,6 +24,7 @@ namespace Cgs.Localization
         private static LocaleChangeQueue _queue;
 
         public static bool IsReady { get; private set; }
+        public static string CurrentLocale => IsReady ? _settings.GetSelectedLocale()?.Identifier.Code : null;
         public static event Action Changed;
         public static IReadOnlyList<SupportedLanguage> Languages => Selector?.Languages ?? Array.Empty<SupportedLanguage>();
         private static CgsLocaleSelector Selector => _settings == null ? null :
@@ -109,6 +110,7 @@ namespace Cgs.Localization
         // read an already loaded table; never block the browser/player to open one.
         public static string Text(UiMessage message)
         {
+            message = message.Resolve();
             if (!IsReady)
                 return message.English;
             var operation = LocalizationSettings.StringDatabase.GetTableAsync(TableName);

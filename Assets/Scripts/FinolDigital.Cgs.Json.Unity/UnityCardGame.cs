@@ -81,6 +81,18 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public bool HasReadProperties { get; private set; }
 
+        [JsonIgnore] public long DefinitionGeneration { get; private set; }
+        public event Action<UnityCardGame> DefinitionChanged;
+        [JsonIgnore] public LocalizationOrigin DefinitionOrigin { get; private set; }
+        [JsonIgnore] public long ContentGeneration { get; private set; }
+        public event Action<UnityCardGame> ContentChanged;
+
+        internal void NotifyContentChanged()
+        {
+            ContentGeneration++;
+            ContentChanged?.Invoke(this);
+        }
+
         public bool IsDownloading
         {
             get => _isDownloading;
@@ -226,6 +238,8 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public void ReadProperties()
         {
+            string movedFrom = null;
+            string movedTo = null;
             try
             {
                 // We need to read the cgs.json file, but reading it can cause *Game:ID* to change, so account for that
@@ -234,29 +248,129 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (!File.Exists(gameFilePath))
                     gameFilePath = GameBackupFilePath;
 
-                ClearDefinitionLists();
-                JsonConvert.PopulateObject(File.ReadAllText(gameFilePath), this);
+                // Clone configuration only. Never let a failed PopulateObject mutate the
+                // installed definition, its collections, or the loaded gameplay objects.
+                var staged = StageDefinition(gameFilePath);
+
+                if (!gameDirectoryPath.Equals(staged.GameDirectoryPath) && Directory.Exists(gameDirectoryPath) &&
+                    !Directory.Exists(staged.GameDirectoryPath))
+                {
+                    LocalizationCache.Invalidate(gameDirectoryPath);
+                    Directory.Move(gameDirectoryPath, staged.GameDirectoryPath);
+                    movedFrom = gameDirectoryPath;
+                    movedTo = staged.GameDirectoryPath;
+                    gameFilePath = Path.Combine(movedTo, Path.GetFileName(gameFilePath));
+                }
+
+                if (!gameFilePath.Equals(staged.GameFilePath) && File.Exists(gameFilePath) && !File.Exists(staged.GameFilePath))
+                    File.Copy(gameFilePath, staged.GameFilePath, true);
+
+                // CardGame's JSON contract consists of configuration auto-properties.
+                // Copy the validated values without reparsing or touching runtime data.
+                var contract = (JsonObjectContract)new DefaultContractResolver().ResolveContract(typeof(CardGame));
+                foreach (var property in contract.Properties.Where(property => !property.Ignored && property.Writable))
+                    property.ValueProvider.SetValue(this, property.ValueProvider.GetValue(staged));
+                LocalizationSpecified = staged.LocalizationSpecified;
                 RefreshId();
+                _warnedCardImageUrlProperties.Clear();
+                DefinitionOrigin = LocalizationFiles.ReadDefinitionOrigin(GameDirectoryPath, GameFilePath);
+                DefinitionGeneration++;
+                HasReadProperties = true;
+            }
+            catch (Exception e)
+            {
+                if (movedFrom != null && Directory.Exists(movedTo) && !Directory.Exists(movedFrom))
+                {
+                    try
+                    {
+                        Directory.Move(movedTo, movedFrom);
+                    }
+                    catch (Exception rollbackError)
+                    {
+                        Error += rollbackError.Message + Environment.NewLine;
+                    }
+                }
 
-                if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath) &&
-                    !Directory.Exists(GameDirectoryPath))
-                    Directory.Move(gameDirectoryPath, GameDirectoryPath);
+                Error += e.Message + e.StackTrace + Environment.NewLine;
+                HasReadProperties = false;
+                return;
+            }
 
-                if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath) && !File.Exists(GameFilePath))
-                    File.Copy(gameFilePath, GameFilePath, true);
+            try
+            {
+                BuiltInGameContent.EnsureDecks(this);
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Built-in authored decks unavailable: " + error.Message);
+            }
 
+            try
+            {
                 // We're being greedy about loading these now, since these could be shown before the game is selected
                 if (File.Exists(BannerImageFilePath))
                     BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
                 if (File.Exists(CardBackImageFilePath))
                     CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
 
-                HasReadProperties = true;
             }
             catch (Exception e)
             {
+                // Optional artwork cannot roll back a successfully installed definition.
                 Error += e.Message + e.StackTrace + Environment.NewLine;
-                HasReadProperties = false;
+            }
+
+            if (DefinitionChanged == null)
+                return;
+            foreach (Action<UnityCardGame> handler in DefinitionChanged.GetInvocationList())
+            {
+                try
+                {
+                    handler(this);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning("Game-content presentation refresh failed: " + e.Message);
+                }
+            }
+        }
+
+        private UnityCardGame StageDefinition(string filePath)
+        {
+            var staged = new UnityCardGame(null, Id);
+            JsonConvert.PopulateObject(JsonConvert.SerializeObject(this), staged);
+            staged.ClearDefinitionLists();
+            staged.Localization = null;
+            var authoredJson = File.ReadAllText(filePath);
+            JsonConvert.PopulateObject(authoredJson, staged);
+            BuiltInGameContent.ApplyCatalog(staged, JObject.Parse(authoredJson));
+            staged.RefreshId();
+            return staged;
+        }
+
+        // Validate before replacing the installed document. Optional localization
+        // metadata failures preserve base-game availability with an unknown origin.
+        public bool InstallDownloadedDefinition(string downloadedPath, FileDownloadResult result)
+        {
+            if (result == null || !result.Succeeded)
+                return false;
+            try
+            {
+                var staged = StageDefinition(downloadedPath);
+                var hasOriginRecord = File.Exists(Path.Combine(GameDirectoryPath, "localization", "state.json"));
+                if ((staged.Localization != null || hasOriginRecord) &&
+                    !LocalizationFiles.RecordDefinitionOrigin(GameDirectoryPath, downloadedPath, result))
+                    LocalizationFiles.RecordUnavailableOrigin(GameDirectoryPath, downloadedPath);
+                if (File.Exists(GameFilePath))
+                    File.Replace(downloadedPath, GameFilePath, null);
+                else
+                    File.Move(downloadedPath, GameFilePath);
+                return true;
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Could not install downloaded game definition: " + error.Message);
+                return false;
             }
         }
 
@@ -283,7 +397,21 @@ namespace FinolDigital.Cgs.Json.Unity
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
             SetDownloadStatus(GameDownloadStage.Specification, "Downloading: Card Game Specification...");
             if (AutoUpdateUrl != null && AutoUpdateUrl.IsAbsoluteUri)
-                yield return UnityFileMethods.SaveUrlToFile(AutoUpdateUrl.AbsoluteUri, GameFilePath);
+            {
+                var stagedPath = GameFilePath + "." + Guid.NewGuid().ToString("N") + ".download";
+                try
+                {
+                    FileDownloadResult result = null;
+                    yield return UnityFileMethods.SaveUrlToFile(AutoUpdateUrl.AbsoluteUri, stagedPath,
+                        completed: completed => result = completed);
+                    InstallDownloadedDefinition(stagedPath, result);
+                }
+                finally
+                {
+                    if (File.Exists(stagedPath))
+                        File.Delete(stagedPath);
+                }
+            }
             ReadProperties();
             if (!HasReadProperties)
             {
@@ -396,9 +524,9 @@ namespace FinolDigital.Cgs.Json.Unity
                 var deckFilePath = Path.Combine(DecksDirectoryPath,
                     deckUrl.Name + "." + DeckFileType.ToString().ToLower());
                 if (!string.IsNullOrEmpty(AllDecksUrlTxtRoot) && !string.IsNullOrEmpty(deckUrl.Txt))
-                    yield return UnityFileMethods.SaveUrlToFile(AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
+                    yield return AuthoredDeckFiles.Download(this, deckUrl.Name, AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
                 else if (deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)
-                    yield return UnityFileMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri, deckFilePath);
+                    yield return AuthoredDeckFiles.Download(this, deckUrl.Name, deckUrl.Url.AbsoluteUri, deckFilePath);
                 else
                     Debug.Log($"Empty url for deckUrl {deckUrl}");
             }
@@ -704,6 +832,7 @@ namespace FinolDigital.Cgs.Json.Unity
         public void LoadCards(string cardsFilePath, string defaultSetCode)
         {
             LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier, defaultSetCode);
+            NotifyContentChanged();
         }
 
         public void LoadSets()
@@ -715,6 +844,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
             if (LoadedSets.TryGetValue(SetCodeDefault, out var defaultSet))
                 defaultSet.Name = SetNameDefault;
+            NotifyContentChanged();
         }
 
         private void LoadJsonFromFile(string file, LoadJTokenDelegate load, string dataId, string defaultSetCode)
@@ -1417,7 +1547,12 @@ namespace FinolDigital.Cgs.Json.Unity
                 LoadedSets[card.SetCode] = new Set(card.SetCode, card.SetCode);
 
             if (writeAllCardsJson)
+            {
                 WriteAllCardsJson();
+                NotifyContentChanged();
+            }
+            else
+                ContentGeneration++;
         }
 
         public void WriteAllCardsJson()
@@ -1459,7 +1594,12 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             LoadedCards.Remove(cardId);
             if (writeAllCardsJson)
+            {
                 WriteAllCardsJson();
+                NotifyContentChanged();
+            }
+            else
+                ContentGeneration++;
         }
 
         [SuppressMessage("ReSharper", "ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator")]

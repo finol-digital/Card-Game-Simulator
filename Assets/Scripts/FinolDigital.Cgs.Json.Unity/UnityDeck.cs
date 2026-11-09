@@ -25,6 +25,26 @@ namespace FinolDigital.Cgs.Json.Unity
         private const float PrintPdfMargin = 0.5f;
         private const int PrintPdfPixelsPerInch = 72;
 
+        private AuthoredDeckFiles.Binding _authoredBinding;
+        private string _authoredPath;
+        private string _boundCanonicalName;
+        public string AuthoredName => _authoredBinding != null && Name == _boundCanonicalName &&
+            AuthoredDeckFiles.ReadBinding((UnityCardGame)SourceGame, _authoredPath)?.Generation == _authoredBinding.Generation
+                ? _authoredBinding.Name : null;
+        public void ClearAuthoredName() => _authoredBinding = null;
+
+        public static UnityDeck LoadFile(UnityCardGame game, string path, string name)
+        {
+            lock (LocalizationFiles.Gate(game.GameDirectoryPath))
+            {
+                var deck = Parse(game, name, game.DeckFileType, File.ReadAllText(path));
+                deck._authoredBinding = AuthoredDeckFiles.ReadBinding(game, path);
+                deck._authoredPath = path;
+                deck._boundCanonicalName = deck.Name;
+                return deck;
+            }
+        }
+
         public string FilePath => ((UnityCardGame) SourceGame).DecksDirectoryPath + Path.DirectorySeparatorChar +
                                   UnityFileMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
 

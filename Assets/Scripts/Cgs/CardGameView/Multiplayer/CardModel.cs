@@ -4,6 +4,7 @@
 
 using Cgs.Localization;
 using System;
+using Cgs.GameContent;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
+    public class CardModel : CgsNetPlayable, ICardDisplay, ICardPresentationDisplay, ICardDropHandler, IStackDropHandler
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
         public override string DeletePrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
@@ -186,7 +187,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             nameLabel.SetActive(value);
             if (value)
-                Cgs.Localization.LocalizedUiText.SetLiteral(nameText, Value.Name);
+                Cgs.GameContent.GameContentText.Set(nameText, Value.Game, display => display.CardName(Value));
         }
 
         [SerializeField] GameObject nameLabel;
@@ -265,23 +266,32 @@ namespace Cgs.CardGameView.Multiplayer
                 Value.RegisterDisplay(this);
         }
 
+        private UnityCard _imageCard;
+        public void SetImageCard(UnityCard card)
+        {
+            _imageCard = card;
+            SetImageSprite(card?.OrientedImageSprite);
+        }
+
         public bool UsesOrientedImage => true;
 
         public void SetImageSprite(Sprite imageSprite)
         {
-            if (imageSprite == null)
+            if (_imageCard == null)
             {
                 RemoveImageSprite();
                 return;
             }
-
-            View.sprite = imageSprite;
-            SetIsNameVisible(false);
+            GameContentImage.Set(View, _imageCard.Game, imageSprite != null ? imageSprite : CardBackImageSprite,
+                true, "cardImages", _imageCard.Id)?.ObserveApplied(localized =>
+                SetIsNameVisible(!localized && _imageCard?.OrientedImageSprite == null && !IsFacedown && !IsSpawned));
         }
 
         private void RemoveImageSprite()
         {
-            View.sprite = CardBackImageSprite;
+            var path = !string.IsNullOrEmpty(Value.BackFaceId)
+                ? new[] { "cardBacks", Value.BackFaceId } : new[] { "cardBackImageUrl" };
+            GameContentImage.Set(View, CardGameManager.Current, CardBackImageSprite, true, path)?.ObserveApplied(null);
             if (!IsFacedown && !IsSpawned)
                 SetIsNameVisible(true);
         }
@@ -980,7 +990,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
 
             FinishFlipAnimation();
-            Value.UnregisterDisplay(this);
+            Value.UnregisterDisplay(this, false);
             if (PlaceHolder != null)
                 Destroy(PlaceHolder.gameObject);
 

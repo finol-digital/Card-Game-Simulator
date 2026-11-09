@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Localization;
+using Cgs.GameContent;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -357,7 +358,7 @@ namespace Cgs.Play
             playMatRectTransform.anchoredPosition = Vector2.zero;
             playMatRectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X,
                 CardGameManager.Current.PlayMatSize.Y) * CardGameManager.PixelsPerInch;
-            playMatImage.sprite = CardGameManager.Current.PlayMatImageSprite;
+            Cgs.GameContent.GameContentImage.Set(playMatImage, CardGameManager.Current, CardGameManager.Current.PlayMatImageSprite, false, "playMatImageUrl");
             playMatImage.transform.SetAsFirstSibling();
 
             if (isOfflineOrHost)
@@ -383,8 +384,10 @@ namespace Cgs.Play
         private void StartDecks()
         {
             if (CardGameManager.Current.GameStartDecks.Count > 0)
-                CardGameManager.Instance.Messenger.Ask(UiMessage.With("play.load.decks", LoadStartDecksAsk,
-                    ("names", string.Join(", ", CardGameManager.Current.GameStartDecks.Select(deck => $"'{deck.Name}'")))), ShowDeckMenu, StartLoadStartDecks);
+                CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(CardGameManager.Current, display =>
+                    UiMessage.With("play.load.decks", LoadStartDecksAsk,
+                        ("names", string.Join(", ", CardGameManager.Current.GameStartDecks.Select(deck =>
+                            $"'{display.DeckName(deck.Name, true)}'"))))), ShowDeckMenu, StartLoadStartDecks);
             else
                 ShowDeckMenu();
         }
@@ -404,17 +407,18 @@ namespace Cgs.Play
                     continue;
                 }
 
-                var deckFilePath = Path.Combine(CardGameManager.Current.DecksDirectoryPath,
-                    deckUrl.Name + "." + CardGameManager.Current.DeckFileType.ToString().ToLower());
+                var deckFilePath = BuiltInGameContent.DeckPath(CardGameManager.Current, deckUrl.Name, deckUrl.Url?.IsAbsoluteUri == true ? deckUrl.Url.AbsoluteUri : null) ??
+                    Path.Combine(CardGameManager.Current.DecksDirectoryPath,
+                        deckUrl.Name + "." + CardGameManager.Current.DeckFileType.ToString().ToLower());
 
                 if (!File.Exists(deckFilePath))
                 {
                     if (!string.IsNullOrEmpty(CardGameManager.Current.AllDecksUrlTxtRoot) &&
                         !string.IsNullOrEmpty(deckUrl.Txt))
-                        yield return UnityFileMethods.SaveUrlToFile(
+                        yield return AuthoredDeckFiles.Download(CardGameManager.Current, deckUrl.Name,
                             CardGameManager.Current.AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
                     else if (deckUrl.Url.IsAbsoluteUri)
-                        yield return UnityFileMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri, deckFilePath);
+                        yield return AuthoredDeckFiles.Download(CardGameManager.Current, deckUrl.Name, deckUrl.Url.AbsoluteUri, deckFilePath);
                     else
                     {
                         Debug.Log($"Empty url for deckUrl {deckUrl}");
@@ -424,9 +428,7 @@ namespace Cgs.Play
 
                 try
                 {
-                    var deckText = File.ReadAllText(deckFilePath);
-                    var newDeck = UnityDeck.Parse(CardGameManager.Current, deckUrl.Name,
-                        CardGameManager.Current.DeckFileType, deckText);
+                    var newDeck = UnityDeck.LoadFile(CardGameManager.Current, deckFilePath, deckUrl.Name);
                     DeckLoadMenu.ShowMissingCardsWarning(newDeck);
                     LoadDeck(newDeck);
                 }
@@ -493,6 +495,7 @@ namespace Cgs.Play
             var deckName = !string.IsNullOrEmpty(CardGameManager.Current.GamePlayDeckName)
                 ? CardGameManager.Current.GamePlayDeckName
                 : deck.Name;
+            var deckLabel = GameContentLabel.ForDeck(CardGameManager.Current, deck);
             var extraGroupNames = ExtraGroupNames;
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
             {
@@ -500,7 +503,7 @@ namespace Cgs.Play
                 var startingDeckCount = AllCardStacks.ToList().Count;
                 if (!TryGetSeatSlotPosition(seatIndex, 0, out var newDeckPosition))
                     newDeckPosition = NewPlayablePosition;
-                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards, newDeckPosition, false);
+                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards, newDeckPosition, false, deckLabel);
                 var i = 1;
                 foreach (var (stackName, cards) in extraGroups)
                 {
@@ -521,7 +524,8 @@ namespace Cgs.Play
                     }
 
                     CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(stackName, cards.Cast<UnityCard>().Reverse(),
-                        position, CgsNetManager.Instance.LocalPlayer.DefaultRotation, false);
+                        position, CgsNetManager.Instance.LocalPlayer.DefaultRotation, false,
+                        GameContentLabel.ForExtraGroup(CardGameManager.Current, stackName));
                     i++;
                 }
 
@@ -534,7 +538,7 @@ namespace Cgs.Play
                 if (!TryGetSeatSlotPosition(blockIndex, 0, out var newDeckPosition))
                     newDeckPosition = NewPlayablePosition;
                 List<CardStack> cardStacks = new();
-                CurrentDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, false);
+                CurrentDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, new CardStackCreationOptions { Label = deckLabel });
                 cardStacks.Add(CurrentDeckStack);
                 var i = 1;
                 foreach (var (groupName, cards) in extraGroups)
@@ -554,7 +558,10 @@ namespace Cgs.Play
                     }
 
                     var cardStack = CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position,
-                        Quaternion.identity, false);
+                        Quaternion.identity, new CardStackCreationOptions
+                        {
+                            Label = GameContentLabel.ForExtraGroup(CardGameManager.Current, groupName)
+                        });
                     cardStacks.Add(cardStack);
                     i++;
                 }
@@ -594,9 +601,20 @@ namespace Cgs.Play
         public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position,
             Quaternion rotation, bool isFaceup, ulong? ownerClientId = null, bool? autoStackCards = null)
         {
+            return CreateCardStack(stackName, cards, position, rotation, new CardStackCreationOptions
+            {
+                IsFaceup = isFaceup, OwnerClientId = ownerClientId, AutoStackCards = autoStackCards
+            });
+        }
+
+        public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position,
+            Quaternion rotation, CardStackCreationOptions options)
+        {
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
             // Loading a deck does not produce a drop event. Resolve overlaps before spawning so
             // the returned stack remains valid for drawing cards and multiplayer deck callbacks.
-            if ((autoStackCards ?? PlaySettings.AutoStackCards) && cards != null && cards.Count > 0)
+            if ((options.AutoStackCards ?? PlaySettings.AutoStackCards) && cards != null && cards.Count > 0)
             {
                 foreach (var existingStack in AllCardStacks)
                 {
@@ -613,8 +631,8 @@ namespace Cgs.Play
             var cardStack = Instantiate(cardStackPrefab, playAreaCardZone.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
             {
-                if (ownerClientId.HasValue)
-                    cardStack.MyNetworkObject.SpawnWithOwnership(ownerClientId.Value);
+                if (options.OwnerClientId.HasValue)
+                    cardStack.MyNetworkObject.SpawnWithOwnership(options.OwnerClientId.Value);
                 else
                     cardStack.MyNetworkObject.Spawn();
             }
@@ -623,11 +641,13 @@ namespace Cgs.Play
                 cardStack.Name = stackName;
             if (cards != null)
                 cardStack.Cards = cards;
+            cardStack.SetContentLabel(options.Label);
+            GameContentNetwork.Current?.Changed(cardStack);
 
             cardStack.Position = position;
             cardStack.Rotation = rotation;
 
-            if (isFaceup)
+            if (options.IsFaceup)
                 cardStack.IsTopFaceup = true;
 
             return cardStack;
@@ -723,22 +743,16 @@ namespace Cgs.Play
         private static UiMessage BuildAskForDeckPlayCards(
             Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> deckToCardsToPlay)
         {
-            var names = new List<string>();
-
-            foreach (var deckPlayCard in deckToCardsToPlay)
+            var cards = deckToCardsToPlay.Values.SelectMany(stacks => stacks.SelectMany(pair =>
+                pair.Value.Select(index => pair.Key.Cards[index]))).ToArray();
+            if (cards.Length == 0)
+                return null;
+            return GameContentMessage.Create(CardGameManager.Current, display =>
             {
-                foreach (var cardStackToPlay in deckPlayCard.Value)
-                {
-                    var cards = cardStackToPlay.Key.Cards;
-                    foreach (var cardToPlay in cardStackToPlay.Value)
-                    {
-                        names.Add("'" + cards[cardToPlay].Name + "'");
-                    }
-                }
-            }
-
-            return names.Count == 0 ? null : UiMessage.With("play.start.cards",
-                "Play " + string.Join(" and ", names) + "?", ("names", string.Join(", ", names)));
+                var names = cards.Select(card => "'" + display.CardName(card) + "'").ToArray();
+                return UiMessage.With("play.start.cards", "Play " + string.Join(" and ", names) + "?",
+                    ("names", string.Join(", ", names)));
+            });
         }
 
         private void MoveToPlay(Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> deckToCardsToPlay)

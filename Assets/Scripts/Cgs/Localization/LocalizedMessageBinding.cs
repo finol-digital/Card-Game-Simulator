@@ -13,13 +13,17 @@ namespace Cgs.Localization
         private readonly UiMessage _message;
         private readonly Action<string> _apply;
         private LocalizedString _localized;
+        private UiMessage _current;
+        private readonly IDisposable _observation;
         private bool _disposed;
 
         public LocalizedMessageBinding(UiMessage message, Action<string> apply)
         {
             _message = message ?? throw new ArgumentNullException(nameof(message));
             _apply = apply ?? throw new ArgumentNullException(nameof(apply));
-            _apply(message.English);
+            _current = message.Resolve();
+            _apply(_current.English);
+            _observation = message.Observe(OnReady);
             CgsLocalization.Changed += OnReady;
             CgsLocalization.Initialize();
             OnReady();
@@ -27,11 +31,20 @@ namespace Cgs.Localization
 
         private void OnReady()
         {
-            if (_disposed || !CgsLocalization.IsReady || _localized != null)
+            if (_disposed)
                 return;
-            _localized = new LocalizedString(CgsLocalization.TableName, _message.Key)
+            _current = _message.Resolve();
+            if (_localized != null)
+                _localized.StringChanged -= Apply;
+            _localized = null;
+            if (!CgsLocalization.IsReady)
             {
-                Arguments = _message.Arguments,
+                _apply(_current.English);
+                return;
+            }
+            _localized = new LocalizedString(CgsLocalization.TableName, _current.Key)
+            {
+                Arguments = _current.Arguments,
                 FallbackState = FallbackBehavior.UseFallback
             };
             _localized.StringChanged += Apply;
@@ -46,7 +59,7 @@ namespace Cgs.Localization
             var operation = _localized.CurrentLoadingOperationHandle;
             var entry = operation.IsValid() && operation.IsDone ? operation.Result.Entry : null;
             _apply(entry == null || string.IsNullOrWhiteSpace(entry.Value) || string.IsNullOrWhiteSpace(text)
-                ? _message.English : text);
+                ? _current.English : text);
         }
 
         public void Dispose()
@@ -54,6 +67,7 @@ namespace Cgs.Localization
             if (_disposed)
                 return;
             _disposed = true;
+            _observation?.Dispose();
             CgsLocalization.Changed -= OnReady;
             if (_localized != null)
                 _localized.StringChanged -= Apply;

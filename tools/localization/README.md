@@ -130,3 +130,18 @@ available offline; the subset reduces non-Chinese startup loading, not total
 offline download size. Font tables and Addressables groups must be regenerated
 together so the full Chinese face is no longer a shared-bundle dependency.
 
+
+## Default game content
+
+`default_games.py` maintains the authored display catalogs for Standard Playing
+Cards, Mahjong, and Dominoes in all ten UI languages. Edit its locale tables,
+then run `python3 tools/localization/default_games.py` and commit the generated
+website, StreamingAssets, and Resources JSON together. `--check` verifies that
+those outputs agree; the normal `test_*.py` suite checks all canonical targets.
+The shipped deck fingerprints require LF checkout line endings.
+
+These are AI-authored translations (Codex, November 2026); fluent human review
+has not been claimed. Numeric domino names and terms shared between languages
+intentionally retain the same text. Canonical cards/decks and artwork stay
+unchanged. Run `DefaultGameLocalizationTests` in Unity to verify resolution,
+live locale changes, upgrade fallback, and provenance-preserving installation.

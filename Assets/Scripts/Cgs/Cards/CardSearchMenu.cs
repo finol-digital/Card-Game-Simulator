@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Localization;
+using Cgs.GameContent;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.Menu;
@@ -202,11 +203,15 @@ namespace Cgs.Cards
             newPanelGameObject.gameObject.SetActive(true);
 
             var config = newPanelGameObject.GetComponent<SearchFilterPanel>();
-            Cgs.Localization.LocalizedUiText.SetLiteral(config.NameLabelText, !string.IsNullOrEmpty(displayName) ? displayName : propertyName);
+            GameContentText.Set(config.NameLabelText, CardGameManager.Current,
+                display => display.PropertyLabel(propertyName, !string.IsNullOrEmpty(displayName) ? displayName : propertyName));
             if (_filters.StringProperties.TryGetValue(propertyName, out var storedFilter))
                 config.StringInputField.text = storedFilter;
-            LocalizedUiText.Set(config.StringPlaceHolderText, UiMessage.With("input.property",
-                "Enter " + propertyName + "...", ("propertyName", propertyName)));
+            GameContentText.SetMessage(config.StringPlaceHolderText, CardGameManager.Current, display =>
+            {
+                var name = display.PropertyLabel(propertyName, propertyName);
+                return UiMessage.With("input.property", "Enter " + name + "...", ("propertyName", name));
+            });
             config.StringInputField.onValueChanged.AddListener(text => SetStringPropertyFilter(propertyName, text));
 
             return newPanelGameObject;
@@ -218,7 +223,8 @@ namespace Cgs.Cards
             newPanelGameObject.gameObject.SetActive(true);
 
             var config = newPanelGameObject.GetComponent<SearchFilterPanel>();
-            Cgs.Localization.LocalizedUiText.SetLiteral(config.NameLabelText, !string.IsNullOrEmpty(displayName) ? displayName : propertyName);
+            GameContentText.Set(config.NameLabelText, CardGameManager.Current,
+                display => display.PropertyLabel(propertyName, !string.IsNullOrEmpty(displayName) ? displayName : propertyName));
 
             if (_filters.IntMinProperties.TryGetValue(propertyName, out var storedFilter))
                 config.IntegerMinInputField.text = storedFilter.ToString();
@@ -237,7 +243,8 @@ namespace Cgs.Cards
             newPanelGameObject.gameObject.SetActive(true);
 
             var config = newPanelGameObject.GetComponent<SearchFilterPanel>();
-            Cgs.Localization.LocalizedUiText.SetLiteral(config.NameLabelText, !string.IsNullOrEmpty(displayName) ? displayName : propertyName + "?");
+            GameContentText.Set(config.NameLabelText, CardGameManager.Current,
+                display => display.PropertyLabel(propertyName, !string.IsNullOrEmpty(displayName) ? displayName : propertyName + "?"));
             var hasFilter = _filters.BoolProperties.TryGetValue(propertyName, out var storedFilter);
 
             var toggleLocalPosition = config.Toggle.transform.localPosition;
@@ -280,7 +287,8 @@ namespace Cgs.Cards
             newPanelGameObject.gameObject.SetActive(true);
 
             var config = newPanelGameObject.GetComponent<SearchFilterPanel>();
-            Cgs.Localization.LocalizedUiText.SetLiteral(config.NameLabelText, !string.IsNullOrEmpty(property.Display) ? property.Display : propertyName);
+            GameContentText.Set(config.NameLabelText, CardGameManager.Current,
+                display => display.PropertyLabel(propertyName, !string.IsNullOrEmpty(property.Display) ? property.Display : propertyName));
             _filters.EnumProperties.TryGetValue(propertyName, out var storedFilter);
             var enumDef = CardGameManager.Current.Enums.First(def => def.Property.Equals(propertyName));
             float toggleWidth;
@@ -303,7 +311,8 @@ namespace Cgs.Cards
                     .GetOrAddComponent<Toggle>();
                 toggle.isOn = (storedFilter & lookupKey) != 0;
                 toggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(propertyName, lookupKey, isOn));
-                Cgs.Localization.LocalizedUiText.SetLiteral(toggle.GetComponentInChildren<Text>(), enumValue.Value);
+                GameContentText.Set(toggle.GetComponentInChildren<Text>(), CardGameManager.Current,
+                    display => display.EnumLabel(propertyName, enumValue.Key, enumValue.Value));
                 toggle.transform.localPosition = toggleLocalPosition;
                 toggleWidth = toggle.GetComponentInChildren<Text>().preferredWidth + 25;
                 var toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
@@ -336,7 +345,8 @@ namespace Cgs.Cards
                 .GetOrAddComponent<Toggle>();
             toggle.isOn = (storedFilter & lookupKey) != 0;
             toggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(propertyName, lookupKey, isOn));
-            Cgs.Localization.LocalizedUiText.SetLiteral(toggle.GetComponentInChildren<Text>(), property.DisplayEmpty);
+            GameContentText.Set(toggle.GetComponentInChildren<Text>(), CardGameManager.Current,
+                display => display.EmptyLabel(propertyName, property.DisplayEmpty));
             toggle.transform.localPosition = toggleLocalPosition;
             var toggleWidth = toggle.GetComponentInChildren<Text>().preferredWidth + 25;
             var toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
@@ -482,7 +492,8 @@ namespace Cgs.Cards
         {
             _results.Clear();
             var shouldHideReprints = Settings.HideReprints;
-            var cardSearcher = CardGameManager.Current.FilterCards(_filters);
+            var cardSearcher = LocalizedCardSearch.Search(CardGameManager.Current, _filters,
+                GameContentPresentation.Context(CardGameManager.Current));
             foreach (var card in cardSearcher)
                 if (!shouldHideReprints || !card.IsReprint)
                     _results.Add(card);

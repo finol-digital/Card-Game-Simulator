@@ -190,6 +190,21 @@ namespace Cgs.Menu
 
         public void ShowCurrent()
         {
+            try
+            {
+                foreach (var report in Cgs.GameContent.GameContentPresentation.Diagnostics(CardGameManager.Current))
+                {
+                    foreach (var diagnostic in report.Diagnostics)
+                        Debug.LogWarning($"Game-content localization [{report.Locale}] {diagnostic.Path}: {diagnostic.Message}");
+                    if (report.Coverage != null)
+                        Debug.Log($"Game-content localization [{report.Locale}]: {report.Coverage.Total - report.Coverage.Missing.Count}/{report.Coverage.Total} targets translated, {report.Coverage.Unknown.Count} unknown targets.");
+                }
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Game-content diagnostics unavailable: " + error.Message);
+            }
+
             Show();
             GameName = CardGameManager.Current.Name;
             Width = CardGameManager.Current.CardSize.X.ToString(CultureInfo.InvariantCulture);
@@ -207,6 +222,8 @@ namespace Cgs.Menu
             {
                 AutoUpdate = CardGameManager.Current.AutoUpdate,
                 AutoUpdateUrl = CardGameManager.Current.AutoUpdateUrl,
+                Localization = CardGameManager.Current.Localization,
+                LocalizationSpecified = CardGameManager.Current.LocalizationSpecified,
                 CardSize = CardGameManager.Current.CardSize,
                 BannerImageFileType = CardGameManager.Current.BannerImageFileType,
                 BannerImageUrl = CardGameManager.Current.BannerImageUrl,

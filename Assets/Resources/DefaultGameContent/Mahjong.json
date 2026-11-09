@@ -1,0 +1,1715 @@
+{
+  "name": "Mahjong",
+  "url": "https://www.cardgamesimulator.com/games/Mahjong/cgs.json",
+  "localization": {
+    "defaultLocale": "en",
+    "locales": {
+      "en": {
+        "inline": {
+          "game": {
+            "name": "Mahjong",
+            "gamePlayDeckName": "Square Wall",
+            "setNameDefault": "All Cards"
+          },
+          "cardNames": {
+            "1 Circle": "1 Circle",
+            "2 Circle": "2 Circle",
+            "3 Circle": "3 Circle",
+            "4 Circle": "4 Circle",
+            "5 Circle": "5 Circle",
+            "6 Circle": "6 Circle",
+            "7 Circle": "7 Circle",
+            "8 Circle": "8 Circle",
+            "9 Circle": "9 Circle",
+            "1 Bamboo": "1 Bamboo",
+            "2 Bamboo": "2 Bamboo",
+            "3 Bamboo": "3 Bamboo",
+            "4 Bamboo": "4 Bamboo",
+            "5 Bamboo": "5 Bamboo",
+            "6 Bamboo": "6 Bamboo",
+            "7 Bamboo": "7 Bamboo",
+            "8 Bamboo": "8 Bamboo",
+            "9 Bamboo": "9 Bamboo",
+            "1 Character": "1 Character",
+            "2 Character": "2 Character",
+            "3 Character": "3 Character",
+            "4 Character": "4 Character",
+            "5 Character": "5 Character",
+            "6 Character": "6 Character",
+            "7 Character": "7 Character",
+            "8 Character": "8 Character",
+            "9 Character": "9 Character",
+            "East Wind": "East Wind",
+            "South Wind": "South Wind",
+            "West Wind": "West Wind",
+            "North Wind": "North Wind",
+            "Red Dragon": "Red Dragon",
+            "Green Dragon": "Green Dragon",
+            "White Dragon": "White Dragon",
+            "Plum": "Plum",
+            "Orchid": "Orchid",
+            "Chrysanthemum": "Chrysanthemum",
+            "Bamboo": "Bamboo",
+            "Spring": "Spring",
+            "Summer": "Summer",
+            "Autumn": "Autumn",
+            "Winter": "Winter"
+          },
+          "properties": {
+            "type": {
+              "display": "Type",
+              "displayEmpty": "(Empty)"
+            },
+            "suit": {
+              "display": "Suit",
+              "displayEmpty": "(Empty)"
+            },
+            "rank": {
+              "display": "Rank",
+              "displayEmpty": "(Empty)"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "Simple",
+              "honor": "Honor",
+              "bonus": "Bonus"
+            },
+            "suit": {
+              "circle": "Circle",
+              "bamboo": "Bamboo",
+              "character": "Character",
+              "wind": "Wind",
+              "dragon": "Dragon",
+              "flower": "Flower",
+              "season": "Season"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "CGS Traditional Mahjong Tiles"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "Traditional Mahjong Deck"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "east"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "south"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "west"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "north"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "red"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "green"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "white"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "plum"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "orchid"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "chrysanthemum"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "bamboo"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "spring"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "summer"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "autumn"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "winter"
+              }
+            }
+          }
+        }
+      },
+      "es": {
+        "inline": {
+          "game": {
+            "name": "Mahjong",
+            "gamePlayDeckName": "Muralla cuadrada",
+            "setNameDefault": "Todas las cartas"
+          },
+          "cardNames": {
+            "1 Circle": "1 Círculos",
+            "2 Circle": "2 Círculos",
+            "3 Circle": "3 Círculos",
+            "4 Circle": "4 Círculos",
+            "5 Circle": "5 Círculos",
+            "6 Circle": "6 Círculos",
+            "7 Circle": "7 Círculos",
+            "8 Circle": "8 Círculos",
+            "9 Circle": "9 Círculos",
+            "1 Bamboo": "1 Bambúes",
+            "2 Bamboo": "2 Bambúes",
+            "3 Bamboo": "3 Bambúes",
+            "4 Bamboo": "4 Bambúes",
+            "5 Bamboo": "5 Bambúes",
+            "6 Bamboo": "6 Bambúes",
+            "7 Bamboo": "7 Bambúes",
+            "8 Bamboo": "8 Bambúes",
+            "9 Bamboo": "9 Bambúes",
+            "1 Character": "1 Caracteres",
+            "2 Character": "2 Caracteres",
+            "3 Character": "3 Caracteres",
+            "4 Character": "4 Caracteres",
+            "5 Character": "5 Caracteres",
+            "6 Character": "6 Caracteres",
+            "7 Character": "7 Caracteres",
+            "8 Character": "8 Caracteres",
+            "9 Character": "9 Caracteres",
+            "East Wind": "Viento del este",
+            "South Wind": "Viento del sur",
+            "West Wind": "Viento del oeste",
+            "North Wind": "Viento del norte",
+            "Red Dragon": "Dragón rojo",
+            "Green Dragon": "Dragón verde",
+            "White Dragon": "Dragón blanco",
+            "Plum": "Ciruelo",
+            "Orchid": "Orquídea",
+            "Chrysanthemum": "Crisantemo",
+            "Bamboo": "Bambú",
+            "Spring": "Primavera",
+            "Summer": "Verano",
+            "Autumn": "Otoño",
+            "Winter": "Invierno"
+          },
+          "properties": {
+            "type": {
+              "display": "Tipo",
+              "displayEmpty": "(Vacío)"
+            },
+            "suit": {
+              "display": "Palo",
+              "displayEmpty": "(Vacío)"
+            },
+            "rank": {
+              "display": "Valor",
+              "displayEmpty": "(Vacío)"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "Numeral",
+              "honor": "Honor",
+              "bonus": "Bonificación"
+            },
+            "suit": {
+              "circle": "Círculos",
+              "bamboo": "Bambúes",
+              "character": "Caracteres",
+              "wind": "Vientos",
+              "dragon": "Dragones",
+              "flower": "Flores",
+              "season": "Estaciones"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "Fichas tradicionales de mahjong de CGS"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "Juego tradicional de mahjong"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "Este"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "Sur"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "Oeste"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "Norte"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "Rojo"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "Verde"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "Blanco"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "Ciruelo"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "Orquídea"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "Crisantemo"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "Bambú"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "Primavera"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "Verano"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "Otoño"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "Invierno"
+              }
+            }
+          }
+        }
+      },
+      "fr": {
+        "inline": {
+          "game": {
+            "name": "Mah-jong",
+            "gamePlayDeckName": "Mur carré",
+            "setNameDefault": "Toutes les cartes"
+          },
+          "cardNames": {
+            "1 Circle": "1 Cercles",
+            "2 Circle": "2 Cercles",
+            "3 Circle": "3 Cercles",
+            "4 Circle": "4 Cercles",
+            "5 Circle": "5 Cercles",
+            "6 Circle": "6 Cercles",
+            "7 Circle": "7 Cercles",
+            "8 Circle": "8 Cercles",
+            "9 Circle": "9 Cercles",
+            "1 Bamboo": "1 Bambous",
+            "2 Bamboo": "2 Bambous",
+            "3 Bamboo": "3 Bambous",
+            "4 Bamboo": "4 Bambous",
+            "5 Bamboo": "5 Bambous",
+            "6 Bamboo": "6 Bambous",
+            "7 Bamboo": "7 Bambous",
+            "8 Bamboo": "8 Bambous",
+            "9 Bamboo": "9 Bambous",
+            "1 Character": "1 Caractères",
+            "2 Character": "2 Caractères",
+            "3 Character": "3 Caractères",
+            "4 Character": "4 Caractères",
+            "5 Character": "5 Caractères",
+            "6 Character": "6 Caractères",
+            "7 Character": "7 Caractères",
+            "8 Character": "8 Caractères",
+            "9 Character": "9 Caractères",
+            "East Wind": "Vent d’est",
+            "South Wind": "Vent du sud",
+            "West Wind": "Vent d’ouest",
+            "North Wind": "Vent du nord",
+            "Red Dragon": "Dragon rouge",
+            "Green Dragon": "Dragon vert",
+            "White Dragon": "Dragon blanc",
+            "Plum": "Prunier",
+            "Orchid": "Orchidée",
+            "Chrysanthemum": "Chrysanthème",
+            "Bamboo": "Bambou",
+            "Spring": "Printemps",
+            "Summer": "Été",
+            "Autumn": "Automne",
+            "Winter": "Hiver"
+          },
+          "properties": {
+            "type": {
+              "display": "Type",
+              "displayEmpty": "(Vide)"
+            },
+            "suit": {
+              "display": "Enseigne",
+              "displayEmpty": "(Vide)"
+            },
+            "rank": {
+              "display": "Valeur",
+              "displayEmpty": "(Vide)"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "Numérale",
+              "honor": "Honneur",
+              "bonus": "Bonus"
+            },
+            "suit": {
+              "circle": "Cercles",
+              "bamboo": "Bambous",
+              "character": "Caractères",
+              "wind": "Vents",
+              "dragon": "Dragons",
+              "flower": "Fleurs",
+              "season": "Saisons"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "Tuiles traditionnelles de mah-jong CGS"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "Jeu traditionnel de mah-jong"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "Est"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "Sud"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "Ouest"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "Nord"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "Rouge"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "Vert"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "Blanc"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "Prunier"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "Orchidée"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "Chrysanthème"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "Bambou"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "Printemps"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "Été"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "Automne"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "Hiver"
+              }
+            }
+          }
+        }
+      },
+      "de": {
+        "inline": {
+          "game": {
+            "name": "Mahjong",
+            "gamePlayDeckName": "Quadratische Mauer",
+            "setNameDefault": "Alle Karten"
+          },
+          "cardNames": {
+            "1 Circle": "1 Kreise",
+            "2 Circle": "2 Kreise",
+            "3 Circle": "3 Kreise",
+            "4 Circle": "4 Kreise",
+            "5 Circle": "5 Kreise",
+            "6 Circle": "6 Kreise",
+            "7 Circle": "7 Kreise",
+            "8 Circle": "8 Kreise",
+            "9 Circle": "9 Kreise",
+            "1 Bamboo": "1 Bambus",
+            "2 Bamboo": "2 Bambus",
+            "3 Bamboo": "3 Bambus",
+            "4 Bamboo": "4 Bambus",
+            "5 Bamboo": "5 Bambus",
+            "6 Bamboo": "6 Bambus",
+            "7 Bamboo": "7 Bambus",
+            "8 Bamboo": "8 Bambus",
+            "9 Bamboo": "9 Bambus",
+            "1 Character": "1 Zeichen",
+            "2 Character": "2 Zeichen",
+            "3 Character": "3 Zeichen",
+            "4 Character": "4 Zeichen",
+            "5 Character": "5 Zeichen",
+            "6 Character": "6 Zeichen",
+            "7 Character": "7 Zeichen",
+            "8 Character": "8 Zeichen",
+            "9 Character": "9 Zeichen",
+            "East Wind": "Ostwind",
+            "South Wind": "Südwind",
+            "West Wind": "Westwind",
+            "North Wind": "Nordwind",
+            "Red Dragon": "Roter Drache",
+            "Green Dragon": "Grüner Drache",
+            "White Dragon": "Weißer Drache",
+            "Plum": "Pflaume",
+            "Orchid": "Orchidee",
+            "Chrysanthemum": "Chrysantheme",
+            "Bamboo": "Bambus",
+            "Spring": "Frühling",
+            "Summer": "Sommer",
+            "Autumn": "Herbst",
+            "Winter": "Winter"
+          },
+          "properties": {
+            "type": {
+              "display": "Typ",
+              "displayEmpty": "(Leer)"
+            },
+            "suit": {
+              "display": "Kartenfarbe",
+              "displayEmpty": "(Leer)"
+            },
+            "rank": {
+              "display": "Wert",
+              "displayEmpty": "(Leer)"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "Zahlenstein",
+              "honor": "Ehrenstein",
+              "bonus": "Bonusstein"
+            },
+            "suit": {
+              "circle": "Kreise",
+              "bamboo": "Bambus",
+              "character": "Zeichen",
+              "wind": "Winde",
+              "dragon": "Drachen",
+              "flower": "Blumen",
+              "season": "Jahreszeiten"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "Traditionelle CGS-Mahjong-Steine"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "Traditioneller Mahjong-Satz"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "Ost"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "Süd"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "West"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "Nord"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "Rot"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "Grün"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "Weiß"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "Pflaume"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "Orchidee"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "Chrysantheme"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "Bambus"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "Frühling"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "Sommer"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "Herbst"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "Winter"
+              }
+            }
+          }
+        }
+      },
+      "it": {
+        "inline": {
+          "game": {
+            "name": "Mahjong",
+            "gamePlayDeckName": "Muro quadrato",
+            "setNameDefault": "Tutte le carte"
+          },
+          "cardNames": {
+            "1 Circle": "1 Cerchi",
+            "2 Circle": "2 Cerchi",
+            "3 Circle": "3 Cerchi",
+            "4 Circle": "4 Cerchi",
+            "5 Circle": "5 Cerchi",
+            "6 Circle": "6 Cerchi",
+            "7 Circle": "7 Cerchi",
+            "8 Circle": "8 Cerchi",
+            "9 Circle": "9 Cerchi",
+            "1 Bamboo": "1 Bambù",
+            "2 Bamboo": "2 Bambù",
+            "3 Bamboo": "3 Bambù",
+            "4 Bamboo": "4 Bambù",
+            "5 Bamboo": "5 Bambù",
+            "6 Bamboo": "6 Bambù",
+            "7 Bamboo": "7 Bambù",
+            "8 Bamboo": "8 Bambù",
+            "9 Bamboo": "9 Bambù",
+            "1 Character": "1 Caratteri",
+            "2 Character": "2 Caratteri",
+            "3 Character": "3 Caratteri",
+            "4 Character": "4 Caratteri",
+            "5 Character": "5 Caratteri",
+            "6 Character": "6 Caratteri",
+            "7 Character": "7 Caratteri",
+            "8 Character": "8 Caratteri",
+            "9 Character": "9 Caratteri",
+            "East Wind": "Vento dell’est",
+            "South Wind": "Vento del sud",
+            "West Wind": "Vento dell’ovest",
+            "North Wind": "Vento del nord",
+            "Red Dragon": "Drago rosso",
+            "Green Dragon": "Drago verde",
+            "White Dragon": "Drago bianco",
+            "Plum": "Pruno",
+            "Orchid": "Orchidea",
+            "Chrysanthemum": "Crisantemo",
+            "Bamboo": "Bambù",
+            "Spring": "Primavera",
+            "Summer": "Estate",
+            "Autumn": "Autunno",
+            "Winter": "Inverno"
+          },
+          "properties": {
+            "type": {
+              "display": "Tipo",
+              "displayEmpty": "(Vuoto)"
+            },
+            "suit": {
+              "display": "Seme",
+              "displayEmpty": "(Vuoto)"
+            },
+            "rank": {
+              "display": "Valore",
+              "displayEmpty": "(Vuoto)"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "Numerale",
+              "honor": "Onore",
+              "bonus": "Bonus"
+            },
+            "suit": {
+              "circle": "Cerchi",
+              "bamboo": "Bambù",
+              "character": "Caratteri",
+              "wind": "Venti",
+              "dragon": "Draghi",
+              "flower": "Fiori",
+              "season": "Stagioni"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "Tessere tradizionali di mahjong CGS"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "Set tradizionale di mahjong"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "Est"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "Sud"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "Ovest"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "Nord"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "Rosso"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "Verde"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "Bianco"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "Pruno"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "Orchidea"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "Crisantemo"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "Bambù"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "Primavera"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "Estate"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "Autunno"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "Inverno"
+              }
+            }
+          }
+        }
+      },
+      "ja": {
+        "inline": {
+          "game": {
+            "name": "麻雀",
+            "gamePlayDeckName": "牌山",
+            "setNameDefault": "すべてのカード"
+          },
+          "cardNames": {
+            "1 Circle": "一筒",
+            "2 Circle": "二筒",
+            "3 Circle": "三筒",
+            "4 Circle": "四筒",
+            "5 Circle": "五筒",
+            "6 Circle": "六筒",
+            "7 Circle": "七筒",
+            "8 Circle": "八筒",
+            "9 Circle": "九筒",
+            "1 Bamboo": "一索",
+            "2 Bamboo": "二索",
+            "3 Bamboo": "三索",
+            "4 Bamboo": "四索",
+            "5 Bamboo": "五索",
+            "6 Bamboo": "六索",
+            "7 Bamboo": "七索",
+            "8 Bamboo": "八索",
+            "9 Bamboo": "九索",
+            "1 Character": "一萬",
+            "2 Character": "二萬",
+            "3 Character": "三萬",
+            "4 Character": "四萬",
+            "5 Character": "五萬",
+            "6 Character": "六萬",
+            "7 Character": "七萬",
+            "8 Character": "八萬",
+            "9 Character": "九萬",
+            "East Wind": "東",
+            "South Wind": "南",
+            "West Wind": "西",
+            "North Wind": "北",
+            "Red Dragon": "中",
+            "Green Dragon": "發",
+            "White Dragon": "白",
+            "Plum": "梅",
+            "Orchid": "蘭",
+            "Chrysanthemum": "菊",
+            "Bamboo": "竹",
+            "Spring": "春",
+            "Summer": "夏",
+            "Autumn": "秋",
+            "Winter": "冬"
+          },
+          "properties": {
+            "type": {
+              "display": "種類",
+              "displayEmpty": "（なし）"
+            },
+            "suit": {
+              "display": "スート",
+              "displayEmpty": "（なし）"
+            },
+            "rank": {
+              "display": "ランク",
+              "displayEmpty": "（なし）"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "数牌",
+              "honor": "字牌",
+              "bonus": "花牌"
+            },
+            "suit": {
+              "circle": "筒子",
+              "bamboo": "索子",
+              "character": "萬子",
+              "wind": "風牌",
+              "dragon": "三元牌",
+              "flower": "花牌",
+              "season": "季節牌"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "CGS伝統麻雀牌"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "伝統的な麻雀牌セット"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "東"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "南"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "西"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "北"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "赤"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "緑"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "白"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "梅"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "蘭"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "菊"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "竹"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "春"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "夏"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "秋"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "冬"
+              }
+            }
+          }
+        }
+      },
+      "ko": {
+        "inline": {
+          "game": {
+            "name": "마작",
+            "gamePlayDeckName": "패산",
+            "setNameDefault": "모든 카드"
+          },
+          "cardNames": {
+            "1 Circle": "1통",
+            "2 Circle": "2통",
+            "3 Circle": "3통",
+            "4 Circle": "4통",
+            "5 Circle": "5통",
+            "6 Circle": "6통",
+            "7 Circle": "7통",
+            "8 Circle": "8통",
+            "9 Circle": "9통",
+            "1 Bamboo": "1삭",
+            "2 Bamboo": "2삭",
+            "3 Bamboo": "3삭",
+            "4 Bamboo": "4삭",
+            "5 Bamboo": "5삭",
+            "6 Bamboo": "6삭",
+            "7 Bamboo": "7삭",
+            "8 Bamboo": "8삭",
+            "9 Bamboo": "9삭",
+            "1 Character": "1만",
+            "2 Character": "2만",
+            "3 Character": "3만",
+            "4 Character": "4만",
+            "5 Character": "5만",
+            "6 Character": "6만",
+            "7 Character": "7만",
+            "8 Character": "8만",
+            "9 Character": "9만",
+            "East Wind": "동",
+            "South Wind": "남",
+            "West Wind": "서",
+            "North Wind": "북",
+            "Red Dragon": "중",
+            "Green Dragon": "발",
+            "White Dragon": "백",
+            "Plum": "매화",
+            "Orchid": "난초",
+            "Chrysanthemum": "국화",
+            "Bamboo": "대나무",
+            "Spring": "봄",
+            "Summer": "여름",
+            "Autumn": "가을",
+            "Winter": "겨울"
+          },
+          "properties": {
+            "type": {
+              "display": "종류",
+              "displayEmpty": "(없음)"
+            },
+            "suit": {
+              "display": "무늬",
+              "displayEmpty": "(없음)"
+            },
+            "rank": {
+              "display": "숫자",
+              "displayEmpty": "(없음)"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "수패",
+              "honor": "자패",
+              "bonus": "화패"
+            },
+            "suit": {
+              "circle": "통수",
+              "bamboo": "삭수",
+              "character": "만수",
+              "wind": "풍패",
+              "dragon": "삼원패",
+              "flower": "꽃패",
+              "season": "계절패"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "CGS 전통 마작패"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "전통 마작패 세트"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "동"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "남"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "서"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "북"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "빨강"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "초록"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "하양"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "매화"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "난초"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "국화"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "대나무"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "봄"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "여름"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "가을"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "겨울"
+              }
+            }
+          }
+        }
+      },
+      "pt-BR": {
+        "inline": {
+          "game": {
+            "name": "Mahjong",
+            "gamePlayDeckName": "Muralha quadrada",
+            "setNameDefault": "Todas as cartas"
+          },
+          "cardNames": {
+            "1 Circle": "1 Círculos",
+            "2 Circle": "2 Círculos",
+            "3 Circle": "3 Círculos",
+            "4 Circle": "4 Círculos",
+            "5 Circle": "5 Círculos",
+            "6 Circle": "6 Círculos",
+            "7 Circle": "7 Círculos",
+            "8 Circle": "8 Círculos",
+            "9 Circle": "9 Círculos",
+            "1 Bamboo": "1 Bambus",
+            "2 Bamboo": "2 Bambus",
+            "3 Bamboo": "3 Bambus",
+            "4 Bamboo": "4 Bambus",
+            "5 Bamboo": "5 Bambus",
+            "6 Bamboo": "6 Bambus",
+            "7 Bamboo": "7 Bambus",
+            "8 Bamboo": "8 Bambus",
+            "9 Bamboo": "9 Bambus",
+            "1 Character": "1 Caracteres",
+            "2 Character": "2 Caracteres",
+            "3 Character": "3 Caracteres",
+            "4 Character": "4 Caracteres",
+            "5 Character": "5 Caracteres",
+            "6 Character": "6 Caracteres",
+            "7 Character": "7 Caracteres",
+            "8 Character": "8 Caracteres",
+            "9 Character": "9 Caracteres",
+            "East Wind": "Vento leste",
+            "South Wind": "Vento sul",
+            "West Wind": "Vento oeste",
+            "North Wind": "Vento norte",
+            "Red Dragon": "Dragão vermelho",
+            "Green Dragon": "Dragão verde",
+            "White Dragon": "Dragão branco",
+            "Plum": "Ameixeira",
+            "Orchid": "Orquídea",
+            "Chrysanthemum": "Crisântemo",
+            "Bamboo": "Bambu",
+            "Spring": "Primavera",
+            "Summer": "Verão",
+            "Autumn": "Outono",
+            "Winter": "Inverno"
+          },
+          "properties": {
+            "type": {
+              "display": "Tipo",
+              "displayEmpty": "(Vazio)"
+            },
+            "suit": {
+              "display": "Naipe",
+              "displayEmpty": "(Vazio)"
+            },
+            "rank": {
+              "display": "Valor",
+              "displayEmpty": "(Vazio)"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "Numeral",
+              "honor": "Honra",
+              "bonus": "Bônus"
+            },
+            "suit": {
+              "circle": "Círculos",
+              "bamboo": "Bambus",
+              "character": "Caracteres",
+              "wind": "Ventos",
+              "dragon": "Dragões",
+              "flower": "Flores",
+              "season": "Estações"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "Peças tradicionais de mahjong CGS"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "Conjunto tradicional de mahjong"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "Leste"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "Sul"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "Oeste"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "Norte"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "Vermelho"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "Verde"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "Branco"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "Ameixeira"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "Orquídea"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "Crisântemo"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "Bambu"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "Primavera"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "Verão"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "Outono"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "Inverno"
+              }
+            }
+          }
+        }
+      },
+      "ru": {
+        "inline": {
+          "game": {
+            "name": "Маджонг",
+            "gamePlayDeckName": "Квадратная стена",
+            "setNameDefault": "Все карты"
+          },
+          "cardNames": {
+            "1 Circle": "1 Точки",
+            "2 Circle": "2 Точки",
+            "3 Circle": "3 Точки",
+            "4 Circle": "4 Точки",
+            "5 Circle": "5 Точки",
+            "6 Circle": "6 Точки",
+            "7 Circle": "7 Точки",
+            "8 Circle": "8 Точки",
+            "9 Circle": "9 Точки",
+            "1 Bamboo": "1 Бамбуки",
+            "2 Bamboo": "2 Бамбуки",
+            "3 Bamboo": "3 Бамбуки",
+            "4 Bamboo": "4 Бамбуки",
+            "5 Bamboo": "5 Бамбуки",
+            "6 Bamboo": "6 Бамбуки",
+            "7 Bamboo": "7 Бамбуки",
+            "8 Bamboo": "8 Бамбуки",
+            "9 Bamboo": "9 Бамбуки",
+            "1 Character": "1 Символы",
+            "2 Character": "2 Символы",
+            "3 Character": "3 Символы",
+            "4 Character": "4 Символы",
+            "5 Character": "5 Символы",
+            "6 Character": "6 Символы",
+            "7 Character": "7 Символы",
+            "8 Character": "8 Символы",
+            "9 Character": "9 Символы",
+            "East Wind": "Восточный ветер",
+            "South Wind": "Южный ветер",
+            "West Wind": "Западный ветер",
+            "North Wind": "Северный ветер",
+            "Red Dragon": "Красный дракон",
+            "Green Dragon": "Зелёный дракон",
+            "White Dragon": "Белый дракон",
+            "Plum": "Слива",
+            "Orchid": "Орхидея",
+            "Chrysanthemum": "Хризантема",
+            "Bamboo": "Бамбук",
+            "Spring": "Весна",
+            "Summer": "Лето",
+            "Autumn": "Осень",
+            "Winter": "Зима"
+          },
+          "properties": {
+            "type": {
+              "display": "Тип",
+              "displayEmpty": "(Пусто)"
+            },
+            "suit": {
+              "display": "Масть",
+              "displayEmpty": "(Пусто)"
+            },
+            "rank": {
+              "display": "Достоинство",
+              "displayEmpty": "(Пусто)"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "Числовая",
+              "honor": "Благородная",
+              "bonus": "Бонусная"
+            },
+            "suit": {
+              "circle": "Точки",
+              "bamboo": "Бамбуки",
+              "character": "Символы",
+              "wind": "Ветры",
+              "dragon": "Драконы",
+              "flower": "Цветы",
+              "season": "Времена года"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "Традиционные кости маджонга CGS"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "Традиционный набор маджонга"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "Восток"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "Юг"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "Запад"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "Север"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "Красный"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "Зелёный"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "Белый"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "Слива"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "Орхидея"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "Хризантема"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "Бамбук"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "Весна"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "Лето"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "Осень"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "Зима"
+              }
+            }
+          }
+        }
+      },
+      "zh-Hans": {
+        "inline": {
+          "game": {
+            "name": "麻将",
+            "gamePlayDeckName": "牌墙",
+            "setNameDefault": "所有牌"
+          },
+          "cardNames": {
+            "1 Circle": "一筒",
+            "2 Circle": "二筒",
+            "3 Circle": "三筒",
+            "4 Circle": "四筒",
+            "5 Circle": "五筒",
+            "6 Circle": "六筒",
+            "7 Circle": "七筒",
+            "8 Circle": "八筒",
+            "9 Circle": "九筒",
+            "1 Bamboo": "一索",
+            "2 Bamboo": "二索",
+            "3 Bamboo": "三索",
+            "4 Bamboo": "四索",
+            "5 Bamboo": "五索",
+            "6 Bamboo": "六索",
+            "7 Bamboo": "七索",
+            "8 Bamboo": "八索",
+            "9 Bamboo": "九索",
+            "1 Character": "一万",
+            "2 Character": "二万",
+            "3 Character": "三万",
+            "4 Character": "四万",
+            "5 Character": "五万",
+            "6 Character": "六万",
+            "7 Character": "七万",
+            "8 Character": "八万",
+            "9 Character": "九万",
+            "East Wind": "东风",
+            "South Wind": "南风",
+            "West Wind": "西风",
+            "North Wind": "北风",
+            "Red Dragon": "红中",
+            "Green Dragon": "发财",
+            "White Dragon": "白板",
+            "Plum": "梅",
+            "Orchid": "兰",
+            "Chrysanthemum": "菊",
+            "Bamboo": "竹",
+            "Spring": "春",
+            "Summer": "夏",
+            "Autumn": "秋",
+            "Winter": "冬"
+          },
+          "properties": {
+            "type": {
+              "display": "类型",
+              "displayEmpty": "（无）"
+            },
+            "suit": {
+              "display": "花色",
+              "displayEmpty": "（无）"
+            },
+            "rank": {
+              "display": "点数",
+              "displayEmpty": "（无）"
+            }
+          },
+          "enums": {
+            "type": {
+              "simple": "数牌",
+              "honor": "字牌",
+              "bonus": "花牌"
+            },
+            "suit": {
+              "circle": "筒子",
+              "bamboo": "索子",
+              "character": "万子",
+              "wind": "风牌",
+              "dragon": "三元牌",
+              "flower": "花牌",
+              "season": "季节牌"
+            }
+          },
+          "sets": {
+            "Mahjong": {
+              "name": "CGS传统麻将牌"
+            }
+          },
+          "decks": {
+            "Traditional Mahjong Deck": {
+              "name": "传统麻将牌组"
+            }
+          },
+          "cards": {
+            "eastwind": {
+              "properties": {
+                "rank": "东"
+              }
+            },
+            "southwind": {
+              "properties": {
+                "rank": "南"
+              }
+            },
+            "westwind": {
+              "properties": {
+                "rank": "西"
+              }
+            },
+            "northwind": {
+              "properties": {
+                "rank": "北"
+              }
+            },
+            "reddragon": {
+              "properties": {
+                "rank": "红"
+              }
+            },
+            "greendragon": {
+              "properties": {
+                "rank": "绿"
+              }
+            },
+            "whitedragon": {
+              "properties": {
+                "rank": "白"
+              }
+            },
+            "plum": {
+              "properties": {
+                "rank": "梅"
+              }
+            },
+            "orchid": {
+              "properties": {
+                "rank": "兰"
+              }
+            },
+            "chrysanthemum": {
+              "properties": {
+                "rank": "菊"
+              }
+            },
+            "bamboo": {
+              "properties": {
+                "rank": "竹"
+              }
+            },
+            "spring": {
+              "properties": {
+                "rank": "春"
+              }
+            },
+            "summer": {
+              "properties": {
+                "rank": "夏"
+              }
+            },
+            "autumn": {
+              "properties": {
+                "rank": "秋"
+              }
+            },
+            "winter": {
+              "properties": {
+                "rank": "冬"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "decks": {
+    "Traditional Mahjong Deck": {
+      "source": "https://www.cardgamesimulator.com/games/Mahjong/decks/Traditional%20Mahjong%20Deck.txt",
+      "text": "### Mahjong Deck: Traditional Mahjong Deck\n4 1 Circle\n4 2 Circle\n4 3 Circle\n4 4 Circle\n4 5 Circle\n4 6 Circle\n4 7 Circle\n4 8 Circle\n4 9 Circle\n4 1 Bamboo\n4 2 Bamboo\n4 3 Bamboo\n4 4 Bamboo\n4 5 Bamboo\n4 6 Bamboo\n4 7 Bamboo\n4 8 Bamboo\n4 9 Bamboo\n4 1 Character\n4 2 Character\n4 3 Character\n4 4 Character\n4 5 Character\n4 6 Character\n4 7 Character\n4 8 Character\n4 9 Character\n4 East Wind\n4 South Wind\n4 West Wind\n4 North Wind\n4 Red Dragon\n4 Green Dragon\n4 White Dragon\n1 Plum\n1 Orchid\n1 Chrysanthemum\n1 Bamboo\n1 Spring\n1 Summer\n1 Autumn\n1 Winter"
+    }
+  }
+}

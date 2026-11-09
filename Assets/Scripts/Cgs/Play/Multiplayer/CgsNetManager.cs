@@ -126,8 +126,21 @@ namespace Cgs.Play.Multiplayer
 
         protected void Start()
         {
+            gameObject.GetOrAddComponent<GameContentNetwork>();
             Transports = GetComponent<Transports>();
             UnityServices.InitializeAsync();
+        }
+
+        public new bool StartHost()
+        {
+            gameObject.GetOrAddComponent<GameContentNetwork>();
+            return base.StartHost();
+        }
+
+        public new bool StartClient()
+        {
+            gameObject.GetOrAddComponent<GameContentNetwork>();
+            return base.StartClient();
         }
 
         public static async Task SignInAnonymouslyAsync()

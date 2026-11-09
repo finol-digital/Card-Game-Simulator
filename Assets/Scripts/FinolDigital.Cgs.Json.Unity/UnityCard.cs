@@ -12,6 +12,7 @@ namespace FinolDigital.Cgs.Json.Unity
 {
     public class UnityCard : Card
     {
+        public UnityCardGame Game => SourceGame as UnityCardGame ?? UnityCardGame.UnityInvalid;
         public static readonly UnityCard Blank = new(UnityCardGame.UnityInvalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
@@ -97,6 +98,8 @@ namespace FinolDigital.Cgs.Json.Unity
         public void RegisterDisplay(ICardDisplay cardDisplay)
         {
             DisplaysUsingImage.Add(cardDisplay);
+            if (cardDisplay is ICardPresentationDisplay presentation)
+                presentation.SetImageCard(this);
             if (ImageSprite != null)
                 cardDisplay.SetImageSprite(GetImageSpriteFor(cardDisplay));
             else if (!IsLoadingImage)
@@ -150,9 +153,15 @@ namespace FinolDigital.Cgs.Json.Unity
             }
         }
 
-        public void UnregisterDisplay(ICardDisplay cardDisplay)
+        public void UnregisterDisplay(ICardDisplay cardDisplay, bool clearDisplay = true)
         {
-            cardDisplay.SetImageSprite(null);
+            // Teardown removes ownership without rebuilding bindings on a dying view.
+            if (clearDisplay)
+            {
+                if (cardDisplay is ICardPresentationDisplay presentation)
+                    presentation.SetImageCard(null);
+                cardDisplay.SetImageSprite(null);
+            }
             DisplaysUsingImage.Remove(cardDisplay);
             if (DisplaysUsingImage.Count < 1)
             {

@@ -1,4 +1,10 @@
 <linker>
+    <assembly fullname="Cgs">
+        <type fullname="Cgs.Play.Multiplayer.GameContentNetwork/Packet" preserve="all"/>
+        <type fullname="Cgs.GameContent.GameContentLabel" preserve="all"/>
+    </assembly>
+    <!-- Localization catalogs use Newtonsoft reflection; retain their public contract on IL2CPP. -->
+    <assembly fullname="FinolDigital.Cgs.Json" preserve="all"/>
     <assembly fullname="Assembly-CSharp-firstpass">
         <type fullname="Didstopia.PDFSharp.Pdf*" preserve="all"/>
     </assembly>
