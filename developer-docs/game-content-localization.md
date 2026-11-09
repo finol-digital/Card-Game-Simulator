@@ -211,6 +211,13 @@ Firebase reports a successful production rollout. The live proxy now returns
 `X-CGS-Final-URL` and includes it in `Access-Control-Expose-Headers`. The deployment
 prerequisite is satisfied; the full E1 player/cache walkthrough remains open.
 
+A cross-origin browser fetch from the WebGL preview on 2026-11-08 also passed:
+the GitHub redirect returned HTTP 200 with a JavaScript-readable final raw URL;
+the Spanish catalog resolved relative to that URL and returned HTTP 200; its
+relative card-back image returned HTTP 200, `image/png`, and 15,741 bytes.
+This verifies deployed redirect/CORS/resource transport, not Unity's in-app
+rendering, persistence, or offline cache export. Those player steps remain below.
+
 The [hosted fixture](fixtures/localization-hosted/cgs.json) is generated with real
 GitHub raw URLs and `autoUpdate: 0`. It uses the same two cards and catalogs as the
 offline fixture. Its identity ends in `@raw.githubusercontent.com`, so it is
