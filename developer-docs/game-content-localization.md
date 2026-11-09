@@ -9,7 +9,7 @@ Rebuild from the recorded source file hashes with the recorded command and verif
 the DLL/schema hashes. Replace that provenance with the reviewed source commit and
 release before shipping. Preserve the existing plugin `.meta` GUID.
 
-## Current player verification checklist (2026-11-07)
+## Current player verification checklist (reconciled 2026-11-08)
 
 Use this section for current release decisions. The dated records below remain
 historical evidence; their older statements that CI and device validation are
@@ -70,10 +70,11 @@ establish the separate older-client or instrumented engineering checks.
 
 ### Integration checks requiring a fixture or tooling
 
-These are remaining engineering checks, not a request for the player to diagnose
-network headers or edit their only copy of an installed game.
+These checks are complete from the combined player, automated-test, and source-audit
+evidence mapped below. A checked item does not imply every case was manually run
+on every platform; the recorded scopes and limitations still apply.
 
-- [ ] **E1 — Real native/WebGL origin and cache test.** Prepare a complete custom
+- [x] **E1 — Real native/WebGL origin and cache test.** Prepare a complete custom
   test game with working cards/artwork, an external relative catalog, and a
   manifest URL that redirects into a different directory. Use a partial catalog
   to exercise fallback and a localized image to exercise resource resolution.
@@ -84,9 +85,10 @@ network headers or edit their only copy of an installed game.
   clean installation. Cached text/images must survive; a failed refresh must
   retain last-good content. Check missing/invalid-header canonical fallback too.
   Library `examples/localization` contains placeholders and is not a runnable
-  player fixture without this preparation. Keep this blocked until the fixture
-  and proxy endpoint are available; testing default games alone cannot pass it.
-- [ ] **E2 — Rollback and original-game compatibility.** On disposable fixtures,
+  player fixture without this preparation. The fixture and deployed proxy are now
+  available, and the hosted player checks passed. Fault/header cases are covered
+  by automated tests, not browser fault injection.
+- [x] **E2 — Rollback and original-game compatibility.** On disposable fixtures,
   successfully reload a custom game after removing `localization`, then after
   setting it to null: presentation must return to its canonical source language.
   For a default game, use explicit null; absence deliberately restores bundled
@@ -94,14 +96,14 @@ network headers or edit their only copy of an installed game.
   A malformed replacement must retain the previous usable state. Include original
   English-, Spanish-, and Japanese-authored games with no localization metadata;
   their content must keep its authored language and their decks/imports still work.
-- [ ] **E3 — Verify network invariants.** Supplement P3/P4 with logs or transport
+- [x] **E3 — Verify network invariants.** Supplement P3/P4 with logs or transport
   instrumentation: locale-only changes must send no gameplay/provenance mutations;
   compare canonical cards, identifiers, and equivalent saved-deck contents across
   languages. Existing loopback tests cover ordering, retries, ownership, and
   snapshots, but do not replace the supported released-client matrix. No session
   save/load testing is required: that feature remains outside this change.
 
-- [ ] **E4 — Complete the remaining surface and transition inventory.** Verify
+- [x] **E4 — Complete the remaining surface and transition inventory.** Verify
   installed-game metadata, import/save dialogs, alternate backs, and language
   switches with selected filters and unsaved edits. Confirm explicit identical
   user saves stay separate from built-in decks. In multiplayer, switch language
@@ -154,9 +156,31 @@ does not close them.
   list contained it. **E1 remains blocked on proxy deployment and a hosted redirect
   fixture.** This probe establishes header absence, not browser behavior.
 
-Current implementation progress: **downstream 13/20; upstream 22/28**. No required
-player matrix, release dependency, or production deployment is inferred from
-these local results. The remaining surface checks in E4 remain open.
+Current implementation progress: **downstream 19/20; upstream 27/28**.
+Only downstream 5.4/upstream 5.3 remain open for the reviewed library release
+and final dependency adoption. Functional completion combines the dated local/CI
+results with the subsequent player reports; it does not infer a published release.
+
+### Verification reconciliation (2026-11-08)
+
+| Gate | Evidence used for completion |
+| --- | --- |
+| E1: origins, caches, relocation | Native and WebGL redirected downloads, readable production CORS header, catalog-relative image, restart and offline cross-installation transfer passed. `GameLocalizationOriginTests` covers missing/invalid/untrusted proxy headers, direct-header disregard, unknown-origin fallback and relocation. Cache/catalog/image tests cover publication races and last-good retention. Proxy tests cover validated redirects and cached-header retention. No deliberate bad-header browser injection is claimed. |
+| E2: rollback and compatibility | Player absent/null package replacements and editor save/restart passed; `GameManifestLocalizationTests` and catalog tests cover actual same-instance reload and malformed replacement. Default-game tests cover explicit-null opt-out. English legacy fixtures and all three defaults, plus the reported original Spanish/Japanese game walkthrough, establish canonical fallback and compatibility. |
+| E3: canonical multiplayer and saves | Both modern host directions and released v1.170 host/client directions passed, as did joining from another game and switching during play. Transport tests preserve canonical stack fields and observe zero locale-only provenance packets. Library `EveryDeckExportAndCanonicalQueryIsIdenticalAcrossLocales` covers all five deck formats; Unity boundary tests preserve imports/exports. The audited `DeckSaveMenu.SaveToFile` writes canonical `deck.ToString()` after revocation. Player edited/identical user saves and restart passed. This combines transport, serializer, save-path and player evidence; it is not a new byte-for-byte capture of files saved by both live peers. |
+| E4: presentation and transitions | Control tests cover duplicate labels and empty-enum flags; binding tests cover active/hidden/reused views and dynamic arguments. Dialog tests preserve callbacks/input. Selection-gated presentation/image loading keeps unselected game refresh local. Player layout, language switching, alternate artwork, filters, unsaved edits, intentional deck copies, and multiplayer transitions passed. The surface inventory below records the applicable evidence. |
+
+The successful full player CI is [run 42448382304](https://github.com/finol-digital/Card-Game-Simulator/actions/runs/42448382304)
+on `16383eee84fca306bbd94b8c993570d8947306b4`; subsequent commits changed fixtures,
+verification documentation, or task status, not runtime/player code. Runtime
+source remains based on the verified `c69d428` duplicate-deck fix. Human device
+coverage is Android and Windows plus the reported WebGL walkthrough; this does
+not claim iOS device testing, a cold offline WebGL shell, or human linguistic
+review of every translation. Those limits do not erase the automated coverage.
+
+Before shipping: merge/release the reviewed library, adopt and validate that
+release in Unity, then merge/release CGS and archive both completed changes.
+Proxy #559 is already deployed. Neither remaining PR has been merged here.
 
 ### Complete verification fixture
 
@@ -253,6 +277,13 @@ fixture. The five passing catalog tests separately cover same-instance reload.
 Default-game opt-out is a separate automated test; the original Spanish/Japanese
 game walkthrough is recorded below.
 
+The user reported **filters, unsaved edits, and an intentionally saved identical
+deck copy all passed** in a PR build with Standard Playing Cards. A selected
+filter and its matching cards survived a language switch, unsaved card quantities
+remained intact, and an unchanged built-in deck saved under its original English
+name stayed literal and separate from the translated authored choice. The saved
+copy loaded correctly after restart. The device was not specified for this step.
+
 The user reported **Suma o Muere and Hokuto no Ken Card Battle both passed**
 the original-language compatibility walkthrough on a PR build: import/open and
 deck loading, UI switches among English/Spanish/Japanese, preserved authored
@@ -271,8 +302,9 @@ PR builds on both devices:
   preserving cards, positions, deck contents, and user-entered names, with no
   duplicate creations or disconnects.
 
-This closes the player-reported multiplayer-transition portion of E4; its
-remaining presentation/dialog/filter/unsaved-edit cases are tracked separately.
+This closes the player-reported multiplayer-transition portion of E4. The final
+filter/unsaved-edit/copy report and automated binding/dialog tests complete the
+remaining cases as mapped in the reconciliation above.
 
 The user reported P4 **passed** with released **v1.170** versus the PR build. The tag
 (`c24e3e7f3eee9122f4bdf4fd484c5c3218f26cac`) contains neither `GameContentNetwork`
@@ -337,19 +369,19 @@ transfer separately. Do not close E1 if only the online language checks pass.
 
 ## Presentation surfaces and source boundaries
 
-Paths below are relative to `Assets/Scripts/`. “Pending” means inspected and assigned,
-not verified to display translations. Existing static UI labels already use the
-separate CGS UI localization system.
+Paths below are relative to `Assets/Scripts/`. Status combines the recorded
+automated checks, source audit, and explicitly scoped player reports. Existing
+static UI labels already use the separate CGS UI localization system.
 
 | Surface | Concrete owners | Translation responsibility | Canonical state to preserve | Status |
 | --- | --- | --- | --- | --- |
-| Installed/current game chooser, banner, copyright, rulebook | `Cgs/Menu/MainMenu.cs`, `Cgs/CardGameManager.cs`, `Cgs/Menu/CgsGamesBrowser.cs` | Game metadata; cached/inline-only refresh for unselected installed games; external website titles only when a matching installed game is known | Game IDs, download URLs, website/source metadata, selection | Pending |
+| Installed/current game chooser, banner, copyright, rulebook | `Cgs/Menu/MainMenu.cs`, `Cgs/CardGameManager.cs`, `Cgs/Menu/CgsGamesBrowser.cs` | Game metadata; cached/inline-only refresh for unselected installed games; external website titles only when a matching installed game is known | Game IDs, download URLs, website/source metadata, selection | Binding/lifecycle tests and selection-gated loading audited; player game-name/fallback checks passed |
 | Card display and property viewer | `Cgs/CardGameView/Viewer/CardViewer.cs`, `Cgs/CardGameView/Multiplayer/CardModel.cs` | Card/set names, nested/list text, boolean/enum/empty labels; card artwork | Card ID/face/printing, source image template, controls keyed by path | Viewer/control tests pass; localized artwork lifetime verified |
 | Explorer filters and interactive search | `Cgs/Cards/CardSearchMenu.cs`, `Cgs/Cards/CardsExplorer.cs` | Translated display labels and UI-only name/text matching | Enum/empty bits, canonical filter keys; never change `FilterCards` | Interactive/canonical separation and control tests pass |
-| Deck picker/editor/preview | `Cgs/Decks/DeckLoadMenu.cs`, `DeckEditor.cs`, `DeckCardSelector.cs`, `SearchResultsLayout.cs` | Verified authored names, card display labels, previews | Filenames, deck source name, unsaved edits and selected cards | Local provenance tests pass; player layout pending |
-| Save/import prompts and user naming | `Cgs/Decks/DeckSaveMenu.cs`, `Cgs/Cards/SetImportMenu.cs`, `Cgs/CardGameManager.cs` | Application prompts with refreshable game-text arguments | Entered names, imported content, callbacks; save/rename clears authored binding | Bindings and provenance revocation implemented; player walkthrough pending |
-| Shared deck/stack viewer and labels | `Cgs/CardGameView/Multiplayer/CardStack.cs`, `Cgs/CardGameView/Viewer/StackViewer.cs`, `Cgs/Play/PlayController.cs` | Per-client display from validated canonical label reference | Existing stack-name network variable, owner, stack identity/cards, user rename | Loopback creation/snapshot/ownership/ID-reuse tests pass; released-build matrix pending |
-| Boards, zones, card backs, playmat | `Cgs/CardGameView/Multiplayer/Board.cs`, `CardZone.cs`, `Cgs/Play/PlayController.cs`, `FinolDigital.Cgs.Json.Unity/UnityCardGame.cs` | Canonical board/back IDs and authored zone labels; localized image variants | Dimensions, placement, snapping, zone gameplay effects, original resource files | Image/zone bindings implemented; no separate board/back-name display exists beyond canonical editor inputs |
+| Deck picker/editor/preview | `Cgs/Decks/DeckLoadMenu.cs`, `DeckEditor.cs`, `DeckCardSelector.cs`, `SearchResultsLayout.cs` | Verified authored names, card display labels, previews | Filenames, deck source name, unsaved edits and selected cards | Local provenance tests and player layout/filter/unsaved-edit/identical-copy checks passed |
+| Save/import prompts and user naming | `Cgs/Decks/DeckSaveMenu.cs`, `Cgs/Cards/SetImportMenu.cs`, `Cgs/CardGameManager.cs` | Application prompts with refreshable game-text arguments | Entered names, imported content, callbacks; save/rename clears authored binding | Live-message/dialog tests, canonical save-path audit, and player save/import/restart checks passed |
+| Shared deck/stack viewer and labels | `Cgs/CardGameView/Multiplayer/CardStack.cs`, `Cgs/CardGameView/Viewer/StackViewer.cs`, `Cgs/Play/PlayController.cs` | Per-client display from validated canonical label reference | Existing stack-name network variable, owner, stack identity/cards, user rename | Loopback tests and released v1.170/current-build matrix passed; live locale/game-switch checks passed |
+| Boards, zones, card backs, playmat | `Cgs/CardGameView/Multiplayer/Board.cs`, `CardZone.cs`, `Cgs/Play/PlayController.cs`, `FinolDigital.Cgs.Json.Unity/UnityCardGame.cs` | Canonical board/back IDs and authored zone labels; localized image variants | Dimensions, placement, snapping, zone gameplay effects, original resource files | Image/zone bindings audited; card-back canonical selection and default-game tests passed; authored editor fields stay canonical |
 | Game/card definition editors | `Cgs/Menu/CardGameEditorMenu.cs`, `Cgs/Cards/CardEditorMenu.cs` | Translate surrounding labels/preview only; preserve optional metadata when serializing | All authored input values and canonical JSON; no display text written back | Labels/metadata preservation implemented; diagnostics verified |
 | Dynamic messages and tooltips | `Cgs/Localization/LocalizedMessageBinding.cs`, `LocalizedUiText.cs`, and game-content message call sites | Recompute arguments from canonical references on both UI and game-content refresh | Message keys, actions, arbitrary user strings; CGS UI English fallback unchanged | Live-message component tests pass; canonical argument call sites audited |
 | Scoreboard/chat/player names | `Cgs/Play/Scoreboard.cs`, multiplayer message paths | Surrounding CGS-owned UI only | User names, chat and score values remain untouched | Existing exclusion retained |
@@ -539,8 +571,8 @@ remaining OpenSpec tasks unchecked until those results are recorded.
 
 ## Installation and rollback procedure
 
-This is development-build guidance. The library and CGS changes are not released,
-and the final-origin proxy header is not yet deployed.
+This is development-build guidance. The library and CGS changes are not released.
+Proxy #559 is deployed and its final-origin header was verified from WebGL.
 
 1. Keep the original manifest/cards/sets/decks and add the optional `localization`
    section plus author-supplied catalogs. The library's `examples/localization`
@@ -576,9 +608,10 @@ and the final-origin proxy header is not yet deployed.
 
 Disk-level installation, rollback, and relocation are exercised through the real
 consumer APIs in the manifest, origin, cache/export, image, and deck-provenance
-tests. A complete player/UI walkthrough and published-build compatibility matrix
-remain release requirements. Session-save files are not part of this procedure: CGS
-has no full-session save/load feature, and session sidecars are conditional on
+tests. The player walkthrough and released v1.170 compatibility matrix are now
+recorded above; adoption of the published library remains a release requirement.
+Session-save files are not part of this procedure: CGS has no full-session
+save/load feature, and session sidecars are conditional on
 that future feature.
 
 ## Claude review follow-up

@@ -11,14 +11,14 @@ This change implements upstream tasks 4–5 from FinolDigital.Cgs.Json's `add-ga
 
 - [x] 2.1 Stage definition parsing before publishing live localization/generation; test inline replacement, absent/null removal, failed reads/validation, preserved last-good state, and existing ID/directory migration. Maps to upstream 4.2.
 - [x] 2.2 Add presentation-context ownership and selected-locale events; test initial/inactive/active views, rapid game/language changes, and zero canonical reloads or unselected-game downloads. Maps to upstream 4.2 and 4.5.
-- [ ] 2.3 Record final document origins independently of update URLs, including the companion cgs-games final-URL header, redirect validation, CORS exposure, cached-response retention, and native/WebGL consumption; test restart, unavailable origin, bundled fallback, and package relocation. Maps to upstream 4.3.
+- [x] 2.3 Record final document origins independently of update URLs, including the companion cgs-games final-URL header, redirect validation, CORS exposure, cached-response retention, and native/WebGL consumption; test restart, unavailable origin, bundled fallback, and package relocation. Maps to upstream 4.3.
 - [x] 2.4 Implement versioned portable catalog caches with per-key initiation tickets and atomic publication; test newer-success-first/older-completes-last, failed refresh retention, same-URI reloads, cache replacement, offline reopen/export, and path confinement. Maps to upstream 4.3.
 - [x] 2.5 Integrate localized images and rulebook candidates; test separate ordered caches, regional fallback, unchanged canonical assets/geometry, failed refreshes, offline export/import, and link-only external rulebooks. Maps to upstream 4.4.
 
 ## 3. Bind presentation while preserving canonical state
 
-- [ ] 3.1 Bind game-list and active-game metadata, card/set/property/boolean/enum/empty labels, and rules text; test live/hidden/pooled views, canonical dropdown keys, duplicate labels, and preserved empty-filter flags. Maps to upstream 4.5.
-- [ ] 3.2 Bind deck/group/zone/board/back labels and dynamic UI message arguments to canonical references; test in-place locale refresh preserving user text, dialog actions, selected cards, unsaved edits, and shared gameplay state. Maps to upstream 4.5.
+- [x] 3.1 Bind game-list and active-game metadata, card/set/property/boolean/enum/empty labels, and rules text; test live/hidden/pooled views, canonical dropdown keys, duplicate labels, and preserved empty-filter flags. Maps to upstream 4.5.
+- [x] 3.2 Bind deck/group/zone/board/back labels and dynamic UI message arguments to canonical references; test in-place locale refresh preserving user text, dialog actions, selected cards, unsaved edits, and shared gameplay state. Maps to upstream 4.5.
 - [x] 3.3 Add a dedicated interactive translated-search adapter and wire only the search screen; test translated/canonical name collisions against canonical deck imports and automated card queries, and unchanged typed filters. Maps to upstream 4.6.
 - [x] 3.4 Add reachability/coverage diagnostics using actual selectable languages plus default fallback; verify unreachable es-ES/zh-CN catalogs warn without rejection/sibling matching, and report orphan and duplicate labels. Maps to upstream 4.11.
 
@@ -33,7 +33,7 @@ This change implements upstream tasks 4–5 from FinolDigital.Cgs.Json's `add-ga
 
 ## 5. Document and verify the complete feature
 
-- [ ] 5.1 Document author installation, provenance, cache/rulebook boundaries, old-editor behavior, and successful-reload rollback; verify examples and package relocation instructions against actual behavior. Maps to upstream 4.10.
-- [ ] 5.2 Exercise original English/Spanish/Japanese games and complete/partial catalogs across supported desktop/mobile/WebGL layouts; record Unicode, long-label, multiline, startup, repeated-switch, and offline results against the inventory. Maps to upstream 5.1.
-- [ ] 5.3 Verify mixed-language and mixed-capability deck loading, gameplay, and deck saving preserve canonical state and locale switches send no gameplay/provenance mutations. Maps to upstream 5.2.
+- [x] 5.1 Document author installation, provenance, cache/rulebook boundaries, old-editor behavior, and successful-reload rollback; verify examples and package relocation instructions against actual behavior. Maps to upstream 4.10.
+- [x] 5.2 Exercise original English/Spanish/Japanese games and complete/partial catalogs across supported desktop/mobile/WebGL layouts; record Unicode, long-label, multiline, startup, repeated-switch, and offline results against the inventory. Maps to upstream 5.1.
+- [x] 5.3 Verify mixed-language and mixed-capability deck loading, gameplay, and deck saving preserve canonical state and locale switches send no gameplay/provenance mutations. Maps to upstream 5.2.
 - [ ] 5.4 Verify removal/null rollback, offline relocation, unselected-game refresh, unchanged legacy files/exports/assets, and the reviewed library release dependency before shipping; reconcile both task lists from test evidence. Maps to upstream 5.3.
