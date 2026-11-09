@@ -230,8 +230,13 @@ the loaded WebGL app offline, whole-game export/import into a native PR build
 without internet access, and repeating the switches after an offline native
 restart. The user did not identify which native device was used for this final
 transfer. This confirms the hosted fixture's browser/cache-transfer walkthrough,
-not a cold offline launch of the WebGL application shell. A fresh redirected
-download in a native player and the remaining E1 fault cases are separate evidence.
+not a cold offline launch of the WebGL application shell.
+
+The user subsequently reported **passed** for a fresh native download through the
+redirecting entry URL, Spanish names and localized card back, intentional Japanese
+fallback, and repeating language switches after restarting CGS. The requested
+platform was Android or Windows; the user did not specify which was used for this
+check. The remaining E1 fault cases are separate evidence.
 
 The user reported P4 **passed** with released **v1.170** versus the PR build. The tag
 (`c24e3e7f3eee9122f4bdf4fd484c5c3218f26cac`) contains neither `GameContentNetwork`
