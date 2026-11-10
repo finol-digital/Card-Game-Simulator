@@ -456,15 +456,16 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override bool PreBeginDrag(PointerEventData eventData)
         {
-            DidDrag = true;
             if (DoesCloneOnDrag)
             {
                 if (!(Container != null && Container.transform == transform.parent) && IsSpawned)
                     MyNetworkObject.Despawn(false);
                 CreateDrag(eventData, gameObject, transform, Value, IsFacedown, IsCardShared);
+                RemovePointer(eventData);
                 return true;
             }
 
+            DidDrag = true;
             EventSystem.current.SetSelectedGameObject(null, eventData);
             return false;
         }
@@ -802,6 +803,11 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 Debug.LogWarning($"FinishMovingToPlaceHolder Lost PlaceHolder for {gameObject.name}!");
                 RecoverLostPlaceholder();
+                if (PlaceHolder == null)
+                {
+                    IsMovingToPlaceHolder = false;
+                    return;
+                }
             }
 
             var previousParentCardZone = ParentCardZone;
