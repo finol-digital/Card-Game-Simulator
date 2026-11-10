@@ -97,6 +97,7 @@ namespace Tests.PlayMode
             Assert.IsNotNull(clone);
             Assert.AreNotSame(source, clone);
             Assert.IsEmpty(source.PointerPositions);
+            Assert.IsFalse((bool)typeof(CgsNetPlayable).GetProperty("DidDrag", PrivateInstance).GetValue(source));
 
             cardZone.OnPointerEnter(eventData);
             Assert.AreSame(cardZone, clone.PlaceHolderCardZone);
