@@ -7,22 +7,34 @@ on:
     types: [opened, reopened, synchronize, edited, ready_for_review]
 
 # Validate trusted event metadata only; never check out or execute PR code.
-permissions: {}
+permissions:
+  statuses: write
 
 jobs:
   develop-to-main:
-    name: Develop to main
+    name: Validate release branch
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
       - name: Require this repository's develop branch
-        env:
-          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
-          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
-        shell: bash
-        run: |
-          if [[ "$HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" || "$HEAD_BRANCH" != "develop" ]]; then
-            echo "::error::PRs targeting main must come from this repository's develop branch. Integrate the changes into develop first."
-            exit 1
-          fi
-          echo "Release PR source verified: develop -> main."
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const repository = `${context.repo.owner}/${context.repo.repo}`;
+            const allowed = pr.head.repo?.full_name === repository && pr.head.ref === 'develop';
+            // pull_request_target runs on the base SHA. Report on the PR head so
+            // this result can satisfy the required status check for the PR.
+            await github.rest.repos.createCommitStatus({
+              ...context.repo,
+              sha: pr.head.sha,
+              context: 'Develop to main',
+              state: allowed ? 'success' : 'failure',
+              description: allowed
+                ? 'Release PR source verified: develop -> main.'
+                : 'PRs to main must come from this repository’s develop branch.',
+              target_url: `${context.serverUrl}/${repository}/actions/runs/${context.runId}`
+            });
+            if (!allowed) {
+              core.setFailed('Integrate changes into this repository’s develop branch before opening a PR to main.');
+            }

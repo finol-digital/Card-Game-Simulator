@@ -96,11 +96,12 @@ jobs:
         with:
           testMode: playmode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      # Keep automated metadata on develop; main changes arrive through release PRs.
       - name: Checkout Release Notes Branch
         if: github.event.action == 'published'
         uses: actions/checkout@v7
         with:
-          ref: main
+          ref: develop
           path: Temp/release-notes
           sparse-checkout: fastlane/metadata
       - name: Update Release Notes
@@ -116,7 +117,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           repository: Temp/release-notes
-          branch: main
+          branch: develop
           file_pattern: fastlane/metadata
           commit_message: Update Release Notes (MINOR)
       - name: Find Open Pull Request
