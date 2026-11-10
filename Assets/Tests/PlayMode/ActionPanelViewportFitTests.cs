@@ -86,6 +86,7 @@ namespace Tests.PlayMode
                     yield return null;
                     var tipObject = (GameObject)typeof(ToolTip).GetField("_toolTipGameObject",
                         BindingFlags.Instance | BindingFlags.NonPublic).GetValue(tooltip);
+                    Assert.IsNotNull(tipObject, $"{tooltip.name} must create its tooltip.");
                     Assert.AreEqual(1, tipObject.GetComponent<CanvasGroup>().alpha, tooltip.name);
                     var tipBounds = BoundsIn(viewport, (RectTransform)tipObject.transform);
                     Assert.GreaterOrEqual(tipBounds.xMin, viewport.rect.xMin - 0.1f, tooltip.name);
