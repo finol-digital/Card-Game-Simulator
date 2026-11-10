@@ -52,6 +52,59 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator PlayMenuTooltipsDoNotCoverButtons()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Play/Play Menu.prefab");
+            var menu = Object.Instantiate(prefab, _container.transform);
+            foreach (var behaviour in menu.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (behaviour is ToolTip || behaviour is UnityEngine.EventSystems.UIBehaviour)
+                    continue;
+                Object.DestroyImmediate(behaviour);
+            }
+            menu.GetComponent<UnityEngine.UI.CanvasScaler>().enabled = false;
+            menu.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+            var viewport = (RectTransform)menu.transform;
+            viewport.localScale = Vector3.one;
+            menu.transform.Find("Panels").gameObject.SetActive(true);
+            menu.SetActive(true);
+            _container.SetActive(true);
+
+            foreach (var size in new[] { new Vector2(1920, 1080), new Vector2(1280, 800),
+                         new Vector2(1080, 1920) })
+            {
+                viewport.sizeDelta = size;
+                yield return null;
+                yield return null;
+                var buttons = menu.GetComponentsInChildren<UnityEngine.UI.Button>();
+                var tooltips = menu.GetComponentsInChildren<ToolTip>();
+                Assert.GreaterOrEqual(tooltips.Length, 6);
+                foreach (var tooltip in tooltips)
+                {
+                    tooltip.OnPointerEnter(null);
+                    yield return null;
+                    yield return null;
+                    var tipObject = (GameObject)typeof(ToolTip).GetField("_toolTipGameObject",
+                        BindingFlags.Instance | BindingFlags.NonPublic).GetValue(tooltip);
+                    Assert.IsNotNull(tipObject, $"{tooltip.name} must create its tooltip.");
+                    Assert.AreEqual(1, tipObject.GetComponent<CanvasGroup>().alpha, tooltip.name);
+                    var tipBounds = BoundsIn(viewport, (RectTransform)tipObject.transform);
+                    Assert.GreaterOrEqual(tipBounds.xMin, viewport.rect.xMin - 0.1f, tooltip.name);
+                    Assert.LessOrEqual(tipBounds.xMax, viewport.rect.xMax + 0.1f, tooltip.name);
+                    Assert.GreaterOrEqual(tipBounds.yMin, viewport.rect.yMin - 0.1f, tooltip.name);
+                    Assert.LessOrEqual(tipBounds.yMax, viewport.rect.yMax + 0.1f, tooltip.name);
+                    foreach (var button in buttons)
+                    {
+                        var buttonBounds = BoundsIn(viewport, (RectTransform)button.transform);
+                        Assert.IsFalse(tipBounds.Overlaps(buttonBounds),
+                            $"{tooltip.name} tooltip {tipBounds} overlaps {button.name} {buttonBounds} at {size}.");
+                    }
+                    tooltip.OnPointerExit(null);
+                }
+            }
+        }
+
+        [UnityTest]
         public IEnumerator CardActionsAndTooltipsStayInViewport()
         {
             yield return CheckPanel("Card Viewer", "Card Action Panel");

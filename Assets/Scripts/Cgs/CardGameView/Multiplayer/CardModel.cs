@@ -357,7 +357,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance == null)
                 return;
 
-            if (Settings.PreviewOnMouseOver && !CardViewer.Instance.IsVisible
+            if (CardViewer.Instance.CanPreviewOnHover && !CardViewer.Instance.IsVisible
                                             && !(PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
                                             && !CardViewer.Instance.Zoom && !IsAnyDragging && !IsFacedown)
                 CardViewer.Instance.PreviewCardModel = this;

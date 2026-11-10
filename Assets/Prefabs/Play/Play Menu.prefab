@@ -1373,6 +1373,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
+      propertyPath: isLeft
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
       propertyPath: localizationKey
       value: common.edit
       objectReference: {fileID: 0}
@@ -1380,7 +1385,7 @@ PrefabInstance:
         type: 3}
       propertyPath: parentTransform
       value: 
-      objectReference: {fileID: 8057757558994361247}
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1604,6 +1609,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
+      propertyPath: isLeft
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
       propertyPath: localizationKey
       value: common.share
       objectReference: {fileID: 0}
@@ -1611,7 +1621,7 @@ PrefabInstance:
         type: 3}
       propertyPath: parentTransform
       value: 
-      objectReference: {fileID: 8000348096829564837}
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1836,6 +1846,11 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: isLeft
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
@@ -2156,6 +2171,11 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: isLeft
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
@@ -2611,6 +2631,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
+      propertyPath: isLeft
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: maxSideWidth
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
       propertyPath: tooltip
       value: Play Menu
       objectReference: {fileID: 0}
@@ -2840,6 +2870,11 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: isLeft
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
@@ -3478,6 +3513,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
+      propertyPath: isLeft
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
       propertyPath: tooltip
       value: Load Deck
       objectReference: {fileID: 0}
@@ -3798,6 +3838,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
+      propertyPath: isLeft
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
       propertyPath: tooltip
       value: Create Counter
       objectReference: {fileID: 0}
@@ -4106,6 +4151,11 @@ PrefabInstance:
       propertyPath: avoidOverlap
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4485005921340226510, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: isLeft
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
       propertyPath: m_Pivot.x
@@ -4214,6 +4264,11 @@ PrefabInstance:
     - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
       propertyPath: avoidOverlap
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: isLeft
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,

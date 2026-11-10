@@ -68,6 +68,8 @@ namespace Cgs.CardGameView.Viewer
         private CardViewerMode _mode;
 
         [SerializeField] CanvasGroup preview;
+        [SerializeField] bool alwaysShowHoverInViewer;
+
         [SerializeField] CanvasGroup minimal;
         [SerializeField] CanvasGroup expanded;
         [SerializeField] CardActionPanel cardActionPanel;
@@ -157,6 +159,8 @@ namespace Cgs.CardGameView.Viewer
 
         private int _selectedPropertyIndex;
 
+        public bool CanPreviewOnHover => alwaysShowHoverInViewer || Cgs.Menu.Settings.PreviewOnMouseOver;
+
         public CardModel PreviewCardModel
         {
             get => _previewCardModel;
@@ -166,13 +170,13 @@ namespace Cgs.CardGameView.Viewer
                 _previewCard = null;
 
                 _previewCardModel = value;
+                _previewImage = value != null ? value.GetComponent<Image>() : null;
                 HidePreviewPresentation();
 
                 if (_previewCardModel == null)
                     return;
 
-                _hoverPreview ??= new CardHoverPreview((RectTransform)transform);
-                _hoverPreview.Show(_previewCardModel.GetComponent<Image>());
+                UpdateHoverOverlay();
                 var card = _previewCardModel.Value;
                 _previewCard = card;
                 card.RegisterDisplay(this);
@@ -186,6 +190,7 @@ namespace Cgs.CardGameView.Viewer
 
         private CardModel _previewCardModel;
         private UnityCard _previewCard;
+        private Image _previewImage;
         private CardHoverPreview _hoverPreview;
 
         public CardModel SelectedCardModel
@@ -701,7 +706,7 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            if (!Cgs.Menu.Settings.PreviewOnMouseOver
+            if (!CanPreviewOnHover
                 || (PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
                 || CardGameManager.Instance.ModalCanvas != null)
             {
@@ -709,13 +714,20 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            if (preview.alpha == 0)
+            preview.alpha = 1;
+            UpdateHoverOverlay();
+        }
+
+        private void UpdateHoverOverlay()
+        {
+            if (!Cgs.Menu.Settings.PreviewOnMouseOver)
             {
-                preview.alpha = 1;
-                _hoverPreview?.Show(_previewCardModel.GetComponent<Image>());
+                _hoverPreview?.Hide();
+                return;
             }
-            else
-                _hoverPreview?.Refresh();
+
+            _hoverPreview ??= new CardHoverPreview((RectTransform)transform);
+            _hoverPreview.Show(_previewImage);
         }
 
         protected void OnDisable()
