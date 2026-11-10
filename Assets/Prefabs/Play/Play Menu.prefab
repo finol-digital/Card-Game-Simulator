@@ -1363,17 +1363,17 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
+      propertyPath: isLeft
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
       propertyPath: tooltip
       value: Edit
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: avoidOverlap
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: isLeft
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
@@ -1583,12 +1583,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 747567428686063629}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &8057757558994361247 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
-    type: 3}
-  m_PrefabInstance: {fileID: 747567428686063629}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &759966389251363895
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1599,17 +1593,17 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
+      propertyPath: isLeft
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
       propertyPath: tooltip
       value: Share
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: avoidOverlap
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: isLeft
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
@@ -1818,12 +1812,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 849115afddf0d7d48b0bd0f145f7349d, type: 3}
---- !u!224 &8000348096829564837 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
-    type: 3}
-  m_PrefabInstance: {fileID: 759966389251363895}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8000348096968803816 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
@@ -1850,18 +1838,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
-      propertyPath: isLeft
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
       propertyPath: tooltip
       value: Add Dice
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      propertyPath: avoidOverlap
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -2171,11 +2149,6 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: isBelow
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      propertyPath: isLeft
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
@@ -2631,18 +2604,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
-      propertyPath: isLeft
-      value: 1
+      propertyPath: tooltip
+      value: Play Menu
       objectReference: {fileID: 0}
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: maxSideWidth
       value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: tooltip
-      value: Play Menu
       objectReference: {fileID: 0}
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -2874,18 +2842,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
-      propertyPath: isLeft
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
       propertyPath: tooltip
       value: Find Cards
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      propertyPath: avoidOverlap
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -3513,18 +3471,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
-      propertyPath: isLeft
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
       propertyPath: tooltip
       value: Load Deck
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      propertyPath: avoidOverlap
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -3838,18 +3786,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
-      propertyPath: isLeft
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
       propertyPath: tooltip
       value: Create Counter
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      propertyPath: avoidOverlap
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -4151,11 +4089,6 @@ PrefabInstance:
       propertyPath: avoidOverlap
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4485005921340226510, guid: 31559ced7dfe08f44a5eb0473961e323,
-        type: 3}
-      propertyPath: isLeft
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
       propertyPath: m_Pivot.x
@@ -4264,11 +4197,6 @@ PrefabInstance:
     - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
       propertyPath: avoidOverlap
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
-        type: 3}
-      propertyPath: isLeft
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,

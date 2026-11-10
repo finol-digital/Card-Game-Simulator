@@ -686,7 +686,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eefdba0dd20bb2346bb00a6dbc4e9db8, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Cgs::Cgs.CardGameView.PieceGraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
@@ -2776,11 +2776,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 350
       objectReference: {fileID: 0}
-    - target: {fileID: 3723564657771830477, guid: 6c8f698bdb10af641a0fdff4f6f16781,
-        type: 3}
-      propertyPath: avoidOverlap
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4938760452889457074, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: isBelow
@@ -3696,17 +3691,17 @@ PrefabInstance:
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.82271814
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.82271814
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.82271814
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
