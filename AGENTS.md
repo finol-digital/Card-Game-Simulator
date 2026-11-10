@@ -109,7 +109,7 @@ All C# files must start with the MPL 2.0 license header:
 
 All pull requests must follow these rules exactly:
 
-1. **Branch**: By default, open release PRs from `develop` to `main`. If the user explicitly requests stacked PRs, open the first feature PR against `develop` and each subsequent PR against the preceding feature branch, unless the user specifies different bases. State the merge order and retarget dependent PRs as their bases merge. Creating a stack does not authorize merging or deploying it.
+1. **Branch and merge method**: Open all PRs from this repository's `develop` branch to `main`. Integrate feature work into `develop` before opening a PR; keep `develop` current with `main` and all integrated feature history. Merge PRs with a merge commit, never squash or rebase, so Git-based build versions retain their history. Creating a PR does not authorize merging or deploying it.
 2. **Description length**: The PR description must be under 500 characters.
 3. **Audience**: Descriptions are used as release notes for end users. Write in simple, plain language — not developer jargon.
 4. **Format**: Use exactly this format, replacing the placeholder bullets with meaningful, user-facing changes. Remove any placeholder text before submitting and do not include "Generated with Claude Code":
