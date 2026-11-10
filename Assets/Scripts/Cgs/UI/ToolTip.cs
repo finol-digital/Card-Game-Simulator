@@ -20,6 +20,8 @@ namespace Cgs.UI
         [SerializeField] string localizationKey;
         [SerializeField] bool avoidOverlap;
         [SerializeField] bool isBelow;
+        [SerializeField] bool isLeft;
+        [SerializeField, Min(80)] float maxSideWidth = 300;
         [SerializeField] string inputActionId;
         [SerializeField] Transform parentTransform;
         [SerializeField] RectTransform singleLineBounds;
@@ -128,6 +130,14 @@ namespace Cgs.UI
         protected void Start()
         {
             var rectTransform = (RectTransform)ToolTipGameObject.transform;
+            if (isLeft)
+            {
+                rectTransform.anchorMin = rectTransform.anchorMax = new Vector2(0, 1);
+                rectTransform.pivot = Vector2.one;
+                rectTransform.sizeDelta = new Vector2(maxSideWidth, rectTransform.sizeDelta.y);
+                rectTransform.anchoredPosition = new Vector2(-8, 0);
+                return;
+            }
             if (!isBelow)
                 return;
             rectTransform.anchorMin = new Vector2(0, 0);
@@ -158,11 +168,21 @@ namespace Cgs.UI
             else
                 UpdateSingleLine(tooltipText);
 
+            if (isLeft)
+            {
+                var sideRect = (RectTransform)ToolTipGameObject.transform;
+                sideRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,
+                    Mathf.Clamp(ToolTipText.preferredWidth + 16, 80, maxSideWidth));
+                return;
+            }
+
             var offsetDirection = isBelow ? Vector2.down : Vector2.up;
             var offsetAmount = avoidOverlap ? 1.0f : 0.5f;
             var rectTransform = (RectTransform)ToolTipGameObject.transform;
-            rectTransform.anchoredPosition = offsetDirection * (offsetAmount * rectTransform.sizeDelta.y)
-                                             + ((RectTransform)ToolTipGameObject.transform.parent).anchoredPosition;
+            // Non-overlapping tips are already anchored to the parent's edge; adding its
+            // position again would shift the tip back across buttons placed by a layout.
+            var parentOffset = avoidOverlap ? Vector2.zero : ((RectTransform)rectTransform.parent).anchoredPosition;
+            rectTransform.anchoredPosition = offsetDirection * (offsetAmount * rectTransform.sizeDelta.y) + parentOffset;
             var positionX = 0f;
             if (singleLineBounds != null)
             {

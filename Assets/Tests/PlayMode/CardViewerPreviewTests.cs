@@ -112,6 +112,17 @@ namespace Tests.PlayMode
                 PlayerPrefs.DeleteKey("PreviewOnMouseOver");
         }
 
+#if UNITY_EDITOR
+        [Test]
+        public void DockedViewerPrefabAllowsHoverWithPreviewDisabled()
+        {
+            Settings.PreviewOnMouseOver = false;
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/Prefabs/CardGameView/Viewer/Card Docked Viewer.prefab");
+            Assert.IsTrue(prefab.GetComponent<CardViewer>().CanPreviewOnHover);
+        }
+#endif
+
         [Test]
         public void PointerEnterStartsHoverPreview()
         {
@@ -121,6 +132,49 @@ namespace Tests.PlayMode
             Assert.AreSame(_model, _viewer.PreviewCardModel);
             Assert.AreEqual(1, _preview.alpha);
             Assert.IsTrue(Overlay.enabled);
+        }
+
+        [Test]
+        public void DockedViewerTracksHoverWithPreviewDisabledWithoutMagnifyingCard()
+        {
+            SetField(_viewer, "alwaysShowHoverInViewer", true);
+            var dockedImage = Child("Docked image", _preview.transform).AddComponent<Image>();
+            SetField(_viewer, "cardImages", new List<Image> { dockedImage });
+            Settings.PreviewOnMouseOver = false;
+            _viewer.HidePreview();
+            _model.OnPointerEnter(new PointerEventData(null));
+            Tick();
+
+            Assert.AreSame(_model, _viewer.PreviewCardModel);
+            Assert.AreEqual(1, _preview.alpha);
+            Assert.AreEqual(_model.Value.Name, _name.text);
+            Assert.AreSame(_model.Value.ImageSprite, dockedImage.sprite);
+            Assert.IsFalse(Overlay.enabled);
+
+            Settings.PreviewOnMouseOver = true;
+            Tick();
+            Assert.IsTrue(Overlay.enabled);
+            Settings.PreviewOnMouseOver = false;
+            Tick();
+            Assert.AreEqual(1, _preview.alpha);
+            Assert.IsFalse(Overlay.enabled);
+
+            _model.OnPointerExit(new PointerEventData(null));
+            Tick();
+            Assert.IsNull(_viewer.PreviewCardModel);
+            Assert.AreEqual(0, _preview.alpha);
+        }
+
+        [Test]
+        public void TableViewerDoesNotStartHoverPreviewWhenDisabled()
+        {
+            Settings.PreviewOnMouseOver = false;
+            _viewer.HidePreview();
+            _model.OnPointerEnter(new PointerEventData(null));
+            Tick();
+            Assert.IsNull(_viewer.PreviewCardModel);
+            Assert.AreEqual(0, _preview.alpha);
+            Assert.IsFalse(Overlay.enabled);
         }
 
         [Test]

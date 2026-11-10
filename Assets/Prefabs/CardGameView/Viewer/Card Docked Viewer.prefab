@@ -477,6 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preview: {fileID: 4172817813677599336}
+  alwaysShowHoverInViewer: 1
   minimal: {fileID: 8107869090209122145}
   expanded: {fileID: 1469157444243445255}
   cardActionPanel: {fileID: 7660895029919681793}
