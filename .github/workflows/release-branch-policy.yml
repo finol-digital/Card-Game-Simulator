@@ -1,0 +1,28 @@
+name: Release branch policy
+
+on:
+  pull_request_target:
+    branches:
+      - main
+    types: [opened, reopened, synchronize, edited, ready_for_review]
+
+# Validate trusted event metadata only; never check out or execute PR code.
+permissions: {}
+
+jobs:
+  develop-to-main:
+    name: Develop to main
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require this repository's develop branch
+        env:
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        shell: bash
+        run: |
+          if [[ "$HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" || "$HEAD_BRANCH" != "develop" ]]; then
+            echo "::error::PRs targeting main must come from this repository's develop branch. Integrate the changes into develop first."
+            exit 1
+          fi
+          echo "Release PR source verified: develop -> main."
