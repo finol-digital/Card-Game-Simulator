@@ -764,7 +764,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             GameContentNetwork.For(NetworkManager)?.Despawned(this);
             if (IsServer)
-                foreach (var player in FindObjectsByType<CgsNetPlayer>(FindObjectsSortMode.None))
+                foreach (var player in FindObjectsByType<CgsNetPlayer>())
                     player.ClearCurrentDeck(NetworkObjectId);
             base.OnNetworkDespawn();
         }
