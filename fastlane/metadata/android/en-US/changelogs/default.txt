@@ -1,4 +1,4 @@
 ## What's Changed
-* Improve card image loading
-* Fix Deck Editor scrolling after switching layouts 
-
+* Keep selected cards and pieces visible beside action panels
+* Improve Play Menu spacing and card hover previews
+* Show authored game content in the selected language
