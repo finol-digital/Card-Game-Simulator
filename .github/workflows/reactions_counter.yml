@@ -5,12 +5,14 @@ on:
   schedule:
     - cron: '0 0 * * *' # Run daily at midnight
 
+permissions: {}
+
 jobs:
   update-reactions:
     runs-on: ubuntu-latest
     steps:
       - name: Count Reactions
-        uses: finol-digital/reactions-counter@v2
+        uses: finol-digital/reactions-counter@a6d121cbcde5d733fb4df8517e916f99359fe57e # v2
         with:
           project-url: 'https://github.com/finol-digital/Card-Game-Simulator/projects/1'
           github-token: ${{ secrets.CGS_PAT }}

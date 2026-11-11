@@ -7,7 +7,7 @@ This file contains guidelines and commands for agentic coding agents working on 
 Card Game Simulator (CGS) is a Unity-based digital platform for playing card games on a virtual tabletop. The project uses C# with Unity Engine and follows specific coding conventions.
 
 **Tech Stack:**
-- Unity 6.3
+- Unity 6.6
 - C# (.NET Standard)
 - Unity UI System (uGUI)
 - Unity Netcode for GameObjects (multiplayer)
@@ -55,17 +55,17 @@ unity install <version>     # Install the Editor version this project uses (see 
 ### Unity Editor Commands
  - `unity open . --args "-automated"` - Open this project in the correct Editor version (the Editor must be running for `unity command` to work)
  - `unity command <name>` - Send a command to the running Editor; auto-discovers the project from the current directory (or pass `--project-path=<path>`)
- - `unity command list_build_targets` - List known build targets
- - `unity command build --target StandaloneWindows64 --outputPath Builds/Windows --confirm` - Start an async Windows Player build
- - `unity command build_status` - Poll the status/report of the current build
- - `unity command recompile` - Force a script recompile (poll with `unity command recompile_status`)
+ - `unity command "build.target list"` - List known build targets
+ - `unity command "build run" --target StandaloneWindows64 --output-path Builds/Windows --confirm` - Start an async Windows Player build
+ - `unity command "build status"` - Poll the status/report of the current build
+ - `unity command "script recompile"` - Force a script recompile (poll with `unity command "script recompile_status"`)
 
 ### Testing Commands
- - `unity command list_tests --mode playmode` - List available tests without running them (`--mode all|editor|playmode`)
- - `unity command run_tests --mode playmode --async_tests` - Start tests without blocking; poll with `unity command test_status`
- - `unity command run_tests --mode playmode --filter <pattern>` - Run tests matching a case-insensitive partial name match (`--filter_type testName|assembly|category`)
- - `unity command cancel_tests` - Cancel running tests
- - Default test timeout is 300 seconds; override with `--timeout <seconds>`
+ - `unity command "test list" --mode playmode` - List available tests without running them (`--mode all|editor|playmode`)
+ - `unity command "test run" --mode playmode --async-tests` - Start tests without blocking; poll with `unity command "test status"`
+ - `unity command "test run" --mode playmode --async-tests --filter <pattern>` - Run tests matching a case-insensitive partial name match (`--filter-type testName|assembly|category`)
+ - `unity command "test cancel"` - Cancel running tests
+ - Default test timeout is 600 seconds; override with `--timeout <seconds>`
 
 ## Code Style Guidelines
 
