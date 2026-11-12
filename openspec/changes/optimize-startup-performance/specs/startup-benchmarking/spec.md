@@ -25,15 +25,19 @@ Every player build SHALL record in-app milestones: engine ready, first scene loa
 - **THEN** the milestones up to Main Menu interactive are recorded and no timing information is shown to the player
 
 ### Requirement: Milestone summaries have defined emission points
-Builds SHALL write one launch summary line when the Main Menu becomes interactive or a documented launch timeout expires, and one play summary line when the first table of the session becomes playable or a documented play timeout expires. Milestones not reached SHALL be marked not reached. A session ended abruptly before a summary is written MAY have no summary, and the benchmark SHALL treat a missing summary as a failure.
+Builds SHALL write one launch summary when the Main Menu becomes interactive or the launch timeout expires, and one final play summary when the session's first card action succeeds or fails, or the play timeout expires. Table-playable time is a diagnostic inside the play summary, counted as a result only if the first action succeeded. Unreached milestones SHALL be marked not reached; the benchmark SHALL treat a missing summary as a failure.
 
 #### Scenario: Menu-only session
 - **WHEN** a player launches CGS and never starts a game
 - **THEN** the log contains exactly one launch summary and no play summary
 
 #### Scenario: Play session
-- **WHEN** a player launches CGS and starts a game
-- **THEN** the log contains one launch summary and one play summary with the play milestones
+- **WHEN** a player launches CGS, starts a game, and performs a card action that succeeds
+- **THEN** the log contains one launch summary and one play summary, written after that action, with the play milestones
+
+#### Scenario: Table ready but first action fails
+- **WHEN** the table becomes playable but the first card action fails
+- **THEN** the play summary is written after the failure, marks the run failed, and reports no successful playable-table time
 
 #### Scenario: Milestone not reached
 - **WHEN** a launch or play timeout expires before its final milestone
