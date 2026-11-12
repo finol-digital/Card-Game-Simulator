@@ -51,7 +51,7 @@ Summaries follow the emission points in the `startup-benchmarking` spec: a launc
 Benchmark mode is triggered by `-cgsBenchmark`, or by a `benchmark` deep-link query only when that link launches CGS. A deep link received while CGS is already running never enters benchmark mode, so it cannot take over or quit an active session. Benchmark mode drives the real UI path (not internal shortcuts) and chooses Start Game after a configurable delay that defaults to zero, so idle-time preparation cannot silently improve results. Result delivery per platform:
 - **Desktop:** a JSON file at an argument-supplied path, then exit with a success or failure status.
 - **Android:** a tagged logcat line plus a JSON file in app storage that the harness pulls with `adb`; the harness stops the app.
-- **iOS:** an `os_log` line plus a JSON file in the app container read by the XCTest harness.
+- **iOS (TestFlight):** an `os_log` line read on a Mac with Console or `log stream` while the iPhone is connected, plus an in-app benchmark results panel that shares the JSON through the existing native share sheet. Run timing comes from the video (D1); the app's results supply the in-app milestones and pass/fail. The tester closes the app to end the run.
 - **Web:** a `window` result object and a console line read by the browser harness.
 
 Preference isolation: in benchmark mode, writes to PlayerPrefs (including `DefaultGame`), remembered start-deck choices, and settings are suppressed in memory instead of being saved, and the designated benchmark game is selected without persisting. Benchmark mode ignores deep-link game URLs and imports, and may download only the designated default games from the official host when the condition requires it (web first visit).
