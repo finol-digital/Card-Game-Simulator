@@ -7,13 +7,13 @@ Launching CGS feels slow: players see a static startup image, then a "Press any 
 ## What Changes
 
 - **BREAKING (UX)**: Remove the title screen. Launch opens directly on the Main Menu; nothing from the title screen (prompt, footer, logo, version/company text) is retained. Scene indices shift by one.
-- Add startup timing milestones, a scripted benchmark mode, a minimal Unity 6.6 reference build, and documented per-platform budgets and reference devices, so every optimization is measured and regressions are caught.
+- Add external launch-action measurement harnesses, in-app startup timing milestones, a scripted benchmark mode, a minimal Unity 6.6 reference build, and documented per-platform budgets and reference devices, so every optimization is measured and regressions are caught.
 - Show the Main Menu from lightweight game properties only; load card data, sets, and game images after the menu is interactive instead of before the first frame.
 - Defer optional services (Unity Services, LAN discovery, Steam) and first-launch bundled-game installation work so they do not block the first interactive frame.
 - Accept Main Menu input as soon as it is shown instead of ignoring presses for an initial 100 ms buffer.
 - Make the platform startup image/background visually continuous with the Main Menu.
 - Reduce engine startup cost through build configuration (unused engine modules, Android LTO/IL2CPP/graphics API choices), validated by measurement.
-- Make starting a single-player game fast: preload the Play scene in the background, ensure single-player networking setup never delays the playable table (whether solo play keeps auto-hosting is decided from measurements), and let players choose to always load a game's start decks without a prompt.
+- Make starting a single-player game fast: make the Play scene cheap to open and load it without freezing the menu (a gated background preload only if measurements require it), ensure single-player networking setup never delays the playable table (whether solo play keeps auto-hosting is decided from measurements), and let players choose to always load a game's start decks without a prompt.
 - Speed up card-data loading for large games (cache and/or off-main-thread parsing, asynchronous image decoding) and avoid first-use rendering hitches.
 - Web: stop blocking play on sequential downloads of default games, and serve compressed, cacheable build files. Web first-visit time is reported but held to separate budgets.
 

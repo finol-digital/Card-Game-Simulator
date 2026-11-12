@@ -7,18 +7,26 @@ Define what players experience from choosing to play until a single-player table
 ## ADDED Requirements
 
 ### Requirement: Single-player table becomes playable within budget
-On each native reference device, for a bundled game with start decks, the time from choosing Start Game on the Main Menu to a playable table SHALL be at most 500 ms at the 95th percentile, and launch to a playable table SHALL be at most 1 second at the 95th percentile. A playable table means the play area and start decks are shown and the first card action succeeds.
+On each native reference device, for launches with existing saved data and a bundled game with start decks, choosing Start Game to a playable table SHALL take at most 500 ms, and the launch action to a playable table at most 1 second, both at the 95th percentile over at least 30 runs. Start Game SHALL be chosen as soon as the Main Menu is interactive. First install is reported separately.
 
 #### Scenario: Start a bundled game from the Main Menu
-- **WHEN** the benchmark chooses Start Game for Standard Playing Cards with start decks loading automatically
+- **WHEN** the benchmark chooses Start Game for Standard Playing Cards immediately after the Main Menu becomes interactive, with start decks loading automatically, over at least 30 runs
 - **THEN** the 95th-percentile time from that choice until a card can be drawn or moved is 500 ms or less
 
 #### Scenario: Launch straight to a playable table
-- **WHEN** the benchmark launches CGS and starts the bundled game with automatic selections
+- **WHEN** an external harness launches CGS with existing saved data at least 30 times and the benchmark starts the bundled game immediately
 - **THEN** the 95th-percentile time from the launch action to a successful first card action is 1 second or less
 
+#### Scenario: First install
+- **WHEN** the same path is measured on the first launch after installation
+- **THEN** the time is reported separately against the documented first-install budget
+
 ### Requirement: Start Game is not delayed by background game loading
-If the selected game's data is still loading when the player chooses Start Game, CGS SHALL open the play screen immediately, show loading progress, and make the table playable as soon as the data is ready. Card data SHALL NOT be loaded twice.
+If the selected game's data is still loading when the player chooses Start Game, CGS SHALL open the play screen immediately, show loading progress, and make the table playable as soon as the data is ready. Card data SHALL NOT be loaded twice. Any work CGS does ahead of time to speed up the play screen SHALL NOT host, create decks, or change game state until the player chooses Start Game.
+
+#### Scenario: Leave the Main Menu without playing
+- **WHEN** the player opens Settings, Deck Editor, or Cards Explorer from the Main Menu instead of Start Game, at any point during ahead-of-time preparation
+- **THEN** that screen opens without added delay, and no table, host, or decks were created
 
 #### Scenario: Start Game before loading finishes
 - **WHEN** the player chooses Start Game while a large selected game is still loading
@@ -49,10 +57,14 @@ When a game defines start decks, the prompt asking whether to load them SHALL of
 - **THEN** the next game start asks again whether to load start decks
 
 ### Requirement: Opening the play screen does not stall
-Opening the play screen and dealing start decks SHALL NOT produce a single frame stall longer than 100 ms on a reference device, including first-use shader or rendering setup.
+Opening the play screen and dealing start decks SHALL NOT produce a single frame stall longer than 100 ms on a reference device, including first-use shader or rendering setup, on every graphics backend that the device's build uses.
 
 #### Scenario: First game after launch
 - **WHEN** the player starts their first game after launching CGS on a reference device
+- **THEN** no frame between choosing Start Game and the first card action takes longer than 100 ms
+
+#### Scenario: Immediate start with cold caches
+- **WHEN** the first launch after installation, or after clearing the graphics caches, chooses Start Game on the first interactive Main Menu frame
 - **THEN** no frame between choosing Start Game and the first card action takes longer than 100 ms
 
 ### Requirement: Web play does not wait for unrelated game downloads

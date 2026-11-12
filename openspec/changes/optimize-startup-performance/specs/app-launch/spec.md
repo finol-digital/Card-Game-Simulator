@@ -19,11 +19,15 @@ A normal launch SHALL show the Main Menu as the first screen. CGS SHALL NOT show
 - **THEN** a Main Menu control is selected and responds to the first gamepad input
 
 ### Requirement: Main Menu becomes interactive within the launch budget
-On each reference device for native platforms, the time from the launch action to the Main Menu accepting a working action SHALL be at most 500 ms at the 95th percentile for launches with existing saved data. First-install launches and web launches SHALL be measured and reported against their own documented budgets.
+On each native reference device, the time from the launch action to the Main Menu accepting a working action SHALL be at most 500 ms at the 95th percentile for launches with existing saved data, measured by an external harness from the launch action. First-install, resume-from-background, and web launches SHALL be measured and reported against their own documented budgets.
 
 #### Scenario: Repeat launch on a reference device
-- **WHEN** the benchmark measures at least 30 terminated-process launches with existing saved data on a reference device
+- **WHEN** an external harness measures at least 30 terminated-process launches with existing saved data on a reference device, timing from the launch action
 - **THEN** the 95th-percentile time to an interactive Main Menu is 500 ms or less
+
+#### Scenario: Resume from background
+- **WHEN** an external harness measures returning to CGS from the background on a mobile reference device
+- **THEN** the time from the resume action to the current screen accepting input is reported against the documented resume budget
 
 #### Scenario: First install
 - **WHEN** CGS is launched for the first time after installation on a reference device
@@ -40,6 +44,14 @@ The Main Menu SHALL become interactive using only lightweight information about 
 #### Scenario: Selected game fails to load
 - **WHEN** background loading of the selected game fails
 - **THEN** the Main Menu stays usable and the player is told about the problem using the existing load-error behavior
+
+#### Scenario: Navigate elsewhere before card data finishes
+- **WHEN** the player opens Settings, Deck Editor, or Cards Explorer while the selected game's card data is still loading
+- **THEN** the screen opens without freezing, shows loading progress where it needs card data, and fills in once loading completes without loading the cards twice
+
+#### Scenario: Rapid game changes
+- **WHEN** the player switches the selected game several times before earlier loads finish
+- **THEN** only the final selection is shown and becomes current, and earlier loads do not overwrite it
 
 ### Requirement: Optional services do not delay the Main Menu
 Services not needed to show and operate the Main Menu, including online multiplayer services, LAN discovery, platform-store integrations, and automatic game updates, SHALL NOT delay the Main Menu becoming interactive. Each SHALL still be available when the player first uses a feature that needs it.
@@ -68,6 +80,10 @@ On first launch, CGS SHALL make the bundled default games available without the 
 - **WHEN** CGS is closed while bundled games are still being installed and is then relaunched
 - **THEN** installation resumes or repairs incomplete games, and no bundled game is left missing or corrupt
 
+#### Scenario: Change a bundled game after first launch
+- **WHEN** the player updates, edits, or deletes a bundled game after a first launch that installed it in the background, and then relaunches
+- **THEN** the change persists exactly as it does today, and a deleted bundled game is not reinstalled
+
 ### Requirement: Main Menu accepts input as soon as it is shown
 Once the Main Menu is visible, CGS SHALL act on the player's first deliberate input. Input that started before the Main Menu was shown SHALL NOT trigger an action unintentionally.
 
@@ -87,11 +103,23 @@ Any platform startup image or background shown before CGS draws its first frame 
 - **THEN** the platform startup screen uses the Main Menu's background, and the transition to the Main Menu shows no color flash
 
 ### Requirement: Startup language is shown from the first Main Menu frame
-The first Main Menu shown SHALL use the startup language resolved under the language-selection rules. CGS SHALL NOT visibly show Main Menu text in a different language first and then switch.
+When localization initializes successfully, the first Main Menu shown SHALL use the startup language resolved under the language-selection rules, without first showing another language. CGS SHALL wait for that language only up to a documented bound. If initialization fails or exceeds the bound, CGS SHALL follow the language-selection fallback: show readable English, keep the menu usable, and record a diagnostic.
 
 #### Scenario: Saved non-English language
-- **WHEN** a player who selected Korean launches CGS
-- **THEN** the first visible Main Menu text is Korean
+- **WHEN** a player who selected Korean launches CGS and localization initializes normally
+- **THEN** the first visible Main Menu text is Korean, and the launch budget still applies
+
+#### Scenario: Override, device, and fallback languages
+- **WHEN** the startup language comes from a command-line override, the device locale, or the English fallback, including Simplified Chinese
+- **THEN** the first visible Main Menu text and fonts are in that language
+
+#### Scenario: Delayed localization
+- **WHEN** localization has not finished within the documented bound
+- **THEN** the Main Menu appears in readable English and is usable, then refreshes in place to the startup language when localization completes
+
+#### Scenario: Failed localization
+- **WHEN** localization initialization fails at launch
+- **THEN** the Main Menu appears in readable English, is usable, and a diagnostic is recorded
 
 ### Requirement: Deep links still open their destinations
 Deep links that open a CGS screen or download a game SHALL keep working when CGS is launched by the link and when CGS is already running.
@@ -103,3 +131,7 @@ Deep links that open a CGS screen or download a game SHALL keep working when CGS
 #### Scenario: Game download link
 - **WHEN** CGS is launched by a deep link containing a game URL
 - **THEN** the Main Menu becomes interactive and the game downloads with visible progress
+
+#### Scenario: Link opened while CGS is running
+- **WHEN** a deep link targeting a screen arrives while CGS is running and the selected game is still loading
+- **THEN** CGS opens that screen, and the screen behaves as it does when opened before card data finishes

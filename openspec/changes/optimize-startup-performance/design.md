@@ -20,7 +20,7 @@ See proposal.md for motivation and specs for the required behavior. This section
   - `PlayController.Start` waits for `IsCurrentReady`.
   - On non-web platforms, it calls `Lobby.Host()` even for solo play.
   - It then prompts before loading start decks.
-- **The web build blocks on downloads.** On WebGL, `CardGameManager.Start` downloads the three default games sequentially before `IsCurrentReady`. `webGLCompressionFormat` is 2, which appears to be Disabled.
+- **The web build blocks on downloads.** On WebGL, when the current game is missing, errored, or not loaded (typical of a first visit), `CardGameManager.Start` downloads the three default games sequentially before `IsCurrentReady`. `CGS_SINGLEGAME` web builds download their single site `cgs.json` instead. `webGLCompressionFormat` is 2, which appears to be Disabled.
 
 ## Goals / Non-Goals
 
@@ -36,19 +36,27 @@ See proposal.md for motivation and specs for the required behavior. This section
 
 ## Decisions
 
-### D1. Measure before optimizing, using one timeline type
-Add a static `StartupTimeline` with these behaviors:
-- It records `Stopwatch`-based marks from the earliest `RuntimeInitializeOnLoadMethod` (`SubsystemRegistration`).
-- It anchors those marks to process start using platform APIs:
-  - Android: `Process.getStartElapsedRealtime` via JNI.
-  - iOS/macOS: the process start time from `sysctl`.
-  - Windows/Linux: `Process.StartTime`.
-  - WebGL: `performance.now()`, which counts from navigation start.
-- It writes a single summary line, plus JSON in benchmark mode.
+### D1. Measure from the launch action externally; keep in-app timings as diagnostics
+Budgets are judged by an external harness that records the launch (or resume) action and the judged milestone on one monotonic clock:
+- **Android:** `am start -W` / Macrobenchmark startup timing. The app calls `Activity.reportFullyDrawn()` when the Main Menu is interactive, so the system's time-to-full-display is the menu milestone.
+- **iOS:** `XCTApplicationLaunchMetric` (with responsiveness), cross-checked with high-frame-rate video.
+- **Desktop:** a harness script reads the OS monotonic clock (`CLOCK_MONOTONIC`, `QueryPerformanceCounter`, `mach_continuous_time`) just before spawning the player and passes it as an argument; the app logs milestones on the same clock.
+- **Web:** Playwright/Puppeteer records navigation start and reads milestones from the page via `performance.now()`, which already shares that origin.
+- **Resume:** the harness timestamps the foreground action; the app records an `OnApplicationPause(false)` / focus mark as the in-app anchor.
 
-Benchmark mode is triggered by `-cgsBenchmark` or a `benchmark` deep-link query. It drives the real UI path, as opposed to calling internal methods, so the measurements reflect the player's path.
+In the app, a static `StartupTimeline` records `Stopwatch` marks from the earliest `RuntimeInitializeOnLoadMethod` (`SubsystemRegistration`). Process-relative offsets are added only where the conversion is exact: Android `Process.getStartElapsedRealtime()` (API 24+, same `elapsedRealtime` origin), Linux/Windows/macOS via the harness-provided timestamp, and the web via `performance.now()`. Anything else is reported as unavailable, never estimated. Native adapters are validated on real IL2CPP device builds, not only in PlayMode.
 
-*Alternatives:* using only the Unity Profiler or Android Macrobenchmark/XCTest. These remain useful for diagnosis and as external cross-checks, but neither identifies "table playable", and neither runs on every platform.
+Summaries follow the emission points in the `startup-benchmarking` spec: a launch summary at Main Menu interactive or the launch timeout, and a play summary at the first playable table or the play timeout.
+
+Benchmark mode is triggered by `-cgsBenchmark` or a `benchmark` deep-link query. It drives the real UI path (not internal shortcuts) and chooses Start Game after a configurable delay that defaults to zero, so idle-time preparation cannot silently improve results. Result delivery per platform:
+- **Desktop:** a JSON file at an argument-supplied path, then exit with a success or failure status.
+- **Android:** a tagged logcat line plus a JSON file in app storage that the harness pulls with `adb`; the harness stops the app.
+- **iOS:** an `os_log` line plus a JSON file in the app container read by the XCTest harness.
+- **Web:** a `window` result object and a console line read by the browser harness.
+
+Preference isolation: in benchmark mode, writes to PlayerPrefs (including `DefaultGame`), remembered start-deck choices, and settings are suppressed in memory instead of being saved, and the designated benchmark game is selected without persisting. Benchmark mode ignores deep-link game URLs and imports, and may download only the designated default games from the official host when the condition requires it (web first visit).
+
+*Alternatives:* using only in-app process-relative timings. These miss the launch-action-to-process delay, have no new process on resume, and mix clock origins across platforms.
 
 ### D2. Delete the title screen; Main Menu becomes build index 0
 Remove `TitleScreen.unity` and `TitleScreen.cs`, along with title-only sprites, strings, and localization inventory entries that nothing else uses. Then shift the `Tags` scene indices. `MainMenu` already sets the version text and already contains the `CardGameManager` prefab, so no bootstrap scene is needed.
@@ -90,16 +98,21 @@ Record the result in this design before archive. The spec requires only that net
 ### D6. Input readiness instead of a time buffer
 Replace `StartBufferTime` with a release-then-press gate. Any button, key, or touch held when the menu becomes interactive is ignored until it is released. This keeps the original protection against carry-over presses from the previous scene without a fixed delay.
 
-### D7. Background preload of PlayGame
-While the Main Menu is idle, start `LoadSceneAsync(PlayGame)` with `allowSceneActivation = false`. Start Game then activates the preloaded scene.
+### D7. Make the Play scene cheap to open; preload only with gated initialization
+`LoadSceneAsync` with `allowSceneActivation = false` cannot be cancelled, stalls every later async operation (including other scene and localization loads) until it activates, and activating a Single-mode load replaces the Main Menu and runs PlayGame lifecycle code. A held preload is therefore not used.
 
-Guardrails:
-- Navigating to any other scene cancels the preload, by activating it into an unloaded state or by not starting it until idle. This matters because Unity serializes async loads and a held activation would block Settings, DeckEditor, and CardsExplorer.
-- Async loading thread priority stays at Normal to protect menu responsiveness.
+Default approach, in order:
+1. Start Game uses an unheld `LoadSceneAsync(PlayGame)` so the Main Menu keeps rendering feedback during the load.
+2. Reduce PlayGame's own load cost: lazily instantiate the menus it does not need on the first frame (several already are), and move `CardViewer`/`PlayableViewer` creation off the critical path where measurement shows a cost.
+3. Ensure the selected game's content is loaded or loading before Start Game (D3), which removes most of the remaining wait.
 
-Other scene transitions move to `LoadSceneAsync` with a single-frame fade only where measurement shows that a blocking load exceeds one frame.
+Only if D1 data shows that PlayGame activation alone still misses the budget, evaluate an additive preload with these rules:
+- The PlayGame root is saved inactive, and `PlayController` and network components do nothing until an explicit activation call. No hosting, deck creation, scene-reset callbacks (`OnSceneActions`), or input bindings happen before Start Game.
+- Activation: the additive scene becomes active, the Main Menu scene unloads, and the gated components initialize.
+- Leaving for any other screen: wait for the additive load to finish (it is never held), then `UnloadSceneAsync` it before or alongside the navigation, and measure that this adds no delay.
+- Tests navigate away both while the preload is in progress and once it has completed, and assert no hosting, decks, callbacks, or blocked localization loads.
 
-*Alternatives:* additive persistent scenes (Main Menu and the table always loaded). This is more memory, more complexity, and invasive for multiplayer object lifetimes.
+*Alternatives:* a held preload (rejected for the reasons above); persistent additive scenes (more memory, more complexity, and invasive for multiplayer object lifetimes).
 
 ### D8. Card data cache and off-thread parse
 After a successful load, write a versioned binary snapshot of the parsed card list, keyed by game ID plus a hash or modification time of the source files and the CGS data version. Later loads read the snapshot, and fall back to JSON when it is missing, stale, or corrupt.
@@ -110,13 +123,15 @@ Implement this only if D1 shows card loading on the critical path for bundled ga
 
 *Alternatives:* lazy per-set loading. This conflicts with search and deck import, which assume all cards are present.
 
-### D9. First-launch install without blocking
-Make first-launch installation non-blocking:
-- Install the default selected game synchronously only if it cannot be read in place. On desktop and iOS, StreamingAssets can be read directly.
-- Install the remaining bundled games on a background thread on Android and desktop, using a per-game completion marker so that an interrupted install is detected and repaired.
-- Notify the game list when each game becomes available.
+### D9. First-launch install without blocking, keeping one writable games root
+All game paths derive from `persistentDataPath/games`, and updates, edits, deletion, set-card downloads, and `ReadProperties` (which can move a game directory) assume writable content. Reading bundled games in place from StreamingAssets would need a second read-only root with copy-on-write, override precedence, and tombstones for deleted bundled games. That is out of scope, so the single writable root stays.
 
-*Alternatives:* shipping the bundled games as one zip. Fewer files, but extraction is still serial and the whole archive is redone if it fails.
+Instead:
+- On first launch, install the default selected game first. If its copy exceeds the launch budget, the Main Menu shows its properties and banner read directly from the bundle (read-only, display only) while the copy finishes, and Start Game waits for the copy with visible progress.
+- Install the remaining bundled games on a background thread, each into a temporary directory that is atomically renamed into place, with a completion marker, so an interrupted install is detected and repaired on the next launch.
+- Notify the game list when each game becomes available, and keep today's rule that a bundled game the player deleted is not reinstalled.
+
+*Alternatives:* read-in-place with copy-on-write (deferred, for the reasons above); shipping the bundled games as one zip (fewer files, but extraction stays serial and the whole archive is redone on failure).
 
 ### D10. Engine and build configuration, each change measured
 Measure each of these as a separate experiment against the D1 benchmark:
@@ -124,8 +139,13 @@ Measure each of these as a separate experiment against the D1 benchmark:
 - On Android, try engine ThinLTO, IL2CPP code generation set to optimize for runtime speed, and the Vulkan-vs-GLES ordering.
 - Keep managed stripping at its current level unless the reflection/AOT audit (`AotTypeEnforcer`, Newtonsoft) supports raising it.
 
-### D11. Rendering warmup
-Use a Unity 6 `GraphicsStateCollection` to record the menu and table graphics states in a trace build, and warm them up during idle Main Menu time. Shader variant stripping keeps the build small. This applies only if D1 frame-time data shows first-use hitches above 100 ms.
+### D11. Rendering warmup per graphics backend
+Apply this only if D1 frame-time data shows first-use hitches over 100 ms:
+- **DX12, Vulkan, Metal:** record a `GraphicsStateCollection` per backend and platform in a trace build, and warm it up incrementally.
+- **GLES, WebGL, DX11:** warm a traced `ShaderVariantCollection` incrementally instead, since PSO tracing does not apply there.
+- **Timing:** warmup starts right after the Main Menu is interactive, in small per-frame slices, and does not depend on menu idle time. If Start Game arrives first, the remaining warmup for the table's states runs during the Play scene load before the board is shown.
+- Unsupported or missing collections fall back to no warmup without errors.
+- Verification uses an immediate Start Game with cold caches (fresh install or cleared driver and pipeline caches) on each backend the reference devices use.
 
 ### D12. Web delivery
 Make these web delivery changes:
@@ -136,12 +156,12 @@ Make these web delivery changes:
 ## Risks / Trade-offs
 
 - **A deferred load leaves code that assumes `Current.HasLoaded` after scene load working with incomplete data.** → Mitigation: audit callers of `ResetGameScene` / `OnSceneActions`, gate on the content-ready state, and add PlayMode tests that open each scene before content is ready.
-- **The startup language must show on the first Main Menu frame, which can conflict with the 500 ms budget if locale tables or CJK fonts load slowly.** → Mitigation: keep the selected-locale preload, measure the localization-ready milestone separately, and if it is over budget, render the menu only after the startup locale is ready, then optimize table and font size rather than flashing English.
+- **The startup language must show on the first Main Menu frame, which can conflict with the 500 ms budget if locale tables or CJK fonts load slowly.** → Mitigation: keep the selected-locale preload and measure the localization-ready milestone separately. Wait for the startup locale only up to a documented bound. On failure or timeout, follow the existing language-selection fallback (readable English, usable menu, diagnostic) and refresh in place when the locale arrives. If the successful path is over budget, optimize table and font size.
 - **Removing the title screen shifts scene indices and could break deep links, tests, and saved references.** → Mitigation: use named constants, add a PlayMode test for every deep-link target, and search the code for literal indices.
-- **A background PlayGame preload can block other async loads and use memory on low-end devices.** → Mitigation: start the preload only when the menu is idle, cancel it on navigation, and skip it below a memory threshold.
+- **An additive PlayGame preload (only if D7's measurement requires it) could run gameplay setup early, or delay other screens.** → Mitigation: keep the root inactive with gated initialization, never hold activation, unload it on navigation, skip it below a memory threshold, and test navigation during and after the load.
 - **The card cache could serve stale data after a game update or a CGS schema change.** → Mitigation: key the cache on the source hash and data version, delete it on update or delete, and treat any read error as a cache miss.
 - **Background bundled-game installation can race with game selection or deletion.** → Mitigation: install per game with completion markers, and have the game list ignore incomplete directories.
-- **Benchmark-mode code could ship and be triggered by untrusted deep links.** → Mitigation: benchmark mode performs only local navigation, does not change preferences, and exits; it never downloads or imports content.
+- **Benchmark-mode code could ship and be triggered by untrusted deep links.** → Mitigation: benchmark mode suppresses preference writes, ignores deep-link game URLs and imports, and may download only the designated default games from the official host.
 - **CI timing is noisy.** → Mitigation: use loose CI thresholds aimed at large regressions; the release gate relies on reference-device runs.
 
 ## Migration Plan
