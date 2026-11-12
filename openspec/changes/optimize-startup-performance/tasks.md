@@ -12,7 +12,7 @@
 
 ## 2. Open directly on the Main Menu
 
-- [ ] 2.1 Remove `TitleScreen.unity`, `TitleScreen.cs`, and title-only assets/strings; make `MainMenu` build index 0 and update `Tags` scene indices; verify the build launches to the Main Menu and that `rg -n "TitleScreen|title\\.start"` finds no leftover references outside archived OpenSpec records
+- [ ] 2.1 Move the version-text provider (`TitleScreen.LocalizedVersion` and its `title.version` key) used by `MainMenu` into `MainMenu` or a shared helper, then remove `TitleScreen.unity`, `TitleScreen.cs`, and title-only assets/strings; make `MainMenu` build index 0 and update `Tags` scene indices; verify the build compiles and launches to the Main Menu with its version text, and that `rg -n "TitleScreen|title\\.start" Assets ProjectSettings translations developer-docs` finds no leftover references
 - [ ] 2.2 Update the localization coverage inventory and translation sources for the removed title strings; verify that the localization coverage tests pass and that the inventory lists five scenes
 - [ ] 2.3 Add PlayMode tests that each deep-link target (`main`, `play`, `decks`, `cards`, `settings`, and the game `url` query) opens the right scene on cold start and when CGS is already running; verify the tests pass
 - [ ] 2.4 Replace `StartBufferTime` with a release-then-press gate in `MainMenu`; verify with PlayMode tests that a fresh first-frame press acts and a press held over from before is ignored until released
@@ -54,7 +54,7 @@
 
 ## 8. Fast single-player start
 
-- [ ] 8.1 Make solo hosting non-blocking so the table is playable before host startup begins; verify with a PlayMode test that a card action succeeds before `StartHost` is called, and that LAN join still works afterwards
+- [ ] 8.1 Make solo hosting non-blocking so the table is playable before host startup begins, converting existing table objects into networked objects when hosting starts; verify with a PlayMode test that a card action succeeds before `StartHost` is called, and with a LAN check that a player joining after decks were loaded and cards moved sees the same table and can act on it
 - [ ] 8.2 Benchmark the D5 options (deferred auto-host, offline with host-on-demand, lazy network prefab), record the decision in design.md, and implement it; verify that the decision and data are recorded and, if joinability changes, that the player documentation is updated
 - [ ] 8.3 Switch Start Game to an unheld `LoadSceneAsync` and cut PlayGame's first-frame cost (lazy menus and viewers per design D7); verify with PlayMode tests that the Main Menu keeps rendering during the load and that the Start Game → play-screen-loaded milestone improves
 - [ ] 8.4 Only if 8.3 data misses the budget, add the gated additive preload from design D7; verify with PlayMode tests that navigating to Settings, Deck Editor, and Cards Explorer during and after the preload adds no delay and creates no host, decks, scene-reset callbacks, or blocked localization loads

@@ -59,7 +59,7 @@ Preference isolation: in benchmark mode, writes to PlayerPrefs (including `Defau
 *Alternatives:* using only in-app process-relative timings. These miss the launch-action-to-process delay, have no new process on resume, and mix clock origins across platforms.
 
 ### D2. Delete the title screen; Main Menu becomes build index 0
-Remove `TitleScreen.unity` and `TitleScreen.cs`, along with title-only sprites, strings, and localization inventory entries that nothing else uses. Then shift the `Tags` scene indices. `MainMenu` already sets the version text and already contains the `CardGameManager` prefab, so no bootstrap scene is needed.
+Remove `TitleScreen.unity` and `TitleScreen.cs`, along with title-only sprites, strings, and localization inventory entries that nothing else uses. Then shift the `Tags` scene indices. `MainMenu` sets its version text through `TitleScreen.LocalizedVersion`, so that provider (`VersionMessage`, `LocalizedVersion`, and the `title.version` key) moves into `MainMenu` or a small shared helper before `TitleScreen.cs` is deleted. `MainMenu` already contains the `CardGameManager` prefab, so no bootstrap scene is needed.
 
 *Alternatives:*
 - An empty bootstrap scene that loads Main Menu asynchronously. This adds a scene load for no benefit, because every scene self-bootstraps through the prefab.
@@ -86,7 +86,7 @@ Splitting the network components out of the `CardGameManager` prefab, into a laz
 *Alternatives:* starting services in parallel at launch, unawaited. This still costs main-thread time and, on some platforms, competes for I/O during the critical window.
 
 ### D5. Single-player hosting is a measured decision
-Make hosting non-blocking first: the table becomes playable before `StartHost` is called, and the host starts on a later frame. Then use D1 data to compare three options:
+Make hosting non-blocking first: the table becomes playable before `StartHost` is called, and the host starts on a later frame. `PlayController` spawns stacks, cards, dice, counters, and zones as network objects only when online, so when hosting starts after play began, the host converts the existing table objects into networked objects, preserving positions, order, faces, and values, so a player who joins later sees the same table. Then use D1 data to compare three options:
 - (a) keep auto-hosting, deferred;
 - (b) offline solo with host-on-demand;
 - (c) lazy network-prefab instantiation.

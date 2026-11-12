@@ -41,6 +41,10 @@ Network setup used by single-player play, such as making the table joinable on t
 - **THEN** the table becomes playable without waiting for network setup
 - **AND** if solo tables are joinable, another player on the local network can still join once setup completes
 
+#### Scenario: Join after the table was used
+- **WHEN** hosting starts after the solo player has already loaded decks and moved cards, and another player then joins
+- **THEN** the joining player sees the same decks, cards, and positions as the host, and both can act on them
+
 #### Scenario: Network setup fails
 - **WHEN** local network setup fails during a single-player game
 - **THEN** the table remains playable and the player is informed only if they try to use a network feature
