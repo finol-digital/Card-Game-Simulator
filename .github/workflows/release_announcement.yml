@@ -21,7 +21,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.4.0
+        uses: Ilshidur/action-discord@d2594079a10f1d6739ee50a2471f0ca57418b554 # 0.4.0
         with:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
       - name: Bluesky Announcement

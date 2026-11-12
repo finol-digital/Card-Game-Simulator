@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 // https://bitbucket.org/UnityUIExtensions/unity-ui-extensions/wiki/Controls/FlowLayoutGroup
 
 using System.Collections.Generic;
@@ -71,6 +75,7 @@ namespace Cgs.UI
             RectOffset padding1 = padding;
             SetLayoutInputForAxis(
                 padding1.horizontal + (cellSize.x + spacing.x) * minColumns - spacing.x,
+                LayoutUtility.DefaultMaxSize,
                 padding1.horizontal + (cellSize.x + spacing.x) * preferredColumns - spacing.x,
                 -1, 0);
         }
@@ -79,7 +84,7 @@ namespace Cgs.UI
         {
             const int minRows = 1;
             float minSpace = padding.vertical + (cellSize.y + spacing.y) * minRows - spacing.y;
-            SetLayoutInputForAxis(minSpace, minSpace, -1, 1);
+            SetLayoutInputForAxis(minSpace, LayoutUtility.DefaultMaxSize, minSpace, -1, 1);
         }
 
         public override void SetLayoutHorizontal()

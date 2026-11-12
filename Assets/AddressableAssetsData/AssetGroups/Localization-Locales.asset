@@ -21,63 +21,76 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: 0e4a5e5e120b81c4fab2df899849e6a4
     m_Address: French (fr)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: 44fbc2ac7d743da4fada128b2ea3edb2
     m_Address: English (en)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: 47d4f14335292bf43b4e857fcf40418d
     m_Address: Japanese (ja)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: 73eaeb1a55ff01946b68e7e069ef8bd1
     m_Address: Portuguese (Brazil) (pt-BR)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: 77c87030608bae84394ff88d01da9c4e
     m_Address: German (de)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: 7d789d355dc82114e8b14fb7d7a1f091
     m_Address: Chinese (Simplified) (zh-Hans)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: acce7786e897f404facd25ffb6c562a4
     m_Address: Russian (ru)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: acf791034849aa448a4481333ff25983
     m_Address: Korean (ko)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   - m_GUID: d6b3c8dfabfa84842b9a2a8e0d7cf619
     m_Address: Spanish (es)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
     FlaggedDuringContentUpdateRestriction: 0
+    m_FolderGuid:
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 764ee85167e0d87449ff11a6b1757512, type: 2}
   m_SchemaSet:
     m_Schemas:
     - {fileID: 11400000, guid: 1810bf13912f1e146ab0bf99eb63b391, type: 2}
     - {fileID: 11400000, guid: 026a263ced4ec5549a3c004124d7bfb8, type: 2}
+    m_SchemaDisplayOrder: []
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

@@ -3,7 +3,7 @@ concurrency:
   group: unity
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
-  UNITY_VERSION: 6000.3.27f2
+  UNITY_VERSION: 6000.6.8f1
 on:
   push:
     branches:
@@ -35,6 +35,9 @@ on:
         required: false
         default: ''
 
+
+permissions:
+  contents: read
 
 jobs:
 
@@ -76,11 +79,11 @@ jobs:
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
       - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v2.0.0
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6 # v2.0.0
         with:
           large-packages: false
       - name: Run EditMode Tests
-        uses: game-ci/unity-test-runner@main
+        uses: game-ci/unity-test-runner@3651041789079526956e876434786ab98af4c8e8 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -88,7 +91,7 @@ jobs:
         with:
           testMode: editmode
       - name: Run PlayMode Tests
-        uses: game-ci/unity-test-runner@main
+        uses: game-ci/unity-test-runner@3651041789079526956e876434786ab98af4c8e8 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -114,7 +117,7 @@ jobs:
           echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Auto-Commit Release Notes
         if: github.event.action == 'published'
-        uses: stefanzweifel/git-auto-commit-action@v7
+        uses: stefanzweifel/git-auto-commit-action@d0b01107b5db882071f96de5dd4b54961ea93f4c # v7
         with:
           repository: Temp/release-notes
           branch: develop
@@ -139,7 +142,9 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-6000.3.27f2-linux-il2cpp-3
+    container:
+      image: unityci/editor:ubuntu-6000.6.8f1-linux-il2cpp-3
+      options: --shm-size=1025m
     timeout-minutes: 30
     steps:
       - name: Checkout Repository
@@ -168,7 +173,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
-        run: unity-editor -quit -batchmode -nographics -logFile /dev/stdout -returnlicense -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD" -serial "$UNITY_SERIAL"
+        run: unity-editor -quit -batchmode -nographics -logFile /dev/stdout -returnlicense -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD"
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
@@ -199,7 +204,7 @@ jobs:
           ./dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
           cd Card-Game-Simulator
       - name: SonarQube Quality Gate Check
-        uses: SonarSource/sonarqube-quality-gate-action@v1.2.1
+        uses: SonarSource/sonarqube-quality-gate-action@7a5fffe8e523c40e0c740b6bc2712ab503e52efa # v1.2.1
         with:
           scanMetadataReportFile: ../.sonarqube/out/.sonar/report-task.txt
         env:
@@ -242,7 +247,7 @@ jobs:
           git add .
           git reset --hard
       - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v2.0.0
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6 # v2.0.0
         with:
           preinstalled-runtimes: true
       - name: Cache Library
@@ -253,7 +258,7 @@ jobs:
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -275,13 +280,13 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: vimtor/action-zip@v1.3
+        uses: vimtor/action-zip@5407800dfb2b1b37d48df912330cb22f4ab6f422 # v1.3
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
           files: build/${{ matrix.targetPlatform }}/
           dest: cgs-${{ matrix.targetPlatform }}.zip
       - name: Upload Zip to GitHub Release
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # v2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
@@ -334,12 +339,12 @@ jobs:
           key: Library-buildProfiles-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildProfiles-
       - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v2.0.0
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6 # v2.0.0
         with:
           preinstalled-runtimes: true
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -355,13 +360,13 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-Web-buildProfile
       - name: Zip Build
-        uses: vimtor/action-zip@v1.3
+        uses: vimtor/action-zip@5407800dfb2b1b37d48df912330cb22f4ab6f422 # v1.3
         if: github.event.action == 'published'
         with:
           files: build/${{ matrix.targetPlatform }}/
           dest: cgs-Web-buildProfile.zip
       - name: Upload Zip to GitHub Release
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # v2
         if: github.event.action == 'published'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
@@ -405,7 +410,7 @@ jobs:
           restore-keys: Library-buildMac-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -447,13 +452,13 @@ jobs:
           path: build/StandaloneOSX/Card Game Simulator.app
           name: Card Game Simulator.app
       - name: Zip App
-        uses: thedoctor0/zip-release@0.7.6
+        uses: thedoctor0/zip-release@b57d897cb5d60cb78b51a507f63fa184cfe35554 # 0.7.6
         if: github.event.action == 'published'
         with:
           directory: build/StandaloneOSX/
           filename: cgs-StandaloneOSX.zip
       - name: Upload Zip to GitHub Release
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # v2
         if: github.event.action == 'published'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
@@ -477,7 +482,7 @@ jobs:
           name: cgs-iOS
           path: build/iOS
       - name: Setup xcode
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
           xcode-version: latest-stable
       - name: Fix File Permissions and Run Fastlane
@@ -527,7 +532,7 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Setup xcode
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
           xcode-version: latest-stable
       - name: Fix File Permissions and Run Fastlane
@@ -581,7 +586,7 @@ jobs:
           GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
         run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
         with:
           ruby-version: 3.4
           bundler-cache: true
@@ -590,7 +595,7 @@ jobs:
           GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
           ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-        uses: maierj/fastlane-action@v3.2.0
+        uses: maierj/fastlane-action@182983d8f94bad9884001c03c1c2786f4c7165ed # v3.2.0
         with:
           lane: 'android playtest'
 
@@ -618,7 +623,7 @@ jobs:
           GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
         run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
         with:
           ruby-version: 3.4
           bundler-cache: true
@@ -627,7 +632,7 @@ jobs:
           GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
           ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-        uses: maierj/fastlane-action@v3.2.0
+        uses: maierj/fastlane-action@182983d8f94bad9884001c03c1c2786f4c7165ed # v3.2.0
         with:
           lane: 'android playprod'
 
@@ -658,7 +663,7 @@ jobs:
           git add .
           git reset --hard
       - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v2.0.0
+        uses: jlumbroso/free-disk-space@ceedf095f4ec1a097402bc6bd80831f2e1a6fde6 # v2.0.0
         with:
           preinstalled-runtimes: true
       - name: Cache Library
@@ -669,7 +674,7 @@ jobs:
           restore-keys: Library-buildLinuxAmazon-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -691,7 +696,7 @@ jobs:
           name: Android.apk
       - name: Upload to GitHub Release
         if: github.event.action == 'published'
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # v2
         with:
           repo_token: ${{ secrets.CGS_PAT }}
           asset_name: Android.apk
@@ -705,7 +710,7 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
         env:
           # The default ~/.cache/gem directory may be unwritable after the Unity build.
           GEM_SPEC_CACHE: ${{ runner.temp }}/amazon-gem-specs
@@ -719,7 +724,7 @@ jobs:
           AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.apk', github.workspace) }}
           ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-        uses: maierj/fastlane-action@v3.2.0
+        uses: maierj/fastlane-action@182983d8f94bad9884001c03c1c2786f4c7165ed # v3.2.0
         with:
           lane: 'android amazon'
 
@@ -727,6 +732,7 @@ jobs:
     name: Deploy to the Web via Firebase Test
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       checks: write
       pull-requests: write
     needs: [tests, buildWithLinux]
@@ -755,7 +761,7 @@ jobs:
           cp "$source/settings.json" "$source/catalog.bin" "$source/catalog.hash" "$destination/"
           cp "$source/WebGL/"*.bundle "$destination/WebGL/"
       - name: Firebase Deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}
@@ -764,6 +770,9 @@ jobs:
           entryPoint: firebase
 
   deployToFirebaseProduction:
+    permissions:
+      contents: read
+      checks: write
     name: Deploy to the Web via Firebase Production
     runs-on: ubuntu-latest
     needs: buildWithLinux
@@ -792,7 +801,7 @@ jobs:
           cp "$source/settings.json" "$source/catalog.bin" "$source/catalog.hash" "$destination/"
           cp "$source/WebGL/"*.bundle "$destination/WebGL/"
       - name: Firebase Deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}
@@ -881,7 +890,7 @@ jobs:
       - name: Build Unity Project
         id: buildStep
         timeout-minutes: 45
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -897,13 +906,13 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: vimtor/action-zip@v1.3
+        uses: vimtor/action-zip@5407800dfb2b1b37d48df912330cb22f4ab6f422 # v1.3
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
           files: build/${{ matrix.targetPlatform }}/
           dest: cgs-${{ matrix.targetPlatform }}.zip
       - name: Upload Zip to GitHub Release
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # v2
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
@@ -942,7 +951,7 @@ jobs:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
       - name: Deploy to Steam
-        uses: game-ci/steam-deploy@main
+        uses: game-ci/steam-deploy@87f8a362c6a8a7dbde08099e4c05da88877f7113 # main
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
@@ -994,7 +1003,7 @@ jobs:
       - name: Build Unity Project
         id: build
         timeout-minutes: 45
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -1053,14 +1062,14 @@ jobs:
           path: ${{ format('{0}\build\WSAPlayer', 'C:\Card-Game-Simulator.git') }}
 # Associate with App Store
       - name: Add Package.StoreAssociation.xml to .vcxproj
-        uses: mingjun97/file-regex-replace@v1
+        uses: mingjun97/file-regex-replace@7d8ae0144cd6660fe8ca5a938ae71ea816a06f47 # v1
         with:
           regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
           replacement: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
 # Associate with App Store
       - name: Add Package.StoreAssociation.xml to .vcxproj.filters
-        uses: mingjun97/file-regex-replace@v1
+        uses: mingjun97/file-regex-replace@7d8ae0144cd6660fe8ca5a938ae71ea816a06f47 # v1
         with:
           regex: '</ItemGroup>'
           replacement: '</ItemGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
@@ -1095,11 +1104,11 @@ jobs:
           [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
           dir $env:UwpProjectDirectory
       - name: Setup Developer Command Prompt for Microsoft Visual C++
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v3
+        uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 # v3
       - name: Setup Unity
-        uses: davidmfinol/setup-unity@master
+        uses: davidmfinol/setup-unity@070c3c5edc77bbb47fb5ebaf501b37db86e2b3f6 # master
         with:
           project-path: C:/Card-Game-Simulator.git
           unity-modules: universal-windows-platform
@@ -1136,7 +1145,7 @@ jobs:
           name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
           path: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Setup Microsoft Store Developer CLI
-        uses: microsoft/setup-msstore-cli@v1
+        uses: microsoft/setup-msstore-cli@3b2ec9136230357ce9abc02b9d056626fb248d3f # v1
       - name: Configure Microsoft Store Developer CLI
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -1247,7 +1256,7 @@ jobs:
       - name: Discord Announcement
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.4.0
+        uses: Ilshidur/action-discord@d2594079a10f1d6739ee50a2471f0ca57418b554 # 0.4.0
         with:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
       - name: Bluesky Announcement

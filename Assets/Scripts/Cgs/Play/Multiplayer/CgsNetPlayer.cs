@@ -929,7 +929,7 @@ namespace Cgs.Play.Multiplayer
                 die.MyNetworkObject.Despawn();
             foreach (var counter in PlayController.Instance.PlayAreaCardZone.GetComponentsInChildren<Counter>())
                 counter.MyNetworkObject.Despawn();
-            foreach (var player in FindObjectsByType<CgsNetPlayer>(FindObjectsSortMode.None))
+            foreach (var player in FindObjectsByType<CgsNetPlayer>())
                 player.RestartClientRpc(player.OwnerClientRpcParams);
         }
 

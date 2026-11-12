@@ -323,7 +323,7 @@ namespace Tests.PlayMode
             var scene = SceneManager.GetSceneByName("Settings");
             // The Editor's startup scene may show a welcome dialog. It must not
             // consume navigation intended for this independently loaded Settings UI.
-            var activeModals = Object.FindObjectsByType<Cgs.Menu.Modal>(FindObjectsSortMode.None)
+            var activeModals = Object.FindObjectsByType<Cgs.Menu.Modal>()
                 .Where(modal => modal.gameObject.activeInHierarchy).ToArray();
             foreach (var modal in activeModals)
                 modal.gameObject.SetActive(false);

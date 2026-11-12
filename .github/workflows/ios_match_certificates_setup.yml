@@ -2,12 +2,15 @@ name: iOS Match Certificates Setup
 
 on: workflow_dispatch
 
+permissions:
+  contents: read
+
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
         with:
           ruby-version: 3.4
           bundler-cache: true

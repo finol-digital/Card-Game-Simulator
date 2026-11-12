@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { verifyRedirectChain } from "./redirect-chain.mjs";
+import { publicResourcePath } from "./public-resource-path.mjs";
 
 const siteUrl = new URL(process.env.SITE_URL || "https://www.cardgamesimulator.com/");
 const failures = [];
@@ -155,12 +156,7 @@ const docs = new URL("../../docs/", import.meta.url);
 const files = (await readdir(docs, { recursive: true })).filter(file =>
   !file.split(/[\\/]/).some(part => /^[_.]/.test(part)) && /\.(json|txt)$/.test(file));
 await Promise.all(files.map(async file => {
-  const relativePath = file.split(/[\\/]/).map(encodeURIComponent).join("/");
-  const source = await readFile(new URL(relativePath, docs), "utf8");
-  // Jekyll can publish a text template at a different machine-readable URL.
-  const frontMatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  const permalink = frontMatter?.[1].match(/^permalink:\s*(\/\S+)\s*$/m)?.[1];
-  const path = permalink || `/${relativePath}`;
+  const path = publicResourcePath(file);
   await check(path, async () => {
     const response = await fetchResponse(path);
     assert.equal(response.status, 200, `${path} must return 200`);

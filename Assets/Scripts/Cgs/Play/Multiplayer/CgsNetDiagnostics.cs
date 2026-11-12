@@ -149,12 +149,12 @@ namespace Cgs.Play.Multiplayer
             var recorder = _instance;
             if (sampled)
             {
-                var key = $"{stage}/{subject?.GetInstanceID()}/{sampleKey}";
+                var key = $"{stage}/{subject?.GetEntityId()}/{sampleKey}";
                 if (!recorder.TryRecordSample(key, Time.unscaledTime))
                     return;
             }
             var identity = subject == null ? "session" :
-                $"{subject.GetType().Name} instance={subject.GetInstanceID()} object={subject.NetworkObjectId} " +
+                $"{subject.GetType().Name} instance={subject.GetEntityId()} object={subject.NetworkObjectId} " +
                 $"spawned={subject.IsSpawned} owner={subject.OwnerClientId} isOwner={subject.IsOwner}";
             recorder.Append($"{DateTime.UtcNow:O} frame={Time.frameCount} local={recorder._manager.LocalClientId} " +
                             $"server={recorder._manager.IsServer} {stage} {identity} {details}");

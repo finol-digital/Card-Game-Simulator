@@ -35,7 +35,7 @@ namespace Cgs.Steam
                 _initialized = SteamAPI.Init();
                 if (!_initialized)
                     return;
-                if (!SteamUtils.IsSteamRunningOnSteamDeck())
+                if (SteamUtils.IsRunningOnSteamHardware() != ESteamHardwareType.k_ESteamHardwareTypeSteamDeck)
                     return;
                 ActiveInputDevice.EnableSteamDeck();
                 ResolutionManager.UseSteamDeckDisplay();
