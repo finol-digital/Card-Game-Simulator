@@ -58,6 +58,27 @@ Preference isolation: in benchmark mode, writes to PlayerPrefs (including `Defau
 
 *Alternatives:* using only in-app process-relative timings. These miss the launch-action-to-process delay, have no new process on resume, and mix clock origins across platforms.
 
+### D1a. Reference devices and test builds
+Reference devices, chosen by the maintainer:
+
+| Device | Platform | Build under test | How it is obtained |
+|---|---|---|---|
+| 16-year-old Lenovo laptop | Windows (or Linux) desktop | `cgs-StandaloneWindows64` (or `cgs-StandaloneWindows` / `cgs-StandaloneLinux64`) | Artifact of the develop → main PR run of `main.yml` |
+| Samsung Galaxy Z Flip 3 | Android | Google Play beta track build | `deployToGooglePlayTest` on the PR run |
+| iPhone 11 | iOS | TestFlight build | `deployToAppleTest` on the PR run |
+| Steam Deck | Linux (SteamOS) | Steam `prerelease` branch | `deployToSteam` on the PR run |
+
+The web version is measured on the Firebase `preview` channel from `deployToFirebaseTest`, using the Lenovo laptop and the Z Flip 3 browsers.
+
+Consequences for the harnesses and benchmark mode:
+- **All of these are release builds**, so benchmark mode and milestone recording must work in release builds, and benchmark mode must be triggerable without a debugger: by command-line argument on desktop and Steam (Steam launch options or running the game binary directly), and by deep link (`adb shell am start -W -d <benchmark link>` on Android, or opening the link on iOS).
+- **iOS:** `XCTApplicationLaunchMetric` needs a development-signed UI-test target and cannot drive a TestFlight build, so the iPhone 11 is measured with high-frame-rate video of the launch tap plus the `os_log` results. An XCTest run from a local development build is an optional cross-check.
+- **Android:** `am start -W` and `reportFullyDrawn()` work with the Play-distributed release build over `adb`. Macrobenchmark, which needs a profileable build, is an optional local cross-check.
+- **Steam Deck:** measure both launching through Steam (as players do) and running the binary directly from game mode's desktop, to separate Steam client overhead.
+- **Old laptop:** this is the lowest-end device. Record its OS, CPU, GPU, RAM, and disk type (HDD or SSD) in the guide, and confirm it meets Unity 6's minimum player requirements before treating its results as budget evidence.
+- **Minimal reference build:** this is a separate project, so it is not built by `main.yml`. It is built locally, and the maintainer decides whether to add it to CI, because agents do not edit `.github`.
+- **When builds exist:** PR builds run when a develop → main PR is opened, and on later pushes to `develop` that touch `Assets`, `Packages`, or `ProjectSettings` while that PR is open. A plan-only change produces no new builds, so measurement uses the build of the commit under test.
+
 ### D2. Delete the title screen; Main Menu becomes build index 0
 Remove `TitleScreen.unity` and `TitleScreen.cs`, along with title-only sprites, strings, and localization inventory entries that nothing else uses. Then shift the `Tags` scene indices. `MainMenu` sets its version text through `TitleScreen.LocalizedVersion`, so that provider (`VersionMessage`, `LocalizedVersion`, and the `title.version` key) moves into `MainMenu` or a small shared helper before `TitleScreen.cs` is deleted. `MainMenu` already contains the `CardGameManager` prefab, so no bootstrap scene is needed.
 
@@ -162,6 +183,7 @@ Make these web delivery changes:
 - **The card cache could serve stale data after a game update or a CGS schema change.** → Mitigation: key the cache on the source hash and data version, delete it on update or delete, and treat any read error as a cache miss.
 - **Background bundled-game installation can race with game selection or deletion.** → Mitigation: install per game with completion markers, and have the game list ignore incomplete directories.
 - **Benchmark-mode code could ship and be triggered by untrusted deep links.** → Mitigation: benchmark mode suppresses preference writes, ignores deep-link game URLs and imports, and may download only the designated default games from the official host.
+- **The minimal reference build may itself exceed 500 ms on the 16-year-old laptop.** → Mitigation: measure it first (task 1.7). If the engine floor alone misses the budget, the maintainer records an explicit exception for that device, as task 11.2 allows, with a budget for CGS's overhead above the reference build.
 - **CI timing is noisy.** → Mitigation: use loose CI thresholds aimed at large regressions; the release gate relies on reference-device runs.
 
 ## Migration Plan
@@ -174,4 +196,3 @@ Make these web delivery changes:
 ## Open Questions
 
 - Whether an HTML/JS pre-Unity menu for the web is worth building, once D12 results for web repeat visits are known.
-- The final reference device list per platform, chosen from hardware the maintainer owns or can rent. It must include an older supported Android phone and an ordinary laptop.
