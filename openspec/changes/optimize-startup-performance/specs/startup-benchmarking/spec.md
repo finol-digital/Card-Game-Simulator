@@ -18,7 +18,7 @@ Budget results SHALL come from an external harness that timestamps the launch or
 - **THEN** process-relative milestones are reported as unavailable while harness-measured budget results are unaffected
 
 ### Requirement: Builds record startup milestones
-Every player build SHALL record in-app milestones: engine ready, first scene loaded, first frame drawn, Main Menu interactive, play screen loaded, and table playable. Release builds SHALL record them without visible output or measurable startup cost.
+Every player build SHALL record in-app milestones: engine ready, first scene loaded, first frame drawn, Main Menu interactive, Start Game chosen, play screen loaded, table playable, and first card action succeeded. Release builds SHALL record them without visible output or measurable startup cost.
 
 #### Scenario: Normal release launch
 - **WHEN** a release build is launched and reaches the Main Menu
@@ -58,12 +58,24 @@ Player builds SHALL support an opt-in benchmark mode that reaches the Main Menu,
 - **WHEN** a milestone is not reached within its timeout in benchmark mode
 - **THEN** the results record which milestone failed, a desktop build exits with a failure status, and no platform hangs
 
+#### Scenario: Action timestamps recorded
+- **WHEN** a benchmark run completes
+- **THEN** its results include the Start Game and first-card-action times on the harness's clock, so both single-player budgets can be judged from one run
+
+#### Scenario: First card action fails
+- **WHEN** the benchmark's first card action does not succeed
+- **THEN** the run is recorded as a failure naming that milestone, and no playable-table time is reported for it
+
+#### Scenario: Benchmark link while running
+- **WHEN** a deep link with the benchmark query arrives while CGS is already running
+- **THEN** CGS does not enter benchmark mode and the current session continues unchanged
+
 #### Scenario: Preferences preserved
 - **WHEN** a player whose saved game is Mahjong and who has a remembered start-deck choice runs a benchmark that succeeds or times out
 - **THEN** afterwards the saved game is still Mahjong and the start-deck choice is unchanged
 
 ### Requirement: Benchmark mode limits network access
-Benchmark mode SHALL NOT download or import content named by a deep link or argument. It SHALL download only the designated default games from the official CGS host, and only where the measured condition requires it, such as a web first visit.
+Benchmark mode SHALL NOT download or import content named by a deep link or argument. It SHALL download only the designated default games from the official CGS host, and only where the measured condition requires it, such as a web first visit. Single-game web builds are excluded from benchmark mode.
 
 #### Scenario: Benchmark link with a game URL
 - **WHEN** benchmark mode is started by a deep link that also contains a game URL

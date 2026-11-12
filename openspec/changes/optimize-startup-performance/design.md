@@ -39,7 +39,7 @@ See proposal.md for motivation and specs for the required behavior. This section
 ### D1. Measure from the launch action externally; keep in-app timings as diagnostics
 Budgets are judged by an external harness that records the launch (or resume) action and the judged milestone on one monotonic clock:
 - **Android:** `am start -W` / Macrobenchmark startup timing. The app calls `Activity.reportFullyDrawn()` when the Main Menu is interactive, so the system's time-to-full-display is the menu milestone.
-- **iOS:** `XCTApplicationLaunchMetric` (with responsiveness), cross-checked with high-frame-rate video.
+- **iOS:** high-frame-rate video of the TestFlight build (see D1a). In benchmark mode the app shows a small visual marker on the exact frame the Main Menu becomes interactive (and again when a card action succeeds), so the video measures from the launch tap to that interactive marker on one clock (the video's frame timeline), not merely to the menu appearing. On a local development build, an XCTest interval such as `XCTOSSignpostMetric`, ending at the app's Main Menu interactive signpost, is an optional cross-check; `XCTApplicationLaunchMetric` responsiveness is diagnostic only.
 - **Desktop:** a harness script reads the OS monotonic clock (`CLOCK_MONOTONIC`, `QueryPerformanceCounter`, `mach_continuous_time`) just before spawning the player and passes it as an argument; the app logs milestones on the same clock.
 - **Web:** Playwright/Puppeteer records navigation start and reads milestones from the page via `performance.now()`, which already shares that origin.
 - **Resume:** the harness timestamps the foreground action; the app records an `OnApplicationPause(false)` / focus mark as the in-app anchor.
@@ -48,7 +48,7 @@ In the app, a static `StartupTimeline` records `Stopwatch` marks from the earlie
 
 Summaries follow the emission points in the `startup-benchmarking` spec: a launch summary at Main Menu interactive or the launch timeout, and a play summary at the first playable table or the play timeout.
 
-Benchmark mode is triggered by `-cgsBenchmark` or a `benchmark` deep-link query. It drives the real UI path (not internal shortcuts) and chooses Start Game after a configurable delay that defaults to zero, so idle-time preparation cannot silently improve results. Result delivery per platform:
+Benchmark mode is triggered by `-cgsBenchmark`, or by a `benchmark` deep-link query only when that link launches CGS. A deep link received while CGS is already running never enters benchmark mode, so it cannot take over or quit an active session. Benchmark mode drives the real UI path (not internal shortcuts) and chooses Start Game after a configurable delay that defaults to zero, so idle-time preparation cannot silently improve results. Result delivery per platform:
 - **Desktop:** a JSON file at an argument-supplied path, then exit with a success or failure status.
 - **Android:** a tagged logcat line plus a JSON file in app storage that the harness pulls with `adb`; the harness stops the app.
 - **iOS:** an `os_log` line plus a JSON file in the app container read by the XCTest harness.
@@ -70,9 +70,11 @@ Reference devices, chosen by the maintainer:
 
 The web version is measured on the Firebase `preview` channel from `deployToFirebaseTest`, using the Lenovo laptop and the Z Flip 3 browsers.
 
+Single-game web builds (`CGS_SINGLEGAME`, profile `Web_SingleGame`) are not built by `main.yml` and are excluded from benchmarking, so the benchmark's download rule needs no exception for their site `cgs.json`.
+
 Consequences for the harnesses and benchmark mode:
 - **All of these are release builds**, so benchmark mode and milestone recording must work in release builds, and benchmark mode must be triggerable without a debugger: by command-line argument on desktop and Steam (Steam launch options or running the game binary directly), and by deep link (`adb shell am start -W -d <benchmark link>` on Android, or opening the link on iOS).
-- **iOS:** `XCTApplicationLaunchMetric` needs a development-signed UI-test target and cannot drive a TestFlight build, so the iPhone 11 is measured with high-frame-rate video of the launch tap plus the `os_log` results. An XCTest run from a local development build is an optional cross-check.
+- **iOS:** `XCTApplicationLaunchMetric` needs a development-signed UI-test target and cannot drive a TestFlight build, so the iPhone 11 is measured with high-frame-rate video of the launch tap up to the benchmark's visual interactive marker (D1), plus the `os_log` results. An XCTest run from a local development build is an optional cross-check.
 - **Android:** `am start -W` and `reportFullyDrawn()` work with the Play-distributed release build over `adb`. Macrobenchmark, which needs a profileable build, is an optional local cross-check.
 - **Steam Deck:** measure both launching through Steam (as players do) and running the binary directly from game mode's desktop, to separate Steam client overhead.
 - **Old laptop:** this is the lowest-end device. Record its OS, CPU, GPU, RAM, and disk type (HDD or SSD) in the guide, and confirm it meets Unity 6's minimum player requirements before treating its results as budget evidence.
