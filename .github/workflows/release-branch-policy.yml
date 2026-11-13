@@ -22,7 +22,13 @@ jobs:
           script: |
             const pr = context.payload.pull_request;
             const repository = `${context.repo.owner}/${context.repo.repo}`;
-            const allowed = pr.head.repo?.full_name === repository && pr.head.ref === 'develop';
+            const sameRepository = pr.head.repo?.full_name === repository;
+            // Dependabot security updates always target the default branch (main).
+            // Version updates target develop through .github/dependabot.yml.
+            const isDependabot = sameRepository
+              && pr.user?.login === 'dependabot[bot]'
+              && pr.head.ref.startsWith('dependabot/');
+            const allowed = sameRepository && (pr.head.ref === 'develop' || isDependabot);
             // pull_request_target runs on the base SHA. Report on the PR head so
             // this result can satisfy the required status check for the PR.
             await github.rest.repos.createCommitStatus({
@@ -31,7 +37,9 @@ jobs:
               context: 'Develop to main',
               state: allowed ? 'success' : 'failure',
               description: allowed
-                ? 'Release PR source verified: develop -> main.'
+                ? (isDependabot
+                  ? 'Dependabot security update verified.'
+                  : 'Release PR source verified: develop -> main.')
                 : 'PRs to main must come from this repository’s develop branch.',
               target_url: `${context.serverUrl}/${repository}/actions/runs/${context.runId}`
             });
