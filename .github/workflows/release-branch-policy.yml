@@ -24,7 +24,9 @@ jobs:
             const repository = `${context.repo.owner}/${context.repo.repo}`;
             const sameRepository = pr.head.repo?.full_name === repository;
             // Dependabot security updates always target the default branch (main).
-            // Version updates target develop through .github/dependabot.yml.
+            // Version updates target develop through .github/dependabot.yml, so a
+            // Dependabot PR on main is a security update unless a maintainer
+            // retargeted it. PR metadata does not expose the update type.
             const isDependabot = sameRepository
               && pr.user?.login === 'dependabot[bot]'
               && pr.head.ref.startsWith('dependabot/');
@@ -38,7 +40,7 @@ jobs:
               state: allowed ? 'success' : 'failure',
               description: allowed
                 ? (isDependabot
-                  ? 'Dependabot security update verified.'
+                  ? 'Dependabot PR from this repository verified.'
                   : 'Release PR source verified: develop -> main.')
                 : 'PRs to main must come from this repository’s develop branch.',
               target_url: `${context.serverUrl}/${repository}/actions/runs/${context.runId}`
