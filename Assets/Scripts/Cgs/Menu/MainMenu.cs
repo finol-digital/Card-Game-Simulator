@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Performance;
 using Cgs.Localization;
 using Cgs.GameContent;
 using System.Collections.Generic;
@@ -35,7 +36,12 @@ namespace Cgs.Menu
         private static bool HasSeenWelcome
         {
             get => PlayerPrefs.GetInt(PlayerPrefsHasSeenWelcome, 0) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefsHasSeenWelcome, value ? 1 : 0);
+            set
+            {
+                // Benchmark runs must not change saved preferences
+                if (!StartupTimeline.IsBenchmarking)
+                    PlayerPrefs.SetInt(PlayerPrefsHasSeenWelcome, value ? 1 : 0);
+            }
         }
 
         public const string QuitPrompt = "Quit?";
@@ -125,6 +131,11 @@ namespace Cgs.Menu
         // Poll for Vector2 inputs
         protected void Update()
         {
+            // Interactive means the Main Menu screen accepts input. A first-launch welcome prompt is part of that
+            // screen and accepts input too; budget runs use saved data, where the prompt is not shown.
+            if (Time.timeSinceLevelLoad >= StartBufferTime)
+                StartupTimeline.Mark(StartupMilestone.MainMenuInteractive);
+
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
@@ -422,6 +433,7 @@ namespace Cgs.Menu
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.IsSearchingForServer = false;
+            StartupTimeline.Mark(StartupMilestone.StartGameChosen);
             SceneManager.LoadScene(Tags.PlayModeSceneIndex);
         }
 

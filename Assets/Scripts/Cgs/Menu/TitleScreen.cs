@@ -44,6 +44,9 @@ namespace Cgs.Menu
 
         private IDisposable _anyButtonPressListener;
 
+        /// <summary>True once the title screen listens for the press that opens the Main Menu.</summary>
+        public bool IsReadyForInput { get; private set; }
+
         protected void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
@@ -123,6 +126,7 @@ namespace Cgs.Menu
 
             _anyButtonPressListener = InputSystem.onAnyButtonPress
                 .CallOnce(_ => GoToMainMenu());
+            IsReadyForInput = true;
         }
 
         public void OnPointerDown(PointerEventData eventData)

@@ -1,10 +1,24 @@
-# Set update schedule for GitHub Actions
+# Dependabot version updates target develop, which is the only branch allowed
+# to open PRs into main. Security updates always target the default branch
+# (main); release-branch-policy.yml allows those Dependabot PRs.
 
 version: 2
 updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "develop"
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
+
+  - package-ecosystem: "bundler"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      # Keep fastlane and its plugins current without manual bundle updates
+      interval: "weekly"
+    groups:
+      ruby:
+        patterns:
+          - "*"

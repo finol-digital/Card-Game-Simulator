@@ -113,6 +113,30 @@ namespace Cgs.Menu
                 OkClose();
         }
 
+        /// <summary>True while a message is displayed.</summary>
+        public bool IsShowing => gameObject.activeSelf;
+
+        /// <summary>Localization key of the displayed message, if it has one.</summary>
+        public string CurrentMessageKey => IsShowing ? _displayedMessage?.Key : null;
+
+        /// <summary>Presses the displayed message's yes/OK button, as a player would.</summary>
+        public void ChooseYes()
+        {
+            if (IsShowing && yesButton.gameObject.activeInHierarchy)
+                yesButton.onClick?.Invoke();
+        }
+
+        /// <summary>Presses the displayed message's no button, or closes a message that has none.</summary>
+        public void ChooseNo()
+        {
+            if (!IsShowing)
+                return;
+            if (noButton.gameObject.activeInHierarchy)
+                noButton.onClick?.Invoke();
+            else
+                OkClose();
+        }
+
         public void Show(string text, bool unskippable = false)
         {
             Prompt(text, null, unskippable);
