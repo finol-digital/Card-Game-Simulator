@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Performance;
 using Cgs.Localization;
 using Cgs.GameContent;
 using System;
@@ -288,6 +289,7 @@ namespace Cgs.Play
 
         protected IEnumerator Start()
         {
+            StartupTimeline.Mark(StartupMilestone.PlaySceneLoaded);
             gameObject.GetOrAddComponent<CgsNetDiagnostics>();
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
@@ -683,6 +685,8 @@ namespace Cgs.Play
 
         public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerSeat)
         {
+            if (cardStacks != null && cardStacks.Count > 0)
+                StartupTimeline.Mark(StartupMilestone.TablePlayable);
             var supportedSeatCount = GetSupportedSeatCount();
             if (supportedSeatCount > 0 && (playerSeat < 1 || playerSeat > supportedSeatCount))
                 Debug.LogError(string.Format(InvalidPlayerSeatMessage, playerSeat, supportedSeatCount));
@@ -809,8 +813,15 @@ namespace Cgs.Play
         public void AddCardsToHand(IEnumerable<UnityCard> cards)
         {
             drawer.SelectTab(0);
+            var added = false;
             foreach (var card in cards)
+            {
                 drawer.AddCard(card);
+                added = true;
+            }
+
+            if (added)
+                StartupTimeline.Mark(StartupMilestone.FirstCardAction);
         }
 
         private IEnumerable<UnityCard> PopSoloDeckCards(int count)
@@ -864,6 +875,8 @@ namespace Cgs.Play
         {
             if (cardModel == null)
                 return;
+
+            StartupTimeline.Mark(StartupMilestone.FirstCardAction);
 
             if (cardModel.IsFacedown && cardModel.Value.IsBackFaceCard)
                 cardModel.IsFacedown = false;

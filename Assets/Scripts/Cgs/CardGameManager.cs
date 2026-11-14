@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Performance;
 using Cgs.Localization;
 using Cgs.GameContent;
 using System;
@@ -461,6 +462,14 @@ namespace Cgs
         private void OnDeepLinkActivated(string deepLink)
         {
             Debug.Log("OnDeepLinkActivated!");
+            // Benchmark links are honored only when they launch CGS (see StartupTimeline); a benchmark link that
+            // arrives later must leave the current session unchanged, and benchmark runs never download from links
+            if (BenchmarkOptions.IsBenchmarkLink(deepLink) || StartupTimeline.IsBenchmarking)
+            {
+                Debug.Log("OnDeepLinkActivated: ignoring link during or for benchmark mode");
+                return;
+            }
+
             DeepLinkLoadScene(deepLink);
             DeepLinkGetAutoUpdateUrl(deepLink);
         }
@@ -786,8 +795,10 @@ namespace Cgs
                 return;
             }
 
-            // Now is the safest time to set this game as the preferred default game for the player
-            PlayerPrefs.SetString(PlayerPrefsDefaultGame, Current.Id);
+            // Now is the safest time to set this game as the preferred default game for the player.
+            // Benchmark runs must not change saved preferences.
+            if (!StartupTimeline.IsBenchmarking)
+                PlayerPrefs.SetString(PlayerPrefsDefaultGame, Current.Id);
 
             // Each scene is responsible for adding to OnSceneActions, but they may not remove
             OnSceneActions.RemoveWhere((action) => action == null);
