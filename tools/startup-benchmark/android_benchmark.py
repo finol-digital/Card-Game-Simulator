@@ -34,9 +34,24 @@ def fully_drawn_pattern(package: str):
 RESULT_TAG = "[CgsBenchmark] "
 
 
+ADB_TIMEOUT_S = 60
+
+
 def adb(args, *command, check=True, capture=True):
     full = ["adb", *(["-s", args.serial] if args.serial else []), *command]
-    return subprocess.run(full, check=check, text=True, capture_output=capture)
+    return subprocess.run(full, check=check, text=True, capture_output=capture, timeout=ADB_TIMEOUT_S)
+
+
+def run_once_bounded(args, run_index: int) -> stats.RunRecord:
+    """Runs once; a stalled or failing adb command becomes a failed run instead of hanging or ending the batch."""
+    try:
+        return run_once(args, run_index)
+    except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as error:
+        try:
+            adb(args, "shell", "am", "force-stop", args.package, check=False)
+        except subprocess.TimeoutExpired:
+            pass
+        return stats.RunRecord(str(run_index), False, f"adb:{type(error).__name__}")
 
 
 def run_once(args, run_index: int) -> stats.RunRecord:
@@ -80,7 +95,10 @@ def run_once(args, run_index: int) -> stats.RunRecord:
                 result = stats.parse_result(line[index + len(RESULT_TAG):])
     finally:
         logcat.kill()
-        adb(args, "shell", "am", "force-stop", package, check=False)
+        try:
+            adb(args, "shell", "am", "force-stop", package, check=False)
+        except subprocess.TimeoutExpired:
+            pass
 
     if result is None:
         return stats.RunRecord(run_id, False, "noResult",
@@ -102,8 +120,10 @@ def run_once(args, run_index: int) -> stats.RunRecord:
         "processStartToMenuMs": None if launch is None or launch.get("processStartOffsetMs") is None
         or menu is None else launch["processStartOffsetMs"] + menu,
     }
-    ok = result.get("outcome") == "ok"
-    return stats.RunRecord(run_id, ok, None if ok else result.get("failedMilestone") or "failed", intervals, flags)
+    ok = result.get("outcome") == "ok" and fully_drawn_ms is not None
+    failure = None if ok else ("noFullyDrawn" if result.get("outcome") == "ok"
+                               else result.get("failedMilestone") or "failed")
+    return stats.RunRecord(run_id, ok, failure, intervals, flags)
 
 
 def main() -> int:
@@ -120,7 +140,7 @@ def main() -> int:
 
     records = []
     for index in range(1, args.runs + 1):
-        record = run_once(args, index)
+        record = run_once_bounded(args, index)
         records.append(record)
         print(f"run {record.run_id}: {'ok' if record.ok else record.failure} {record.intervals_ms} {record.flags}",
               file=sys.stderr)

@@ -191,6 +191,19 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void RunIdsCannotEscapeTheResultFolder()
+        {
+            var options = BenchmarkOptions.Parse(new[] { "cgs" },
+                "cardgamesim://main?benchmark=1&run=x%2F..%2F..%2Fvictim");
+
+            Assert.AreEqual("xvictim", options.RunId);
+            Assert.AreEqual("0", BenchmarkOptions.SanitizeRunId("../.."));
+            Assert.AreEqual("7-ab_C", BenchmarkOptions.SanitizeRunId("7-ab_C"));
+            Assert.AreEqual(BenchmarkOptions.MaxRunIdLength,
+                BenchmarkOptions.SanitizeRunId(new string('a', 100)).Length);
+        }
+
+        [Test]
         public void OrdinaryLinksDoNotEnableBenchmarkMode()
         {
             Assert.IsFalse(BenchmarkOptions.Parse(new[] { "cgs" }, "cardgamesim://main?url=x").IsEnabled);

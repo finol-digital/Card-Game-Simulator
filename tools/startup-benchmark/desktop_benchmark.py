@@ -71,10 +71,21 @@ def run_once(args, run_index: int, work_dir: Path) -> stats.RunRecord:
         time.sleep(args.steam_settle)
 
     if not result_file.exists():
+        if args.steam:
+            # The player may still be running and could write a later run's result.json
+            raise SteamRunAborted(f"Steam run {run_id} produced no result within {args.timeout:g} s. "
+                                  "Stop Card Game Simulator before running again.")
         return stats.RunRecord(run_id, False, "noResult")
 
-    result = stats.parse_result(result_file.read_text(encoding="utf-8"))
+    try:
+        result = stats.parse_result(result_file.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return stats.RunRecord(run_id, False, "malformedResult")
     return to_record(run_id, result)
+
+
+class SteamRunAborted(RuntimeError):
+    pass
 
 
 def to_record(run_id: str, result: dict) -> stats.RunRecord:
@@ -116,8 +127,14 @@ def main() -> int:
     work_dir = Path(args.work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
     records = []
+    aborted = None
     for index in range(1, args.runs + 1):
-        record = run_once(args, index, work_dir)
+        try:
+            record = run_once(args, index, work_dir)
+        except SteamRunAborted as error:
+            aborted = str(error)
+            print(aborted, file=sys.stderr)
+            break
         records.append(record)
         print(f"run {record.run_id}: {'ok' if record.ok else record.failure} {record.intervals_ms} {record.flags}",
               file=sys.stderr)
@@ -127,8 +144,10 @@ def main() -> int:
                                        "launchToActionMs": stats.LAUNCH_TO_ACTION_BUDGET_MS,
                                        "startToActionMs": stats.START_TO_ACTION_BUDGET_MS})
     report["condition"] = "steam" if args.steam else "direct"
+    if aborted:
+        report["aborted"] = aborted
     stats.write_reports(records, report, args.csv)
-    return 0 if report["failures"] == 0 else 1
+    return 0 if report["failures"] == 0 and not aborted else 1
 
 
 if __name__ == "__main__":

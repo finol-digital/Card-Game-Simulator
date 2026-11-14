@@ -110,7 +110,7 @@ namespace Cgs.Performance
                 return;
             session.LaunchRequestOffsetMs = (session.ZeroMonotonicNs.Value - runFile.monotonicNs) / 1_000_000.0;
             if (!string.IsNullOrEmpty(runFile.runId))
-                _runId = runFile.runId;
+                _runId = BenchmarkOptions.SanitizeRunId(runFile.runId);
         }
 
         private IEnumerator Start()
@@ -182,9 +182,14 @@ namespace Cgs.Performance
         private IEnumerator EnsureBenchmarkGame()
         {
             var manager = CardGameManager.Instance;
-            if (CardGameManager.Current.Id == _options.GameId ||
-                !manager.AllCardGames.ContainsKey(_options.GameId))
+            if (CardGameManager.Current.Id == _options.GameId)
                 yield break;
+            if (!manager.AllCardGames.ContainsKey(_options.GameId))
+            {
+                // Never report a result for a game that was not measured
+                _gameLoadFailure = "benchmarkGameUnavailable";
+                yield break;
+            }
 
             // Selection is not persisted in benchmark mode; the run is flagged so it is not used as a budget result
             _gameSwitched = true;

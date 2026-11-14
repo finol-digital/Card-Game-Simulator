@@ -131,6 +131,8 @@ namespace Cgs.Menu
         // Poll for Vector2 inputs
         protected void Update()
         {
+            // Interactive means the Main Menu screen accepts input. A first-launch welcome prompt is part of that
+            // screen and accepts input too; budget runs use saved data, where the prompt is not shown.
             if (Time.timeSinceLevelLoad >= StartBufferTime)
                 StartupTimeline.Mark(StartupMilestone.MainMenuInteractive);
 

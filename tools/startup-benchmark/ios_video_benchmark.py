@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 import sys
 from pathlib import Path
@@ -31,10 +32,20 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import startup_stats as stats  # noqa: E402
 
 
-def frame_interval(start, end, fps: float, margin_ms: float):
-    if start in (None, "") or end in (None, ""):
+def frame_number(value):
+    """Returns a finite, non-negative frame number, None for an empty cell, or raises ValueError."""
+    if value in (None, "") or str(value).strip() == "":
         return None
-    return (float(end) - float(start)) * 1000.0 / fps + margin_ms
+    number = float(value)
+    if not math.isfinite(number) or number < 0:
+        raise ValueError(f"invalid frame number {value!r}")
+    return number
+
+
+def frame_interval(start, end, fps: float, margin_ms: float):
+    if start is None or end is None:
+        return None
+    return (end - start) * 1000.0 / fps + margin_ms
 
 
 def load_results(directory):
@@ -56,6 +67,8 @@ def main() -> int:
     parser.add_argument("--fps", type=float, default=240.0, help="Capture frame rate of the video")
     parser.add_argument("--display-hz", type=float, default=60.0, help="Refresh rate of the phone display")
     parser.add_argument("--results-dir", help="Folder of JSON results shared from the app")
+    parser.add_argument("--reference", action="store_true",
+                        help="Measure the minimal reference build (tap and menu frames only)")
     parser.add_argument("--csv")
     args = parser.parse_args()
     if args.fps < 240:
@@ -67,15 +80,28 @@ def main() -> int:
     with open(args.frames_csv, newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
             run_id = (row.get("run") or "").strip()
-            failed_marker = (row.get("failed") or "").strip() != ""
-            intervals = {
-                "launchToMenuMs": frame_interval(row.get("tap"), row.get("menu"), args.fps, margin_ms),
-                "launchToActionMs": frame_interval(row.get("tap"), row.get("action"), args.fps, margin_ms),
-                "startToActionMs": frame_interval(row.get("start"), row.get("action"), args.fps, margin_ms),
-            }
-            ok = not failed_marker and intervals["launchToActionMs"] is not None
-            flags = []
             result = results.get(run_id)
+            # The minimal reference build stops at its interactive button and never shows play markers
+            reference = args.reference or bool(result and result.get("reference"))
+            try:
+                frames = {name: frame_number(row.get(name)) for name in ("tap", "menu", "start", "action")}
+            except ValueError:
+                records.append(stats.RunRecord(run_id, False, "invalidFrames", {}, []))
+                continue
+            failed_marker = (row.get("failed") or "").strip() != ""
+            required = ("tap", "menu") if reference else ("tap", "menu", "start", "action")
+            present = [frames[name] for name in required]
+            ordered = all(value is not None for value in present) and all(
+                earlier <= later for earlier, later in zip(present, present[1:]))
+            intervals = {
+                "launchToMenuMs": frame_interval(frames["tap"], frames["menu"], args.fps, margin_ms),
+                "launchToActionMs": None if reference
+                else frame_interval(frames["tap"], frames["action"], args.fps, margin_ms),
+                "startToActionMs": None if reference
+                else frame_interval(frames["start"], frames["action"], args.fps, margin_ms),
+            }
+            ok = not failed_marker and ordered
+            flags = []
             if args.results_dir:
                 if result is None:
                     flags.append("noJson")
@@ -84,13 +110,20 @@ def main() -> int:
                     if (result.get("outcome") == "ok") != ok:
                         # Video and app disagree about pass/fail; discard and re-run
                         flags.append("videoJsonMismatch")
-            failure = None if ok else ("failedMarker" if failed_marker else "missingFrames")
+            if ok:
+                failure = None
+            elif failed_marker:
+                failure = "failedMarker"
+            elif all(value is not None for value in present):
+                failure = "framesOutOfOrder"
+            else:
+                failure = "missingFrames"
             records.append(stats.RunRecord(run_id, ok, failure, intervals, flags))
 
     report = stats.summarize(records, {"launchToMenuMs": stats.LAUNCH_TO_MENU_BUDGET_MS,
                                        "launchToActionMs": stats.LAUNCH_TO_ACTION_BUDGET_MS,
                                        "startToActionMs": stats.START_TO_ACTION_BUDGET_MS})
-    report["condition"] = "ios-video"
+    report["condition"] = "ios-video-reference" if args.reference else "ios-video"
     report["uncertaintyMarginMs"] = margin_ms
     stats.write_reports(records, report, args.csv)
     return 0 if report["failures"] == 0 else 1

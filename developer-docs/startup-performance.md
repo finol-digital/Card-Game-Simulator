@@ -109,7 +109,7 @@ Start Game is dispatched only after the frame with the menu marker has been pres
 
 ## Harnesses
 
-The scripts are in `tools/startup-benchmark/` and need Python 3.9 or later. Each prints the median, p95, failure
+The scripts are in `tools/startup-benchmark/` and need Python 3.10 or later. Each prints the median, p95, failure
 count, and pass/fail per interval. Runs flagged `gameSwitched`, with a start delay, or with a run-file error are
 excluded from budget statistics.
 
@@ -193,9 +193,10 @@ conservative. Runs whose video and JSON disagree are discarded and re-run. On a 
 ### Web
 
 ```bash
-npx -y -p playwright playwright install chromium
-npx -y -p playwright node tools/startup-benchmark/web_benchmark.mjs --url <preview-url> --runs 30 --mode first
-npx -y -p playwright node tools/startup-benchmark/web_benchmark.mjs --url <preview-url> --runs 30 --mode repeat
+npm install --no-save --prefix tools/startup-benchmark playwright
+tools/startup-benchmark/node_modules/.bin/playwright install chromium
+node tools/startup-benchmark/web_benchmark.mjs --url <preview-url> --runs 30 --mode first
+node tools/startup-benchmark/web_benchmark.mjs --url <preview-url> --runs 30 --mode repeat
 ```
 
 Record the network type and browser version with the results.
@@ -236,6 +237,8 @@ Linking the full CGS IL2CPP player needs about 3.5 GB on top of the editor. On a
 
 Other targets are `StandaloneWindows64`, `Android` (`.apk` output), `iOS` (an Xcode project), and `WebGL`. For
 Android, install the APK and run `android_benchmark.py --package com.finoldigital.cgsstartupreference`.
+On desktop, pass `--build 6000.6.8` (the reference build's version). On iOS, launch it from its icon, record only
+the tap and menu frames, and run `ios_video_benchmark.py --reference`.
 
 ## Reporting
 

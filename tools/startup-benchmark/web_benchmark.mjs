@@ -4,12 +4,14 @@
 //
 // Web startup benchmark for CGS with Playwright (Firebase preview channel or a local build).
 //
-//   npx -y -p playwright node web_benchmark.mjs --url https://<preview-channel-url>/ --runs 30 --mode first
-//   npx -y -p playwright node web_benchmark.mjs --url https://<preview-channel-url>/ --runs 30 --mode repeat
+//   npm install --no-save --prefix tools/startup-benchmark playwright
+//   tools/startup-benchmark/node_modules/.bin/playwright install chromium
+//   node tools/startup-benchmark/web_benchmark.mjs --url https://<preview-channel-url>/ --runs 30 --mode first
+//   node tools/startup-benchmark/web_benchmark.mjs --url https://<preview-channel-url>/ --runs 30 --mode repeat
 //
 // "first" uses a new browser profile per run (empty caches); "repeat" warms one persistent profile, then
 // measures reloads with caches retained. All times are relative to navigation start, the origin the player's
-// performance.now() shares. Run `npx playwright install chromium` once beforehand.
+// performance.now() shares.
 
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -102,9 +104,13 @@ for (const name of names) {
     const values = usable.filter(r => r[name] != null).map(r => r[name]);
     report.intervals[name] = { count: values.length, medianMs: median(values), p95Ms: percentile(values, 95) };
 }
+const csvField = value => {
+    const text = String(value ?? '');
+    return /[",\r\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+};
 if (args.csv)
-    fs.writeFileSync(args.csv, ['run,ok,failure,flags,' + names.join(','),
-        ...records.map(r => [r.run, r.ok, r.failure ?? '', (r.flags ?? []).join(';'),
-            ...names.map(n => r[n] ?? '')].join(','))].join('\n'));
+    fs.writeFileSync(args.csv, [['run', 'ok', 'failure', 'flags', ...names].join(','),
+        ...records.map(r => [r.run, r.ok, r.failure, (r.flags ?? []).join(';'), ...names.map(n => r[n])]
+            .map(csvField).join(','))].join('\n'));
 console.log(JSON.stringify(report, null, 2));
 process.exit(report.failures === 0 ? 0 : 1);

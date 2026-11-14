@@ -26,6 +26,7 @@ namespace Cgs.Performance
         public const double RunFileMaxAgeMs = 120_000;
 
         public bool IsEnabled { get; private set; }
+        public const int MaxRunIdLength = 64;
         public string RunId { get; private set; } = "0";
         public string RunFilePath { get; private set; }
         public string ResultFilePath { get; private set; }
@@ -63,7 +64,7 @@ namespace Cgs.Performance
                     else if (TryGetValue(argument, ArgumentGame, out var game))
                         options.GameId = game;
                     else if (TryGetValue(argument, ArgumentRun, out var run))
-                        options.RunId = run;
+                        options.RunId = SanitizeRunId(run);
                 }
             }
 
@@ -73,7 +74,7 @@ namespace Cgs.Performance
             options.IsEnabled = true;
             options.Source = "deepLink";
             if (query.TryGetValue("run", out var queryRun) && !string.IsNullOrEmpty(queryRun))
-                options.RunId = queryRun;
+                options.RunId = SanitizeRunId(queryRun);
             if (query.TryGetValue("delay", out var queryDelay))
                 options.StartDelayMs = ParseDelay(queryDelay);
             if (query.TryGetValue("game", out var queryGame) && !string.IsNullOrEmpty(queryGame))
@@ -84,6 +85,25 @@ namespace Cgs.Performance
         }
 
         /// <summary>True when a deep link asks for benchmark mode (honored only when it launches CGS).</summary>
+        /// <summary>
+        /// Run IDs name result files, so only letters, digits, '-' and '_' are kept (at most 64 characters).
+        /// </summary>
+        public static string SanitizeRunId(string runId)
+        {
+            if (string.IsNullOrEmpty(runId))
+                return "0";
+            var builder = new System.Text.StringBuilder(Math.Min(runId.Length, MaxRunIdLength));
+            foreach (var character in runId)
+            {
+                if (builder.Length == MaxRunIdLength)
+                    break;
+                if (character is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9' or '-' or '_')
+                    builder.Append(character);
+            }
+
+            return builder.Length > 0 ? builder.ToString() : "0";
+        }
+
         public static bool IsBenchmarkLink(string url) => IsBenchmarkLink(url, out _);
 
         private static bool IsBenchmarkLink(string url, out Dictionary<string, string> query)

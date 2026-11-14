@@ -30,10 +30,12 @@ namespace Cgs.Performance
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Begin()
         {
+            // Read the monotonic anchor immediately before starting the stopwatch so both share one origin
+            var zeroMonotonicNs = StartupClocks.MonotonicNowNs();
             _stopwatch = Stopwatch.StartNew();
             Session = new StartupTimelineSession(() => ElapsedMs, Debug.Log)
             {
-                ZeroMonotonicNs = StartupClocks.MonotonicNowNs()
+                ZeroMonotonicNs = zeroMonotonicNs
             };
             Session.Mark(StartupMilestone.EngineReady);
             Benchmark = BenchmarkOptions.Disabled;

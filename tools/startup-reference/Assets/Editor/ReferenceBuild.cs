@@ -26,7 +26,8 @@ public static class ReferenceBuild
     private const string ScenePath = "Assets/Scenes/Reference.unity";
     private const string PipelinePath = "Assets/Settings/ReferenceURP.asset";
     private const string RendererPath = "Assets/Settings/ReferenceURP_Renderer.asset";
-    private const string Version = "reference-6000.6.8f1";
+    // iOS needs three period-separated integers; result JSON marks reference runs with "reference":true
+    private const string Version = "6000.6.8";
 
     [MenuItem("Reference/Generate Scene")]
     public static void GenerateScene()
