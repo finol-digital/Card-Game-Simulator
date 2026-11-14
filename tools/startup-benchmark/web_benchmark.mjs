@@ -36,6 +36,14 @@ function benchmarkUrl(run) {
     return url.toString();
 }
 
+function median(values) {
+    if (values.length === 0) return null;
+    const ordered = [...values].sort((a, b) => a - b);
+    const middle = Math.floor(ordered.length / 2);
+    return ordered.length % 2 ? ordered[middle] : (ordered[middle - 1] + ordered[middle]) / 2;
+}
+
+// Nearest-rank percentile, matching startup_stats.py
 function percentile(values, pct) {
     if (values.length === 0) return null;
     const ordered = [...values].sort((a, b) => a - b);
@@ -52,8 +60,13 @@ async function measure(page, run) {
     const menu = launch.milestonesMs?.mainMenuInteractive;
     const start = play.milestonesMs?.startGameChosen;
     const action = play.milestonesMs?.firstCardAction;
+    // Same exclusion rules as startup_stats.result_flags
+    const flags = [];
+    if (result.gameSwitched) flags.push('gameSwitched');
+    if (result.runFileError) flags.push(String(result.runFileError));
+    if ((result.startDelayMs ?? 0) > 0) flags.push('startDelay');
     return {
-        run, ok: result.outcome === 'ok', failure: result.failedMilestone ?? null,
+        run, ok: result.outcome === 'ok', failure: result.failedMilestone ?? null, flags,
         launchToMenuMs: offset != null && menu != null ? offset + menu : null,
         launchToActionMs: offset != null && action != null ? offset + action : null,
         startToActionMs: start != null && action != null ? action - start : null,
@@ -81,13 +94,17 @@ if (mode === 'repeat') {
 }
 
 const names = ['launchToMenuMs', 'launchToActionMs', 'startToActionMs'];
-const report = { mode, runs: records.length, failures: records.filter(r => !r.ok).length, intervals: {} };
+const usable = records.filter(r => r.ok && (r.flags ?? []).length === 0);
+const report = {
+    mode, runs: records.length, usableRuns: usable.length, failures: records.filter(r => !r.ok).length, intervals: {},
+};
 for (const name of names) {
-    const values = records.filter(r => r.ok && r[name] != null).map(r => r[name]);
-    report.intervals[name] = { count: values.length, medianMs: percentile(values, 50), p95Ms: percentile(values, 95) };
+    const values = usable.filter(r => r[name] != null).map(r => r[name]);
+    report.intervals[name] = { count: values.length, medianMs: median(values), p95Ms: percentile(values, 95) };
 }
 if (args.csv)
-    fs.writeFileSync(args.csv, ['run,ok,failure,' + names.join(','),
-        ...records.map(r => [r.run, r.ok, r.failure ?? '', ...names.map(n => r[n] ?? '')].join(','))].join('\n'));
+    fs.writeFileSync(args.csv, ['run,ok,failure,flags,' + names.join(','),
+        ...records.map(r => [r.run, r.ok, r.failure ?? '', (r.flags ?? []).join(';'),
+            ...names.map(n => r[n] ?? '')].join(','))].join('\n'));
 console.log(JSON.stringify(report, null, 2));
 process.exit(report.failures === 0 ? 0 : 1);

@@ -14,10 +14,12 @@ intervals use the app's elapsedRealtime-consistent milestones measured from that
 from __future__ import annotations
 
 import argparse
+import os
+import queue
 import re
 import subprocess
-import os
 import sys
+import threading
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -58,11 +60,17 @@ def run_once(args, run_index: int) -> stats.RunRecord:
     deadline = time.monotonic() + args.timeout
     logcat = subprocess.Popen(["adb", *(["-s", args.serial] if args.serial else []), "logcat", "-v", "brief"],
                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+    # Read logcat on a thread so a quiet log cannot block the deadline check
+    lines: queue.Queue = queue.Queue()
+    threading.Thread(target=lambda: [lines.put(line) for line in logcat.stdout], daemon=True).start()
     try:
-        while time.monotonic() < deadline and result is None:
-            line = logcat.stdout.readline()
-            if not line:
-                time.sleep(0.05)
+        while result is None:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+            try:
+                line = lines.get(timeout=min(remaining, 0.5))
+            except queue.Empty:
                 continue
             match = fully_drawn.search(line)
             if match:

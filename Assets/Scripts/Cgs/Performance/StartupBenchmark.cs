@@ -28,6 +28,7 @@ namespace Cgs.Performance
         private const string StartDecksMessageKey = "play.load.decks";
         private const double ActionTimeoutMs = 5_000;
         private const double DealWithoutDealerAfterMs = 1_000;
+        private const double GameLoadTimeoutMs = 30_000;
         private const int MarkerSize = 96;
 
         private enum Marker
@@ -54,6 +55,7 @@ namespace Cgs.Performance
         private string _runId;
         private string _runFileError;
         private bool _gameSwitched;
+        private string _gameLoadFailure;
         private string _launchJson;
         private string _playJson;
         private readonly Dictionary<Marker, double> _markersPresentedMs = new();
@@ -98,6 +100,9 @@ namespace Cgs.Performance
 
         private void ConsumeRunFile()
         {
+            // Only desktop and Steam harnesses hand off a run file; mobile and web launches have none
+            if (string.IsNullOrEmpty(_options.RunFilePath))
+                return;
             var session = StartupTimeline.Session;
             var runFile = BenchmarkRunFile.Consume(_options.RunFilePath, Application.version,
                 StartupClocks.MonotonicNowNs(), out _runFileError);
@@ -145,6 +150,13 @@ namespace Cgs.Performance
                 yield return new WaitForSecondsRealtime((float)(_options.StartDelayMs / 1000.0));
 
             yield return EnsureBenchmarkGame();
+            if (_gameLoadFailure != null)
+            {
+                session.Mark(StartupMilestone.StartGameChosen);
+                session.MarkFirstCardActionFailed(_gameLoadFailure);
+                Finish();
+                yield break;
+            }
 
             var mainMenu = FindObjectsByType<MainMenu>().FirstOrDefault();
             if (mainMenu == null)
@@ -177,9 +189,15 @@ namespace Cgs.Performance
             // Selection is not persisted in benchmark mode; the run is flagged so it is not used as a budget result
             _gameSwitched = true;
             manager.Select(_options.GameId);
+            var deadline = StartupTimeline.ElapsedMs + GameLoadTimeoutMs;
             while (CardGameManager.Current.Id == _options.GameId && !CardGameManager.Current.HasLoaded &&
-                   string.IsNullOrEmpty(CardGameManager.Current.Error))
+                   string.IsNullOrEmpty(CardGameManager.Current.Error) && StartupTimeline.ElapsedMs < deadline)
                 yield return null;
+
+            if (CardGameManager.Current.Id != _options.GameId || !CardGameManager.Current.HasLoaded)
+                _gameLoadFailure = StartupTimeline.ElapsedMs >= deadline
+                    ? "benchmarkGameLoadTimeout"
+                    : "benchmarkGameLoadFailed";
         }
 
         private IEnumerator PlayToFirstCardAction()
@@ -237,6 +255,8 @@ namespace Cgs.Performance
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = short.MaxValue;
             canvasObject.AddComponent<CanvasScaler>();
+            // Markers ignore raycasts; only the results panel (mobile) receives taps
+            canvasObject.AddComponent<GraphicRaycaster>();
 
             var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             foreach (Marker marker in Enum.GetValues(typeof(Marker)))
