@@ -318,11 +318,10 @@ namespace Cgs.Performance
             StartupClocks.PublishWebResult(json);
             WriteResultFile(json);
 
-            var ok = IsSuccess();
 #if UNITY_ANDROID || UNITY_IOS
-            ShowResults(ok);
+            ShowResults(IsSuccess());
 #elif UNITY_STANDALONE && !UNITY_EDITOR
-            Application.Quit(ok ? 0 : 1);
+            Application.Quit(IsSuccess() ? 0 : 1);
 #endif
         }
 
@@ -402,11 +401,11 @@ namespace Cgs.Performance
 
             json.Append('}');
             AppendString(json, "outcome", IsSuccess() ? StartupTimelineSession.OutcomeOk : StartupTimelineSession.OutcomeFailed);
-            var failed = !session.HasMark(StartupMilestone.MainMenuInteractive)
-                ? "mainMenuInteractive"
-                : session.FailedMilestone == null
-                    ? null
-                    : StartupTimelineSession.ToCamelCase(session.FailedMilestone);
+            string failed = null;
+            if (!session.HasMark(StartupMilestone.MainMenuInteractive))
+                failed = "mainMenuInteractive";
+            else if (session.FailedMilestone != null)
+                failed = StartupTimelineSession.ToCamelCase(session.FailedMilestone);
             json.Append(",\"failedMilestone\":").Append(failed == null ? "null" : "\"" + failed + "\"");
             json.Append(",\"launch\":").Append(_launchJson ?? "null");
             json.Append(",\"play\":").Append(_playJson ?? "null");
