@@ -305,21 +305,24 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 |---|---|---|---|---|---|---|---|
 | Lenovo IdeaPad Y510P | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneLinux64`, commit `37fc9fe6`) | 1119 / 1176 ms | 188 / 202 ms | 1371 / 1444 ms | 498 / 560 ms | 0 of 30 |
 | Lenovo IdeaPad Y510P | First install | 1.171.24 (`cgs-StandaloneLinux64`, commit `37fc9fe6`) | 5905 / 5955 ms | 3014 / 3017 ms | 10919 / 10967 ms | 498 / 560 ms | 0 of 30 |
-| Surface Laptop Studio | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 1428 / 3395 ms | 123 / 211 ms | 1626 / 5342 ms | Unavailable: no Windows reference build yet | 0 of 30 |
-| Surface Laptop Studio | First install | – | Not measured yet | | | | |
+| Surface Laptop Studio | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 1428 / 3395 ms | 123 / 211 ms | 1626 / 5342 ms | 785 / 826 ms | 0 of 30 |
+| Surface Laptop Studio | First install | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 3932 / 4313 ms | 261 / 320 ms | 4396 / 4725 ms | 785 / 826 ms | 0 of 30 |
 
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
   launch budget at p95 on this laptop (560 ms), so its launch budget needs an exception stated relative to the
   reference build. First-install runs used `first_install.py`'s method (an empty `XDG_CONFIG_HOME` per run), so CGS
-  had no saved data. On first
-  install, the Main Menu becomes interactive about 5.5 s after the first managed callback, because the bundled games
-  are copied before it accepts input; after Start Game, the Play screen takes about 2.1 s to load and the first card
-  action follows about 0.9 s after the table is ready.
+  had no saved data. On first install, the Main Menu becomes interactive about 5.5 s after the first managed
+  callback, because the bundled games are copied before it accepts input; after Start Game, the Play screen takes
+  about 2.1 s to load and the first card action follows about 0.9 s after the table is ready.
 - **Surface Laptop Studio** (2026-11-15, direct launch, 30 runs, plugged in, Best performance power mode, NVIDIA
   GPU). 28 of the 30 runs reached the Main Menu in 1327–1510 ms; the p95 values come from two slow runs: the first
   launch (3395 ms to the menu) and run 29 (8804 ms, almost all of it before the Main Menu's first frame), which looks
   like a background Windows task. An earlier 30-run attempt on the default power mode slowed by about 1 s per phase
   after its sixth run (launch → menu median 2738 ms), so run this laptop plugged in, in Best performance, after it
-  has cooled. The reference build needs a Windows machine with Unity 6000.6.8f1 and the Visual Studio C++ tools to
-  build.
+  has cooled. The reference build alone misses the 500 ms launch budget here too (826 ms at p95; most of it before
+  the first managed callback), so this laptop also needs a launch-budget exception relative to the reference build.
+  First-install runs used `first_install.py`; the Main Menu becomes interactive about 2.5 s after the first managed
+  callback while the bundled games are copied. Unlike the Lenovo IdeaPad, start → action on first install matched
+  repeat launches (about 260 ms). The first run of each set was a cold outlier (first install 10431 ms to the menu,
+  reference 4964 ms, right after the build); the nearest-rank p95 of 30 runs excludes one such run.
