@@ -43,7 +43,7 @@ Record each device's details here before using its results:
 | Lenovo IdeaPad Y510P | Ubuntu 26.04.1 LTS, GNOME on Wayland | Intel Core i7-4700MQ (4 cores, 8 threads, 2.4–3.4 GHz) | NVIDIA GeForce GT 750M with the open-source nouveau driver (OpenGL 4.3, Mesa 26.0.8) | 8 GB (7.2 GB usable) | SSD (Kingston A400, 240 GB) | Partly. The CPU and OpenGL 4.3 meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); Ubuntu 26.04 (supported: 22.04 and 24.04) and the nouveau driver (supported: NVIDIA's proprietary driver) are outside them |
 | Galaxy Z Flip 3 | | Snapdragon 888 | Adreno 660 | 8 GB | UFS | |
 | iPhone 11 | | A13 | | 4 GB | | |
-| Steam Deck | SteamOS | | | 16 GB | | |
+| Steam Deck (LCD, "Jupiter") | SteamOS 3.8.28; Desktop Mode (KDE Plasma on Wayland) for these measurements | AMD Custom APU 0405 (Zen 2, 4 cores, 8 threads) | AMD Custom GPU 0405 (RDNA 2) with Mesa radeonsi; the player used OpenGL 4.6 | 16 GB (14 GiB usable) | SSD (NVMe, Transcend TS256GMTE352T, 256 GB) | Partly. The CPU, GPU, and AMD Mesa driver meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); SteamOS and KDE Plasma are not listed (supported: Ubuntu 22.04 and 24.04 with GNOME) |
 | Pixel Fold 10 | | | | | | |
 | iPad (9th generation) | | A13 | | 3 GB | | |
 | Mac mini (M1) | | Apple M1 | | | SSD | |
@@ -307,6 +307,9 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Lenovo IdeaPad Y510P | First install | 1.171.24 (`cgs-StandaloneLinux64`, commit `37fc9fe6`) | 5905 / 5955 ms | 3014 / 3017 ms | 10919 / 10967 ms | 498 / 560 ms | 0 of 30 |
 | Surface Laptop Studio | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 1428 / 3395 ms | 123 / 211 ms | 1626 / 5342 ms | 785 / 826 ms | 0 of 30 |
 | Surface Laptop Studio | First install | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 3932 / 4313 ms | 261 / 320 ms | 4396 / 4725 ms | 785 / 826 ms | 0 of 30 |
+| Steam Deck (LCD) | Repeat launch, saved data, direct | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 1782 / 1903 ms | 212 / 235 ms | 2103 / 2273 ms | 1146 / 1199 ms | 0 of 30 |
+| Steam Deck (LCD) | First install, direct | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 1841 / 1924 ms | 214 / 232 ms | 2160 / 2237 ms | 1146 / 1199 ms | 0 of 30 |
+| Steam Deck (LCD) | Repeat launch, saved data, through Steam | 1.171.24 (Steam `prerelease`) | Not measured yet | | | | |
 
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
@@ -326,3 +329,10 @@ Notes:
   callback while the bundled games are copied. Unlike the Lenovo IdeaPad, start → action on first install matched
   repeat launches (about 260 ms). The first run of each set was a cold outlier (first install 10431 ms to the menu,
   reference 4964 ms, right after the build); the nearest-rank p95 of 30 runs excludes one such run.
+- **Steam Deck (LCD)** (2026-11-15, Desktop Mode, 30 runs per row, on battery at 98%). Launched directly from the
+  Steam installation, over SSH with `DISPLAY=:0 WAYLAND_DISPLAY=wayland-0 XDG_RUNTIME_DIR=/run/user/1000`. The
+  reference build alone misses the 500 ms launch budget (1199 ms at p95), so the Deck also needs a launch-budget
+  exception relative to the reference build. First install added only about 60 ms here: the fresh data folder was
+  confirmed to receive the bundled games (13 MB), which this device copies quickly, unlike the Lenovo IdeaPad (about
+  5.5 s). Direct launches change Unity's `Screenmanager Resolution Use Native` preference, so back up
+  `~/.config/unity3d/Finol Digital LLC/Card Game Simulator/prefs` before them and restore it afterwards.
