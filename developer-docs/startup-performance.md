@@ -41,7 +41,7 @@ Record each device's details here before using its results:
 | Device | OS | CPU | GPU | RAM | Disk | Meets Unity 6.6 player requirements? |
 |---|---|---|---|---|---|---|
 | Lenovo IdeaPad Y510P | Ubuntu 26.04.1 LTS, GNOME on Wayland | Intel Core i7-4700MQ (4 cores, 8 threads, 2.4–3.4 GHz) | NVIDIA GeForce GT 750M with the open-source nouveau driver (OpenGL 4.3, Mesa 26.0.8) | 8 GB (7.2 GB usable) | SSD (Kingston A400, 240 GB) | Partly. The CPU and OpenGL 4.3 meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); Ubuntu 26.04 (supported: 22.04 and 24.04) and the nouveau driver (supported: NVIDIA's proprietary driver) are outside them |
-| Galaxy Z Flip 3 | | Snapdragon 888 | Adreno 660 | 8 GB | UFS | |
+| Galaxy Z Flip 3 (SM-F711U1) | Android 15, One UI 7.0 (AP3A.240905.015.A2.F711U1UESIKZH2) | Snapdragon 888 | Adreno 660 (OpenGL ES 3.2, Vulkan); 120 Hz display | 8 GB | UFS, 256 GB | Yes. Android 15 on ARM64 with OpenGL ES 3.2 and Vulkan meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 | iPhone 11 | | A13 | | 4 GB | | |
 | Steam Deck (LCD, "Jupiter") | SteamOS 3.8.28; Desktop Mode (KDE Plasma on Wayland) for these measurements | AMD Custom APU 0405 (Zen 2, 4 cores, 8 threads) | AMD Custom GPU 0405 (RDNA 2) with Mesa radeonsi; the player used OpenGL 4.6 | 16 GB (14 GiB usable) | SSD (NVMe, Transcend TS256GMTE352T, 256 GB) | Partly. The CPU, GPU, and AMD Mesa driver meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); SteamOS and KDE Plasma are not listed (supported: Ubuntu 22.04 and 24.04 with GNOME) |
 | Pixel Fold 10 | | | | | | |
@@ -314,6 +314,8 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Steam Deck (LCD) | Repeat launch, saved data, direct | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 1782 / 1903 ms | 212 / 235 ms | 2103 / 2273 ms | 1146 / 1199 ms | 0 of 30 |
 | Steam Deck (LCD) | First install, direct | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 1841 / 1924 ms | 214 / 232 ms | 2160 / 2237 ms | 1146 / 1199 ms | 0 of 30 |
 | Steam Deck (LCD) | Repeat launch, saved data, through Steam | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 6515 / 8071 ms | 224 / 259 ms | 6794 / 8351 ms | 1146 / 1199 ms (direct) | 0 of 30 |
+| Galaxy Z Flip 3 | Repeat launch, saved data (process stopped) | 1.171.24 (Google Play beta, version code 1171024) | 1655 / 2315 ms | 229 / 249 ms | 1951 / 2625 ms | Pending | 0 of 30 |
+| Galaxy Z Flip 3 | First install (app data cleared) | 1.171.24 (Google Play beta, version code 1171024) | 1832 / 2045 ms | 225 / 239 ms | 2129 / 2403 ms | Pending | 0 of 30 |
 
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
@@ -347,3 +349,10 @@ Notes:
   (`_v2-entry-point`, `capsule-capture-libs`) before Unity starts. Steam Cloud's launch scan itself took under 1 s,
   although it watches 1183 files (110 MB) in the legacy `~/.config/unity3d/FinolDigital/CardGameSimulator` folder
   rather than the current `Finol Digital LLC/Card Game Simulator` folder.
+- **Galaxy Z Flip 3** (2026-11-16, unfolded, 120 Hz, on battery, over wireless debugging, 30 runs per row). Launch →
+  menu is Android's "Fully drawn" time. An earlier repeat set on a wireless charger reached thermal status 3
+  (severe; skin 44 °C) and slowed by about 170 ms halfway through; it was discarded. Even off the charger, 30
+  back-to-back launches kept the phone at thermal status 1–3, but launch times stayed flat, so let it cool to status
+  0 or 1 (`adb shell dumpsys thermalservice`) before each set and run it off the charger. In the repeat row, the p95
+  comes from the first two launches (3335 and 2315 ms); the other 28 took 1601–1738 ms. First install (`--clear-data`)
+  added about 180 ms at the median.
