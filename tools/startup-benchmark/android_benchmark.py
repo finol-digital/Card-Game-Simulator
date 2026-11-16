@@ -9,6 +9,9 @@ so this is launch intent -> interactive Main Menu on the system clock), and the 
 intervals use the app's elapsedRealtime-consistent milestones measured from that same interactive point.
 
   python3 android_benchmark.py --runs 30 --csv zflip3.csv
+
+First install: --clear-data clears the app's data (`pm clear`) before every run, so each launch starts like a fresh
+install. This permanently deletes the app's games, decks, and settings on the device.
 """
 
 from __future__ import annotations
@@ -58,6 +61,10 @@ def run_once(args, run_index: int) -> stats.RunRecord:
     run_id = str(run_index)
     package = args.package
     adb(args, "shell", "am", "force-stop", package)
+    if args.clear_data:
+        cleared = adb(args, "shell", "pm", "clear", package)
+        if "Success" not in (cleared.stdout or ""):
+            return stats.RunRecord(run_id, False, "clearDataFailed")
     adb(args, "logcat", "-c")
     time.sleep(args.settle)
     link = f"cardgamesim://main?benchmark=1&run={run_id}&delay={args.start_delay_ms:g}"
@@ -136,6 +143,8 @@ def main() -> int:
     parser.add_argument("--settle", type=float, default=2.0, help="Seconds to idle after force-stop")
     parser.add_argument("--start-delay-ms", type=float, default=0)
     parser.add_argument("--csv")
+    parser.add_argument("--clear-data", action="store_true",
+                        help="First install: clear the app's data before each run (deletes it permanently)")
     args = parser.parse_args()
 
     records = []
@@ -148,7 +157,7 @@ def main() -> int:
     report = stats.summarize(records, {"launchToMenuMs": stats.LAUNCH_TO_MENU_BUDGET_MS,
                                        "launchToActionMs": stats.LAUNCH_TO_ACTION_BUDGET_MS,
                                        "startToActionMs": stats.START_TO_ACTION_BUDGET_MS})
-    report["condition"] = "android-terminated-process"
+    report["condition"] = "android-first-install" if args.clear_data else "android-terminated-process"
     stats.write_reports(records, report, args.csv)
     return 0 if report["failures"] == 0 else 1
 

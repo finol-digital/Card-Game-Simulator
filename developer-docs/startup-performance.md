@@ -180,6 +180,10 @@ Cards. Then run:
 python3 tools/startup-benchmark/android_benchmark.py --runs 30 --csv zflip3.csv
 ```
 
+For the first-install condition, add `--clear-data`: it clears CGS's app data (`pm clear`) before every run. Play
+builds cannot be backed up first, so this permanently deletes CGS's games, decks, and settings on that device; run it
+last, and only on a device whose CGS data can be lost.
+
 With both phones connected, pick one with `--serial <id>` (from `adb devices`). For the Pixel Fold 10, keep it in
 one posture for a whole run set and record it (for example `--csv pixelfold10-unfolded.csv`).
 
