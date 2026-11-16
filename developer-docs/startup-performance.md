@@ -309,7 +309,7 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Surface Laptop Studio | First install | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 3932 / 4313 ms | 261 / 320 ms | 4396 / 4725 ms | 785 / 826 ms | 0 of 30 |
 | Steam Deck (LCD) | Repeat launch, saved data, direct | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 1782 / 1903 ms | 212 / 235 ms | 2103 / 2273 ms | 1146 / 1199 ms | 0 of 30 |
 | Steam Deck (LCD) | First install, direct | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 1841 / 1924 ms | 214 / 232 ms | 2160 / 2237 ms | 1146 / 1199 ms | 0 of 30 |
-| Steam Deck (LCD) | Repeat launch, saved data, through Steam | 1.171.24 (Steam `prerelease`) | Not measured yet | | | | |
+| Steam Deck (LCD) | Repeat launch, saved data, through Steam | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 6515 / 8071 ms | 224 / 259 ms | 6794 / 8351 ms | 1146 / 1199 ms (direct) | 0 of 30 |
 
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
@@ -336,3 +336,10 @@ Notes:
   confirmed to receive the bundled games (13 MB), which this device copies quickly, unlike the Lenovo IdeaPad (about
   5.5 s). Direct launches change Unity's `Screenmanager Resolution Use Native` preference, so back up
   `~/.config/unity3d/Finol Digital LLC/Card Game Simulator/prefs` before them and restore it afterwards.
+  Through Steam (plugged in), launch → menu was 5367–8560 ms, about 4.7 s more than direct at the median, while the
+  first managed callback → menu interval matched direct launches (933 ms median). Steam's `console-linux.txt` shows
+  where the extra time goes, to 1 s resolution: about 3–4 s in the Steam client before it starts the game (session
+  start, the Steam Cloud check, and Steam Input setup), then about 2 s for the Steam Linux Runtime container
+  (`_v2-entry-point`, `capsule-capture-libs`) before Unity starts. Steam Cloud's launch scan itself took under 1 s,
+  although it watches 1183 files (110 MB) in the legacy `~/.config/unity3d/FinolDigital/CardGameSimulator` folder
+  rather than the current `Finol Digital LLC/Card Game Simulator` folder.
