@@ -1201,5 +1201,12 @@ namespace Cgs.Play
             InputSystem.actions.FindAction(Tags.PlayGameHelp).performed -= InputPlayHelp;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
+
+        protected void OnDestroy()
+        {
+            // Other screens check Instance; it must not keep pointing at a Play screen that has closed
+            if (Instance == this)
+                Instance = null;
+        }
     }
 }

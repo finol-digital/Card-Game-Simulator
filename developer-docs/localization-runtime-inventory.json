@@ -504,23 +504,13 @@
     },
     {
       "source": "Assets/Scripts/Cgs/Menu/MainMenu.cs",
-      "line": 437,
-      "key": "prompt.quit"
-    },
-    {
-      "source": "Assets/Scripts/Cgs/Menu/TitleScreen.cs",
-      "line": 23,
+      "line": 52,
       "key": "title.version"
     },
     {
-      "source": "Assets/Scripts/Cgs/Menu/TitleScreen.cs",
-      "line": 98,
-      "key": "title.start.keyboard"
-    },
-    {
-      "source": "Assets/Scripts/Cgs/Menu/TitleScreen.cs",
-      "line": 100,
-      "key": "title.start.touch"
+      "source": "Assets/Scripts/Cgs/Menu/MainMenu.cs",
+      "line": 437,
+      "key": "prompt.quit"
     },
     {
       "source": "Assets/Scripts/Cgs/Play/PlayController.cs",

@@ -677,8 +677,8 @@ namespace Cgs.CardGameView.Multiplayer
                         PlaceHolderCardZone = cardZone;
                 }
             }
-            else if (PlaceHolderCardZone != null
-                     && PlaceHolderCardZone.transform.parent == PlayController.Instance?.PlayAreaCardZone.transform
+            else if (PlaceHolderCardZone != null && PlayController.Instance != null
+                     && PlaceHolderCardZone.transform.parent == PlayController.Instance.PlayAreaCardZone.transform
                      && !RectTransformUtility.RectangleContainsScreenPoint(
                          (RectTransform)PlaceHolderCardZone.transform,
                          CurrentPointerEventData.position))

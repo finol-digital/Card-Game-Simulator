@@ -65,8 +65,8 @@ not verify the Steam overlay or actual Deck hardware.
 On a Steam-launched build on physical Deck hardware (native Linux and the Windows
 build under Proton if both are distributed):
 
-1. Start with the built-in controls. Confirm controller button labels on the title
-   screen, menus, card/deck actions, and play help. Move the trackpad and gyro;
+1. Start with the built-in controls. Confirm controller button labels on the Main
+   Menu, other menus, card/deck actions, and play help. Move the trackpad and gyro;
    prompts must remain controller prompts. Connect a keyboard/mouse, press a key
    or click, then use the controller again; prompts should follow the active device.
 2. Focus Player Name, Deck Name, Id, Set Code, Rank, and card search using both
@@ -77,7 +77,7 @@ build under Proton if both are distributed):
    directly between fields and close their containing menu. Also check multiline
    text, validation, selection replacement, and non-ASCII text entry.
 4. Verify the framebuffer is 1280 × 800, with no letterboxing/pillarboxing, from
-   first launch and after previously using a different display mode. Check title,
+   first launch and after previously using a different display mode. Check the Main Menu,
    settings, deck/card editors, gameplay, and modal dialogs for clipped controls.
 5. Launch the same build without Steam and confirm ordinary desktop input still
    works. Confirm mobile/WebGL builds contain no Steam integration assembly.

@@ -70,14 +70,14 @@ Reference devices, chosen by the maintainer:
 
 | Device | Platform | Build under test | How it is obtained |
 |---|---|---|---|
-| 16-year-old Lenovo laptop | Windows (or Linux) desktop | `cgs-StandaloneWindows64` (or `cgs-StandaloneWindows` / `cgs-StandaloneLinux64`) | Artifact of the develop → main PR run of `main.yml` |
+| Lenovo IdeaPad Y510P | Linux desktop (Ubuntu) | `cgs-StandaloneLinux64` | Artifact of the develop → main PR run of `main.yml` |
 | Samsung Galaxy Z Flip 3 | Android | Google Play beta track build | `deployToGooglePlayTest` on the PR run |
 | iPhone 11 | iOS | TestFlight build | `deployToAppleTest` on the PR run |
 | Steam Deck | Linux (SteamOS) | Steam `prerelease` branch | `deployToSteam` on the PR run |
 | Google Pixel Fold 10 | Android (foldable) | Google Play beta track build | `deployToGooglePlayTest` on the PR run |
 | iPad (9th generation) | iPadOS | TestFlight build (the iOS build targets iPhone and iPad) | `deployToAppleTest` on the PR run |
 | Mac mini (M1) | macOS (Apple silicon) | `cgs-StandaloneOSX` (`Card Game Simulator.app`); optionally the Steam `prerelease` branch | Artifact of the PR's `buildWithMac` job; `deployToSteam` |
-| Microsoft Surface Book | Windows | `cgs-StandaloneWindows64`; optionally the Steam `prerelease` branch | Artifact of the PR run; `deployToSteam` |
+| Microsoft Surface Laptop Studio | Windows | `cgs-StandaloneWindows64`; optionally the Steam `prerelease` branch | Artifact of the PR run; `deployToSteam` |
 
 The web version is measured on the Firebase `preview` channel from `deployToFirebaseTest`, using the Lenovo laptop and the Z Flip 3 browsers.
 
@@ -90,7 +90,7 @@ Consequences for the harnesses and benchmark mode:
 - **iPad (9th generation):** measured like the iPhone 11, with video to the markers and the TestFlight result channels, on its 60 Hz display.
 - **Pixel Fold 10:** measured like the Z Flip 3. Record the posture (folded or unfolded) and the display refresh rate with each result, and report the two postures separately if both are measured, because the window size and refresh rate differ.
 - **Mac mini (M1):** measured with the desktop harness against the artifact's `Card Game Simulator.app/Contents/MacOS/Card Game Simulator`. Python's `time.monotonic_ns()` and the player's `Stopwatch` both read `mach_absolute_time` on macOS; task 1.2 validates that on this device. Clear the download quarantine (`xattr -dr com.apple.quarantine`) before timing, so Gatekeeper checks are not counted. If it is measured through Steam, report that separately, as for the Steam Deck.
-- **Surface Book:** measured with the desktop harness against the Windows artifact. Record whether the keyboard base (with its discrete GPU, on models that have one) is attached, because that changes which GPU the player uses.
+- **Surface Laptop Studio:** measured with the desktop harness against the Windows artifact. It has switchable Intel and NVIDIA GPUs, so record which one the player used (from its `Player.log`) and the power mode, because both change the results.
 - **Steam Deck:** measure both launching through Steam (as players do) and running the binary directly from desktop mode, to separate Steam client overhead. Both use the run-file handoff from D1, so the Steam-launched clock starts before the Steam launch request.
 - **Old laptop:** this is the lowest-end device. Record its OS, CPU, GPU, RAM, and disk type (HDD or SSD) in the guide, and confirm it meets Unity 6's minimum player requirements before treating its results as budget evidence.
 - **Minimal reference build:** this is a separate project, so it is not built by `main.yml`. It is built locally, and the maintainer decides whether to add it to CI, because agents do not edit `.github`.

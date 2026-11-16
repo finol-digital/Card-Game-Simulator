@@ -219,7 +219,7 @@
     },
     "common.close": {
       "text": "Close",
-      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Close Button in Assets/Scenes/TitleScreen.unity. Keep control labels concise.",
+      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Close Button in Assets/Resources/CardGameManager.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },
@@ -231,7 +231,7 @@
     },
     "common.copy": {
       "text": "Copy",
-      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Copy Button in Assets/Scenes/TitleScreen.unity. Keep control labels concise.",
+      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Copy Button in Assets/Resources/CardGameManager.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },
@@ -365,7 +365,7 @@
     },
     "common.downloading": {
       "text": "Downloading...",
-      "context": "Interface label or button at CardGameManager/ProgressBar/Frame/Loading Message in Assets/Scenes/TitleScreen.unity. Keep control labels concise.",
+      "context": "Interface label or button at CardGameManager/ProgressBar/Frame/Loading Message in Assets/Resources/CardGameManager.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },
@@ -761,7 +761,7 @@
     },
     "common.no": {
       "text": "No",
-      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Response ButtonGroup/No Button in Assets/Scenes/TitleScreen.unity. Keep control labels concise.",
+      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Response ButtonGroup/No Button in Assets/Resources/CardGameManager.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },
@@ -791,7 +791,7 @@
     },
     "common.ok": {
       "text": "OK",
-      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Response ButtonGroup/Yes Button in Assets/Scenes/TitleScreen.unity. Keep control labels concise.",
+      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Response ButtonGroup/Yes Button in Assets/Resources/CardGameManager.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },
@@ -1037,7 +1037,7 @@
     },
     "common.share": {
       "text": "Share",
-      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Share Button in Assets/Scenes/TitleScreen.unity. Keep control labels concise.",
+      "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Share Button in Assets/Resources/CardGameManager.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },
@@ -2380,24 +2380,6 @@
     "sharing.unknown": {
       "text": "Sharing closed. Couldn't confirm whether the content was shared or copied.",
       "context": "CGS runtime sharing.unknown presentation; keep supplied names and model data unchanged.",
-      "arguments": {},
-      "smart": false
-    },
-    "title.start.gamepad": {
-      "text": "Press Any Button",
-      "context": "Title screen start prompt when a gamepad or Steam Deck is active. Button refers to a physical controller button.",
-      "arguments": {},
-      "smart": false
-    },
-    "title.start.keyboard": {
-      "text": "Press Any Key",
-      "context": "Title screen instruction on desktop; any key opens the main menu.",
-      "arguments": {},
-      "smart": false
-    },
-    "title.start.touch": {
-      "text": "Tap anywhere to start",
-      "context": "Interface label or button at TitleScreen Canvas/Footer/Start Text in Assets/Scenes/TitleScreen.unity. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },

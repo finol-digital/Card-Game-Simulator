@@ -26,28 +26,28 @@ opened, and on later pushes to `develop` that touch `Assets`, `Packages`, or `Pr
 
 | Device | Build | Where to get it | Harness |
 |---|---|---|---|
-| Lenovo laptop (about 2010) | `cgs-StandaloneWindows64` (or `cgs-StandaloneWindows` / `cgs-StandaloneLinux64`, depending on its OS) | Artifacts of the PR's "Test, Build, and Deploy with GameCI" run | `desktop_benchmark.py --player` |
+| Lenovo IdeaPad Y510P (Ubuntu) | `cgs-StandaloneLinux64` | Artifacts of the PR's "Test, Build, and Deploy with GameCI" run | `desktop_benchmark.py --player` |
 | Samsung Galaxy Z Flip 3 | Google Play beta track | Play Store (beta tester) | `android_benchmark.py` |
 | iPhone 11 | TestFlight | TestFlight | `ios_video_benchmark.py` (video) |
 | Steam Deck | Steam `prerelease` branch | Steam > Properties > Betas | `desktop_benchmark.py --steam` and `--player` |
 | Google Pixel Fold 10 | Google Play beta track | Play Store (beta tester) | `android_benchmark.py` (record the posture) |
 | iPad (9th generation) | TestFlight | TestFlight | `ios_video_benchmark.py` (video) |
 | Mac mini (M1) | `cgs-StandaloneOSX` (`Card Game Simulator.app`); optionally Steam `prerelease` | Artifacts of the PR's run; Steam > Properties > Betas | `desktop_benchmark.py --player` (optionally `--steam`) |
-| Microsoft Surface Book | `cgs-StandaloneWindows64`; optionally Steam `prerelease` | Artifacts of the PR's run; Steam > Properties > Betas | `desktop_benchmark.py --player` (optionally `--steam`) |
+| Microsoft Surface Laptop Studio | `cgs-StandaloneWindows64`; optionally Steam `prerelease` | Artifacts of the PR's run; Steam > Properties > Betas | `desktop_benchmark.py --player` (optionally `--steam`) |
 | Web (laptop and Z Flip 3 browsers) | Firebase `preview` channel | URL in the PR's Firebase deploy step | `web_benchmark.mjs` |
 
 Record each device's details here before using its results:
 
 | Device | OS | CPU | GPU | RAM | Disk | Meets Unity 6.6 player requirements? |
 |---|---|---|---|---|---|---|
-| Lenovo laptop | _to fill_ | | | | HDD / SSD | Check the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
+| Lenovo IdeaPad Y510P | Ubuntu 26.04.1 LTS, GNOME on Wayland | Intel Core i7-4700MQ (4 cores, 8 threads, 2.4–3.4 GHz) | NVIDIA GeForce GT 750M with the open-source nouveau driver (OpenGL 4.3, Mesa 26.0.8) | 8 GB (7.2 GB usable) | SSD (Kingston A400, 240 GB) | Partly. The CPU and OpenGL 4.3 meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); Ubuntu 26.04 (supported: 22.04 and 24.04) and the nouveau driver (supported: NVIDIA's proprietary driver) are outside them |
 | Galaxy Z Flip 3 | | Snapdragon 888 | Adreno 660 | 8 GB | UFS | |
 | iPhone 11 | | A13 | | 4 GB | | |
 | Steam Deck | SteamOS | | | 16 GB | | |
 | Pixel Fold 10 | | | | | | |
 | iPad (9th generation) | | A13 | | 3 GB | | |
 | Mac mini (M1) | | Apple M1 | | | SSD | |
-| Surface Book | | | integrated / discrete (base attached?) | | SSD | |
+| Surface Laptop Studio | Windows 11 Home (10.0.26300) | Intel Core i7-11370H (4 cores, 8 threads, 3.3–4.8 GHz) | Intel Iris Xe and NVIDIA GeForce RTX 3050 Ti Laptop GPU (switchable; which one the player used is in its `Player.log`) | 16 GB | SSD (Samsung MZ9LQ512HALU, 512 GB) | Yes. Windows 11 x64 and DirectX 12-capable GPUs meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 
 ## What the app records
 
@@ -72,8 +72,8 @@ becomes interactive. Resuming from the background logs a `resume` line with its 
 
 ## Benchmark mode
 
-Benchmark mode presses through the title screen (until it is removed), waits for the Main Menu, and declines a
-first-launch welcome prompt. It then chooses Start Game for Standard Playing Cards, accepts its start decks, and
+Benchmark mode waits for the Main Menu, which CGS opens directly, and declines a first-launch welcome
+prompt. It then chooses Start Game for Standard Playing Cards, accepts its start decks, and
 confirms the starting-hand dealer, which is the first card action. Finally it delivers a JSON result.
 
 **Saved data:**
@@ -113,7 +113,7 @@ The scripts are in `tools/startup-benchmark/` and need Python 3.10 or later. Eac
 count, and pass/fail per interval. Runs flagged `gameSwitched`, with a start delay, or with a run-file error are
 excluded from budget statistics.
 
-### Desktop (Lenovo laptop, Linux, Steam Deck direct)
+### Desktop (Lenovo IdeaPad Y510P, Linux, Steam Deck direct)
 
 ```bash
 python3 tools/startup-benchmark/desktop_benchmark.py --player "/path/to/Card Game Simulator.x86_64" \
@@ -135,9 +135,10 @@ python3 tools/startup-benchmark/desktop_benchmark.py \
   --build <Application.version> --runs 30 --csv macmini-direct.csv
 ```
 
-### Surface Book
+### Surface Laptop Studio
 
-Same as the Lenovo laptop, with the Windows artifact. Record whether the keyboard base is attached.
+Same as the Lenovo IdeaPad, with the Windows artifact. Run it plugged in, and record the power mode and whether the
+laptop was warm from earlier use, because this laptop throttles.
 
 ### Steam Deck through Steam
 
@@ -259,10 +260,32 @@ A local Mono Linux player is enough to check that benchmark mode works end to en
 | Build | Launch → menu (median / p95) | Start → action | Launch → action |
 |---|---|---|---|
 | CGS, Mono, before any optimization | 2272 / 2352 ms | 525 / 560 ms | 2867 / 2936 ms |
+| CGS, Mono, opens directly on the Main Menu (2026-11-14) | 1757 / 1824 ms | 569 / 592 ms | 2720 / 2807 ms |
 | Reference build, IL2CPP | 500 / 533 ms | – | – |
+
+Opening directly on the Main Menu removed the title screen's scene load and the Main Menu's 100 ms input delay:
+launch → menu fell by about 515 ms at the median, and the first managed callback → menu interval fell from about
+1608 ms to 1104 ms. Start → action is unaffected by this change.
 
 ## Baselines
 
 | Device | Condition | Build | Launch → menu (median / p95) | Start → action | Launch → action | Reference launch → button | Failures |
 |---|---|---|---|---|---|---|---|
-| _To be recorded (task 1.7)_ | | | | | | | |
+| Lenovo IdeaPad Y510P | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneLinux64`, commit `37fc9fe6`) | 1119 / 1176 ms | 188 / 202 ms | 1371 / 1444 ms | 498 / 560 ms | 0 of 30 |
+| Lenovo IdeaPad Y510P | First install | 1.171.24 (`cgs-StandaloneLinux64`, commit `37fc9fe6`) | 5905 / 5955 ms | 3014 / 3017 ms | 10919 / 10967 ms | 498 / 560 ms | 0 of 30 |
+| Surface Laptop Studio | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 2738 / 2940 ms | 256 / 318 ms | 3192 / 3405 ms | Unavailable: no Windows reference build yet | 0 of 30 |
+| Surface Laptop Studio | First install | – | Not measured yet | | | | |
+
+Notes:
+- **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
+  launch budget at p95 on this laptop (560 ms), so its launch budget needs an exception stated relative to the
+  reference build. First-install runs each started with an empty `XDG_CONFIG_HOME`, so CGS had no saved data. On first
+  install, the Main Menu becomes interactive about 5.5 s after the first managed callback, because the bundled games
+  are copied before it accepts input; after Start Game, the Play screen takes about 2.1 s to load and the first card
+  action follows about 0.9 s after the table is ready.
+- **Surface Laptop Studio** (2026-11-15, direct launch, 30 runs). Runs 2–6 reached the Main Menu in 1678–2037 ms
+  (start → action 142–183 ms); from run 7 on, every phase was slower (launch → menu 2621–2940 ms, start → action
+  229–318 ms), which looks like the CPU throttling (heat or power mode) rather than CGS. The table reports all 30
+  runs. Repeat this row plugged in, in the Best performance power mode, after the laptop has cooled, before using it
+  as budget evidence. The reference build needs a Windows machine with Unity 6000.6.8f1 and the Visual Studio C++
+  tools to build.

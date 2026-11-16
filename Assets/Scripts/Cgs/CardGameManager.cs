@@ -437,29 +437,33 @@ namespace Cgs
             GameContentPresentation.Select(Current);
         }
 
+        /// <summary>The link that launched CGS; tests substitute it to simulate a cold start from a link.</summary>
+        internal static Func<string> LaunchDeepLink = () => Application.absoluteURL;
+
         private void CheckDeepLinks()
         {
             Application.deepLinkActivated -= OnDeepLinkActivated;
             Application.deepLinkActivated += OnDeepLinkActivated;
 
             Debug.Log("Checking Deep Links...");
-            if (string.IsNullOrEmpty(Application.absoluteURL))
+            var launchDeepLink = LaunchDeepLink();
+            if (string.IsNullOrEmpty(launchDeepLink))
             {
                 Debug.Log("No Start Deep Link");
                 return;
             }
 
-            if (!Uri.IsWellFormedUriString(Application.absoluteURL, UriKind.RelativeOrAbsolute))
+            if (!Uri.IsWellFormedUriString(launchDeepLink, UriKind.RelativeOrAbsolute))
             {
-                Debug.LogWarning("Start Deep Link malformed: " + Application.absoluteURL);
+                Debug.LogWarning("Start Deep Link malformed: " + launchDeepLink);
                 return;
             }
 
-            Debug.Log("Start Deep Link: " + Application.absoluteURL);
-            OnDeepLinkActivated(Application.absoluteURL);
+            Debug.Log("Start Deep Link: " + launchDeepLink);
+            OnDeepLinkActivated(launchDeepLink);
         }
 
-        private void OnDeepLinkActivated(string deepLink)
+        internal void OnDeepLinkActivated(string deepLink)
         {
             Debug.Log("OnDeepLinkActivated!");
             // Benchmark links are honored only when they launch CGS (see StartupTimeline); a benchmark link that
@@ -477,31 +481,26 @@ namespace Cgs
         private static void DeepLinkLoadScene(string deepLink)
         {
             var scene = GetScene(deepLink);
+            int sceneIndex;
             if ("main".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::main");
-                SceneManager.LoadScene(Tags.MainMenuSceneIndex);
-            }
+                sceneIndex = Tags.MainMenuSceneIndex;
             else if ("play".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::play");
-                SceneManager.LoadScene(Tags.PlayModeSceneIndex);
-            }
+                sceneIndex = Tags.PlayModeSceneIndex;
             else if ("decks".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::decks");
-                SceneManager.LoadScene(Tags.DeckEditorSceneIndex);
-            }
+                sceneIndex = Tags.DeckEditorSceneIndex;
             else if ("cards".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::cards");
-                SceneManager.LoadScene(Tags.CardsExplorerSceneIndex);
-            }
+                sceneIndex = Tags.CardsExplorerSceneIndex;
             else if ("settings".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::settings");
-                SceneManager.LoadScene(Tags.SettingsSceneIndex);
-            }
+                sceneIndex = Tags.SettingsSceneIndex;
+            else
+                return;
+
+            Debug.Log("DeepLinkLoadScene::" + scene);
+            // CGS launches on the Main Menu, so a launch link to it must not load the Main Menu a second time
+            if (sceneIndex == Tags.MainMenuSceneIndex &&
+                SceneManager.GetActiveScene().buildIndex == Tags.MainMenuSceneIndex)
+                return;
+            SceneManager.LoadScene(sceneIndex);
         }
 
         private static string GetScene(string deepLink)
