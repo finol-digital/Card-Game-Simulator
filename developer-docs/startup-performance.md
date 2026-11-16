@@ -123,6 +123,19 @@ python3 tools/startup-benchmark/desktop_benchmark.py --player "/path/to/Card Gam
 On Windows, use `py` and the `.exe`. The harness writes `~/cgs-bench/run.json` with the monotonic time taken just
 before launching. `launchToMenuMs` is `launchRequestOffsetMs + mainMenuInteractive` on one clock.
 
+For the first-install condition, run `first_install.py` with the same arguments (Windows and Linux):
+
+```bash
+python3 tools/startup-benchmark/first_install.py --player "/path/to/Card Game Simulator.x86_64" \
+  --build <Application.version> --runs 30 --csv lenovo-first-install.csv
+```
+
+Every run starts with no CGS data or settings. On Linux each run gets an empty `XDG_CONFIG_HOME`, so your own data
+is not touched. On Windows your CGS data folder (`AppData\LocalLow`), cache folder (`%TEMP%`), and registry settings
+are set aside before the first run and put back when the runs end, even after a failure or Ctrl+C; the settings are
+also exported to `~/cgs-bench/cgs-settings-backup.reg`. If the script is stopped before it can put them back (for
+example, by a power loss), run it again with `--restore`.
+
 ### Mac mini (M1)
 
 Unzip the `cgs-StandaloneOSX` artifact, clear its quarantine so Gatekeeper checks are not timed, then run the
@@ -237,6 +250,24 @@ Linking the full CGS IL2CPP player needs about 3.5 GB on top of the editor. On a
 `systemd-oomd` can stop the build and everything in the same session; run it in its own scope (for example
 `systemd-run --user --scope -p MemoryHigh=5G Unity ...`) or use the PR build artifacts instead.
 
+Windows reference builds must be built on Windows. Install Unity 6000.6.8f1 with the "Windows Build Support
+(IL2CPP)" module (open `unityhub://6000.6.8f1/237b6593792b` with Unity Hub, signed in with an activated license)
+and the Visual Studio C++ build tools (`winget install Microsoft.VisualStudio.2022.BuildTools --override "--quiet
+--wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"`), then build from PowerShell:
+
+```powershell
+$reference = "$PWD\tools\startup-reference"
+$unity = Start-Process -PassThru "C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor\Unity.exe" `
+  -ArgumentList "-batchmode -quit -projectPath `"$reference`" -executeMethod ReferenceBuild.Build",
+  "-referenceTarget StandaloneWindows64 -referenceOutput `"$reference\Builds\StandaloneWindows64\Reference.exe`"",
+  "-logFile `"$reference\Logs\build.log`""
+$null = $unity.Handle  # keeps the exit code readable
+$unity.WaitForExit()
+$unity.ExitCode  # 0 when the build worked; otherwise see Logs\build.log
+```
+
+Run it from the repository root. The first build takes several minutes while Unity imports the project.
+
 Other targets are `StandaloneWindows64`, `Android` (`.apk` output), `iOS` (an Xcode project), and `WebGL`. For
 Android, install the APK and run `android_benchmark.py --package com.finoldigital.cgsstartupreference`.
 On desktop, pass `--build 6000.6.8` (the reference build's version). On iOS, launch it from its icon, record only
@@ -280,7 +311,8 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
   launch budget at p95 on this laptop (560 ms), so its launch budget needs an exception stated relative to the
-  reference build. First-install runs each started with an empty `XDG_CONFIG_HOME`, so CGS had no saved data. On first
+  reference build. First-install runs used `first_install.py`'s method (an empty `XDG_CONFIG_HOME` per run), so CGS
+  had no saved data. On first
   install, the Main Menu becomes interactive about 5.5 s after the first managed callback, because the bundled games
   are copied before it accepts input; after Start Game, the Play screen takes about 2.1 s to load and the first card
   action follows about 0.9 s after the table is ready.
