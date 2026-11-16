@@ -47,7 +47,7 @@ Record each device's details here before using its results:
 | Pixel Fold 10 | | | | | | |
 | iPad (9th generation) | | A13 | | 3 GB | | |
 | Mac mini (M1) | | Apple M1 | | | SSD | |
-| Surface Laptop Studio | Windows 11 Home (10.0.26300) | Intel Core i7-11370H (4 cores, 8 threads, 3.3–4.8 GHz) | Intel Iris Xe and NVIDIA GeForce RTX 3050 Ti Laptop GPU (switchable; which one the player used is in its `Player.log`) | 16 GB | SSD (Samsung MZ9LQ512HALU, 512 GB) | Yes. Windows 11 x64 and DirectX 12-capable GPUs meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
+| Surface Laptop Studio | Windows 11 Home (10.0.26300) | Intel Core i7-11370H (4 cores, 8 threads, 3.3–4.8 GHz) | Intel Iris Xe and NVIDIA GeForce RTX 3050 Ti Laptop GPU (switchable; the player used the NVIDIA GPU, per the `Renderer` line in its `Player.log`) | 16 GB | SSD (Samsung MZ9LQ512HALU, 512 GB) | Yes. Windows 11 x64 and DirectX 12-capable GPUs meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 
 ## What the app records
 
@@ -137,8 +137,9 @@ python3 tools/startup-benchmark/desktop_benchmark.py \
 
 ### Surface Laptop Studio
 
-Same as the Lenovo IdeaPad, with the Windows artifact. Run it plugged in, and record the power mode and whether the
-laptop was warm from earlier use, because this laptop throttles.
+Same as the Lenovo IdeaPad, with the Windows artifact. Run it plugged in, in the Best performance power mode, after
+the laptop has cooled, because it throttles otherwise. Record which GPU the player used (the `Renderer` line in
+`%USERPROFILE%\AppData\LocalLow\Finol Digital LLC\Card Game Simulator\Player.log`).
 
 ### Steam Deck through Steam
 
@@ -273,7 +274,7 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 |---|---|---|---|---|---|---|---|
 | Lenovo IdeaPad Y510P | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneLinux64`, commit `37fc9fe6`) | 1119 / 1176 ms | 188 / 202 ms | 1371 / 1444 ms | 498 / 560 ms | 0 of 30 |
 | Lenovo IdeaPad Y510P | First install | 1.171.24 (`cgs-StandaloneLinux64`, commit `37fc9fe6`) | 5905 / 5955 ms | 3014 / 3017 ms | 10919 / 10967 ms | 498 / 560 ms | 0 of 30 |
-| Surface Laptop Studio | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 2738 / 2940 ms | 256 / 318 ms | 3192 / 3405 ms | Unavailable: no Windows reference build yet | 0 of 30 |
+| Surface Laptop Studio | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneWindows64`, commit `37fc9fe6`) | 1428 / 3395 ms | 123 / 211 ms | 1626 / 5342 ms | Unavailable: no Windows reference build yet | 0 of 30 |
 | Surface Laptop Studio | First install | – | Not measured yet | | | | |
 
 Notes:
@@ -283,9 +284,10 @@ Notes:
   install, the Main Menu becomes interactive about 5.5 s after the first managed callback, because the bundled games
   are copied before it accepts input; after Start Game, the Play screen takes about 2.1 s to load and the first card
   action follows about 0.9 s after the table is ready.
-- **Surface Laptop Studio** (2026-11-15, direct launch, 30 runs). Runs 2–6 reached the Main Menu in 1678–2037 ms
-  (start → action 142–183 ms); from run 7 on, every phase was slower (launch → menu 2621–2940 ms, start → action
-  229–318 ms), which looks like the CPU throttling (heat or power mode) rather than CGS. The table reports all 30
-  runs. Repeat this row plugged in, in the Best performance power mode, after the laptop has cooled, before using it
-  as budget evidence. The reference build needs a Windows machine with Unity 6000.6.8f1 and the Visual Studio C++
-  tools to build.
+- **Surface Laptop Studio** (2026-11-15, direct launch, 30 runs, plugged in, Best performance power mode, NVIDIA
+  GPU). 28 of the 30 runs reached the Main Menu in 1327–1510 ms; the p95 values come from two slow runs: the first
+  launch (3395 ms to the menu) and run 29 (8804 ms, almost all of it before the Main Menu's first frame), which looks
+  like a background Windows task. An earlier 30-run attempt on the default power mode slowed by about 1 s per phase
+  after its sixth run (launch → menu median 2738 ms), so run this laptop plugged in, in Best performance, after it
+  has cooled. The reference build needs a Windows machine with Unity 6000.6.8f1 and the Visual Studio C++ tools to
+  build.
