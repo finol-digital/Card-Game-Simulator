@@ -314,8 +314,8 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Steam Deck (LCD) | Repeat launch, saved data, direct | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 1782 / 1903 ms | 212 / 235 ms | 2103 / 2273 ms | 1146 / 1199 ms | 0 of 30 |
 | Steam Deck (LCD) | First install, direct | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 1841 / 1924 ms | 214 / 232 ms | 2160 / 2237 ms | 1146 / 1199 ms | 0 of 30 |
 | Steam Deck (LCD) | Repeat launch, saved data, through Steam | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 6515 / 8071 ms | 224 / 259 ms | 6794 / 8351 ms | 1146 / 1199 ms (direct) | 0 of 30 |
-| Galaxy Z Flip 3 | Repeat launch, saved data (process stopped) | 1.171.24 (Google Play beta, version code 1171024) | 1655 / 2315 ms | 229 / 249 ms | 1951 / 2625 ms | Pending | 0 of 30 |
-| Galaxy Z Flip 3 | First install (app data cleared) | 1.171.24 (Google Play beta, version code 1171024) | 1832 / 2045 ms | 225 / 239 ms | 2129 / 2403 ms | Pending | 0 of 30 |
+| Galaxy Z Flip 3 | Repeat launch, saved data (process stopped) | 1.171.24 (Google Play beta, version code 1171024) | 1655 / 2315 ms | 229 / 249 ms | 1951 / 2625 ms | 619 / 678 ms | 0 of 30 |
+| Galaxy Z Flip 3 | First install (app data cleared) | 1.171.24 (Google Play beta, version code 1171024) | 1832 / 2045 ms | 225 / 239 ms | 2129 / 2403 ms | 619 / 678 ms | 0 of 30 |
 
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
@@ -355,4 +355,6 @@ Notes:
   back-to-back launches kept the phone at thermal status 1–3, but launch times stayed flat, so let it cool to status
   0 or 1 (`adb shell dumpsys thermalservice`) before each set and run it off the charger. In the repeat row, the p95
   comes from the first two launches (3335 and 2315 ms); the other 28 took 1601–1738 ms. First install (`--clear-data`)
-  added about 180 ms at the median.
+  added about 180 ms at the median. The reference build (installed from the Surface, built with Unity 6000.6.8f1)
+  took 582–687 ms to draw, so this phone also needs a launch-budget exception relative to the reference build. CGS
+  adds about 1040 ms to it at the median, more than the 620–640 ms it adds on the desktops.
