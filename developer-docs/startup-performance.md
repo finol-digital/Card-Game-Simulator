@@ -316,8 +316,8 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Steam Deck (LCD) | Repeat launch, saved data, through Steam | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 6515 / 8071 ms | 224 / 259 ms | 6794 / 8351 ms | 1146 / 1199 ms (direct) | 0 of 30 |
 | Galaxy Z Flip 3 | Repeat launch, saved data (process stopped) | 1.171.24 (Google Play beta, version code 1171024) | 1655 / 2315 ms | 229 / 249 ms | 1951 / 2625 ms | 619 / 678 ms | 0 of 30 |
 | Galaxy Z Flip 3 | First install (app data cleared) | 1.171.24 (Google Play beta, version code 1171024) | 1832 / 2045 ms | 225 / 239 ms | 2129 / 2403 ms | 619 / 678 ms | 0 of 30 |
-| Pixel 10 Pro Fold | Repeat launch, saved data (process stopped), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1327 / 1462 ms | 194 / 218 ms | 1590 / 1759 ms | Pending | 0 of 30 |
-| Pixel 10 Pro Fold | First install (app data cleared), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1380 / 1415 ms | 202 / 219 ms | 1651 / 1686 ms | Pending | 0 of 30 |
+| Pixel 10 Pro Fold | Repeat launch, saved data (process stopped), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1327 / 1462 ms | 194 / 218 ms | 1590 / 1759 ms | 836 / 950 ms | 0 of 30 |
+| Pixel 10 Pro Fold | First install (app data cleared), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1380 / 1415 ms | 202 / 219 ms | 1651 / 1686 ms | 836 / 950 ms | 0 of 30 |
 
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
@@ -366,4 +366,7 @@ Notes:
   Battery Saver turned off (`adb shell cmd power set-mode 0`, and `1` afterwards to put it back). Check
   `adb shell settings get global low_power` before each set, or charge the phone first and let it cool. In the
   repeat row the p95 comes from the first two launches (1533 and 1462 ms); the other 28 took 1295–1410 ms. First
-  install added only about 50 ms at the median.
+  install added only about 50 ms at the median. The reference build (installed from the Surface) took 718–965 ms to
+  draw, slower than on the Z Flip 3 even though CGS is faster here, so CGS adds only about 490 ms to it at the median.
+  The reference set also stepped down after its 19th run (824–965 ms before, 718–789 ms after), which may be
+  background optimization of the newly installed APK; wait a few minutes after installing before measuring.
