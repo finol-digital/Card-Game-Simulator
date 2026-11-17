@@ -9,9 +9,11 @@
 //   node tools/startup-benchmark/web_benchmark.mjs --url https://<preview-channel-url>/ --runs 30 --mode first
 //   node tools/startup-benchmark/web_benchmark.mjs --url https://<preview-channel-url>/ --runs 30 --mode repeat
 //
-// "first" uses a new browser profile per run (empty caches); "repeat" warms one persistent profile, then
-// measures reloads with caches retained. All times are relative to navigation start, the origin the player's
-// performance.now() shares.
+// "first" starts a new browser with a new profile for each run (empty caches); "repeat" warms one persistent
+// profile, then measures reloads with caches retained; --warmup-ms (default 60000) keeps the warm-up page open so
+// the first visit's game downloads finish first. All times are relative to navigation start, the origin the player's
+// performance.now() shares. Headless Chromium renders WebGL in software; add --headless false to use the GPU, and
+// --angle vulkan where its OpenGL driver loses the WebGL context.
 
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -25,6 +27,19 @@ const args = Object.fromEntries(process.argv.slice(2).reduce((pairs, value, inde
 const runs = Number(args.runs ?? 30);
 const mode = args.mode ?? 'first';
 const timeoutMs = Number(args.timeout ?? 180000);
+const warmupMs = Number(args['warmup-ms'] ?? 60000);
+// --console-log appends every run's browser console to a file, for diagnosing failed runs
+const consoleLog = args['console-log'] ? fs.createWriteStream(args['console-log'], { flags: 'a' }) : null;
+function logConsole(page, label) {
+    if (!consoleLog) return;
+    page.on('console', message => consoleLog.write(`[${label()} ${message.type()}] ${message.text()}\n`));
+    page.on('pageerror', error => consoleLog.write(`[${label()} pageerror] ${error}\n`));
+    page.on('crash', () => consoleLog.write(`[${label()} crash]\n`));
+}
+let currentRun = 0;
+// --angle picks Chromium's graphics backend, e.g. vulkan where the OpenGL driver loses the WebGL context
+const browserArgs = args.angle ? [`--use-angle=${args.angle}`,
+    ...(args.angle === 'vulkan' ? ['--enable-features=Vulkan,DefaultANGLEVulkan,VulkanFromANGLE'] : [])] : [];
 if (!args.url) {
     console.error('usage: node web_benchmark.mjs --url <url> [--runs 30] [--mode first|repeat] [--csv out.csv]');
     process.exit(2);
@@ -53,8 +68,28 @@ function percentile(values, pct) {
 }
 
 async function measure(page, run) {
+    currentRun = run;
+    consoleLog?.write(`[run ${run}] ${new Date().toISOString()}\n`);
     await page.goto(benchmarkUrl(run), { waitUntil: 'commit' });
-    await page.waitForFunction(() => window.cgsBenchmarkResult, null, { timeout: timeoutMs });
+    // Listen only after the new page commits: unloading the previous page loses its WebGL context too
+    let contextLost;
+    const lost = new Promise((_, reject) => {
+        contextLost = message => {
+            if (message.text().includes('CONTEXT_LOST_WEBGL')) reject(new Error('webglContextLost'));
+        };
+    });
+    lost.catch(() => {});
+    page.on('console', contextLost);
+    try {
+        // Poll on a timer: the Unity player drives requestAnimationFrame, so Playwright's default per-frame polling
+        // may never see the result
+        await Promise.race([
+            page.waitForFunction(() => window.cgsBenchmarkResult, null, { timeout: timeoutMs, polling: 250 }),
+            lost,
+        ]);
+    } finally {
+        page.off('console', contextLost);
+    }
     const result = await page.evaluate(() => window.cgsBenchmarkResult);
     const launch = result.launch ?? {};
     const play = result.play ?? {};
@@ -78,21 +113,26 @@ async function measure(page, run) {
 const records = [];
 if (mode === 'repeat') {
     const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'cgs-web-'));
-    const context = await chromium.launchPersistentContext(profile, { headless: args.headless !== 'false' });
+    const context = await chromium.launchPersistentContext(profile, {
+        headless: args.headless !== 'false', args: browserArgs,
+    });
     const page = await context.newPage();
+    logConsole(page, () => currentRun);
     await measure(page, 0).catch(() => null); // warm the caches; not recorded
+    // Keep the warm-up page open while the first visit downloads and saves the default games
+    await page.waitForTimeout(warmupMs);
     for (let run = 1; run <= runs; run++)
         records.push(await measure(page, run).catch(error => ({ run, ok: false, failure: String(error) })));
     await context.close();
 } else {
-    const browser = await chromium.launch({ headless: args.headless !== 'false' });
+    // A new browser per run also empties the GPU shader cache, and recovers if a GPU driver fault hangs a run
     for (let run = 1; run <= runs; run++) {
-        const context = await browser.newContext();
-        const page = await context.newPage();
+        const browser = await chromium.launch({ headless: args.headless !== 'false', args: browserArgs });
+        const page = await browser.newPage();
+        logConsole(page, () => currentRun);
         records.push(await measure(page, run).catch(error => ({ run, ok: false, failure: String(error) })));
-        await context.close();
+        await browser.close();
     }
-    await browser.close();
 }
 
 const names = ['launchToMenuMs', 'launchToActionMs', 'startToActionMs'];
