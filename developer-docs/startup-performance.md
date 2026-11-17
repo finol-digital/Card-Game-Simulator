@@ -226,6 +226,10 @@ days after that deploy. Record the network type and browser version with the res
   downloads finish and are saved before the measured reloads.
 - `--angle vulkan` switches Chromium to its Vulkan backend, for GPUs whose OpenGL driver loses the WebGL context.
 - `--console-log <file>` appends each run's browser console to a file, for diagnosing failed runs.
+- `--pause-ms <ms>` leaves a blank page between runs so that a phone can cool down.
+- `--cdp <url>` drives a phone's Chrome instead of a local browser. Turn on wireless or USB debugging, then run
+  `adb forward tcp:9333 localabstract:chrome_devtools_remote` and pass `--cdp http://127.0.0.1:9333`. First visits
+  use incognito contexts; repeat visits use a normal tab and then clear the site's data from the phone's profile.
 
 On a first visit the Main Menu accepts input while the default games are still downloading, so build 1.171.24
 reports the play phase as failed (`benchmarkGameUnavailable`); use only `launchToMenuMs` from those runs.
@@ -330,6 +334,8 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Pixel 10 Pro Fold | First install (app data cleared), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1380 / 1415 ms | 202 / 219 ms | 1651 / 1686 ms | 836 / 950 ms | 0 of 30 |
 | Web, Lenovo IdeaPad Y510P (Chromium 159) | Repeat visit, cached | 1.171.24 (Firebase `preview` channel, commit `37fc9fe6`) | 2180 / 2308 ms | 207 / 229 ms | 2428 / 2530 ms | Not built | 0 of 30 |
 | Web, Lenovo IdeaPad Y510P (Chromium 159) | First visit, empty caches | 1.171.24 (Firebase `preview` channel, commit `37fc9fe6`) | 6953 / 7249 ms (20 runs) | Not measurable in this build | Not measurable in this build | Not built | 10 of 30 (WebGL context lost) |
+| Web, Galaxy Z Flip 3 (Chrome 157) | Repeat visit, cached | 1.171.24 (Firebase `preview` channel, commit `37fc9fe6`) | 2990 / 3692 ms | 308 / 381 ms | 3355 / 4166 ms | Not built | 0 of 30 |
+| Web, Galaxy Z Flip 3 (Chrome 157) | First visit, empty caches (incognito) | 1.171.24 (Firebase `preview` channel, commit `37fc9fe6`) | 4682 / 5000 ms | Not measurable in this build | Not measurable in this build | Not built | 0 of 30 (launch) |
 
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
@@ -395,3 +401,12 @@ Notes:
   Earlier repeat-visit attempts also lost the context or hung, including on `--angle vulkan`, before this clean set.
   The reference build has no WebGL build yet (this laptop's Unity 6.6.8 has no WebGL module and too little free disk
   space for it).
+- **Web on the Galaxy Z Flip 3** (2026-11-16, Chrome 157.0.8103.78, unfolded, on battery at 63–54%, Wi-Fi, 30 runs
+  per row, driven from the laptop with `--cdp` over wireless debugging). Each first visit used a new incognito
+  context, so Chrome's GPU shader cache was not emptied between first visits. A CGS page keeps rendering, so
+  back-to-back runs heated the phone to thermal status 3 within 2 minutes and slowed launches from about 2.1 s to
+  7 s; those sets were discarded and re-run with `--pause-ms 15000`, which kept it at status 0 throughout. Repeat
+  visits reach the menu about 1.3 s later than the installed Android app. The build ships DXT-compressed textures,
+  which this phone's GPU cannot sample, so every load logs `decompressing texture` and pays to decompress them; an
+  ASTC or ETC2 variant for mobile browsers would avoid that. In the discarded repeat set, the saved games vanished
+  from browser storage after the 24th reload (`Could not find file …/Dominoes.json`), and CGS downloaded them again.
