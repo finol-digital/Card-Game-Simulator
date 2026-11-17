@@ -50,6 +50,8 @@ def run_once_bounded(args, run_index: int) -> stats.RunRecord:
     try:
         return run_once(args, run_index)
     except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as error:
+        detail = (error.stderr or error.stdout or "") if isinstance(error, subprocess.CalledProcessError) else ""
+        print(f"adb {' '.join(error.cmd[1:])} failed: {detail.strip() or error}", file=sys.stderr)
         try:
             adb(args, "shell", "am", "force-stop", args.package, check=False)
         except subprocess.TimeoutExpired:
