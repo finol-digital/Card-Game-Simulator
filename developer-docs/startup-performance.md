@@ -30,7 +30,7 @@ opened, and on later pushes to `develop` that touch `Assets`, `Packages`, or `Pr
 | Samsung Galaxy Z Flip 3 | Google Play beta track | Play Store (beta tester) | `android_benchmark.py` |
 | iPhone 11 | TestFlight | TestFlight | `ios_video_benchmark.py` (video) |
 | Steam Deck | Steam `prerelease` branch | Steam > Properties > Betas | `desktop_benchmark.py --steam` and `--player` |
-| Google Pixel Fold 10 | Google Play beta track | Play Store (beta tester) | `android_benchmark.py` (record the posture) |
+| Google Pixel 10 Pro Fold | Google Play beta track | Play Store (beta tester) | `android_benchmark.py` (record the posture) |
 | iPad (9th generation) | TestFlight | TestFlight | `ios_video_benchmark.py` (video) |
 | Mac mini (M1) | `cgs-StandaloneOSX` (`Card Game Simulator.app`); optionally Steam `prerelease` | Artifacts of the PR's run; Steam > Properties > Betas | `desktop_benchmark.py --player` (optionally `--steam`) |
 | Microsoft Surface Laptop Studio | `cgs-StandaloneWindows64`; optionally Steam `prerelease` | Artifacts of the PR's run; Steam > Properties > Betas | `desktop_benchmark.py --player` (optionally `--steam`) |
@@ -44,7 +44,7 @@ Record each device's details here before using its results:
 | Galaxy Z Flip 3 (SM-F711U1) | Android 15, One UI 7.0 (AP3A.240905.015.A2.F711U1UESIKZH2) | Snapdragon 888 | Adreno 660 (OpenGL ES 3.2, Vulkan); 120 Hz display | 8 GB | UFS, 256 GB | Yes. Android 15 on ARM64 with OpenGL ES 3.2 and Vulkan meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 | iPhone 11 | | A13 | | 4 GB | | |
 | Steam Deck (LCD, "Jupiter") | SteamOS 3.8.28; Desktop Mode (KDE Plasma on Wayland) for these measurements | AMD Custom APU 0405 (Zen 2, 4 cores, 8 threads) | AMD Custom GPU 0405 (RDNA 2) with Mesa radeonsi; the player used OpenGL 4.6 | 16 GB (14 GiB usable) | SSD (NVMe, Transcend TS256GMTE352T, 256 GB) | Partly. The CPU, GPU, and AMD Mesa driver meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); SteamOS and KDE Plasma are not listed (supported: Ubuntu 22.04 and 24.04 with GNOME) |
-| Pixel Fold 10 | | | | | | |
+| Pixel 10 Pro Fold ("rango") | Android 17 (CP3A.261005.005, security patch 2026-10-05) | Google Tensor G5 | PowerVR D-Series DXT-48-1536 (OpenGL ES 3.2, Vulkan); inner display 2076 × 2152 at 120 Hz | 16 GB | UFS, 256 GB | Yes. Android on ARM64 with OpenGL ES 3.2 and Vulkan meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 | iPad (9th generation) | | A13 | | 3 GB | | |
 | Mac mini (M1) | | Apple M1 | | | SSD | |
 | Surface Laptop Studio | Windows 11 Home (10.0.26300) | Intel Core i7-11370H (4 cores, 8 threads, 3.3–4.8 GHz) | Intel Iris Xe and NVIDIA GeForce RTX 3050 Ti Laptop GPU (switchable; the player used the NVIDIA GPU, per the `Renderer` line in its `Player.log`) | 16 GB | SSD (Samsung MZ9LQ512HALU, 512 GB) | Yes. Windows 11 x64 and DirectX 12-capable GPUs meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
@@ -171,7 +171,7 @@ python3 tools/startup-benchmark/desktop_benchmark.py --steam --build <Applicatio
 
 Clear the launch options afterwards. Report Steam-launched and direct (`--player`) results separately.
 
-### Android (Galaxy Z Flip 3, Pixel Fold 10)
+### Android (Galaxy Z Flip 3, Pixel 10 Pro Fold)
 
 Enable USB debugging, connect over USB, install the Play beta build, and set the saved game to Standard Playing
 Cards. Then run:
@@ -184,8 +184,8 @@ For the first-install condition, add `--clear-data`: it clears CGS's app data (`
 builds cannot be backed up first, so this permanently deletes CGS's games, decks, and settings on that device; run it
 last, and only on a device whose CGS data can be lost.
 
-With both phones connected, pick one with `--serial <id>` (from `adb devices`). For the Pixel Fold 10, keep it in
-one posture for a whole run set and record it (for example `--csv pixelfold10-unfolded.csv`).
+With both phones connected, pick one with `--serial <id>` (from `adb devices`). For the Pixel 10 Pro Fold, keep it in
+one posture for a whole run set and record it (for example `--csv pixel10fold-unfolded.csv`).
 
 `launchToMenuMs` is the system's "Fully drawn" time, from the launch intent to `reportFullyDrawn()` at the
 interactive Main Menu. Later intervals add the app's own milestones, which use the same `elapsedRealtime` clock.
@@ -316,6 +316,8 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Steam Deck (LCD) | Repeat launch, saved data, through Steam | 1.171.24 (Steam `prerelease`, Steam build 26661549) | 6515 / 8071 ms | 224 / 259 ms | 6794 / 8351 ms | 1146 / 1199 ms (direct) | 0 of 30 |
 | Galaxy Z Flip 3 | Repeat launch, saved data (process stopped) | 1.171.24 (Google Play beta, version code 1171024) | 1655 / 2315 ms | 229 / 249 ms | 1951 / 2625 ms | 619 / 678 ms | 0 of 30 |
 | Galaxy Z Flip 3 | First install (app data cleared) | 1.171.24 (Google Play beta, version code 1171024) | 1832 / 2045 ms | 225 / 239 ms | 2129 / 2403 ms | 619 / 678 ms | 0 of 30 |
+| Pixel 10 Pro Fold | Repeat launch, saved data (process stopped), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1327 / 1462 ms | 194 / 218 ms | 1590 / 1759 ms | Pending | 0 of 30 |
+| Pixel 10 Pro Fold | First install (app data cleared), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1380 / 1415 ms | 202 / 219 ms | 1651 / 1686 ms | Pending | 0 of 30 |
 
 Notes:
 - **Lenovo IdeaPad Y510P** (2026-11-14, direct launch, 30 runs per row). The reference build alone misses the 500 ms
@@ -358,3 +360,10 @@ Notes:
   added about 180 ms at the median. The reference build (installed from the Surface, built with Unity 6000.6.8f1)
   took 582–687 ms to draw, so this phone also needs a launch-budget exception relative to the reference build. CGS
   adds about 1040 ms to it at the median, more than the 620–640 ms it adds on the desktops.
+- **Pixel 10 Pro Fold** (2026-11-16, unfolded on the inner display at 120 Hz, on battery at 22–19%, over wireless
+  debugging, 30 runs per row). The phone stayed at thermal status 0 throughout. Battery Saver turns on by itself at 20%
+  and slowed launches by about 300 ms from that run on, so an earlier first-install set was discarded and re-run with
+  Battery Saver turned off (`adb shell cmd power set-mode 0`, and `1` afterwards to put it back). Check
+  `adb shell settings get global low_power` before each set, or charge the phone first and let it cool. In the
+  repeat row the p95 comes from the first two launches (1533 and 1462 ms); the other 28 took 1295–1410 ms. First
+  install added only about 50 ms at the median.
