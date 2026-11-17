@@ -24,16 +24,16 @@ def monotonic_ns() -> int:
     """The OS monotonic clock the player reads through System.Diagnostics.Stopwatch.
 
     Linux/SteamOS/Android: CLOCK_MONOTONIC. Windows: QueryPerformanceCounter (perf_counter_ns).
-    macOS: mach_absolute_time (monotonic_ns). Each platform adapter must be validated on device.
-    Python 3.9 offsets these Windows and macOS clocks to a process-local origin, so 3.10 or later is required.
+    macOS: mach_absolute_time, which CLOCK_UPTIME_RAW reads in nanoseconds. Each platform adapter must be validated
+    on device. Python 3.9 offsets the Windows clock to a process-local origin, so 3.10 or later is required there.
     """
     if sys.platform.startswith("linux"):
         return time.clock_gettime_ns(time.CLOCK_MONOTONIC)
+    if sys.platform == "darwin":
+        return time.clock_gettime_ns(time.CLOCK_UPTIME_RAW)
     if sys.version_info < (3, 10):
-        raise SystemExit("Python 3.10 or later is required on Windows and macOS for a system-wide clock origin")
-    if sys.platform == "win32":
-        return time.perf_counter_ns()
-    return time.monotonic_ns()
+        raise SystemExit("Python 3.10 or later is required on Windows for a system-wide clock origin")
+    return time.perf_counter_ns()
 
 
 def percentile(values: list[float], pct: float) -> Optional[float]:

@@ -46,7 +46,7 @@ Record each device's details here before using its results:
 | Steam Deck (LCD, "Jupiter") | SteamOS 3.8.28; Desktop Mode (KDE Plasma on Wayland) for these measurements | AMD Custom APU 0405 (Zen 2, 4 cores, 8 threads) | AMD Custom GPU 0405 (RDNA 2) with Mesa radeonsi; the player used OpenGL 4.6 | 16 GB (14 GiB usable) | SSD (NVMe, Transcend TS256GMTE352T, 256 GB) | Partly. The CPU, GPU, and AMD Mesa driver meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); SteamOS and KDE Plasma are not listed (supported: Ubuntu 22.04 and 24.04 with GNOME) |
 | Pixel 10 Pro Fold ("rango") | Android 17 (CP3A.261005.005, security patch 2026-10-05) | Google Tensor G5 | PowerVR D-Series DXT-48-1536 (OpenGL ES 3.2, Vulkan); inner display 2076 × 2152 at 120 Hz | 16 GB | UFS, 256 GB | Yes. Android on ARM64 with OpenGL ES 3.2 and Vulkan meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 | iPad (9th generation) | | A13 | | 3 GB | | |
-| Mac mini (M1) | | Apple M1 | | | SSD | |
+| Mac mini (M1, Macmini9,1) | macOS 27.0 (26A428) | Apple M1 (4 performance and 4 efficiency cores) | Apple M1, 8 GPU cores (Metal 4); 1920 × 1080 display at 100 Hz | 8 GB | SSD (Apple AP0256Q, 256 GB) | Yes. Apple silicon with Metal meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 | Surface Laptop Studio | Windows 11 Home (10.0.26300) | Intel Core i7-11370H (4 cores, 8 threads, 3.3–4.8 GHz) | Intel Iris Xe and NVIDIA GeForce RTX 3050 Ti Laptop GPU (switchable; the player used the NVIDIA GPU, per the `Renderer` line in its `Player.log`) | 16 GB | SSD (Samsung MZ9LQ512HALU, 512 GB) | Yes. Windows 11 x64 and DirectX 12-capable GPUs meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 
 ## What the app records
@@ -109,9 +109,9 @@ Start Game is dispatched only after the frame with the menu marker has been pres
 
 ## Harnesses
 
-The scripts are in `tools/startup-benchmark/` and need Python 3.10 or later. Each prints the median, p95, failure
-count, and pass/fail per interval. Runs flagged `gameSwitched`, with a start delay, or with a run-file error are
-excluded from budget statistics.
+The scripts are in `tools/startup-benchmark/` and need Python 3.9 or later (3.10 or later on Windows). Each prints
+the median, p95, failure count, and pass/fail per interval. Runs flagged `gameSwitched`, with a start delay, or with
+a run-file error are excluded from budget statistics.
 
 ### Desktop (Lenovo IdeaPad Y510P, Linux, Steam Deck direct)
 
@@ -143,10 +143,18 @@ desktop harness against the executable inside the app bundle:
 
 ```bash
 xattr -dr com.apple.quarantine "Card Game Simulator.app"
+C=~/Library/Containers/com.finoldigital.CardGameSimulator/Data
 python3 tools/startup-benchmark/desktop_benchmark.py \
   --player "Card Game Simulator.app/Contents/MacOS/Card Game Simulator" \
-  --build <Application.version> --runs 30 --csv macmini-direct.csv
+  --build <Application.version> --runs 30 --work-dir "$C/cgs-bench" --csv macmini-direct.csv
 ```
+
+This build is sandboxed and signed for the Mac App Store, so it can only read and write inside its container: pass
+a `--work-dir` there, as above. It also shares that container, including the saved game and settings, with an
+installed App Store copy of CGS. Before changing the saved game, back up the settings with
+`defaults export "$C/Library/Preferences/com.finoldigital.CardGameSimulator.plist" <file>`, and `defaults import`
+them afterwards. `first_install.py` takes the same `--work-dir` and sets the container's data and settings aside
+for its runs.
 
 ### Surface Laptop Studio
 
@@ -332,6 +340,8 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Galaxy Z Flip 3 | First install (app data cleared) | 1.171.24 (Google Play beta, version code 1171024) | 1832 / 2045 ms | 225 / 239 ms | 2129 / 2403 ms | 619 / 678 ms | 0 of 30 |
 | Pixel 10 Pro Fold | Repeat launch, saved data (process stopped), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1327 / 1462 ms | 194 / 218 ms | 1590 / 1759 ms | 836 / 950 ms | 0 of 30 |
 | Pixel 10 Pro Fold | First install (app data cleared), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1380 / 1415 ms | 202 / 219 ms | 1651 / 1686 ms | 836 / 950 ms | 0 of 30 |
+| Mac mini (M1) | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneOSX`, commit `37fc9fe6`) | 1007 / 1275 ms | 93 / 122 ms | 1542 / 1857 ms | 543 / 625 ms | 0 of 30 |
+| Mac mini (M1) | First install | 1.171.24 (`cgs-StandaloneOSX`, commit `37fc9fe6`) | 1213 / 1379 ms | 103 / 120 ms | 1778 / 1953 ms | 543 / 625 ms | 0 of 30 |
 | Web, Lenovo IdeaPad Y510P (Chromium 159) | Repeat visit, cached | 1.171.24 (Firebase `preview` channel, commit `37fc9fe6`) | 2180 / 2308 ms | 207 / 229 ms | 2428 / 2530 ms | Not built | 0 of 30 |
 | Web, Lenovo IdeaPad Y510P (Chromium 159) | First visit, empty caches | 1.171.24 (Firebase `preview` channel, commit `37fc9fe6`) | 6953 / 7249 ms (20 runs) | Not measurable in this build | Not measurable in this build | Not built | 10 of 30 (WebGL context lost) |
 | Web, Galaxy Z Flip 3 (Chrome 157) | Repeat visit, cached | 1.171.24 (Firebase `preview` channel, commit `37fc9fe6`) | 2990 / 3692 ms | 308 / 381 ms | 3355 / 4166 ms | Not built | 0 of 30 |
@@ -388,6 +398,13 @@ Notes:
   draw, slower than on the Z Flip 3 even though CGS is faster here, so CGS adds only about 490 ms to it at the median.
   The reference set also stepped down after its 19th run (824–965 ms before, 718–789 ms after), which may be
   background optimization of the newly installed APK; wait a few minutes after installing before measuring.
+- **Mac mini (M1)** (2026-11-16, on mains power, 30 runs per row, driven over SSH while the user stayed logged
+  in). The `cgs-StandaloneOSX` build is sandboxed and shares its container with the installed App Store CGS, so the
+  saved game was switched to Standard Playing Cards for these runs and the container's settings were restored
+  afterwards. First install added about 200 ms. The reference build took 516–625 ms after its first launch (2404 ms),
+  so this Mac also needs a launch-budget exception relative to it, by a small margin. CGS adds about 460 ms to it
+  at the median, the least of any device. Wait for Spotlight and other background indexing to finish after copying
+  or building an app: right after the reference build, the load average reached 24.
 - **Web on the Lenovo IdeaPad Y510P** (2026-11-16, Playwright's Chromium 159.0.8154.6 in a visible window,
   Wi-Fi at 2.4 GHz, 30 runs per row). Chromium drew WebGL on the GeForce GT 750M through ANGLE on OpenGL (Mesa
   nouveau). Times run from navigation start, so they include downloading the build. Launch → menu is about 1 s

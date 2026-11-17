@@ -4,18 +4,23 @@
 """First-install condition for desktop players: every run starts with no CGS data or settings.
 
 Linux: each run gets an empty XDG_CONFIG_HOME, so your own CGS data is never touched.
-Windows: your CGS data, cache, and settings are renamed aside before the first run and put back afterwards, even if
-the runs fail or you press Ctrl+C. Your settings are also exported to <work-dir>/cgs-settings-backup.reg first.
-If the script is ever stopped before it can put them back (for example, by a power loss), run it with --restore.
+Windows and macOS: your CGS data, cache, and settings are renamed aside before the first run and put back afterwards,
+even if the runs fail or you press Ctrl+C. Your settings are also exported to <work-dir> first. If the script is ever
+stopped before it can put them back (for example, by a power loss), run it with --restore (and, on macOS, --player).
+On macOS a sandboxed build (such as the Mac App Store build) shares its data with any installed copy, and can only
+read the run file inside its container, so pass a --work-dir inside it:
+  --work-dir ~/Library/Containers/com.finoldigital.CardGameSimulator/Data/cgs-bench
 
   py first_install.py --player "C:/path/to/Card Game Simulator.exe" --build 1.2.3 --runs 30 --csv first.csv
   python3 first_install.py --player "/path/to/Card Game Simulator.x86_64" --build 1.2.3 --runs 30
+  python3 first_install.py --player "Card Game Simulator.app/Contents/MacOS/Card Game Simulator" --build 1.2.3
 """
 
 from __future__ import annotations
 
 import argparse
 import os
+import plistlib
 import shutil
 import subprocess
 import sys
@@ -108,6 +113,75 @@ class WindowsData:
         print("Your CGS data and settings are restored.", file=sys.stderr)
 
 
+class MacData:
+    """Moves the player's data folder, cache folder, and settings aside, and puts them back."""
+
+    def __init__(self, work_dir: Path, player: str):
+        app = next((parent for parent in Path(player).resolve().parents if parent.suffix == ".app"), None)
+        if app is None:
+            raise SystemExit("--player must be the executable inside the .app bundle")
+        with open(app / "Contents" / "Info.plist", "rb") as info:
+            bundle_id = plistlib.load(info)["CFBundleIdentifier"]
+        entitlements = subprocess.run(["codesign", "-d", "--entitlements", "-", str(app)], capture_output=True,
+                                      text=True).stdout
+        library = Path.home() / "Library"
+        if "com.apple.security.app-sandbox" in entitlements:
+            library = library / "Containers" / bundle_id / "Data" / "Library"
+        self.folders = [library / "Application Support" / bundle_id, library / "Caches" / bundle_id]
+        # Settings go through cfprefsd, which caches them, so they are changed with defaults instead of as a file
+        self.prefs = str(library / "Preferences" / f"{bundle_id}.plist")
+        self.prefs_backup = work_dir / "cgs-settings-backup.plist"
+        self.settings_saved = work_dir / "cgs-settings-saved"
+        self.runs_started = work_dir / "cgs-first-install-running"
+
+    def defaults(self, *args: str, check: bool = True) -> int:
+        code = subprocess.run(["defaults", *args], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
+        if check and code != 0:
+            raise SystemExit(f"defaults {args[0]} failed for {self.prefs}; your settings are in {self.prefs_backup}")
+        return code
+
+    def save(self) -> None:
+        if self.settings_saved.exists() or self.runs_started.exists() or \
+                any(WindowsData.saved(f).exists() for f in self.folders):
+            raise SystemExit("CGS data from an earlier first-install run is still set aside. Run with --restore.")
+        try:
+            if Path(self.prefs).exists():
+                self.defaults("export", self.prefs, str(self.prefs_backup))
+                self.settings_saved.write_text("1", encoding="utf-8")
+                self.defaults("delete", self.prefs)
+            for folder in self.folders:
+                if folder.exists():
+                    folder.rename(WindowsData.saved(folder))
+        except BaseException:
+            self.restore()
+            raise
+        self.runs_started.write_text("1", encoding="utf-8")
+        print("Your CGS data and settings are set aside; they are put back when the runs end.", file=sys.stderr)
+
+    def clear(self) -> None:
+        for folder in self.folders:
+            remove_tree(folder)
+        self.defaults("delete", self.prefs, check=False)
+
+    def restore(self) -> None:
+        running = self.runs_started.exists()
+        for folder in self.folders:
+            if WindowsData.saved(folder).exists():
+                remove_tree(folder)
+                WindowsData.saved(folder).rename(folder)
+            elif running:
+                remove_tree(folder)
+        if self.settings_saved.exists():
+            self.defaults("delete", self.prefs, check=False)
+            self.defaults("import", self.prefs, str(self.prefs_backup))
+            self.settings_saved.unlink()
+        elif running:
+            self.defaults("delete", self.prefs, check=False)
+        if running:
+            self.runs_started.unlink()
+        print("Your CGS data and settings are restored.", file=sys.stderr)
+
+
 class LinuxData:
     """Points the player at an empty config folder for each run."""
 
@@ -141,10 +215,14 @@ def main() -> int:
     work_dir.mkdir(parents=True, exist_ok=True)
     if sys.platform == "win32":
         data = WindowsData(work_dir)
+    elif sys.platform == "darwin":
+        if not args.player:
+            parser.error("--player is required on macOS")
+        data = MacData(work_dir, args.player)
     elif sys.platform.startswith("linux"):
         data = LinuxData(work_dir)
     else:
-        raise SystemExit("First-install runs are supported on Windows and Linux")
+        raise SystemExit("First-install runs are supported on Windows, macOS, and Linux")
     if args.restore:
         data.restore()
         return 0
