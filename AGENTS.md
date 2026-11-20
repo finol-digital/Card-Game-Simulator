@@ -67,6 +67,10 @@ unity install <version>     # Install the Editor version this project uses (see 
  - `unity command "test cancel"` - Cancel running tests
  - Default test timeout is 600 seconds; override with `--timeout <seconds>`
 
+### Editor Log Checks
+ - `python3 tools/unity-log-scan/scan_unity_log.py Logs/Editor.log` - Report Editor warnings and errors not on `tools/unity-log-scan/allowlist.txt` (exits 1 if any)
+ - `python3 -m unittest discover -s tools/unity-log-scan -p 'test_*.py'` - Test the log scanner
+
 ## Code Style Guidelines
 
 Read [the Unity C# style guide](developer-docs/unity-csharp-style-guide.md) before changing `Assets/Scripts`. It documents the existing patterns and the migration rules for humans and AI agents.
@@ -91,6 +95,8 @@ All C# files must start with the MPL 2.0 license header:
 
 ### Unity-Specific Guidelines
 - Use `using` statements for disposable Unity objects (UnityWebRequest, etc.)
+- Keep the Editor log free of warnings. After changing assets, settings, packages, or the Unity version, scan the log with `python3 tools/unity-log-scan/scan_unity_log.py Logs/Editor.log` and fix what it reports. Follow [the Unity upgrade guide](developer-docs/unity-upgrades.md) for Editor and package upgrades.
+- Do not import whole package samples into `Assets/`; copy only the files the project uses, so later package versions cannot cause GUID conflicts.
 
 ### Performance Guidelines
 - Avoid expensive operations in Update() methods

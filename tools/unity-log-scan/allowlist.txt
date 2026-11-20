@@ -1,0 +1,8 @@
+# Known Unity Editor log messages that scan_unity_log.py ignores. One Python regular expression per line, matched
+# anywhere in the message. Only list messages we cannot fix in this repository (for example, shaders inside Unity
+# packages that do not support every graphics API). Note why each entry is here and remove it once it no longer
+# appears.
+
+# URP package shaders that need features Metal does not provide. We do not use terrain or VR spatial mapping.
+^WARNING: Shader Unsupported: 'Universal Render Pipeline/VR/SpatialMapping/Wireframe'
+^WARNING: Shader Unsupported: '(?:Hidden/)?Universal Render Pipeline/Terrain/Lit
