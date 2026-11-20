@@ -297,7 +297,7 @@ namespace Cgs.Play
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             yield return null;
-            while (!CardGameManager.IsCurrentReady)
+            while (!CardGameManager.IsCurrentContentSettled)
                 yield return null;
 
             StartLobby();
