@@ -3,8 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.Localization;
+using System.Collections;
 using System.IO;
 using Cgs.UI;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -259,30 +261,37 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void Sync()
         {
+            // The manager runs the sync, so it continues after this menu hides
             if (CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false)
-            {
-                if (File.Exists(CardGameManager.Current.CardsFilePath))
-                    File.Delete(CardGameManager.Current.CardsFilePath);
-                if (File.Exists(CardGameManager.Current.DecksFilePath))
-                    File.Delete(CardGameManager.Current.DecksFilePath);
-                if (File.Exists(CardGameManager.Current.SetsFilePath))
-                    File.Delete(CardGameManager.Current.SetsFilePath);
-                if (File.Exists(CardGameManager.Current.BannerImageFilePath))
-                    File.Delete(CardGameManager.Current.BannerImageFilePath);
-                if (File.Exists(CardGameManager.Current.CardBackImageFilePath))
-                    File.Delete(CardGameManager.Current.CardBackImageFilePath);
-                if (File.Exists(CardGameManager.Current.PlayMatImageFilePath))
-                    File.Delete(CardGameManager.Current.PlayMatImageFilePath);
-                if (Directory.Exists(CardGameManager.Current.SetsDirectoryPath))
-                    Directory.Delete(CardGameManager.Current.SetsDirectoryPath, true);
-                CardGameManager.Instance.StartCoroutine(
-                    CardGameManager.Instance.UpdateCardGame(CardGameManager.Current));
-            }
+                CardGameManager.Instance.StartCoroutine(SyncGame(CardGameManager.Current));
             else
                 CardGameManager.Instance.Messenger.Show(Cgs.GameContent.GameContentMessage.Create(CardGameManager.Current, display =>
                     UiMessage.With("games.sync.unavailable", NoSyncMessage, ("gameName", display.GameName))));
 
             Hide();
+        }
+
+        private static IEnumerator SyncGame(UnityCardGame game)
+        {
+            // Card data loads in the background after a screen opens; let it finish before deleting its files
+            while (game.IsLoading)
+                yield return null;
+
+            if (File.Exists(game.CardsFilePath))
+                File.Delete(game.CardsFilePath);
+            if (File.Exists(game.DecksFilePath))
+                File.Delete(game.DecksFilePath);
+            if (File.Exists(game.SetsFilePath))
+                File.Delete(game.SetsFilePath);
+            if (File.Exists(game.BannerImageFilePath))
+                File.Delete(game.BannerImageFilePath);
+            if (File.Exists(game.CardBackImageFilePath))
+                File.Delete(game.CardBackImageFilePath);
+            if (File.Exists(game.PlayMatImageFilePath))
+                File.Delete(game.PlayMatImageFilePath);
+            if (Directory.Exists(game.SetsDirectoryPath))
+                Directory.Delete(game.SetsDirectoryPath, true);
+            yield return CardGameManager.Instance.UpdateCardGame(game);
         }
 
         private void InputCancel(InputAction.CallbackContext callbackContext)
