@@ -46,7 +46,11 @@ namespace Cgs.Menu
 
         public const string QuitPrompt = "Quit?";
 
-        private const float StartBufferTime = 0.1f;
+        public static string VersionMessage => $"VERSION {Application.version}";
+
+        public static UiMessage LocalizedVersion =>
+            UiMessage.With("title.version", VersionMessage, ("version", Application.version));
+
         private const float AnimationDuration = 0.25f;
 
         [SerializeField] GameObject gamesManagementMenuPrefab;
@@ -72,6 +76,8 @@ namespace Cgs.Menu
 
         private GamesManagementMenu _gamesManagement;
 
+        private readonly HeldInputGate _heldInput = new();
+
         private bool _isAnimating;
 
         private InputAction _moveAction;
@@ -79,6 +85,8 @@ namespace Cgs.Menu
 
         protected void OnEnable()
         {
+            _heldInput.Arm();
+
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
             CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
 
@@ -102,7 +110,7 @@ namespace Cgs.Menu
 
         protected void Start()
         {
-            Cgs.Localization.LocalizedUiText.Set(versionText, TitleScreen.LocalizedVersion);
+            LocalizedUiText.Set(versionText, LocalizedVersion);
 
 #if UNITY_WEBGL
             fullscreenButton.gameObject.SetActive(true);
@@ -113,6 +121,8 @@ namespace Cgs.Menu
 #else
             quitButton.SetActive(false);
 #endif
+
+            SelectFirstControl();
 
             if (!HasSeenWelcome)
                 CardGameManager.Instance.Messenger.Ask(new UiMessage(
@@ -128,13 +138,24 @@ namespace Cgs.Menu
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
 
+        // Focus the current game so the first gamepad or keyboard input acts on it, as Submit did with nothing focused.
+        // Touch-first devices without a gamepad show no focus highlight.
+        private void SelectFirstControl()
+        {
+            if (!ActiveInputDevice.UseGamepad && Application.isMobilePlatform)
+                return;
+            if (EventSystem.current != null && !EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(selectableButtons[0]);
+        }
+
         // Poll for Vector2 inputs
         protected void Update()
         {
-            // Interactive means the Main Menu screen accepts input. A first-launch welcome prompt is part of that
-            // screen and accepts input too; budget runs use saved data, where the prompt is not shown.
-            if (Time.timeSinceLevelLoad >= StartBufferTime)
-                StartupTimeline.Mark(StartupMilestone.MainMenuInteractive);
+            // Interactive means the Main Menu screen accepts input, which it does from its first frame. A first-launch
+            // welcome prompt is part of that screen and accepts input too; budget runs use saved data, where the
+            // prompt is not shown.
+            StartupTimeline.Mark(StartupMilestone.MainMenuInteractive);
+            _heldInput.Refresh();
 
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
@@ -143,27 +164,29 @@ namespace Cgs.Menu
             var pageHorizontal = _pageAction?.ReadValue<Vector2>().x ?? 0;
             var moveHorizontal = _moveAction?.ReadValue<Vector2>().x ?? 0;
             var moveVertical = _moveAction?.ReadValue<Vector2>().y ?? 0;
-            if (_pageAction?.WasPressedThisFrame() ?? false)
+            if ((_pageAction?.WasPressedThisFrame() ?? false) && _heldInput.Allows(_pageAction.activeControl))
             {
                 if (pageVertical < 0)
-                    SelectNext();
+                    DoSelectNext();
                 else if (pageVertical > 0)
-                    SelectPrevious();
+                    DoSelectPrevious();
                 else if (pageHorizontal < 0)
-                    SelectPrevious();
+                    DoSelectPrevious();
                 else if (pageHorizontal > 0)
-                    SelectNext();
+                    DoSelectNext();
             }
-            else if ((_moveAction?.WasPressedThisFrame() ?? false) && Mathf.Abs(moveHorizontal) > 0 &&
+            else if ((_moveAction?.WasPressedThisFrame() ?? false) && _heldInput.Allows(_moveAction.activeControl) &&
+                     Mathf.Abs(moveHorizontal) > 0 &&
                      (EventSystem.current.currentSelectedGameObject == null ||
                       EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
             {
                 if (moveHorizontal < 0)
-                    SelectPrevious();
+                    DoSelectPrevious();
                 else if (moveHorizontal > 0)
-                    SelectNext();
+                    DoSelectNext();
             }
-            else if ((_moveAction?.WasPressedThisFrame() ?? false) && Mathf.Abs(moveVertical) > 0 &&
+            else if ((_moveAction?.WasPressedThisFrame() ?? false) && _heldInput.Allows(_moveAction.activeControl) &&
+                     Mathf.Abs(moveVertical) > 0 &&
                      !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
         }
@@ -208,14 +231,20 @@ namespace Cgs.Menu
 
         private void InputSelectPrevious(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null)
-                SelectPrevious();
+            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+                DoSelectPrevious();
         }
 
         [UsedImplicitly]
         public void SelectPrevious()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime || _isAnimating)
+            if (_heldInput.AllowsPointerAction)
+                DoSelectPrevious();
+        }
+
+        private void DoSelectPrevious()
+        {
+            if (_isAnimating)
                 return;
 
             // Create duplicate cards to animate
@@ -276,14 +305,20 @@ namespace Cgs.Menu
 
         private void InputSelectNext(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null)
-                SelectNext();
+            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+                DoSelectNext();
         }
 
         [UsedImplicitly]
         public void SelectNext()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime || _isAnimating)
+            if (_heldInput.AllowsPointerAction)
+                DoSelectNext();
+        }
+
+        private void DoSelectNext()
+        {
+            if (_isAnimating)
                 return;
 
             // Create duplicate cards to animate
@@ -344,94 +379,119 @@ namespace Cgs.Menu
 
         private void InputSubmit(InputAction.CallbackContext context)
         {
-            if (EventSystem.current.currentSelectedGameObject == null && CardGameManager.Instance.ModalCanvas == null)
-                ShowGamesManagementMenu();
+            if (EventSystem.current.currentSelectedGameObject == null && CardGameManager.Instance.ModalCanvas == null &&
+                _heldInput.Allows(context.control))
+                DoShowGamesManagementMenu();
         }
 
         private void InputGamesManagementMenu(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null)
-                ShowGamesManagementMenu();
+            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+                DoShowGamesManagementMenu();
         }
 
         [UsedImplicitly]
         public void ShowGamesManagementMenu()
         {
+            if (_heldInput.AllowsPointerAction)
+                DoShowGamesManagementMenu();
+        }
+
+        private void DoShowGamesManagementMenu()
+        {
 #if !CGS_SINGLEGAME
-            if (Time.timeSinceLevelLoad < StartBufferTime)
-                return;
             GamesManagement.Show();
 #endif
         }
 
         private void InputSettings(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null)
-                ShowSettings();
+            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+                DoShowSettings();
         }
 
         [UsedImplicitly]
         public void ShowSettings()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime)
-                return;
+            if (_heldInput.AllowsPointerAction)
+                DoShowSettings();
+        }
+
+        private static void DoShowSettings()
+        {
             SceneManager.LoadScene(Tags.SettingsSceneIndex);
         }
 
         private void InputExploreCards(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null)
-                ExploreCards();
+            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+                DoExploreCards();
         }
 
         [UsedImplicitly]
         public void ExploreCards()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime)
-                return;
+            if (_heldInput.AllowsPointerAction)
+                DoExploreCards();
+        }
+
+        private static void DoExploreCards()
+        {
             SceneManager.LoadScene(Tags.CardsExplorerSceneIndex);
         }
 
         private void InputEditDeck(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null)
-                EditDeck();
+            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+                DoEditDeck();
         }
 
         [UsedImplicitly]
         public void EditDeck()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime)
-                return;
+            if (_heldInput.AllowsPointerAction)
+                DoEditDeck();
+        }
+
+        private static void DoEditDeck()
+        {
             SceneManager.LoadScene(Tags.DeckEditorSceneIndex);
         }
 
         private void InputJoinGame(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null)
-                JoinGame();
+            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+                DoJoinGame();
         }
 
         [UsedImplicitly]
         public void JoinGame()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime)
-                return;
+            if (_heldInput.AllowsPointerAction)
+                DoJoinGame();
+        }
+
+        private static void DoJoinGame()
+        {
             CardGameManager.Instance.IsSearchingForServer = true;
             SceneManager.LoadScene(Tags.PlayModeSceneIndex);
         }
 
         private void InputStartGame(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null)
-                StartGame();
+            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+                DoStartGame();
         }
 
         [UsedImplicitly]
         public void StartGame()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime)
-                return;
+            if (_heldInput.AllowsPointerAction)
+                DoStartGame();
+        }
+
+        private static void DoStartGame()
+        {
             CardGameManager.Instance.IsSearchingForServer = false;
             StartupTimeline.Mark(StartupMilestone.StartGameChosen);
             SceneManager.LoadScene(Tags.PlayModeSceneIndex);
@@ -439,10 +499,10 @@ namespace Cgs.Menu
 
         private void InputCancel(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas != null)
+            if (CardGameManager.Instance.ModalCanvas != null || !_heldInput.Allows(context.control))
                 return;
             if (EventSystem.current.currentSelectedGameObject == null)
-                PromptQuit();
+                DoPromptQuit();
             else if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(null);
         }
@@ -450,8 +510,12 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void PromptQuit()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime)
-                return;
+            if (_heldInput.AllowsPointerAction)
+                DoPromptQuit();
+        }
+
+        private void DoPromptQuit()
+        {
 #if UNITY_ANDROID
             Quit();
 #else

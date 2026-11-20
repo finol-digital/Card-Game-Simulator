@@ -77,7 +77,28 @@ namespace Cgs
         private static CardGameManager _instance;
 
         public static UnityCardGame Current { get; private set; } = UnityCardGame.UnityInvalid;
-        public static bool IsCurrentReady { get; private set; }
+
+        /// <summary>Startup's own work, such as the web build's default-game downloads, has finished.</summary>
+        private static bool HasStartedUp { get; set; }
+
+        /// <summary>
+        /// The current game's properties (name, banner, and other cgs.json values) are available. This is all the Main
+        /// Menu needs; card data loads after the menu is interactive.
+        /// </summary>
+        public static bool IsCurrentPropertiesReady =>
+            HasStartedUp && Current.HasReadProperties && !Current.IsDownloading;
+
+        /// <summary>The current game's cards, sets, and images have loaded, so a table can be played.</summary>
+        public static bool IsCurrentContentReady =>
+            IsCurrentPropertiesReady && Current.HasLoaded && !Current.IsLoading;
+
+        /// <summary>
+        /// Loading the current game's content has finished, successfully or not, so screens waiting for it can go on.
+        /// </summary>
+        public static bool IsCurrentContentSettled =>
+            HasStartedUp && !Current.IsDownloading && !Current.IsLoading &&
+            (Current.HasLoaded || !string.IsNullOrEmpty(Current.Error) || Current == UnityCardGame.UnityInvalid);
+
         public static bool IsQuitting { get; private set; }
 
         public bool IsSearchingForServer { get; set; }
@@ -201,12 +222,15 @@ namespace Cgs
 
         private int _selectionVersion;
 
+        // A scene has loaded and its content load will start after the scene's first frame
+        internal bool IsContentLoadScheduled { get; private set; }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStaticState()
         {
             _instance = null;
             Current = UnityCardGame.UnityInvalid;
-            IsCurrentReady = false;
+            HasStartedUp = false;
             IsQuitting = false;
         }
 
@@ -286,11 +310,33 @@ namespace Cgs
                 if (AddressableAssetsFolderName.Equals(gameDirectoryName))
                     continue;
                 var newCardGame = new UnityCardGame(this, gameDirectoryName);
-                newCardGame.ReadProperties();
+                // Decoding every game's images here would delay the first frame; see LoadVisiblePreviewImages
+                newCardGame.ReadProperties(false);
                 if (!string.IsNullOrEmpty(newCardGame.Error))
                     Debug.LogError(newCardGame.Error);
                 else
                     AllCardGames[newCardGame.Id] = newCardGame;
+            }
+        }
+
+        /// <summary>
+        /// Decodes the banners and card backs that game selection shows now: the current game and its neighbors.
+        /// </summary>
+        private void LoadVisiblePreviewImages()
+        {
+            foreach (var game in new[] { Current, Previous, Next })
+                if (game != UnityCardGame.UnityInvalid && !game.HasPreviewImages)
+                    game.LoadPreviewImages();
+        }
+
+        /// <summary>Decodes the other games' banners and card backs in the background, one game at a time.</summary>
+        private IEnumerator LoadPreviewImagesInBackground()
+        {
+            foreach (var game in AllCardGames.Values.ToList())
+            {
+                if (game.HasPreviewImages || !AllCardGames.ContainsValue(game))
+                    continue;
+                yield return game.LoadPreviewImagesAsync();
             }
         }
 
@@ -417,7 +463,11 @@ namespace Cgs
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             ResolutionManager.ScaleResolution();
-            ResetGameScene();
+            // The new scene shows the current game from its properties on its first frame. Its cards, sets, and
+            // images load after that frame, and the scene fills in when they finish.
+            RunSceneActions();
+            IsContentLoadScheduled = true;
+            StartCoroutine(ResetGameSceneAsync(Current, ++_selectionVersion, true));
         }
 
         private void OnSceneUnloaded(Scene scene)
@@ -434,8 +484,12 @@ namespace Cgs
                       string.IsNullOrEmpty(currentGame.Error)
                 ? currentGame
                 : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
+            LoadVisiblePreviewImages();
             GameContentPresentation.Select(Current);
         }
+
+        /// <summary>The link that launched CGS; tests substitute it to simulate a cold start from a link.</summary>
+        internal static Func<string> LaunchDeepLink { get; set; } = () => Application.absoluteURL;
 
         private void CheckDeepLinks()
         {
@@ -443,23 +497,24 @@ namespace Cgs
             Application.deepLinkActivated += OnDeepLinkActivated;
 
             Debug.Log("Checking Deep Links...");
-            if (string.IsNullOrEmpty(Application.absoluteURL))
+            var launchDeepLink = LaunchDeepLink();
+            if (string.IsNullOrEmpty(launchDeepLink))
             {
                 Debug.Log("No Start Deep Link");
                 return;
             }
 
-            if (!Uri.IsWellFormedUriString(Application.absoluteURL, UriKind.RelativeOrAbsolute))
+            if (!Uri.IsWellFormedUriString(launchDeepLink, UriKind.RelativeOrAbsolute))
             {
-                Debug.LogWarning("Start Deep Link malformed: " + Application.absoluteURL);
+                Debug.LogWarning("Start Deep Link malformed: " + launchDeepLink);
                 return;
             }
 
-            Debug.Log("Start Deep Link: " + Application.absoluteURL);
-            OnDeepLinkActivated(Application.absoluteURL);
+            Debug.Log("Start Deep Link: " + launchDeepLink);
+            OnDeepLinkActivated(launchDeepLink);
         }
 
-        private void OnDeepLinkActivated(string deepLink)
+        internal void OnDeepLinkActivated(string deepLink)
         {
             Debug.Log("OnDeepLinkActivated!");
             // Benchmark links are honored only when they launch CGS (see StartupTimeline); a benchmark link that
@@ -477,31 +532,26 @@ namespace Cgs
         private static void DeepLinkLoadScene(string deepLink)
         {
             var scene = GetScene(deepLink);
+            int sceneIndex;
             if ("main".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::main");
-                SceneManager.LoadScene(Tags.MainMenuSceneIndex);
-            }
+                sceneIndex = Tags.MainMenuSceneIndex;
             else if ("play".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::play");
-                SceneManager.LoadScene(Tags.PlayModeSceneIndex);
-            }
+                sceneIndex = Tags.PlayModeSceneIndex;
             else if ("decks".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::decks");
-                SceneManager.LoadScene(Tags.DeckEditorSceneIndex);
-            }
+                sceneIndex = Tags.DeckEditorSceneIndex;
             else if ("cards".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::cards");
-                SceneManager.LoadScene(Tags.CardsExplorerSceneIndex);
-            }
+                sceneIndex = Tags.CardsExplorerSceneIndex;
             else if ("settings".Equals(scene, StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("DeepLinkLoadScene::settings");
-                SceneManager.LoadScene(Tags.SettingsSceneIndex);
-            }
+                sceneIndex = Tags.SettingsSceneIndex;
+            else
+                return;
+
+            Debug.Log("DeepLinkLoadScene::" + scene);
+            // CGS launches on the Main Menu, so a launch link to it must not load the Main Menu a second time
+            if (sceneIndex == Tags.MainMenuSceneIndex &&
+                SceneManager.GetActiveScene().buildIndex == Tags.MainMenuSceneIndex)
+                return;
+            SceneManager.LoadScene(sceneIndex);
         }
 
         private static string GetScene(string deepLink)
@@ -562,13 +612,17 @@ namespace Cgs
             var uri = new Uri(Application.absoluteURL);
             yield return GetCardGame("https://" + uri.Host + "/cgs.json");
 #elif UNITY_WEBGL
+            // The current game's content loads after the first frame; wait for it before deciding it is missing
+            while (IsContentLoadScheduled || Current is { IsLoading: true })
+                yield return null;
             var isMissingGame =
  Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Current.HasLoaded;
             if (isMissingGame)
                 yield return StartGetDefaultCardGames();
 #endif
 
-            IsCurrentReady = true;
+            HasStartedUp = true;
+            StartCoroutine(LoadPreviewImagesInBackground());
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -634,7 +688,7 @@ namespace Cgs
             yield return cardGame.Download();
             Progress.Hide();
 
-            cardGame.Load(UpdateCardGame, LoadCards, LoadSetCards);
+            yield return cardGame.LoadRoutine(UpdateCardGame, LoadCards, LoadSetCards);
 
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
@@ -667,6 +721,11 @@ namespace Cgs
         {
             cardGame ??= Current;
 
+            // The download replaces the loaded cards, so let a load that is still running finish first; otherwise that
+            // load would end without the downloaded cards
+            while (cardGame.IsLoading)
+                yield return null;
+
             Progress.Show(cardGame);
             yield return cardGame.Download(true);
             Progress.Hide();
@@ -679,7 +738,7 @@ namespace Cgs
                 cardGame.ClearError();
             }
 
-            cardGame.Load(null, LoadCards, LoadSetCards);
+            yield return cardGame.LoadRoutine(null, LoadCards, LoadSetCards);
             if (cardGame == Current)
                 ResetGameScene();
         }
@@ -754,36 +813,80 @@ namespace Cgs
 
             // Immediately set current so UI can update without waiting for heavy load work
             Current = game;
+            LoadVisiblePreviewImages();
             GameContentPresentation.Select(game);
             // Start an async reset so heavy load work doesn't block the main thread/UI animation
             StartCoroutine(ResetGameSceneAsync(game, ++_selectionVersion));
         }
 
-        private IEnumerator ResetGameSceneAsync(UnityCardGame targetGame, int selectionVersion)
+        /// <summary>
+        /// Loads <paramref name="targetGame"/>'s content in the background, then resets the scene. A later selection or
+        /// scene load supersedes this one; a load that is already running is waited for instead of being repeated.
+        /// </summary>
+        /// <param name="afterFirstFrame">Waits until the scene has drawn and accepted input once, as on scene load.
+        /// Otherwise, as when the player selects a game, the scene also refreshes every frame while it loads.</param>
+        private IEnumerator ResetGameSceneAsync(UnityCardGame targetGame, int selectionVersion,
+            bool afterFirstFrame = false)
         {
-            if (targetGame != Current || selectionVersion != _selectionVersion)
+            if (afterFirstFrame)
+            {
+                yield return null;
+                // Batch-mode Editors and players never reach the end of a rendered frame
+                if (Application.isBatchMode)
+                    yield return null;
+                else
+                    yield return new WaitForEndOfFrame();
+                IsContentLoadScheduled = false;
+            }
+
+            if (IsSuperseded(targetGame, selectionVersion))
                 yield break;
 
-            if (!targetGame.HasLoaded && !targetGame.IsLoading)
+            if (NeedsContentLoad(targetGame) || targetGame.IsLoading)
             {
-                targetGame.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
+                if (!targetGame.IsLoading)
+                    targetGame.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
                 yield return null;
                 while (targetGame.IsLoading)
                 {
-                    ResetGameScene();
+                    if (IsSuperseded(targetGame, selectionVersion))
+                        yield break;
+                    if (!afterFirstFrame && string.IsNullOrEmpty(targetGame.Error))
+                        RunSceneActions();
                     yield return null;
                 }
             }
 
-            ResetGameScene();
+            if (!IsSuperseded(targetGame, selectionVersion))
+                RunSceneActions();
         }
 
+        private bool IsSuperseded(UnityCardGame targetGame, int selectionVersion) =>
+            targetGame != Current || selectionVersion != _selectionVersion;
+
+        private static bool NeedsContentLoad(UnityCardGame game) =>
+            game != UnityCardGame.UnityInvalid && !game.HasLoaded && !game.IsLoading && !game.IsDownloading &&
+            string.IsNullOrEmpty(game.Error);
+
+        /// <summary>
+        /// Refreshes the scene for the current game, first loading its content in the background if it has not loaded.
+        /// </summary>
         internal void ResetGameScene()
         {
-            if (!Current.HasLoaded && !Current.IsLoading)
-                Current.Load(Current.IsDownloading ? null : UpdateCardGame, LoadCards, LoadSetCards);
+            if (NeedsContentLoad(Current))
+            {
+                StartCoroutine(ResetGameSceneAsync(Current, ++_selectionVersion));
+                return;
+            }
 
-            if (Current.IsDownloading)
+            RunSceneActions();
+        }
+
+        /// <summary>Runs the scene's actions for the current game as it is now, without loading anything.</summary>
+        private void RunSceneActions()
+        {
+            // No game is installed yet (as on a first web visit), or it is still downloading
+            if (Current == UnityCardGame.UnityInvalid || Current.IsDownloading)
                 return;
 
             if (!string.IsNullOrEmpty(Current.Error))
@@ -795,9 +898,9 @@ namespace Cgs
                 return;
             }
 
-            // Now is the safest time to set this game as the preferred default game for the player.
+            // Once the game has loaded is the safest time to set it as the preferred default game for the player.
             // Benchmark runs must not change saved preferences.
-            if (!StartupTimeline.IsBenchmarking)
+            if (Current.HasLoaded && !StartupTimeline.IsBenchmarking)
                 PlayerPrefs.SetString(PlayerPrefsDefaultGame, Current.Id);
 
             // Each scene is responsible for adding to OnSceneActions, but they may not remove

@@ -251,6 +251,30 @@ namespace Cgs.Editor.Localization
             }
         }
 
+        /// <summary>
+        /// Explicit retirement migration: removes the named keys from every generated table after they have been
+        /// removed from all catalogs. Keys that are still in the English catalog are rejected.
+        /// </summary>
+        public static void RetireKeys(params string[] keys)
+        {
+            var catalogs = ReadValidated(CatalogDirectory);
+            var stillPresent = keys.Where(key => catalogs.English[key] != null).ToArray();
+            if (stillPresent.Length > 0)
+                throw new BuildFailedException(CatalogError + "Remove keys from every catalog before retiring them: "
+                                               + string.Join(", ", stillPresent));
+            var collection = LocalizationEditorSettings.GetStringTableCollection(CgsLocalization.TableName);
+            if (collection == null)
+                return;
+            foreach (var key in keys.Where(key => collection.SharedData.Contains(key)))
+                collection.RemoveEntry(key);
+            foreach (var table in collection.StringTables)
+                EditorUtility.SetDirty(table);
+            EditorUtility.SetDirty(collection.SharedData);
+            EditorUtility.SetDirty(collection);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Retired CGS messages: " + string.Join(", ", keys));
+        }
+
         private static void CheckRetiredKeys(StringTableCollection collection, CatalogSet catalogs)
         {
             if (collection == null)
