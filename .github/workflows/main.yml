@@ -258,7 +258,7 @@ jobs:
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -344,7 +344,7 @@ jobs:
           preinstalled-runtimes: true
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -410,7 +410,7 @@ jobs:
           restore-keys: Library-buildMac-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -674,7 +674,7 @@ jobs:
           restore-keys: Library-buildLinuxAmazon-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -890,7 +890,7 @@ jobs:
       - name: Build Unity Project
         id: buildStep
         timeout-minutes: 45
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -1003,7 +1003,7 @@ jobs:
       - name: Build Unity Project
         id: build
         timeout-minutes: 45
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
