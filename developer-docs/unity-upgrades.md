@@ -23,6 +23,15 @@ imported, so scan a log from a clean import (below) when you want to see everyth
 Only add an allowlist entry for a message we cannot fix in this repository, such as a shader inside a Unity package,
 and write down why. Remove entries that no longer match.
 
+## Compiler warnings that fail the build
+
+`Assets/csc.rsp` passes `-warnaserror:CS0618,CS0612,UAC1001` to the C# compiler for every script under `Assets/`
+(packages are not affected). Using an API marked `[Obsolete]`, or a field Unity cannot serialize, is a compile error
+instead of a warning. Code inside platform blocks such as `#if UNITY_IOS` or `#if ENABLE_WINMD_SUPPORT` only compiles
+when building for that platform, so CI's platform builds are what catch those. Replace the obsolete API instead of
+suppressing the error; if a suppression is unavoidable, use `#pragma warning disable` around the single line with a
+comment explaining why.
+
 ## Clean open
 
 To see every import-time warning, open the project with an empty `Library/` in batchmode and scan the logs:

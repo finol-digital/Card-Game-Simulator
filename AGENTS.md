@@ -96,6 +96,7 @@ All C# files must start with the MPL 2.0 license header:
 ### Unity-Specific Guidelines
 - Use `using` statements for disposable Unity objects (UnityWebRequest, etc.)
 - Keep the Editor log free of warnings. After changing assets, settings, packages, or the Unity version, scan the log with `python3 tools/unity-log-scan/scan_unity_log.py Logs/Editor.log` and fix what it reports. Follow [the Unity upgrade guide](developer-docs/unity-upgrades.md) for Editor and package upgrades.
+- `Assets/csc.rsp` makes obsolete-API use (CS0618, CS0612) and unserializable fields (UAC1001) compile errors. Replace the obsolete API rather than suppressing the error.
 - Do not import whole package samples into `Assets/`; copy only the files the project uses, so later package versions cannot cause GUID conflicts.
 
 ### Performance Guidelines
