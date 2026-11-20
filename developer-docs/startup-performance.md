@@ -31,7 +31,7 @@ opened, and on later pushes to `develop` that touch `Assets`, `Packages`, or `Pr
 | iPhone 11 | TestFlight | TestFlight | `ios_video_benchmark.py` (video) |
 | Steam Deck | Steam `prerelease` branch | Steam > Properties > Betas | `desktop_benchmark.py --steam` and `--player` |
 | Google Pixel 10 Pro Fold | Google Play beta track | Play Store (beta tester) | `android_benchmark.py` (record the posture) |
-| iPad (9th generation) | TestFlight | TestFlight | `ios_video_benchmark.py` (video) |
+| iPad (6th generation) | TestFlight | TestFlight | `ios_video_benchmark.py` (video) |
 | Mac mini (M1) | `cgs-StandaloneOSX` (`Card Game Simulator.app`); optionally Steam `prerelease` | Artifacts of the PR's run; Steam > Properties > Betas | `desktop_benchmark.py --player` (optionally `--steam`) |
 | Microsoft Surface Laptop Studio | `cgs-StandaloneWindows64`; optionally Steam `prerelease` | Artifacts of the PR's run; Steam > Properties > Betas | `desktop_benchmark.py --player` (optionally `--steam`) |
 | Web (laptop and Z Flip 3 browsers) | Firebase `preview` channel | URL in the PR's Firebase deploy step | `web_benchmark.mjs` |
@@ -42,10 +42,10 @@ Record each device's details here before using its results:
 |---|---|---|---|---|---|---|
 | Lenovo IdeaPad Y510P | Ubuntu 26.04.1 LTS, GNOME on Wayland | Intel Core i7-4700MQ (4 cores, 8 threads, 2.4–3.4 GHz) | NVIDIA GeForce GT 750M with the open-source nouveau driver (OpenGL 4.3, Mesa 26.0.8) | 8 GB (7.2 GB usable) | SSD (Kingston A400, 240 GB) | Partly. The CPU and OpenGL 4.3 meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); Ubuntu 26.04 (supported: 22.04 and 24.04) and the nouveau driver (supported: NVIDIA's proprietary driver) are outside them |
 | Galaxy Z Flip 3 (SM-F711U1) | Android 15, One UI 7.0 (AP3A.240905.015.A2.F711U1UESIKZH2) | Snapdragon 888 | Adreno 660 (OpenGL ES 3.2, Vulkan); 120 Hz display | 8 GB | UFS, 256 GB | Yes. Android 15 on ARM64 with OpenGL ES 3.2 and Vulkan meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
-| iPhone 11 | | A13 | | 4 GB | | |
+| iPhone 11 (iPhone12,1) | iOS 27.2.1 (24B156) | Apple A13 Bionic (2 performance and 4 efficiency cores) | Apple 4-core GPU (Metal); 828 × 1792 display at 60 Hz | 4 GB | NAND flash, 64 GB | Yes. iOS on ARM64 with Metal meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 | Steam Deck (LCD, "Jupiter") | SteamOS 3.8.28; Desktop Mode (KDE Plasma on Wayland) for these measurements | AMD Custom APU 0405 (Zen 2, 4 cores, 8 threads) | AMD Custom GPU 0405 (RDNA 2) with Mesa radeonsi; the player used OpenGL 4.6 | 16 GB (14 GiB usable) | SSD (NVMe, Transcend TS256GMTE352T, 256 GB) | Partly. The CPU, GPU, and AMD Mesa driver meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements); SteamOS and KDE Plasma are not listed (supported: Ubuntu 22.04 and 24.04 with GNOME) |
 | Pixel 10 Pro Fold ("rango") | Android 17 (CP3A.261005.005, security patch 2026-10-05) | Google Tensor G5 | PowerVR D-Series DXT-48-1536 (OpenGL ES 3.2, Vulkan); inner display 2076 × 2152 at 120 Hz | 16 GB | UFS, 256 GB | Yes. Android on ARM64 with OpenGL ES 3.2 and Vulkan meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
-| iPad (9th generation) | | A13 | | 3 GB | | |
+| iPad (6th generation) (iPad7,5) | iPadOS 17.7.11 (21H461) | Apple A10 Fusion (2 performance and 2 efficiency cores) | Apple A10 GPU (Metal); 1536 × 2048 display at 60 Hz | 2 GB | NAND flash, 32 GB | Yes. iPadOS on ARM64 with Metal meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 | Mac mini (M1, Macmini9,1) | macOS 27.0 (26A428) | Apple M1 (4 performance and 4 efficiency cores) | Apple M1, 8 GPU cores (Metal 4); 1920 × 1080 display at 100 Hz | 8 GB | SSD (Apple AP0256Q, 256 GB) | Yes. Apple silicon with Metal meets the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 | Surface Laptop Studio | Windows 11 Home (10.0.26300) | Intel Core i7-11370H (4 cores, 8 threads, 3.3–4.8 GHz) | Intel Iris Xe and NVIDIA GeForce RTX 3050 Ti Laptop GPU (switchable; the player used the NVIDIA GPU, per the `Renderer` line in its `Player.log`) | 16 GB | SSD (Samsung MZ9LQ512HALU, 512 GB) | Yes. Windows 11 x64 and DirectX 12-capable GPUs meet the [Unity 6.6 system requirements](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/getting-started-installing-unity/system-requirements) |
 
@@ -104,7 +104,7 @@ Start Game is dispatched only after the frame with the menu marker has been pres
 |---|---|---|
 | Desktop | Result file and log | The player exits with status 0 (ok) or 1 (failed) |
 | Android | Logcat line `[CgsBenchmark] {...}` and `files/benchmark/run-<id>.json` | The harness |
-| iOS | `os_log` line (Console or `log stream` on a Mac) and an on-screen panel: tap it to share the JSON | The tester closes the app |
+| iOS | `os_log` line (Console or `log stream` on a Mac), `Documents/benchmark/run-<id>.json` in the app's container, and an on-screen panel: tap it to share the JSON | The tester or the harness closes the app |
 | Web | `window.cgsBenchmarkResult` and a console line | The harness |
 
 ## Harnesses
@@ -198,7 +198,7 @@ one posture for a whole run set and record it (for example `--csv pixel10fold-un
 `launchToMenuMs` is the system's "Fully drawn" time, from the launch intent to `reportFullyDrawn()` at the
 interactive Main Menu. Later intervals add the app's own milestones, which use the same `elapsedRealtime` clock.
 
-### iOS and iPadOS (iPhone 11, iPad 9th generation, TestFlight)
+### iOS and iPadOS (iPhone 11, iPad 6th generation, TestFlight)
 
 1. Save `cardgamesim://main?benchmark=1&run=1` (one run number per launch) as links in Notes.
 2. Film the screen with an external camera at 240 fps or faster. Tap a link, wait for the results panel, close CGS
@@ -216,6 +216,36 @@ interactive Main Menu. Later intervals add the app's own milestones, which use t
 Each interval adds one capture frame and one display refresh (about 20.8 ms at 240 fps and 60 Hz), so pass/fail is
 conservative. Runs whose video and JSON disagree are discarded and re-run. On a local development build, an
 `XCTOSSignpostMetric` test is an optional cross-check.
+
+The iPhone 11 and iPad baselines were recorded without touching the device, from a Mac with Xcode:
+
+- **Launch:** with the device trusted and in Developer Mode, close CGS and wait 3 s on the Home Screen. Then run
+  `xcrun devicectl device process launch --device <udid> --payload-url "cardgamesim://main?benchmark=1&run=<id>"
+  com.finoldigital.CardGameSim`.
+  - Find the pid to close with `xcrun devicectl device info processes`, then close it with
+    `xcrun devicectl device process terminate --pid <pid>`.
+  - After the set, copy the results with `xcrun devicectl device copy from --domain-type appDataContainer
+    --domain-identifier com.finoldigital.CardGameSim --source Documents/benchmark`.
+- **Filming:** a Pixel 10 Pro Fold filmed the screen in Slow Motion at 1/8× (240 frames per second), started and
+  stopped over `adb` with the volume key.
+  - Fix the exposure at about 30% with the iPhone at 30% brightness, or yellow overexposes to white.
+  - Turn on Auto-Lock Never and Do Not Disturb.
+  - Use a Home Screen page without animated widgets.
+  - Power the camera phone from a fast charger: 240 fps drains it faster than a 500 mA port charges it.
+- **Reading the video:** the marker frames come from colour tracking.
+  - Launch is the first frame where the screen starts to change, which is the start of the app-opening animation.
+  - Compare each frame with the one two frames earlier. This cancels the 120 Hz flicker of mains lighting.
+  - The launch threshold comes from a quiet stretch of the Home Screen after the previous run closes. On the iPad the
+    app-closing animation lasts longer, so start that stretch 2 s after the previous run's markers disappear rather
+    than 1 s.
+  - Locate the blue and yellow markers from the green one's position. Tracked on their own, they can slide onto other
+    yellow or blue content on screen.
+- **The reference build:** launch it by bundle ID (`com.finoldigital.CgsStartupReference`). Unity on iOS does not pass
+  launch arguments to the app, so it always writes `run-0.json`: copy that file after each run.
+- **Xcode's debugger:** while Xcode's debugger is attached after a Run, `devicectl` cannot close the app. Press Stop
+  in Xcode first.
+- **First install:** `devicectl` cannot clear an app's data, so first install needs deleting and reinstalling from
+  TestFlight by hand.
 
 ### Web
 
@@ -340,6 +370,10 @@ launch → menu fell by about 515 ms at the median, and the first managed callba
 | Galaxy Z Flip 3 | First install (app data cleared) | 1.171.24 (Google Play beta, version code 1171024) | 1832 / 2045 ms | 225 / 239 ms | 2129 / 2403 ms | 619 / 678 ms | 0 of 30 |
 | Pixel 10 Pro Fold | Repeat launch, saved data (process stopped), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1327 / 1462 ms | 194 / 218 ms | 1590 / 1759 ms | 836 / 950 ms | 0 of 30 |
 | Pixel 10 Pro Fold | First install (app data cleared), unfolded | 1.171.24 (Google Play beta, version code 1171024) | 1380 / 1415 ms | 202 / 219 ms | 1651 / 1686 ms | 836 / 950 ms | 0 of 30 |
+| iPhone 11 | Repeat launch, saved data (app closed) | 1.171.24 (TestFlight) | 1296 / 1379 ms | 200 / 204 ms | 1506 / 1604 ms | 421 / 646 ms | 0 of 30 |
+| iPhone 11 | First install | 1.171.24 (TestFlight) | Not measured | Not measured | Not measured | 421 / 646 ms | – |
+| iPad (6th generation) | Repeat launch, saved data (app closed) | 1.171.24 (TestFlight) | 2075 / 3125 ms | 298 / 321 ms | 2396 / 3546 ms | 623 / 1333 ms | 0 of 30 |
+| iPad (6th generation) | First install | 1.171.24 (TestFlight) | Not measured | Not measured | Not measured | 623 / 1333 ms | – |
 | Mac mini (M1) | Repeat launch, saved data | 1.171.24 (`cgs-StandaloneOSX`, commit `37fc9fe6`) | 1007 / 1275 ms | 93 / 122 ms | 1542 / 1857 ms | 543 / 625 ms | 0 of 30 |
 | Mac mini (M1) | First install | 1.171.24 (`cgs-StandaloneOSX`, commit `37fc9fe6`) | 1213 / 1379 ms | 103 / 120 ms | 1778 / 1953 ms | 543 / 625 ms | 0 of 30 |
 | Web, Lenovo IdeaPad Y510P (Chromium 159) | Repeat visit, cached | 1.171.24 (Firebase `preview` channel, commit `37fc9fe6`) | 2180 / 2308 ms | 207 / 229 ms | 2428 / 2530 ms | Not built | 0 of 30 |
@@ -398,6 +432,36 @@ Notes:
   draw, slower than on the Z Flip 3 even though CGS is faster here, so CGS adds only about 490 ms to it at the median.
   The reference set also stepped down after its 19th run (824–965 ms before, 718–789 ms after), which may be
   background optimization of the newly installed APK; wait a few minutes after installing before measuring.
+- **iPhone 11** (2026-11-18, plugged into the Mac, 30% brightness, 30 runs per row, filmed at 240 fps; see
+  [iOS and iPadOS](#ios-and-ipados-iphone-11-ipad-6th-generation-testflight)).
+  - **Video times:** the times come from the video and include the 20.8 ms uncertainty margin. Every run's JSON
+    reported `ok`, and none switched games.
+  - **CGS on iOS draws at 30 fps,** so the screen lags the app's own timestamps by up to a few frames:
+    - Start → action is about 180 ms on video, against about 112 ms in the JSON.
+    - The Start button's marker appears 30–50 ms after the menu's on video, against 100–110 ms in the JSON.
+    - Launch → menu agrees with the JSON: the menu appears 850–920 ms after the engine starts, and the rest is the
+      system's app launch.
+  - **Reference build:** it took 400–571 ms in 28 runs. The two slow runs were the first launches after a pause:
+    646 ms on the first launch after installing, and 1229 ms after an hour without launching it, almost all of it
+    before Unity started.
+
+    Like every other native device, the iPhone 11 needs a launch-budget exception relative to the reference build.
+    CGS adds about 875 ms to it at the median.
+  - **First install was not measured.** It needs the app deleted and reinstalled from TestFlight before each run,
+    because `devicectl` cannot clear app data. It is deferred to task 6.3, which sets the first-install budgets.
+- **iPad (6th generation)** (2026-11-19, plugged into the Mac, 30% brightness, landscape, 30 runs per row, filmed at
+  240 fps like the iPhone 11). The iPad (9th generation) originally listed was not available, so this older iPad,
+  with an A10 Fusion and 2 GB of RAM, is the iPad reference device.
+  - **CGS:** every run's JSON reported `ok`, and none switched games. 28 runs reached the menu in 1967–2504 ms. The
+    two slow ones were the first launch of the set (3575 ms) and the first launch after a 6-minute pause (3125 ms).
+    Each run was given 8 s before it was closed, rather than 6 s, because the first launch reached the card action
+    about 4.2 s after launch.
+  - **Reference build:** 24 runs took 592–688 ms. The first launch after installing took 2317 ms, and launches
+    after a pause of a few minutes took 850–1333 ms.
+
+    The iPad needs a launch-budget exception relative to the reference build. CGS adds about 1450 ms to it at the
+    median, the most of any native device.
+  - **First install was not measured,** for the same reason as on the iPhone 11.
 - **Mac mini (M1)** (2026-11-16, on mains power, 30 runs per row, driven over SSH while the user stayed logged
   in). The `cgs-StandaloneOSX` build is sandboxed and shares its container with the installed App Store CGS, so the
   saved game was switched to Standard Playing Cards for these runs and the container's settings were restored
