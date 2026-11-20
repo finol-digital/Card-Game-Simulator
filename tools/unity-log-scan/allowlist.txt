@@ -6,3 +6,7 @@
 # URP package shaders that need features Metal does not provide. We do not use terrain or VR spatial mapping.
 ^WARNING: Shader Unsupported: 'Universal Render Pipeline/VR/SpatialMapping/Wireframe'
 ^WARNING: Shader Unsupported: '(?:Hidden/)?Universal Render Pipeline/Terrain/Lit
+
+# URP package deferred-lighting shaders, unsupported by the graphics API on the Linux CI runners. The project uses the
+# 2D Renderer, which never uses deferred lighting.
+^WARNING: Shader Unsupported: 'Hidden/Universal Render Pipeline/(?:ClusterDeferred|StencilDeferred)'

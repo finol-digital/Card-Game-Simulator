@@ -14,6 +14,7 @@ on:
       - 'ProjectSettings/**'
       - '.github/workflows/main.yml'
       - '.github/actions/unity-windows-python/**'
+      - 'tools/unity-log-scan/**'
   pull_request:
     types:
       - opened
@@ -25,6 +26,7 @@ on:
       - 'ProjectSettings/**'
       - '.github/workflows/main.yml'
       - '.github/actions/unity-windows-python/**'
+      - 'tools/unity-log-scan/**'
   release:
     types:
       - published
@@ -99,6 +101,21 @@ jobs:
         with:
           testMode: playmode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      # The test runner writes each Unity Editor log to artifacts/<testMode>.log.
+      - name: Scan Unity Logs for Warnings
+        if: ${{ !cancelled() }}
+        run: |
+          status=0
+          for log in artifacts/editmode.log artifacts/playmode.log; do
+            echo "::group::Scan $log"
+            if [ -f "$log" ]; then
+              python3 tools/unity-log-scan/scan_unity_log.py "$log" --github || status=1
+            else
+              echo "::warning title=Unity log scan::$log was not found"
+            fi
+            echo "::endgroup::"
+          done
+          exit $status
       # Keep automated metadata on develop; main changes arrive through release PRs.
       - name: Checkout Release Notes Branch
         if: github.event.action == 'published'

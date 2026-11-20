@@ -20,6 +20,11 @@ An interactive Editor writes `Logs/Editor.log` (and one `Logs/AssetImportWorker*
 Console is not saved, but every Console message is also in these logs. Many warnings appear only when an asset is
 imported, so scan a log from a clean import (below) when you want to see everything.
 
+CI runs the scanner on the EditMode and PlayMode test logs (`artifacts/editmode.log` and `artifacts/playmode.log`) in
+the Unit Tests job of `.github/workflows/main.yml`. New warnings appear as annotations on the run and fail the job.
+CI restores a cached `Library/`, so it only sees import warnings for assets that changed; the clean open below is
+still needed after upgrades.
+
 Only add an allowlist entry for a message we cannot fix in this repository, such as a shader inside a Unity package,
 and write down why. Remove entries that no longer match.
 
