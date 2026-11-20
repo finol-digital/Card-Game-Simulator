@@ -205,6 +205,22 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator KeyPressActsWhileAPointerIsHeldFromBefore()
+        {
+            var mouse = Add<Mouse>();
+            var keyboard = Add<Keyboard>();
+            InputSystem.QueueStateEvent(mouse, new MouseState().WithButton(MouseButton.Left));
+            yield return null;
+
+            yield return ColdStart(null);
+            // The held mouse button blocks clicks, but not a fresh key press
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Delete));
+            yield return WaitForScene(Tags.SettingsSceneIndex);
+
+            Assert.AreEqual("Settings", SceneManager.GetActiveScene().name);
+        }
+
+        [UnityTest]
         public IEnumerator GamepadPlayerHasAControlSelectedAndTheFirstPressActs()
         {
             var gamepad = Add<Gamepad>();

@@ -129,7 +129,11 @@ const launchOptions = { headless: args.headless !== 'false', args: browserArgs }
 const remote = args.cdp ? await chromium.connectOverCDP(args.cdp) : null;
 if (mode === 'repeat') {
     const profile = remote ? null : fs.mkdtempSync(path.join(os.tmpdir(), 'cgs-web-'));
-    const context = remote ? remote.contexts()[0] : await chromium.launchPersistentContext(profile, launchOptions);
+    // On a phone, one incognito context holds the whole set, so its caches stay warm between runs while the normal
+    // profile is never touched; a null viewport keeps Playwright from resizing the window, which Android does not allow
+    const context = remote
+        ? await remote.newContext({ viewport: null })
+        : await chromium.launchPersistentContext(profile, launchOptions);
     const page = await context.newPage();
     logConsole(page, () => currentRun);
     await measure(page, 0).catch(() => null); // warm the caches; not recorded
@@ -139,15 +143,10 @@ if (mode === 'repeat') {
         records.push(await measure(page, run).catch(error => ({ run, ok: false, failure: String(error) })));
         if (pauseMs > 0) await pause(page);
     }
-    if (remote) {
-        // Remove what the runs saved for the benchmarked site from the phone's normal browser profile
-        const session = await context.newCDPSession(page);
-        await session.send('Storage.clearDataForOrigin', { origin: new URL(args.url).origin, storageTypes: 'all' });
-        await page.close();
-    } else {
-        await context.close();
+    // Closing the context discards everything the runs saved
+    await context.close();
+    if (profile)
         fs.rmSync(profile, { recursive: true, force: true });
-    }
 } else {
     for (let run = 1; run <= runs; run++) {
         if (remote) {

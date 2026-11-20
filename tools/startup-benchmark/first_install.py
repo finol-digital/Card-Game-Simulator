@@ -47,23 +47,58 @@ def remove_tree(path: Path) -> None:
         raise SystemExit(f"Could not delete {path}; close anything using it and try again")
 
 
+class SetAsideFolders:
+    """Moves folders aside and puts them back, so that a restore can be retried after stopping at any step.
+
+    A list of the folders that were moved is kept until the restore finishes. A folder on that list whose saved copy
+    is gone has already been put back, so a retried restore leaves it alone instead of deleting it as run data.
+    """
+
+    def __init__(self, folders: list[Path], work_dir: Path):
+        self.folders = folders
+        self.moved = work_dir / "cgs-first-install-moved"
+
+    @staticmethod
+    def saved(folder: Path) -> Path:
+        return folder.with_name(folder.name + SAVED_SUFFIX)
+
+    def any_set_aside(self) -> bool:
+        return self.moved.exists() or any(self.saved(f).exists() for f in self.folders)
+
+    def set_aside(self) -> None:
+        for folder in self.folders:
+            if folder.exists():
+                with open(self.moved, "a", encoding="utf-8") as moved:
+                    moved.write(str(folder) + "\n")
+                folder.rename(self.saved(folder))
+
+    def put_back(self, running: bool) -> None:
+        moved = set(self.moved.read_text(encoding="utf-8").splitlines()) if self.moved.exists() else set()
+        for folder in self.folders:
+            if self.saved(folder).exists():
+                remove_tree(folder)
+                self.saved(folder).rename(folder)
+            elif running and str(folder) not in moved:
+                # The player had no data here, so whatever is here now came from the runs
+                remove_tree(folder)
+
+    def finish(self) -> None:
+        self.moved.unlink(missing_ok=True)
+
+
 class WindowsData:
     """Moves the player's data folder, cache folder, and registry settings aside, and puts them back."""
 
     def __init__(self, work_dir: Path):
         profile = Path(os.environ["USERPROFILE"])
-        self.folders = [profile / "AppData" / "LocalLow" / COMPANY / PRODUCT,
-                        Path(os.environ["TEMP"]) / COMPANY / PRODUCT]
+        self.folders = SetAsideFolders([profile / "AppData" / "LocalLow" / COMPANY / PRODUCT,
+                                        Path(os.environ["TEMP"]) / COMPANY / PRODUCT], work_dir)
         self.key = rf"HKCU\Software\{COMPANY}\{PRODUCT}"
         self.reg_backup = work_dir / "cgs-settings-backup.reg"
         # Present while the settings exist only in reg_backup
         self.settings_saved = work_dir / "cgs-settings-saved"
         # Present once everything is set aside; from then on, what is in the original places is run data
         self.runs_started = work_dir / "cgs-first-install-running"
-
-    @staticmethod
-    def saved(folder: Path) -> Path:
-        return folder.with_name(folder.name + SAVED_SUFFIX)
 
     def reg(self, *args: str, check: bool = True) -> int:
         code = subprocess.run(["reg", *args], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
@@ -72,17 +107,14 @@ class WindowsData:
         return code
 
     def save(self) -> None:
-        if self.settings_saved.exists() or self.runs_started.exists() or \
-                any(self.saved(f).exists() for f in self.folders):
+        if self.settings_saved.exists() or self.runs_started.exists() or self.folders.any_set_aside():
             raise SystemExit("CGS data from an earlier first-install run is still set aside. Run with --restore.")
         try:
             if self.reg("query", self.key, check=False) == 0:
                 self.reg("export", self.key, str(self.reg_backup), "/y")
                 self.settings_saved.write_text("1", encoding="utf-8")
                 self.reg("delete", self.key, "/f")
-            for folder in self.folders:
-                if folder.exists():
-                    folder.rename(self.saved(folder))
+            self.folders.set_aside()
         except BaseException:
             self.restore()
             raise
@@ -90,26 +122,22 @@ class WindowsData:
         print("Your CGS data and settings are set aside; they are put back when the runs end.", file=sys.stderr)
 
     def clear(self) -> None:
-        for folder in self.folders:
+        for folder in self.folders.folders:
             remove_tree(folder)
         self.reg("delete", self.key, "/f", check=False)
 
     def restore(self) -> None:
         running = self.runs_started.exists()
-        for folder in self.folders:
-            if self.saved(folder).exists():
-                remove_tree(folder)
-                self.saved(folder).rename(folder)
-            elif running:
-                remove_tree(folder)
+        self.folders.put_back(running)
+        # Importing the backup again is harmless, so its marker is removed only once everything is back
         if self.settings_saved.exists():
             self.reg("delete", self.key, "/f", check=False)
             self.reg("import", str(self.reg_backup))
-            self.settings_saved.unlink()
         elif running:
             self.reg("delete", self.key, "/f", check=False)
-        if running:
-            self.runs_started.unlink()
+        self.runs_started.unlink(missing_ok=True)
+        self.settings_saved.unlink(missing_ok=True)
+        self.folders.finish()
         print("Your CGS data and settings are restored.", file=sys.stderr)
 
 
@@ -127,7 +155,9 @@ class MacData:
         library = Path.home() / "Library"
         if "com.apple.security.app-sandbox" in entitlements:
             library = library / "Containers" / bundle_id / "Data" / "Library"
-        self.folders = [library / "Application Support" / bundle_id, library / "Caches" / bundle_id]
+        # The player keeps its data in folders named after the bundle ID (inside the container when sandboxed)
+        self.folders = SetAsideFolders([library / "Application Support" / bundle_id, library / "Caches" / bundle_id],
+                                       work_dir)
         # Settings go through cfprefsd, which caches them, so they are changed with defaults instead of as a file
         self.prefs = str(library / "Preferences" / f"{bundle_id}.plist")
         self.prefs_backup = work_dir / "cgs-settings-backup.plist"
@@ -141,17 +171,14 @@ class MacData:
         return code
 
     def save(self) -> None:
-        if self.settings_saved.exists() or self.runs_started.exists() or \
-                any(WindowsData.saved(f).exists() for f in self.folders):
+        if self.settings_saved.exists() or self.runs_started.exists() or self.folders.any_set_aside():
             raise SystemExit("CGS data from an earlier first-install run is still set aside. Run with --restore.")
         try:
             if Path(self.prefs).exists():
                 self.defaults("export", self.prefs, str(self.prefs_backup))
                 self.settings_saved.write_text("1", encoding="utf-8")
                 self.defaults("delete", self.prefs)
-            for folder in self.folders:
-                if folder.exists():
-                    folder.rename(WindowsData.saved(folder))
+            self.folders.set_aside()
         except BaseException:
             self.restore()
             raise
@@ -159,26 +186,22 @@ class MacData:
         print("Your CGS data and settings are set aside; they are put back when the runs end.", file=sys.stderr)
 
     def clear(self) -> None:
-        for folder in self.folders:
+        for folder in self.folders.folders:
             remove_tree(folder)
         self.defaults("delete", self.prefs, check=False)
 
     def restore(self) -> None:
         running = self.runs_started.exists()
-        for folder in self.folders:
-            if WindowsData.saved(folder).exists():
-                remove_tree(folder)
-                WindowsData.saved(folder).rename(folder)
-            elif running:
-                remove_tree(folder)
+        self.folders.put_back(running)
+        # Importing the backup again is harmless, so its marker is removed only once everything is back
         if self.settings_saved.exists():
             self.defaults("delete", self.prefs, check=False)
             self.defaults("import", self.prefs, str(self.prefs_backup))
-            self.settings_saved.unlink()
         elif running:
             self.defaults("delete", self.prefs, check=False)
-        if running:
-            self.runs_started.unlink()
+        self.runs_started.unlink(missing_ok=True)
+        self.settings_saved.unlink(missing_ok=True)
+        self.folders.finish()
         print("Your CGS data and settings are restored.", file=sys.stderr)
 
 

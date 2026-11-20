@@ -234,6 +234,10 @@ The iPhone 11 and iPad baselines were recorded without touching the device, from
   - Power the camera phone from a fast charger: 240 fps drains it faster than a 500 mA port charges it.
 - **Reading the video:** the marker frames come from colour tracking.
   - Launch is the first frame where the screen starts to change, which is the start of the app-opening animation.
+    This stands in for the player's tap, which iOS answers with that animation within a display refresh or two. The
+    time of the `devicectl` request is not used, because it adds USB and CoreDevice delays that a tap does not have.
+    The measured times can therefore be shorter than tap-to-menu times by those one or two refreshes (about
+    17–33 ms at 60 Hz).
   - Compare each frame with the one two frames earlier. This cancels the 120 Hz flicker of mains lighting.
   - The launch threshold comes from a quiet stretch of the Home Screen after the previous run closes. On the iPad the
     app-closing animation lasts longer, so start that stretch 2 s after the previous run's markers disappear rather
@@ -266,8 +270,10 @@ days after that deploy. Record the network type and browser version with the res
 - `--console-log <file>` appends each run's browser console to a file, for diagnosing failed runs.
 - `--pause-ms <ms>` leaves a blank page between runs so that a phone can cool down.
 - `--cdp <url>` drives a phone's Chrome instead of a local browser. Turn on wireless or USB debugging, then run
-  `adb forward tcp:9333 localabstract:chrome_devtools_remote` and pass `--cdp http://127.0.0.1:9333`. First visits
-  use incognito contexts; repeat visits use a normal tab and then clear the site's data from the phone's profile.
+  `adb forward tcp:9333 localabstract:chrome_devtools_remote` and pass `--cdp http://127.0.0.1:9333`. Each first
+  visit uses a new incognito context; a repeat-visit set uses one incognito context for all its runs and closes it at
+  the end, so the phone's normal profile is never changed. The Z Flip 3 web baselines below predate this: their repeat
+  visits used a normal tab, and the harness then cleared the site's data from the phone's profile.
 
 On a first visit the Main Menu accepts input while the default games are still downloading, so build 1.171.24
 reports the play phase as failed (`benchmarkGameUnavailable`); use only `launchToMenuMs` from those runs.

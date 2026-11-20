@@ -25,9 +25,11 @@ namespace Cgs.Menu
             _held.Clear();
             _pointerReleaseFrame = -1;
             foreach (var device in InputSystem.devices)
-            foreach (var control in device.allControls)
-                if (control is ButtonControl { isPressed: true, wasPressedThisFrame: false } button)
-                    _held.Add(button);
+            {
+                foreach (var control in device.allControls)
+                    if (control is ButtonControl { isPressed: true, wasPressedThisFrame: false } button)
+                        _held.Add(button);
+            }
         }
 
         /// <summary>
