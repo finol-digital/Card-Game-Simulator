@@ -721,6 +721,11 @@ namespace Cgs
         {
             cardGame ??= Current;
 
+            // The download replaces the loaded cards, so let a load that is still running finish first; otherwise that
+            // load would end without the downloaded cards
+            while (cardGame.IsLoading)
+                yield return null;
+
             Progress.Show(cardGame);
             yield return cardGame.Download(true);
             Progress.Hide();
@@ -826,7 +831,11 @@ namespace Cgs
             if (afterFirstFrame)
             {
                 yield return null;
-                yield return new WaitForEndOfFrame();
+                // Batch-mode Editors and players never reach the end of a rendered frame
+                if (Application.isBatchMode)
+                    yield return null;
+                else
+                    yield return new WaitForEndOfFrame();
                 IsContentLoadScheduled = false;
             }
 

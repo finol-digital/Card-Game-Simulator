@@ -816,11 +816,12 @@ namespace FinolDigital.Cgs.Json.Unity
                 var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && updateCoroutine != null;
                 if (shouldUpdate)
                 {
+                    // This load ends here and hands over to the update, which must not wait for it
+                    IsLoading = false;
                     if (CoroutineRunner != null)
                         CoroutineRunner.StartCoroutine(updateCoroutine(this));
                     else
                         Debug.LogWarning($"Should update {Name}, but CoroutineRunner is null!");
-                    IsLoading = false;
                     yield break;
                 }
 
