@@ -17,7 +17,7 @@ namespace Tests.PlayMode
 {
     public class LocalizationInitializationTestSettings : LocalizationSettings
     {
-        public AsyncOperationHandle<LocalizationSettings> Operation;
+        public AsyncOperationHandle<LocalizationSettings> Operation { get; set; }
         public override AsyncOperationHandle<LocalizationSettings> GetInitializationOperation() => Operation;
     }
 
