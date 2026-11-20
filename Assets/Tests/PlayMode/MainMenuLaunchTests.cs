@@ -220,6 +220,26 @@ namespace Tests.PlayMode
             Assert.AreEqual("Settings", SceneManager.GetActiveScene().name);
         }
 
+        [TestCase(Key.RightArrow, ExpectedResult = null)]
+        [TestCase(Key.End, ExpectedResult = null)]
+        [UnityTest]
+        public IEnumerator CarouselKeyActsWhileAPointerIsHeldFromBefore(Key key)
+        {
+            var mouse = Add<Mouse>();
+            var keyboard = Add<Keyboard>();
+            InputSystem.QueueStateEvent(mouse, new MouseState().WithButton(MouseButton.Left));
+            yield return null;
+
+            yield return ColdStart(null);
+            var selected = CardGameManager.Current;
+            // Move right (an arrow key) and page right (End) both select the next game
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(key));
+            for (var frame = 0; frame < 5 && CardGameManager.Current == selected; frame++)
+                yield return null;
+
+            Assert.AreNotEqual(selected, CardGameManager.Current, "The held mouse button must not block the key");
+        }
+
         [UnityTest]
         public IEnumerator GamepadPlayerHasAControlSelectedAndTheFirstPressActs()
         {

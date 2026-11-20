@@ -167,13 +167,13 @@ namespace Cgs.Menu
             if ((_pageAction?.WasPressedThisFrame() ?? false) && _heldInput.Allows(_pageAction.activeControl))
             {
                 if (pageVertical < 0)
-                    SelectNext();
+                    DoSelectNext();
                 else if (pageVertical > 0)
-                    SelectPrevious();
+                    DoSelectPrevious();
                 else if (pageHorizontal < 0)
-                    SelectPrevious();
+                    DoSelectPrevious();
                 else if (pageHorizontal > 0)
-                    SelectNext();
+                    DoSelectNext();
             }
             else if ((_moveAction?.WasPressedThisFrame() ?? false) && _heldInput.Allows(_moveAction.activeControl) &&
                      Mathf.Abs(moveHorizontal) > 0 &&
@@ -181,9 +181,9 @@ namespace Cgs.Menu
                       EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
             {
                 if (moveHorizontal < 0)
-                    SelectPrevious();
+                    DoSelectPrevious();
                 else if (moveHorizontal > 0)
-                    SelectNext();
+                    DoSelectNext();
             }
             else if ((_moveAction?.WasPressedThisFrame() ?? false) && _heldInput.Allows(_moveAction.activeControl) &&
                      Mathf.Abs(moveVertical) > 0 &&
