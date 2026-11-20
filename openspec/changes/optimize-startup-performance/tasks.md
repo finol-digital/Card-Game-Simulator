@@ -22,7 +22,7 @@
 ## 3. Show the Main Menu before card data loads
 
 - [x] 3.1 Split readiness into properties-ready and content-ready states on `CardGameManager`/`UnityCardGame`, and gate the Main Menu only on properties; verify with a PlayMode test that the Main Menu is interactive while a large fixture game's content is still loading
-- [ ] 3.2 Replace the synchronous `Load` in the scene-load reset with `LoadAsync` started after the first interactive frame, decode carousel banners asynchronously, and audit the remaining synchronous `Load` callers; verify the existing `CardGameManagerTests` and new tests pass, and that only the documented fallback uses synchronous `Load`
+- [x] 3.2 Replace the synchronous `Load` in the scene-load reset with `LoadAsync` started after the first interactive frame, decode carousel banners asynchronously, and audit the remaining synchronous `Load` callers; verify the existing `CardGameManagerTests` and new tests pass, and that only the documented fallback uses synchronous `Load`
 - [x] 3.3 Move the automatic game-update check after the Main Menu is interactive, keeping progress UI; verify with a test that a game due for update starts updating only after the interactive milestone
 - [x] 3.4 Verify that a background load failure still shows the existing load-error prompt without blocking the menu (PlayMode test with a corrupt fixture)
 - [ ] 3.5 Make Settings, Deck Editor, Cards Explorer, and warm deep links behave correctly while content is loading (progress where card data is needed, fill-in on completion, no double load), and make rapid game changes keep only the latest selection; verify with PlayMode tests that open each screen and switch games several times during a slow fixture load
