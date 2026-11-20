@@ -83,7 +83,7 @@ jobs:
         with:
           large-packages: false
       - name: Run EditMode Tests
-        uses: game-ci/unity-test-runner@3651041789079526956e876434786ab98af4c8e8 # main
+        uses: game-ci/unity-test-runner@27ad97086954f16da573903654a114e0f9b8c778 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -91,7 +91,7 @@ jobs:
         with:
           testMode: editmode
       - name: Run PlayMode Tests
-        uses: game-ci/unity-test-runner@3651041789079526956e876434786ab98af4c8e8 # main
+        uses: game-ci/unity-test-runner@27ad97086954f16da573903654a114e0f9b8c778 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -258,7 +258,7 @@ jobs:
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -344,7 +344,7 @@ jobs:
           preinstalled-runtimes: true
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -410,7 +410,7 @@ jobs:
           restore-keys: Library-buildMac-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -674,7 +674,7 @@ jobs:
           restore-keys: Library-buildLinuxAmazon-
       - name: Build Unity Project
         id: buildStep
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -890,7 +890,7 @@ jobs:
       - name: Build Unity Project
         id: buildStep
         timeout-minutes: 45
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
@@ -951,7 +951,7 @@ jobs:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
       - name: Deploy to Steam
-        uses: game-ci/steam-deploy@87f8a362c6a8a7dbde08099e4c05da88877f7113 # main
+        uses: game-ci/steam-deploy@1c487ecde10efac6b6630e38978187c09497c427 # main
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
@@ -1003,7 +1003,7 @@ jobs:
       - name: Build Unity Project
         id: build
         timeout-minutes: 45
-        uses: game-ci/unity-builder@fc892a0623ba0dba1f2d01b2be52994a57f936f3 # main
+        uses: game-ci/unity-builder@107e018f9df656df4d66d24cff5eb903171214e3 # main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
