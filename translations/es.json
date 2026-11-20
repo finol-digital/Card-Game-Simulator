@@ -311,7 +311,7 @@
     "common.close": {
       "text": "Cerrar",
       "status": "machine",
-      "sourceHash": "32aef8e5cdef2486cc952fd953e74edacc0ef2c72c3d836cb72d10d14f703e10",
+      "sourceHash": "4bdef1447720aaf34077e9855390ac2d6373ba27b2196aeb9c0993cc3b83f0f6",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
@@ -329,7 +329,7 @@
     "common.copy": {
       "text": "Copiar",
       "status": "machine",
-      "sourceHash": "ddf0866902a4a72cb2bfcf1d684baf23518691263f090c9e2c670e15756f2166",
+      "sourceHash": "78c702bf161f0088396e737b165e7408fbf866191eab06b66f22d7175b6038ef",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
@@ -531,7 +531,7 @@
     "common.downloading": {
       "text": "Descargando...",
       "status": "machine",
-      "sourceHash": "e8442f463ed96652012bf9694038dade44a4741463601895cbf54346ef5cd3f8",
+      "sourceHash": "a7552ef24b76714722afb5b847cc087b3cbbb7ad7ea00c1cb759f75b3eeb4b5b",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
@@ -1129,7 +1129,7 @@
     "common.no": {
       "text": "No",
       "status": "machine",
-      "sourceHash": "7b849b13dd029e2819a1d743ba2b61b6716a15e9ee7a9237bf230f7586bb76c9",
+      "sourceHash": "def678b0ae31242564d30d7fa341c7d61d16976f2ee77d2fab4027f05ab40abf",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
@@ -1175,7 +1175,7 @@
     "common.ok": {
       "text": "Aceptar",
       "status": "machine",
-      "sourceHash": "05b2cfef3ba7702c4233aed9a8c376f93e35e5179927031ba6ae74f89be4ed0d",
+      "sourceHash": "88f5a6d8a6d4ac30641f1beaf3252d370a65e4a6dc4adecc8eb6fcd60de4060f",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
@@ -1546,7 +1546,7 @@
     "common.share": {
       "text": "Compartir",
       "status": "machine",
-      "sourceHash": "0df4b3522fed7180daee10a9b9f47360cd22384a6bff85ab0a3f9aaa93888cbd",
+      "sourceHash": "2f67787d1b77789a2497b0f4998c4147ad89918c4d2547b636cbcc899198b2f8",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
@@ -3409,33 +3409,6 @@
       "text": "Se cerró la opción de compartir. No se pudo confirmar si el contenido se compartió o copió.",
       "status": "machine",
       "sourceHash": "45ce66249278db915687842739719753130c178e5c3a23af786b47082f645dbf",
-      "provenance": {
-        "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
-      }
-    },
-    "title.start.gamepad": {
-      "text": "Pulsa cualquier botón",
-      "status": "machine",
-      "sourceHash": "5fbf318f2112b15099600f8336e14806f53b320783349530e88d740d2000a27f",
-      "provenance": {
-        "method": "Codex translation from English controller help context",
-        "date": "2026-10-21"
-      }
-    },
-    "title.start.keyboard": {
-      "text": "Pulsa cualquier tecla",
-      "status": "machine",
-      "sourceHash": "301a9650eade3eb946f048f666212fa7671f2673b22bd2d94d811d19c7033b55",
-      "provenance": {
-        "method": "Codex contextual machine draft; English context and CGS glossary",
-        "date": "2026-10-05"
-      }
-    },
-    "title.start.touch": {
-      "text": "Toca para empezar",
-      "status": "machine",
-      "sourceHash": "4c7b7d3f798cc6ec27777d72a54ebfc807144bb4652cd1c255a027b1dc375d8b",
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"

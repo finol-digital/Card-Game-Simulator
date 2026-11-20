@@ -81,6 +81,9 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public bool HasReadProperties { get; private set; }
 
+        /// <summary>The banner and card back shown in game selection have been decoded.</summary>
+        public bool HasPreviewImages { get; private set; }
+
         [JsonIgnore] public long DefinitionGeneration { get; private set; }
         public event Action<UnityCardGame> DefinitionChanged;
         [JsonIgnore] public LocalizationOrigin DefinitionOrigin { get; private set; }
@@ -236,7 +239,11 @@ namespace FinolDigital.Cgs.Json.Unity
             GameStartDecks.Clear();
         }
 
-        public void ReadProperties()
+        public void ReadProperties() => ReadProperties(true);
+
+        /// <param name="loadPreviewImages">Decodes the banner and card back now. Startup passes false and decodes them
+        /// later, so that reading every installed game does not delay the first frame.</param>
+        public void ReadProperties(bool loadPreviewImages)
         {
             string movedFrom = null;
             string movedTo = null;
@@ -305,20 +312,11 @@ namespace FinolDigital.Cgs.Json.Unity
                 Debug.LogWarning("Built-in authored decks unavailable: " + error.Message);
             }
 
-            try
-            {
-                // We're being greedy about loading these now, since these could be shown before the game is selected
-                if (File.Exists(BannerImageFilePath))
-                    BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
-                if (File.Exists(CardBackImageFilePath))
-                    CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
-
-            }
-            catch (Exception e)
-            {
-                // Optional artwork cannot roll back a successfully installed definition.
-                Error += e.Message + e.StackTrace + Environment.NewLine;
-            }
+            // These could be shown before the game is selected
+            if (loadPreviewImages)
+                LoadPreviewImages();
+            else
+                HasPreviewImages = false;
 
             if (DefinitionChanged == null)
                 return;
@@ -333,6 +331,62 @@ namespace FinolDigital.Cgs.Json.Unity
                     Debug.LogWarning("Game-content presentation refresh failed: " + e.Message);
                 }
             }
+        }
+
+        /// <summary>Decodes the banner and card back now.</summary>
+        public void LoadPreviewImages()
+        {
+            try
+            {
+                if (File.Exists(BannerImageFilePath))
+                    BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
+                if (File.Exists(CardBackImageFilePath))
+                    CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
+                HasPreviewImages = true;
+            }
+            catch (Exception e)
+            {
+                // Optional artwork cannot roll back a successfully installed definition.
+                Error += e.Message + e.StackTrace + Environment.NewLine;
+            }
+        }
+
+        /// <summary>
+        /// Decodes the banner and card back over several frames, unless another load decodes them first: sprites already
+        /// shown are never replaced from here.
+        /// </summary>
+        public IEnumerator LoadPreviewImagesAsync()
+        {
+            Sprite bannerSprite = null;
+            if (File.Exists(BannerImageFilePath))
+                yield return UnityFileMethods.CreateSpriteFromFileAsync(BannerImageFilePath,
+                    output => bannerSprite = output);
+
+            Sprite cardBackSprite = null;
+            if (!HasPreviewImages && File.Exists(CardBackImageFilePath))
+                yield return UnityFileMethods.CreateSpriteFromFileAsync(CardBackImageFilePath,
+                    output => cardBackSprite = output);
+
+            if (HasPreviewImages)
+            {
+                DestroySprite(bannerSprite);
+                DestroySprite(cardBackSprite);
+                yield break;
+            }
+
+            if (bannerSprite != null)
+                BannerImageSprite = bannerSprite;
+            if (cardBackSprite != null)
+                CardBackImageSprite = cardBackSprite;
+            HasPreviewImages = true;
+        }
+
+        private static void DestroySprite(Sprite sprite)
+        {
+            if (sprite == null)
+                return;
+            Object.Destroy(sprite.texture);
+            Object.Destroy(sprite);
         }
 
         private UnityCardGame StageDefinition(string filePath)
@@ -605,6 +659,11 @@ namespace FinolDigital.Cgs.Json.Unity
             HasLoaded = false;
         }
 
+        /// <summary>
+        /// Loads synchronously, blocking the frame. Only <see cref="LoadAsync"/> uses it, as a fallback when the game has
+        /// no <see cref="CoroutineRunner"/>; everything else loads with <see cref="LoadAsync"/> or
+        /// <see cref="LoadRoutine"/> so that loading never freezes the screen.
+        /// </summary>
         public void Load(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
@@ -663,6 +722,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
             if (File.Exists(CardBackImageFilePath))
                 CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
+            HasPreviewImages = true;
 
             if (Directory.Exists(BacksDirectoryPath))
             {
@@ -693,12 +753,30 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             if (CoroutineRunner != null)
                 CoroutineRunner.StartCoroutine(
-                    LoadAsyncImpl(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine));
+                    LoadRoutine(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine));
             else
             {
                 Debug.LogWarning($"LoadAsync called for {Name} but CoroutineRunner is null! Falling back to Load.");
                 Load(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine);
             }
+        }
+
+        /// <summary>
+        /// Loads cards, sets, and images over several frames, for callers that wait for the load to finish. If a load
+        /// is already running, waits for it instead of loading the game twice.
+        /// </summary>
+        public IEnumerator LoadRoutine(CardGameCoroutineDelegate updateCoroutine,
+            CardGameCoroutineDelegate loadCardsCoroutine,
+            CardGameCoroutineDelegate loadSetCardsCoroutine)
+        {
+            if (IsLoading)
+            {
+                while (IsLoading)
+                    yield return null;
+                yield break;
+            }
+
+            yield return LoadAsyncImpl(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine);
         }
 
         private IEnumerator LoadAsyncImpl(CardGameCoroutineDelegate updateCoroutine,
@@ -738,11 +816,12 @@ namespace FinolDigital.Cgs.Json.Unity
                 var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && updateCoroutine != null;
                 if (shouldUpdate)
                 {
+                    // This load ends here and hands over to the update, which must not wait for it
+                    IsLoading = false;
                     if (CoroutineRunner != null)
                         CoroutineRunner.StartCoroutine(updateCoroutine(this));
                     else
                         Debug.LogWarning($"Should update {Name}, but CoroutineRunner is null!");
-                    IsLoading = false;
                     yield break;
                 }
 
@@ -775,6 +854,8 @@ namespace FinolDigital.Cgs.Json.Unity
                     CardBackImageSprite = cardBackSprite;
                     yield return null;
                 }
+
+                HasPreviewImages = true;
 
                 // Load card back images
                 if (Directory.Exists(BacksDirectoryPath))
