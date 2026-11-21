@@ -108,10 +108,11 @@ jobs:
           status=0
           for log in artifacts/editmode.log artifacts/playmode.log; do
             echo "::group::Scan $log"
-            if [ -f "$log" ]; then
-              python3 tools/unity-log-scan/scan_unity_log.py "$log" --github || status=1
+            if [ -s "$log" ]; then
+              python3 tools/unity-log-scan/scan_unity_log.py "$log" --test-log --github || status=1
             else
-              echo "::warning title=Unity log scan::$log was not found"
+              echo "::error title=Unity log scan::$log is missing or empty, so it could not be scanned"
+              status=1
             fi
             echo "::endgroup::"
           done

@@ -21,9 +21,11 @@ Console is not saved, but every Console message is also in these logs. Many warn
 imported, so scan a log from a clean import (below) when you want to see everything.
 
 CI runs the scanner on the EditMode and PlayMode test logs (`artifacts/editmode.log` and `artifacts/playmode.log`) in
-the Unit Tests job of `.github/workflows/main.yml`. New warnings appear as annotations on the run and fail the job.
-CI restores a cached `Library/`, so it only sees import warnings for assets that changed; the clean open below is
-still needed after upgrades.
+the Unit Tests job of `.github/workflows/main.yml`. New warnings appear as annotations on the run and fail the job, as
+does a missing or empty log. CI passes `--test-log`, which skips `Debug.LogWarning`/`LogError` messages: tests trigger
+many of them on purpose, and the Unity Test Framework already fails a test that logs an unexpected error. The scanner
+also skips these messages in any log when the stack shows a test was running. CI restores a cached `Library/`, so it
+only sees import warnings for assets that changed; the clean open below is still needed after upgrades.
 
 Only add an allowlist entry for a message we cannot fix in this repository, such as a shader inside a Unity package,
 and write down why. Remove entries that no longer match.

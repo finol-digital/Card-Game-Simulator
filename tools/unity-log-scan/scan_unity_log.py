@@ -11,6 +11,7 @@ exits with status 1 if anything else is found.
 
   python3 tools/unity-log-scan/scan_unity_log.py Logs/Editor.log
   python3 tools/unity-log-scan/scan_unity_log.py Logs/Editor.log --github   # also emit GitHub annotations
+  python3 tools/unity-log-scan/scan_unity_log.py artifacts/playmode.log --test-log   # a test run's log
 """
 
 from __future__ import annotations
@@ -30,8 +31,13 @@ SHADER = re.compile(r"^(?:WARNING: Shader Unsupported: .*|Shader (?:warning|erro
 GUID_CONFLICT = re.compile(r"^GUID \[[0-9a-f]{32}\] for asset '.*' conflicts with:$")
 OUTDATED_SETTINGS = re.compile(r"below the supported minimum .*re-save", re.IGNORECASE)
 STACK_START = re.compile(r"^UnityEngine\.Debug:ExtractStackTraceNoAlloc ")
-LOG_CALL = re.compile(r"^UnityEngine\.(?:Debug|Logger):(?P<call>Log(?:Format)?|LogWarning(?:Format)?|LogError(?:Format)?"
+LOG_CALL = re.compile(r"^UnityEngine\.(?P<owner>Debug|Logger):(?P<call>Log(?:Format)?|LogWarning(?:Format)?|LogError(?:Format)?"
                       r"|LogException|LogAssertion(?:Format)?) ")
+# A frame from NUnit or the Unity Test Framework, which runs [UnityTest] coroutines. Messages logged while a test runs
+# are left to the test framework, which fails the test on an unexpected error and lets tests expect one with
+# LogAssert.Expect.
+TEST_FRAME = re.compile(r"^(?:NUnit\.Framework|UnityEngine\.TestTools)\.")
+MAX_STACK_LINES = 200
 # Native Editor messages that carry a managed stack trace but no Debug.Log frame (for example, Player Settings
 # validation). Treat them as warnings only when the text reads like one.
 NATIVE_WARNING_WORDS = re.compile(
@@ -51,19 +57,29 @@ def _clean(line: str) -> str:
 
 
 def _stack_level(lines: list[str], start: int) -> str | None:
-    """Return 'warning'/'error' for a Debug.Log* stack trace, '' for a plain Debug.Log, None if no Log frame."""
-    for line in lines[start:start + 20]:
+    """Return the level of the Debug.Log* call in a stack trace.
+
+    Returns 'warning' or 'error' for a warning or error call, '' for a plain Debug.Log or a message logged by a
+    running test, and None if the stack has no Log frame. Unity routes Debug.LogWarning and Debug.LogError through
+    the generic Logger:Log frame, which appears first in the stack, so the whole stack is read before deciding.
+    """
+    level = None
+    for line in lines[start:start + MAX_STACK_LINES]:
         if not line.strip():
             break
-        match = LOG_CALL.match(line)
-        if match:
-            call = match.group("call")
-            if call.startswith("LogWarning"):
-                return "warning"
-            if call.startswith(("LogError", "LogException", "LogAssertion")):
-                return "error"
+        if TEST_FRAME.match(line):
             return ""
-    return None
+        match = LOG_CALL.match(line)
+        if not match or level is not None:
+            continue
+        call = match.group("call")
+        if call.startswith("LogWarning"):
+            level = "warning"
+        elif call.startswith(("LogError", "LogException", "LogAssertion")):
+            level = "error"
+        elif match.group("owner") == "Debug":
+            level = ""  # A plain Debug.Log. Logger:Log alone is the generic frame, so keep reading.
+    return level
 
 
 def scan(text: str) -> list[Finding]:
@@ -115,10 +131,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--allowlist", type=Path, default=DEFAULT_ALLOWLIST,
                         help="File of regular expressions for known messages to ignore (default: %(default)s)")
     parser.add_argument("--github", action="store_true", help="Also print GitHub Actions annotations")
+    parser.add_argument("--test-log", action="store_true",
+                        help="The log is from a Unity Test Framework run. Skip Debug.LogWarning/LogError messages: "
+                             "tests log them on purpose, and the test framework fails tests on unexpected errors")
     args = parser.parse_args(argv)
 
     allowlist = load_allowlist(args.allowlist) if args.allowlist.exists() else []
-    findings = Counter(scan(args.log.read_text(encoding="utf-8", errors="replace")))
+    findings = Counter(finding for finding in scan(args.log.read_text(encoding="utf-8", errors="replace"))
+                       if not (args.test_log and finding.category == "script-log"))
     unexpected: Counter[Finding] = Counter()
     allowed: Counter[str] = Counter()
     for finding, count in findings.items():

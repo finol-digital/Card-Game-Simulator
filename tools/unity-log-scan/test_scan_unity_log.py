@@ -34,13 +34,48 @@ UnityEditor.PlayerSettings:GetProjectSettingsPlayerSettings ()
 
 Loaded the main menu.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:37)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
 Cgs.Menu.MainMenu:Start ()
 
 Game data failed to load.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:37)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:LogError (object)
 Cgs.CardGameManager:Load ()
+"""
+
+# Messages logged while tests run, in the order Unity writes the stack frames.
+TEST_LOG = """\
+Invalid card game archive.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogError (object)
+Cgs.CardGameManager:ImportCardGame (string,System.Action) (at Assets/Scripts/Cgs/CardGameManager.cs:316)
+Tests.PlayMode.CardGameManagerTests:ImportCompletionReleasesInvalidArchive (string,bool)
+System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
+NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
+
+CreateSprite::TextureNull
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogWarning (object)
+UnityExtensionMethods.UnityFileMethods:CreateSprite (UnityEngine.Texture2D) (at Assets/Scripts/UnityExtensionMethods/UnityFileMethods.cs:591)
+UnityEngine.TestTools.TestEnumerator/<Execute>d__8:MoveNext ()
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+
+RecoverLostPlaceholder: PlayController.Instance == null
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogWarning (object)
+Cgs.CardGameView.Multiplayer.CgsNetPlayable:Update () (at Assets/Scripts/Cgs/CardGameView/Multiplayer/CgsNetPlayable.cs:377)
 """
 
 
@@ -67,6 +102,10 @@ class ScanTests(unittest.TestCase):
 
     def test_plain_debug_log_is_not_reported(self):
         self.assertNotIn("Loaded the main menu.", [f.message for f in scan(LOG)])
+
+    def test_messages_logged_by_a_running_test_are_not_reported(self):
+        self.assertEqual(scan(TEST_LOG), [
+            Finding("script-log", "warning", "RecoverLostPlaceholder: PlayController.Instance == null")])
 
 
 class MainTests(unittest.TestCase):
@@ -98,6 +137,13 @@ class MainTests(unittest.TestCase):
         self.assertIn("::error title=Unity compiler::", output)
         self.assertIn("::warning title=Unity guid-conflict::", output)
         self.assertNotIn("SpatialMapping", output.split("Found")[1])
+
+    def test_test_log_skips_script_messages_only(self):
+        status, output = self.run_main(LOG + TEST_LOG, "--test-log")
+        self.assertEqual(status, 1)
+        self.assertNotIn("[script-log]", output)
+        self.assertIn("[compiler]", output)
+        self.assertIn("[editor]", output)
 
     def test_invalid_allowlist_pattern_is_reported(self):
         self.allowlist.write_text("[unclosed\n", encoding="utf-8")
