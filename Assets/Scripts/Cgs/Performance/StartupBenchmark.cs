@@ -117,22 +117,9 @@ namespace Cgs.Performance
         {
             var session = StartupTimeline.Session;
 
-            // Launch: press through the title screen as early as it accepts input, then wait for the Main Menu
-            var pressedTitle = false;
+            // Launch: CGS opens directly on the Main Menu; wait for it to accept input
             while (!session.IsLaunchSummaryWritten)
-            {
-                if (!pressedTitle)
-                {
-                    var titleScreen = FindObjectsByType<TitleScreen>().FirstOrDefault(title => title.IsReadyForInput);
-                    if (titleScreen != null)
-                    {
-                        pressedTitle = true;
-                        titleScreen.GoToMainMenu();
-                    }
-                }
-
                 yield return null;
-            }
 
             if (!session.HasMark(StartupMilestone.MainMenuInteractive))
             {

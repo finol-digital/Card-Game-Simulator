@@ -15,7 +15,9 @@ and preserved in generated Unity table metadata.
 ## Authored inventory
 
 The live Editor audit traversed all six enabled scenes and 80 prefab dependencies,
-including inactive objects. `translations/bindings/authored.json` is the detailed
+including inactive objects. The title screen scene and its start prompts were later removed,
+leaving five scenes; its rows were dropped from the inventory, whose totals below predate that.
+`translations/bindings/authored.json` is the detailed
 inventory of 876 sites: 483 legacy Text components, 9 TMP components, 344 tooltip
 descriptions and 40 dropdown options. Each row has a key, a dynamic presenter/key
 family, or an explicit exclusion. The final classifications are 551 direct keys,
@@ -36,13 +38,13 @@ control symbols and empty templates do not require their own translation keys.
 
 ## Runtime producers and ownership
 
-`localization-runtime-inventory.json` records 155 literal-key call sites with source
+`localization-runtime-inventory.json` records 153 literal-key call sites with source
 locations. These locations are an audit snapshot; semantic keys remain stable.
 The following state-selected families and adapters supplement those sites:
 
 | Producer | Localized presentation | Preserved content |
 | --- | --- | --- |
-| `TitleScreen`, `MainMenu` | start/version, welcome, quit | version, company/game names and copyright |
+| `MainMenu` | version, welcome, quit | version, company/game names and copyright |
 | `Settings` | first-row language choice, native names in manifest order | other preferences and values |
 | `Dialog`, `DecisionModal`, `DownloadMenu` | keyed messages, choices, placeholders, queued/reused messages | actions, entered text, literal payloads |
 | `GamesManagementMenu`, `CardGameEditorMenu`, `CgsGamesBrowser` | import/download choices, native file titles, errors and credit wrapper | names, author/copyright, file paths, URLs, exceptions |

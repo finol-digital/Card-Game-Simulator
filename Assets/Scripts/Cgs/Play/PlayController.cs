@@ -297,7 +297,7 @@ namespace Cgs.Play
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             yield return null;
-            while (!CardGameManager.IsCurrentReady)
+            while (!CardGameManager.IsCurrentContentSettled)
                 yield return null;
 
             StartLobby();
@@ -1200,6 +1200,13 @@ namespace Cgs.Play
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed -= InputPlayGameMenu;
             InputSystem.actions.FindAction(Tags.PlayGameHelp).performed -= InputPlayHelp;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+        }
+
+        protected void OnDestroy()
+        {
+            // Other screens check Instance; it must not keep pointing at a Play screen that has closed
+            if (Instance == this)
+                Instance = null;
         }
     }
 }

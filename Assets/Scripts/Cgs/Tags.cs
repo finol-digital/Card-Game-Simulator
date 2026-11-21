@@ -10,11 +10,11 @@ namespace Cgs
         public const string CardViewer = "CardViewer";
         public const string PlayableViewer = "PlayableViewer";
 
-        public const int MainMenuSceneIndex = 1;
-        public const int PlayModeSceneIndex = 2;
-        public const int DeckEditorSceneIndex = 3;
-        public const int CardsExplorerSceneIndex = 4;
-        public const int SettingsSceneIndex = 5;
+        public const int MainMenuSceneIndex = 0;
+        public const int PlayModeSceneIndex = 1;
+        public const int DeckEditorSceneIndex = 2;
+        public const int CardsExplorerSceneIndex = 3;
+        public const int SettingsSceneIndex = 4;
 
         public const string PlayerMove = "Player/Move";
         public const string PlayerPage = "Player/Page";
