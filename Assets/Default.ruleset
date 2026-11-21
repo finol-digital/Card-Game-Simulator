@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Card Game Simulator" Description="Treat obsolete APIs and unserializable fields as errors in project code." ToolsVersion="16.0">
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+    <Rule Id="CS0612" Action="Error" />
+    <Rule Id="CS0618" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="Unity.SerializationAnalyzer" RuleNamespace="Unity.SerializationAnalyzer">
+    <Rule Id="UAC1001" Action="Error" />
+  </Rules>
+</RuleSet>

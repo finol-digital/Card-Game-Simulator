@@ -32,12 +32,16 @@ and write down why. Remove entries that no longer match.
 
 ## Compiler warnings that fail the build
 
-`Assets/csc.rsp` passes `-warnaserror:CS0618,CS0612,UAC1001` to the C# compiler for every script under `Assets/`
-(packages are not affected). Using an API marked `[Obsolete]`, or a field Unity cannot serialize, is a compile error
-instead of a warning. Code inside platform blocks such as `#if UNITY_IOS` or `#if ENABLE_WINMD_SUPPORT` only compiles
-when building for that platform, so CI's platform builds are what catch those. Replace the obsolete API instead of
-suppressing the error; if a suppression is unavoidable, use `#pragma warning disable` around the single line with a
-comment explaining why.
+`Assets/Default.ruleset` raises CS0618 and CS0612 (use of an API marked `[Obsolete]`) and UAC1001 (a field Unity
+cannot serialize) from warnings to compile errors. Unity applies it to the project's assemblies, but not to packages.
+Code inside platform blocks such as `#if UNITY_IOS`, `#if ENABLE_WINMD_SUPPORT`, or `#if !UNITY_EDITOR` only compiles
+in player builds, so CI's platform builds are what catch those. Replace the obsolete API instead of suppressing the
+error; if a suppression is unavoidable, use `#pragma warning disable` around the single line with a comment
+explaining why.
+
+Do not use `Assets/csc.rsp` with `-warnaserror` for this. Unity passes `csc.rsp` to every assembly, including
+packages, so a package that still uses an obsolete API fails the player build. Editor compiles and tests do not
+show this, because the obsolete calls in packages are often in player-only code.
 
 ## Clean open
 
