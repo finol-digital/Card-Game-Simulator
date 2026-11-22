@@ -24,6 +24,14 @@ description: Create, share, and play card games with Card Game Simulator. No acc
     <div class="eyebrow" data-table-title>START WITH A FAMILIAR DECK</div>
     <p data-table-copy>Shuffle, deal, and move cards around the table.</p>
     <small>Tabletop illustration</small>
+    <div class="table-instructions" hidden>
+      <p id="table-instructions">Drag cards to move. Double-click or double-tap to flip.</p>
+      <small id="table-keyboard-help">Or select a card, then click the table to move it. Arrow keys move; Enter or Space flips.</small>
+      <div class="table-controls">
+        <button type="button" data-flip-card>Flip selected card</button>
+        <button type="button" data-reset-table>Reset table</button>
+      </div>
+    </div>
   </div>
   <div class="card-spread" aria-hidden="true">
     <div class="card-back">CGS</div>

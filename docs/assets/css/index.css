@@ -244,6 +244,71 @@ p {
   font: bold 21px/1 Georgia,serif;
 }
 
+.table-instructions p {
+  margin-bottom: 8px;
+}
+
+.table-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.table-controls button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--cgs-edge);
+  border-radius: 5px;
+  background: #25170e;
+  color: var(--cgs-cream);
+  font: inherit;
+  font-size: 12px;
+}
+
+.card-spread.interactive {
+  position: relative;
+  height: 240px;
+  padding: 0;
+  border: 1px dashed #bca26b80;
+  border-radius: 8px;
+  isolation: isolate;
+}
+
+.card-spread.interactive .playing-card {
+  position: absolute;
+  margin: 0;
+  transform: none;
+  text-align: left;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.card-spread.interactive .playing-card.is-dragging {
+  cursor: grabbing;
+  box-shadow: 0 12px 20px #0008;
+}
+
+.card-spread.interactive .playing-card.is-selected {
+  outline: 2px solid var(--cgs-gold);
+  outline-offset: 2px;
+}
+
+.card-spread.interactive .playing-card:focus-visible {
+  outline: 3px solid var(--cgs-cream);
+  outline-offset: 3px;
+}
+
+.card-spread.interactive .playing-card.is-facedown {
+  border: 3px double #c9b46b;
+  background: repeating-linear-gradient(45deg,#730e2433 0px,#730e2433 2px,transparent 3px,transparent 8px),var(--cgs-wine);
+  color: #e4cf84;
+  text-align: center;
+  font: bold 15px Georgia,serif;
+}
+
 .playing-card span {
   display: block;
   text-align: center;
@@ -278,11 +343,11 @@ p {
   box-shadow: 0 8px 15px #0005;
 }
 
-.card-spread .playing-card:nth-child(2) {
+.card-spread:not(.interactive) .playing-card:nth-child(2) {
   transform: rotate(-9deg) translateY(-3px);
 }
 
-.card-spread .playing-card:nth-child(4) {
+.card-spread:not(.interactive) .playing-card:nth-child(4) {
   transform: rotate(9deg) translateY(4px);
 }
 
@@ -881,6 +946,10 @@ a:hover {
 
   .card-spread {
     gap: 5px;
+  }
+
+  .card-spread.interactive {
+    margin-top: 16px;
   }
 
   .card-spread .card-back {
