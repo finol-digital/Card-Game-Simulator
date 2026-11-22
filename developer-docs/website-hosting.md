@@ -23,11 +23,15 @@ proxies the records, public DNS returns Cloudflare's addresses, so GitHub cannot
 certificate's state from the GitHub API. When the certificate has failed or expires within 21 days, it:
 
 1. Switches the Cloudflare `A`, `AAAA`, and `CNAME` records for `www` and the bare domain to DNS only.
-2. Removes and re-adds the custom domain in GitHub Pages, which restarts provisioning.
-3. Waits up to 40 minutes for GitHub to report a new certificate.
-4. Turns the Cloudflare proxy back on and checks the site again. It always does this, even if renewal fails.
+2. Waits until GitHub's own DNS check (`GET /repos/{owner}/{repo}/pages/health`) reports both domains as eligible
+   for HTTPS. Cloudflare's proxied answers can be cached for 5 minutes, and GitHub will not issue a certificate
+   while it still sees Cloudflare's addresses.
+3. Removes and re-adds the custom domain in GitHub Pages, which restarts provisioning.
+4. Waits up to 40 minutes for GitHub to report a new certificate.
+5. Turns the Cloudflare proxy back on and checks the site again. It always does this, even if renewal fails.
 
-While the records are DNS only, which takes a few minutes, the Worker's redirects and Markdown responses do not run.
+While the records are DNS only, which takes at least 10 minutes, the Worker's redirects and Markdown responses do not
+run.
 Renewing 21 days early means visitors still get GitHub's valid certificate during that time. If the certificate has
 already expired, HTTPS fails for those few minutes.
 
@@ -49,6 +53,6 @@ Without these, the daily check still tests the site and reports the certificate'
 
 - **A website check failed:** open the failed URL. Cloudflare error 526 means the SSL mode is on Full (strict) and
   GitHub's certificate is invalid; set it back to Full. Error 522 or 523 means Cloudflare cannot reach GitHub.
-- **Renewal failed:** the job log shows each certificate state. Check that the secrets above are valid, that
+- **Renewal failed:** the job log shows GitHub's DNS check for each domain and each certificate state. Check that the secrets above are valid, that
   GitHub Pages deploys from GitHub Actions, and that there are no `CAA` records, or that one allows
   `letsencrypt.org`. Then run the workflow again with renewal checked.

@@ -39,9 +39,11 @@ USER_AGENT = "card-game-simulator-site-health"
 RENEW_DAYS_BEFORE_EXPIRY = 21
 HEALTHY_CERTIFICATE_STATE = "approved"
 DNS_ONLY_TTL = 60
-DNS_SETTLE_SECONDS = 120
+# Cloudflare answers for proxied records with a 300 second TTL, so resolvers can keep its addresses that long.
+PROXIED_TTL_SECONDS = 300
+DNS_CHECK_TIMEOUT_SECONDS = 20 * 60
 PROVISIONING_TIMEOUT_SECONDS = 40 * 60
-FAILURE_GRACE_SECONDS = 5 * 60
+FAILURE_GRACE_SECONDS = 10 * 60
 POLL_SECONDS = 30
 FAILED_CERTIFICATE_STATES = ("errored", "bad_authz", "authorization_revoked")
 
@@ -152,6 +154,11 @@ class GitHubPages:
     def update(self, **fields) -> None:
         self.api.request("PUT", self.path, fields)
 
+    def health(self) -> dict | None:
+        """GitHub's DNS check for the custom domain, or None while GitHub is still running it."""
+        result = self.api.request("GET", f"{self.path}/health")
+        return result if result and result.get("domain") else None
+
     def can_administer(self) -> bool:
         """Whether the token's account is a repository administrator, which changing the custom domain needs."""
         return bool((self.api.request("GET", self.repository_path).get("permissions") or {}).get("admin"))
@@ -167,6 +174,31 @@ class CloudflareDns:
 
     def update(self, record_id: str, proxied: bool, ttl: int) -> None:
         self.api.request("PATCH", f"{self.path}/{record_id}", {"proxied": proxied, "ttl": ttl})
+
+
+HEALTH_FIELDS = ("is_proxied", "is_cloudflare_ip", "is_pointed_to_github_pages_ip", "is_cname_to_github_user_domain",
+                 "is_https_eligible", "caa_error", "reason")
+
+
+def wait_until_https_eligible(pages: GitHubPages, log: Callable[[str], None], sleep: Callable[[float], None],
+                              clock: Callable[[], float]) -> None:
+    """Wait until GitHub's own DNS check says it can issue a certificate for the domain and its alternate."""
+    deadline = clock() + DNS_CHECK_TIMEOUT_SECONDS
+    while True:
+        health = pages.health()
+        if health:
+            domains = [health[key] for key in ("domain", "alt_domain") if health.get(key)]
+            for domain in domains:
+                log(f"GitHub DNS check for {domain.get('host')}: "
+                    + ", ".join(f"{field}={domain.get(field)}" for field in HEALTH_FIELDS))
+            if all(domain.get("is_https_eligible") for domain in domains):
+                return
+        else:
+            log("GitHub is still running its DNS check")
+        if clock() >= deadline:
+            raise ApiError(f"GitHub's DNS check did not find the domain eligible for HTTPS after "
+                           f"{DNS_CHECK_TIMEOUT_SECONDS // 60} minutes")
+        sleep(POLL_SECONDS)
 
 
 def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = print,
@@ -191,12 +223,14 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
         for record in proxied:
             log(f"Setting {record['type']} {record['name']} to DNS only")
             dns.update(record["id"], proxied=False, ttl=DNS_ONLY_TTL)
-        log(f"Waiting {DNS_SETTLE_SECONDS} seconds for the DNS change to be visible")
-        sleep(DNS_SETTLE_SECONDS)
+        # GitHub only issues a certificate once its DNS check sees the records pointing straight at GitHub Pages.
+        log(f"Waiting {PROXIED_TTL_SECONDS} seconds for resolvers to drop Cloudflare's addresses")
+        sleep(PROXIED_TTL_SECONDS)
+        wait_until_https_eligible(pages, log, sleep, clock)
 
         log(f"Removing and re-adding {cname} to restart certificate provisioning")
         pages.update(cname=None)
-        sleep(10)
+        sleep(POLL_SECONDS)
         pages.update(cname=cname)
 
         started = clock()
@@ -225,6 +259,10 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
             for record in proxied:
                 log(f"Restoring the Cloudflare proxy for {record['type']} {record['name']}")
                 dns.update(record["id"], proxied=True, ttl=record.get("ttl", 1))
+            if proxied:
+                # Let resolvers drop GitHub's addresses before anything checks the site through Cloudflare again.
+                log(f"Waiting {2 * DNS_ONLY_TTL} seconds for the proxied records to be visible again")
+                sleep(2 * DNS_ONLY_TTL)
 
 
 def _annotate(kind: str, title: str, message: str, github: bool) -> None:

@@ -62,10 +62,17 @@ class CheckSiteTests(unittest.TestCase):
         self.assertIn("certificate has expired", problems[3])
 
 
+def eligible_health(eligible=True):
+    return {"domain": {"host": "www.cardgamesimulator.com", "is_https_eligible": eligible},
+            "alt_domain": {"host": "cardgamesimulator.com", "is_https_eligible": eligible}}
+
+
 class FakePages:
-    def __init__(self, site, states, admin=True):
+    def __init__(self, site, states, admin=True, health=None):
         self.site = site
         self.admin = admin
+        # DNS check results, one per call; the last one repeats. Eligible by default.
+        self.health_results = list(health or [eligible_health()])
         self.states = list(states)  # Certificates reported after the domain is re-added, one per poll.
         self.calls = []
         self.readded = False
@@ -77,6 +84,10 @@ class FakePages:
 
     def can_administer(self):
         return self.admin
+
+    def health(self):
+        self.calls.append(("health",))
+        return self.health_results.pop(0) if len(self.health_results) > 1 else self.health_results[0]
 
     def update(self, **fields):
         self.calls.append(("update", fields))
@@ -132,7 +143,8 @@ class RenewTests(unittest.TestCase):
         dns = self.run_renew(pages)
 
         self.assertEqual(dns.updates, [("a1", False, 60), ("www", False, 60), ("a1", True, 1), ("www", True, 1)])
-        self.assertEqual(pages.calls, [("update", {"cname": None}), ("update", {"cname": "www.cardgamesimulator.com"})])
+        self.assertEqual([call for call in pages.calls if call[0] == "update"],
+                         [("update", {"cname": None}), ("update", {"cname": "www.cardgamesimulator.com"})])
         self.assertIn("GitHub Pages has a new certificate", self.log)
 
     def test_failure_still_restores_the_proxy_and_the_domain(self):
@@ -156,6 +168,23 @@ class RenewTests(unittest.TestCase):
         with self.assertRaisesRegex(ApiError, "GitHub Actions"):
             self.run_renew(pages, dns)
         self.assertEqual((pages.calls, dns.updates), ([], []))
+
+    def test_waits_for_github_dns_check_before_restarting_provisioning(self):
+        issued = {"state": "approved", "expires_at": "2027-02-20", "description": ""}
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [issued],
+                          health=[None, eligible_health(False), eligible_health()])
+        self.run_renew(pages)
+        first_update = pages.calls.index(("update", {"cname": None}))
+        self.assertEqual(pages.calls[:first_update], [("health",)] * 3)
+        self.assertIn("GitHub is still running its DNS check", self.log)
+
+    def test_dns_check_that_never_passes_restores_the_proxy_without_touching_the_domain(self):
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [], health=[eligible_health(False)])
+        dns = FakeDns()
+        with self.assertRaisesRegex(ApiError, "DNS check did not find the domain eligible"):
+            self.run_renew(pages, dns)
+        self.assertNotIn(("update", {"cname": None}), pages.calls)
+        self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
 
     def test_token_without_admin_access_changes_nothing(self):
         pages = FakePages(pages_site("bad_authz", "2026-11-21"), [], admin=False)
