@@ -20,16 +20,30 @@ GitHub issues its certificate only when the domain's DNS records point straight 
 proxies the records, public DNS returns Cloudflare's addresses, so GitHub cannot renew the certificate on its own.
 
 `.github/workflows/site-health.yml` handles this. Every day it checks the site over HTTPS and reads the
-certificate's state from the GitHub API. When the certificate has failed or expires within 21 days, it:
+certificate's state from the GitHub API. When the certificate is still valid but expires within 21 days, it:
 
 1. Switches the Cloudflare `A`, `AAAA`, and `CNAME` records for `www` and the bare domain to DNS only.
-2. Removes and re-adds the custom domain in GitHub Pages, which restarts provisioning.
-3. Waits up to 40 minutes for GitHub to report a new certificate.
-4. Turns the Cloudflare proxy back on and checks the site again. It always does this, even if renewal fails.
+2. Waits until GitHub's own DNS check (`GET /repos/{owner}/{repo}/pages/health`) reports both domains as eligible
+   for HTTPS. Cloudflare's proxied answers can be cached for 5 minutes, and GitHub will not issue a certificate
+   while it still sees Cloudflare's addresses.
+3. Removes and re-adds the custom domain in GitHub Pages, which restarts provisioning.
+4. Waits up to 40 minutes for GitHub to report a new certificate. GitHub says HTTPS can take up to an hour, and it
+   can keep showing the old failed state for much of that time, so a failed state only stops the wait after
+   provisioning has visibly restarted.
+5. Turns the Cloudflare proxy back on and checks the site again. It always does this, even if renewal fails.
 
-While the records are DNS only, which takes a few minutes, the Worker's redirects and Markdown responses do not run.
-Renewing 21 days early means visitors still get GitHub's valid certificate during that time. If the certificate has
-already expired, HTTPS fails for those few minutes.
+DNS checks and certificate provisioning share a 50-minute renewal deadline, including the fixed waits and API
+latency. When it expires, renewal stops and restores the domain and proxy. This leaves time within the workflow's
+60-minute limit for restoration, DNS propagation, and the final website check; cleanup does not use the renewal
+deadline.
+
+While the records are DNS only, which takes from 10 minutes to nearly an hour, the Worker's redirects and Markdown
+responses do not run. Renewing 21 days early means visitors still get GitHub's valid certificate during that time.
+
+The daily run does not renew a certificate that has already failed or expired. Visitors would get HTTPS errors for
+up to an hour, and it may not work: in November 2026 a certificate stuck in `bad_authz` stayed that way through
+three renewals, even with GitHub's DNS check reporting both domains eligible. Instead the check fails every day
+with a "Not renewing automatically" error until someone fixes it. Visitors are unaffected while the SSL mode is Full.
 
 To renew by hand, run **Website Health** from the Actions tab with **Renew the GitHub Pages certificate now**
 checked. The same steps can be run locally with `python3 tools/site-health/site_health.py renew` and the
@@ -49,6 +63,9 @@ Without these, the daily check still tests the site and reports the certificate'
 
 - **A website check failed:** open the failed URL. Cloudflare error 526 means the SSL mode is on Full (strict) and
   GitHub's certificate is invalid; set it back to Full. Error 522 or 523 means Cloudflare cannot reach GitHub.
-- **Renewal failed:** the job log shows each certificate state. Check that the secrets above are valid, that
-  GitHub Pages deploys from GitHub Actions, and that there are no `CAA` records, or that one allows
-  `letsencrypt.org`. Then run the workflow again with renewal checked.
+- **Renewal failed:** the job log shows GitHub's DNS check for each domain and each certificate state. Check that
+  the secrets above are valid, that GitHub Pages deploys from GitHub Actions, and that there are no `CAA` records,
+  or that one allows `letsencrypt.org`. Then run the workflow again with renewal checked.
+- **"Not renewing automatically":** the certificate has failed or expired. Run the workflow with renewal checked
+  at a quiet time. If the state still never leaves `bad_authz` or `errored`, ask GitHub Support to reset the
+  certificate for the custom domain.

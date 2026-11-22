@@ -4,10 +4,14 @@
 """Tests for site_health.py. Nothing here calls GitHub, Cloudflare, or the live site."""
 
 import datetime
+import io
+import os
 import unittest
+from unittest import mock
+from unittest.mock import patch
 
 import site_health
-from site_health import ApiError, certificate_problem, check_site, renew
+from site_health import ApiError, certificate_problem, check_site, renew, renews_without_outage
 
 TODAY = datetime.date(2026, 11, 22)
 
@@ -30,6 +34,46 @@ class CertificateProblemTests(unittest.TestCase):
 
     def test_missing_certificate_is_renewed(self):
         self.assertIn("no certificate", certificate_problem({"cname": "www.example.com"}, TODAY))
+
+
+class RenewsWithoutOutageTests(unittest.TestCase):
+    def test_valid_certificate_near_expiry_renews_on_schedule(self):
+        self.assertTrue(renews_without_outage(pages_site(expires="2026-12-13"), TODAY))
+
+    def test_failed_expired_or_missing_certificate_waits_for_a_person(self):
+        self.assertFalse(renews_without_outage(pages_site("bad_authz", "2026-11-21"), TODAY))
+        self.assertFalse(renews_without_outage(pages_site(expires="2026-11-22"), TODAY))
+        self.assertFalse(renews_without_outage(pages_site("errored", "2027-01-01"), TODAY))
+        self.assertFalse(renews_without_outage({"cname": "www.example.com"}, TODAY))
+
+
+class CheckCertificateCommandTests(unittest.TestCase):
+    def run_check(self, site, force=""):
+        class Pages:
+            def __init__(self, *args):
+                pass
+
+            def get(self):
+                return site
+        outputs = {}
+        with mock.patch.object(site_health, "GitHubPages", Pages), \
+                mock.patch.object(site_health, "_set_output", outputs.__setitem__), \
+                mock.patch.dict(os.environ, {"GH_TOKEN": "token", "FORCE_RENEW": force}), \
+                mock.patch("sys.stdout", io.StringIO()) as stdout:
+            code = site_health.main(["check-certificate", "--repository", "owner/repo", "--github"])
+        return code, outputs["renew"], stdout.getvalue()
+
+    def test_stuck_certificate_fails_the_check_without_renewing(self):
+        code, renew_output, output = self.run_check(pages_site("bad_authz", "2026-11-21"))
+        self.assertEqual((code, renew_output), (1, "false"))
+        self.assertIn("::error title=GitHub Pages certificate::Not renewing automatically", output)
+
+    def test_valid_certificate_near_expiry_is_renewed(self):
+        expiring = pages_site(expires=str(datetime.date.today() + datetime.timedelta(days=10)))
+        self.assertEqual(self.run_check(expiring)[:2], (0, "true"))
+
+    def test_manual_request_renews_a_stuck_certificate(self):
+        self.assertEqual(self.run_check(pages_site("bad_authz", "2026-11-21"), force="true")[:2], (0, "true"))
 
 
 class CheckSiteTests(unittest.TestCase):
@@ -62,10 +106,17 @@ class CheckSiteTests(unittest.TestCase):
         self.assertIn("certificate has expired", problems[3])
 
 
+def eligible_health(eligible=True):
+    return {"domain": {"host": "www.cardgamesimulator.com", "is_https_eligible": eligible},
+            "alt_domain": {"host": "cardgamesimulator.com", "is_https_eligible": eligible}}
+
+
 class FakePages:
-    def __init__(self, site, states, admin=True):
+    def __init__(self, site, states, admin=True, health=None):
         self.site = site
         self.admin = admin
+        # DNS check results, one per call; the last one repeats. Eligible by default.
+        self.health_results = list(health or [eligible_health()])
         self.states = list(states)  # Certificates reported after the domain is re-added, one per poll.
         self.calls = []
         self.readded = False
@@ -77,6 +128,10 @@ class FakePages:
 
     def can_administer(self):
         return self.admin
+
+    def health(self):
+        self.calls.append(("health",))
+        return self.health_results.pop(0) if len(self.health_results) > 1 else self.health_results[0]
 
     def update(self, **fields):
         self.calls.append(("update", fields))
@@ -132,12 +187,13 @@ class RenewTests(unittest.TestCase):
         dns = self.run_renew(pages)
 
         self.assertEqual(dns.updates, [("a1", False, 60), ("www", False, 60), ("a1", True, 1), ("www", True, 1)])
-        self.assertEqual(pages.calls, [("update", {"cname": None}), ("update", {"cname": "www.cardgamesimulator.com"})])
+        self.assertEqual([call for call in pages.calls if call[0] == "update"],
+                         [("update", {"cname": None}), ("update", {"cname": "www.cardgamesimulator.com"})])
         self.assertIn("GitHub Pages has a new certificate", self.log)
 
     def test_failure_still_restores_the_proxy_and_the_domain(self):
         failed = {"state": "errored", "expires_at": None, "description": "DNS check failed"}
-        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [failed] * 100)
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [{"state": "new"}, failed])
         dns = FakeDns()
         with self.assertRaisesRegex(ApiError, "state 'errored'"):
             self.run_renew(pages, dns)
@@ -156,6 +212,89 @@ class RenewTests(unittest.TestCase):
         with self.assertRaisesRegex(ApiError, "GitHub Actions"):
             self.run_renew(pages, dns)
         self.assertEqual((pages.calls, dns.updates), ([], []))
+
+    def test_slow_dns_and_provisioning_share_a_deadline_and_restore_the_proxy(self):
+        stale = {"state": "approved", "expires_at": "2026-12-10"}
+        pages = FakePages(pages_site(expires="2026-12-10"), [stale] * 1000,
+                          health=[eligible_health(False)] * 38 + [eligible_health()])
+        dns = FakeDns()
+        clock = Clock()
+        original_get = pages.get
+
+        def slow_get():
+            clock.sleep(60)  # Account for API latency as well as polling sleeps.
+            return original_get()
+
+        with patch.object(pages, "get", side_effect=slow_get):
+            with self.assertRaisesRegex(ApiError, "renewal exceeded 50 minutes"):
+                renew(pages, dns, log=lambda _: None, sleep=clock.sleep, clock=clock)
+        self.assertIn(("update", {"cname": None}), pages.calls)
+        self.assertEqual(pages.site["cname"], "www.cardgamesimulator.com")
+        self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
+        self.assertLess(clock(), 60 * 60)
+
+    def test_deadline_during_domain_removal_restores_domain_and_proxy(self):
+        pages = FakePages(pages_site(), [])
+        dns = FakeDns()
+        clock = Clock()
+        # Expire partway through the removal wait, before the normal re-add operation.
+        with patch.object(site_health, "RENEWAL_TIMEOUT_SECONDS", site_health.PROXIED_TTL_SECONDS + 10):
+            with self.assertRaisesRegex(ApiError, "renewal exceeded"):
+                renew(pages, dns, log=lambda _: None, sleep=clock.sleep, clock=clock)
+        self.assertEqual(pages.site["cname"], "www.cardgamesimulator.com")
+        self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
+        self.assertEqual(clock(), site_health.PROXIED_TTL_SECONDS + 10 + 2 * site_health.DNS_ONLY_TTL)
+
+    def test_old_failed_state_is_not_a_failure_until_provisioning_restarts(self):
+        old = {"state": "bad_authz", "expires_at": "2026-11-21", "description": "bad"}
+        issued = {"state": "approved", "expires_at": "2027-02-20", "description": ""}
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [old] * 60 + [{"state": "authorized"}, issued])
+        self.run_renew(pages)
+        self.assertIn("GitHub Pages has a new certificate", self.log)
+
+    def test_waits_for_github_dns_check_before_restarting_provisioning(self):
+        issued = {"state": "approved", "expires_at": "2027-02-20", "description": ""}
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [issued],
+                          health=[None, eligible_health(False), eligible_health()])
+        self.run_renew(pages)
+        first_update = pages.calls.index(("update", {"cname": None}))
+        self.assertEqual(pages.calls[:first_update], [("health",)] * 3)
+        self.assertIn("GitHub is still running its DNS check", self.log)
+
+    def test_dns_check_that_never_passes_restores_the_proxy_without_touching_the_domain(self):
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [], health=[eligible_health(False)])
+        dns = FakeDns()
+        with self.assertRaisesRegex(ApiError, "DNS check did not find the domain eligible"):
+            self.run_renew(pages, dns)
+        self.assertNotIn(("update", {"cname": None}), pages.calls)
+        self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
+
+    def test_missing_alternate_domain_is_not_eligible(self):
+        only_www = {"domain": {"host": "www.cardgamesimulator.com", "is_https_eligible": True}, "alt_domain": None}
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [], health=[only_www])
+        with self.assertRaisesRegex(ApiError, "DNS check did not find the domain eligible"):
+            self.run_renew(pages)
+        self.assertNotIn(("update", {"cname": None}), pages.calls)
+
+    def test_domain_removed_when_renewal_stops_is_re_added_even_if_reading_pages_fails(self):
+        class FailingPages(FakePages):
+            def update(self, **fields):
+                super().update(**fields)
+                if fields == {"cname": None}:
+                    self.fail_reads = True
+
+            def get(self):
+                if getattr(self, "fail_reads", False):
+                    raise ApiError("GET failed")
+                return super().get()
+        pages = FailingPages(pages_site("bad_authz", "2026-11-21"), [])
+        dns = FakeDns()
+        # The deadline runs out during the wait between removing and re-adding the domain.
+        with mock.patch.object(site_health, "RENEWAL_TIMEOUT_SECONDS", site_health.PROXIED_TTL_SECONDS + 10):
+            with self.assertRaises(ApiError):
+                self.run_renew(pages, dns)
+        self.assertEqual(pages.site["cname"], "www.cardgamesimulator.com")
+        self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
 
     def test_token_without_admin_access_changes_nothing(self):
         pages = FakePages(pages_site("bad_authz", "2026-11-21"), [], admin=False)

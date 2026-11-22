@@ -39,9 +39,12 @@ USER_AGENT = "card-game-simulator-site-health"
 RENEW_DAYS_BEFORE_EXPIRY = 21
 HEALTHY_CERTIFICATE_STATE = "approved"
 DNS_ONLY_TTL = 60
-DNS_SETTLE_SECONDS = 120
+# Cloudflare answers for proxied records with a 300 second TTL, so resolvers can keep its addresses that long.
+PROXIED_TTL_SECONDS = 300
+DNS_CHECK_TIMEOUT_SECONDS = 20 * 60
 PROVISIONING_TIMEOUT_SECONDS = 40 * 60
-FAILURE_GRACE_SECONDS = 5 * 60
+# The workflow allows 60 minutes; reserve 10 for API calls, restoration, and the final website check.
+RENEWAL_TIMEOUT_SECONDS = 50 * 60
 POLL_SECONDS = 30
 FAILED_CERTIFICATE_STATES = ("errored", "bad_authz", "authorization_revoked")
 
@@ -119,6 +122,19 @@ def certificate_problem(pages: dict, today: datetime.date) -> str | None:
     return None
 
 
+def renews_without_outage(pages: dict, today: datetime.date) -> bool:
+    """Whether the certificate is still valid, so visitors keep working HTTPS while the records are DNS only.
+
+    A certificate that has failed or expired is not renewed on a schedule: visitors would get HTTPS errors for up to
+    an hour, and removing and re-adding the domain does not always restart provisioning (in November 2026 it never
+    moved a certificate stuck in 'bad_authz'). Renew it by hand, or ask GitHub Support to reset it.
+    """
+    certificate = pages.get("https_certificate") or {}
+    expires = certificate.get("expires_at")
+    return (certificate.get("state") == HEALTHY_CERTIFICATE_STATE and bool(expires)
+            and datetime.date.fromisoformat(expires) > today)
+
+
 class JsonApi:
     def __init__(self, base_url: str, headers: dict[str, str]):
         self.base_url = base_url
@@ -152,6 +168,11 @@ class GitHubPages:
     def update(self, **fields) -> None:
         self.api.request("PUT", self.path, fields)
 
+    def health(self) -> dict | None:
+        """GitHub's DNS check for the custom domain, or None while GitHub is still running it."""
+        result = self.api.request("GET", f"{self.path}/health")
+        return result if result and result.get("domain") else None
+
     def can_administer(self) -> bool:
         """Whether the token's account is a repository administrator, which changing the custom domain needs."""
         return bool((self.api.request("GET", self.repository_path).get("permissions") or {}).get("admin"))
@@ -169,9 +190,49 @@ class CloudflareDns:
         self.api.request("PATCH", f"{self.path}/{record_id}", {"proxied": proxied, "ttl": ttl})
 
 
+HEALTH_FIELDS = ("is_proxied", "is_cloudflare_ip", "is_pointed_to_github_pages_ip", "is_cname_to_github_user_domain",
+                 "is_https_eligible", "caa_error", "reason")
+
+
+def wait_until_https_eligible(pages: GitHubPages, log: Callable[[str], None], sleep: Callable[[float], None],
+                              clock: Callable[[], float]) -> None:
+    """Wait until GitHub's own DNS check says it can issue a certificate for the domain and its alternate."""
+    deadline = clock() + DNS_CHECK_TIMEOUT_SECONDS
+    while True:
+        health = pages.health()
+        if health:
+            # The certificate covers www and the bare domain, so both must be reported and eligible.
+            domains = [health.get(key) for key in ("domain", "alt_domain")]
+            for domain in filter(None, domains):
+                log(f"GitHub DNS check for {domain.get('host')}: "
+                    + ", ".join(f"{field}={domain.get(field)}" for field in HEALTH_FIELDS))
+            if not health.get("alt_domain"):
+                log("GitHub's DNS check did not report the alternate domain yet")
+            if all(domain and domain.get("is_https_eligible") for domain in domains):
+                return
+        else:
+            log("GitHub is still running its DNS check")
+        if clock() >= deadline:
+            raise ApiError(f"GitHub's DNS check did not find the domain eligible for HTTPS after "
+                           f"{DNS_CHECK_TIMEOUT_SECONDS // 60} minutes")
+        sleep(POLL_SECONDS)
+
+
 def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = print,
           sleep: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic) -> None:
     """Restart GitHub Pages certificate provisioning while the domain's records are DNS only."""
+    renewal_deadline = clock() + RENEWAL_TIMEOUT_SECONDS
+
+    def check_deadline() -> None:
+        if clock() >= renewal_deadline:
+            raise ApiError(f"certificate renewal exceeded {RENEWAL_TIMEOUT_SECONDS // 60} minutes; "
+                           "restoring the custom domain and Cloudflare proxy")
+
+    def wait(seconds: float) -> None:
+        check_deadline()
+        sleep(min(seconds, renewal_deadline - clock()))
+        check_deadline()
+
     site = pages.get()
     if site.get("build_type") != "workflow":
         # Removing the custom domain from a branch-built site commits a CNAME change to the protected branch.
@@ -187,44 +248,63 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
     proxied = [record for name in dict.fromkeys([apex, cname]) for record in dns.records(name)
                if record.get("type") in ("A", "AAAA", "CNAME") and record.get("proxied")]
 
+    domain_removed = False
     try:
         for record in proxied:
+            check_deadline()
             log(f"Setting {record['type']} {record['name']} to DNS only")
             dns.update(record["id"], proxied=False, ttl=DNS_ONLY_TTL)
-        log(f"Waiting {DNS_SETTLE_SECONDS} seconds for the DNS change to be visible")
-        sleep(DNS_SETTLE_SECONDS)
+        # GitHub only issues a certificate once its DNS check sees the records pointing straight at GitHub Pages.
+        log(f"Waiting {PROXIED_TTL_SECONDS} seconds for resolvers to drop Cloudflare's addresses")
+        wait(PROXIED_TTL_SECONDS)
+        wait_until_https_eligible(pages, log, wait, clock)
+        check_deadline()
 
         log(f"Removing and re-adding {cname} to restart certificate provisioning")
+        domain_removed = True
         pages.update(cname=None)
-        sleep(10)
+        wait(POLL_SECONDS)
         pages.update(cname=cname)
+        domain_removed = False
 
-        started = clock()
-        deadline = started + PROVISIONING_TIMEOUT_SECONDS
+        deadline = clock() + PROVISIONING_TIMEOUT_SECONDS
+        last_seen, restarted = None, False
         while True:
+            check_deadline()
             certificate = pages.get().get("https_certificate") or {}
+            check_deadline()
             state, expiry = certificate.get("state"), certificate.get("expires_at") or ""
-            log(f"Certificate state: {state}, expires {expiry or 'unknown'}")
+            if (state, expiry) != last_seen:
+                log(f"Certificate state: {state}, expires {expiry or 'unknown'}")
+                last_seen = (state, expiry)
             if state == HEALTHY_CERTIFICATE_STATE and expiry > old_expiry:
                 log("GitHub Pages has a new certificate")
                 break
-            # Right after the domain is re-added, GitHub can still report the old failed state for a moment.
-            if state in FAILED_CERTIFICATE_STATES and clock() - started >= FAILURE_GRACE_SECONDS:
+            # GitHub can keep reporting the old failed state for a long time before provisioning starts (it says
+            # HTTPS can take up to an hour), so a failed state only ends the wait once provisioning has restarted.
+            if state not in FAILED_CERTIFICATE_STATES:
+                restarted = True
+            elif restarted:
                 raise ApiError(f"certificate provisioning failed with state {state!r}: "
                                f"{certificate.get('description')}")
             if clock() >= deadline:
                 raise ApiError(f"no new certificate after {PROVISIONING_TIMEOUT_SECONDS // 60} minutes "
                                f"(state {state!r})")
-            sleep(POLL_SECONDS)
+            wait(POLL_SECONDS)
     finally:
         try:
-            if pages.get().get("cname") != cname:
+            # After a removal, re-add the domain without first needing a GET to succeed.
+            if domain_removed or pages.get().get("cname") != cname:
                 log(f"Restoring the custom domain {cname}")
                 pages.update(cname=cname)
         finally:
             for record in proxied:
                 log(f"Restoring the Cloudflare proxy for {record['type']} {record['name']}")
                 dns.update(record["id"], proxied=True, ttl=record.get("ttl", 1))
+            if proxied:
+                # Let resolvers drop GitHub's addresses before anything checks the site through Cloudflare again.
+                log(f"Waiting {2 * DNS_ONLY_TTL} seconds for the proxied records to be visible again")
+                sleep(2 * DNS_ONLY_TTL)
 
 
 def _annotate(kind: str, title: str, message: str, github: bool) -> None:
@@ -264,12 +344,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "check-certificate":
         site = pages.get()
         print(json.dumps(site.get("https_certificate"), indent=2))
-        problem = certificate_problem(site, datetime.date.today())
+        today = datetime.date.today()
+        problem = certificate_problem(site, today)
         force = os.environ.get("FORCE_RENEW", "").lower() == "true"
-        if problem:
+        if force:
+            print(f"Renewing as requested: {problem}" if problem else
+                  "The certificate is healthy, but renewal was requested.")
+        elif problem and renews_without_outage(site, today):
             _annotate("warning", "GitHub Pages certificate", f"Renewing: {problem}", args.github)
-        elif force:
-            print("The certificate is healthy, but renewal was requested.")
+        elif problem:
+            _annotate("error", "GitHub Pages certificate",
+                      f"Not renewing automatically because the certificate is no longer valid: {problem.rstrip('.')}. "
+                      "Visitors are unaffected while Cloudflare's SSL mode is Full. "
+                      "See developer-docs/website-hosting.md.", args.github)
+            _set_output("renew", "false")
+            return 1
         else:
             print("The GitHub Pages certificate is healthy.")
         _set_output("renew", "true" if problem or force else "false")
