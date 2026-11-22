@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Web;
 using Cgs.Menu;
 using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
@@ -589,10 +588,30 @@ namespace Cgs
 
             var deepLinkUriQuery = new Uri(deepLink).Query;
             Debug.Log("GetAutoUpdateUrl::deepLinkUriQuery: " + deepLinkUriQuery);
-            var autoUpdateUrl = HttpUtility.ParseQueryString(deepLinkUriQuery).Get("url");
+            var autoUpdateUrl = GetQueryParameter(deepLinkUriQuery, "url");
             Debug.Log("GetAutoUpdateUrl::autoUpdateUrl: " + autoUpdateUrl);
 
             return autoUpdateUrl;
+        }
+
+        // Returns the first value of the named parameter in a URI query string, or null if it is missing.
+        // Replaces System.Web.HttpUtility.ParseQueryString, which is not available on every platform.
+        internal static string GetQueryParameter(string query, string name)
+        {
+            foreach (var parameter in query.TrimStart('?').Split('&'))
+            {
+                var separatorIndex = parameter.IndexOf('=');
+                var key = separatorIndex < 0 ? parameter : parameter.Substring(0, separatorIndex);
+                if (string.Equals(DecodeQueryComponent(key), name, StringComparison.OrdinalIgnoreCase))
+                    return separatorIndex < 0 ? string.Empty : DecodeQueryComponent(parameter.Substring(separatorIndex + 1));
+            }
+
+            return null;
+        }
+
+        private static string DecodeQueryComponent(string value)
+        {
+            return Uri.UnescapeDataString(value.Replace('+', ' '));
         }
 
         protected IEnumerator Start()

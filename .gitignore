@@ -101,3 +101,6 @@ Assets/Resources/PerformanceTestRunSettings.json.meta
 docs/Gemfile
 docs/Gemfile.lock
 docs/_site/
+# Python bytecode caches
+__pycache__/
+*.pyc

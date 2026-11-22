@@ -8,7 +8,6 @@ using Application = UnityEngine.WSA.Application;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.AccessCache;
-using Windows.UI.ViewManagement;
 
 namespace UnityExtensionMethods
 {
@@ -44,41 +43,36 @@ namespace UnityExtensionMethods
 
         private static async void OpenFile()
         {
-            if (ApplicationView.Value != ApplicationViewState.Snapped || ApplicationView.TryUnsnap())
+            Debug.Log("OpenFile...");
+
+            Selection.Clear();
+            LastOpenFiles.Clear();
+            IsBusy = true;
+
+            try
             {
-                Debug.Log("OpenFile...");
+                FileOpenPicker openPicker = new FileOpenPicker();
+                openPicker.ViewMode = CurrentViewMode;
+                openPicker.SuggestedStartLocation = CurrentLocation;
 
-                Selection.Clear();
-                LastOpenFiles.Clear();
-                IsBusy = true;
+                foreach (string ext in Extensions.SelectMany(extension => extension.Extensions))
+                    openPicker.FileTypeFilter.Add(ext.StartsWith("*") ? ext : "." + ext);
 
-                try
+                StorageFile file = await openPicker.PickSingleFileAsync();
+                if (file != null)
                 {
-                    FileOpenPicker openPicker = new FileOpenPicker();
-                    openPicker.ViewMode = CurrentViewMode;
-                    openPicker.SuggestedStartLocation = CurrentLocation;
-
-                    foreach (string ext in Extensions.SelectMany(extension => extension.Extensions))
-                        openPicker.FileTypeFilter.Add(ext.StartsWith("*") ? ext : "." + ext);
-
-                    StorageFile file = await openPicker.PickSingleFileAsync();
-                    if (file != null)
-                    {
-                        Selection.Add(file.Path);
-                        LastOpenFiles.Add(file);
-                    }
+                    Selection.Add(file.Path);
+                    LastOpenFiles.Add(file);
                 }
-                catch (Exception ex)
-                {
-                    Debug.LogError(ex.ToString());
-                }
-
-                IsBusy = false;
-
-                Debug.Log("OpenFile end: " + Selection.Count);
             }
-            else
-                Debug.LogError("OpenFile: could not unsnap! " + Selection.Count);
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.ToString());
+            }
+
+            IsBusy = false;
+
+            Debug.Log("OpenFile end: " + Selection.Count);
         }
     }
 

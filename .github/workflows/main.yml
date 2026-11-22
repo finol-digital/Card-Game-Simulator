@@ -14,6 +14,7 @@ on:
       - 'ProjectSettings/**'
       - '.github/workflows/main.yml'
       - '.github/actions/unity-windows-python/**'
+      - 'tools/unity-log-scan/**'
   pull_request:
     types:
       - opened
@@ -25,6 +26,7 @@ on:
       - 'ProjectSettings/**'
       - '.github/workflows/main.yml'
       - '.github/actions/unity-windows-python/**'
+      - 'tools/unity-log-scan/**'
   release:
     types:
       - published
@@ -99,6 +101,22 @@ jobs:
         with:
           testMode: playmode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      # The test runner writes each Unity Editor log to artifacts/<testMode>.log.
+      - name: Scan Unity Logs for Warnings
+        if: ${{ !cancelled() }}
+        run: |
+          status=0
+          for log in artifacts/editmode.log artifacts/playmode.log; do
+            echo "::group::Scan $log"
+            if [ -s "$log" ]; then
+              python3 tools/unity-log-scan/scan_unity_log.py "$log" --test-log --github || status=1
+            else
+              echo "::error title=Unity log scan::$log is missing or empty, so it could not be scanned"
+              status=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $status
       # Keep automated metadata on develop; main changes arrive through release PRs.
       - name: Checkout Release Notes Branch
         if: github.event.action == 'published'
@@ -470,7 +488,7 @@ jobs:
 
   deployToAppleTest:
     name: Deploy to Apple TestFlight
-    runs-on: macos-15
+    runs-on: xcode-27
     needs: [tests, buildWithLinux]
     if: needs.tests.outputs.isPr == 'true'
     steps:
@@ -485,6 +503,16 @@ jobs:
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
           xcode-version: latest-stable
+      # Apple requires the iOS 27 SDK (Xcode 27) for uploads starting April 2027 (ITMS-90725).
+      - name: Check Xcode version
+        run: |
+          xcodebuild -version
+          sdk_version=$(xcrun --sdk iphoneos --show-sdk-version)
+          echo "iOS SDK: $sdk_version"
+          if [ "${sdk_version%%.*}" -lt 27 ]; then
+            echo "::error title=Xcode too old::App Store uploads need the iOS 27 SDK or later, but this runner has iOS SDK $sdk_version"
+            exit 1
+          fi
       - name: Fix File Permissions and Run Fastlane
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
@@ -515,7 +543,7 @@ jobs:
 
   deployToAppStore:
     name: Deploy to the App Store
-    runs-on: macos-15
+    runs-on: xcode-27
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'iOS'))
     steps:
@@ -535,6 +563,16 @@ jobs:
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
           xcode-version: latest-stable
+      # Apple requires the iOS 27 SDK (Xcode 27) for uploads starting April 2027 (ITMS-90725).
+      - name: Check Xcode version
+        run: |
+          xcodebuild -version
+          sdk_version=$(xcrun --sdk iphoneos --show-sdk-version)
+          echo "iOS SDK: $sdk_version"
+          if [ "${sdk_version%%.*}" -lt 27 ]; then
+            echo "::error title=Xcode too old::App Store uploads need the iOS 27 SDK or later, but this runner has iOS SDK $sdk_version"
+            exit 1
+          fi
       - name: Fix File Permissions and Run Fastlane
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
