@@ -1997,6 +1997,16 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648379
       - rid: 451339117355073545
+  - m_Id: 17272803462995968
+    m_Localized: Agitar para rolar dados
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195953
+  - m_Id: 17272803634962432
+    m_Localized: Agite o dispositivo para rolar todos os dados da mesa.
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195954
   references:
     version: 2
     RefIds:
@@ -2008,6 +2018,14 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"O deck \\\"{deckName}\\\" est\xE1 incompleto. Cartas carregadas: {loadedCount}. Cartas ausentes: {missingCount}.\\n\\nEstes nomes ou IDs de cartas n\xE3o foram encontrados neste jogo:\\n{cards}\\n\\nConfira a lista do deck ou atualize os dados do jogo antes de jogar.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 3103366582956195953
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Agitar para rolar dados","status":"machine","sourceHash":"340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057","provenance":{"method":"Contextual machine draft; English context and CGS glossary","date":"2026-11-22"}}'
+    - rid: 3103366582956195954
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Agite o dispositivo para rolar todos os dados da mesa.","status":"machine","sourceHash":"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de","provenance":{"method":"Contextual machine draft; English context and CGS glossary","date":"2026-11-22"}}'
     - rid: 7133309421012648379
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

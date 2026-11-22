@@ -14,6 +14,7 @@ namespace Cgs.Play
         private const string PlayerPrefsAutoStackCards = "AutoStackCards";
         private const string PlayerPrefsDieFaceCount = "DieFaceCount";
         private const string PlayerPrefsDoubleClickToRollDice = "DoubleClickToRollDice";
+        private const string PlayerPrefsShakeToRollDice = "ShakeToRollDice";
         private const string PlayerPrefsDoubleClickToViewStacks = "DoubleClickToViewStacks";
         private const string PlayerPrefsStackViewerOverlap = "StackViewerOverlap";
         private const string PlayerPrefsShowActionsMenu = "ShowActionsMenu";
@@ -57,6 +58,12 @@ namespace Cgs.Play
         {
             get => PlayerPrefs.GetInt(PlayerPrefsDoubleClickToRollDice, 1) == 1;
             set => PlayerPrefs.SetInt(PlayerPrefsDoubleClickToRollDice, value ? 1 : 0);
+        }
+
+        public static bool ShakeToRollDice
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsShakeToRollDice, 1) == 1;
+            set => PlayerPrefs.SetInt(PlayerPrefsShakeToRollDice, value ? 1 : 0);
         }
 
         public static bool DoubleClickToViewStacks

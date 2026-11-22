@@ -291,6 +291,7 @@ namespace Cgs.Play
         {
             StartupTimeline.Mark(StartupMilestone.PlaySceneLoaded);
             gameObject.GetOrAddComponent<CgsNetDiagnostics>();
+            gameObject.GetOrAddComponent<DiceShakeRoller>();
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
             playAreaCardZone.OnAddCardActions.Add(AddCardToPlayArea);
