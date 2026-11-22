@@ -75,6 +75,22 @@ Close any Editor that has the project open first. A full import takes a few minu
    behavior changes.
 7. Run the PlayMode tests and let CI build every platform before merging.
 
+## Project Auditor
+
+Unity's Project Auditor (**Window > Analysis > Project Auditor**) checks code, assets, and settings. It needs the
+`com.unity.project-auditor-rules` package, which is in `Packages/manifest.json`. Run it after an upgrade and fix
+platform and compatibility findings, such as `System.Web` use or shaders URP cannot render.
+
+These findings are expected and do not need action:
+
+- Code performance hints (allocations, LINQ, string concatenation, `Debug.Log`), which flag every use in the
+  project. Fix them only where profiling shows a hot path.
+- Assets in `Resources` folders. The project loads them by name.
+- TextMesh Pro's Distance Field, Bitmap, and Sprite shaders including `UnityCG.cginc`. TextMesh Pro finds them by
+  name at runtime, and they render UI correctly in URP.
+- Quality levels without their own URP asset. They use the default render pipeline asset from Graphics settings.
+- Gamma color space. Switching to Linear changes how every color in the UI looks, so it needs a visual review first.
+
 ## Package samples
 
 Do not import a whole package sample into `Assets/`. Copy only the files the project uses into a project folder
