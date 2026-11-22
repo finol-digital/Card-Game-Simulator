@@ -150,7 +150,7 @@ class RenewTests(unittest.TestCase):
 
     def test_failure_still_restores_the_proxy_and_the_domain(self):
         failed = {"state": "errored", "expires_at": None, "description": "DNS check failed"}
-        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [failed] * 100)
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [{"state": "new"}, failed])
         dns = FakeDns()
         with self.assertRaisesRegex(ApiError, "state 'errored'"):
             self.run_renew(pages, dns)
@@ -201,6 +201,13 @@ class RenewTests(unittest.TestCase):
         self.assertEqual(pages.site["cname"], "www.cardgamesimulator.com")
         self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
         self.assertEqual(clock(), site_health.PROXIED_TTL_SECONDS + 10 + 2 * site_health.DNS_ONLY_TTL)
+
+    def test_old_failed_state_is_not_a_failure_until_provisioning_restarts(self):
+        old = {"state": "bad_authz", "expires_at": "2026-11-21", "description": "bad"}
+        issued = {"state": "approved", "expires_at": "2027-02-20", "description": ""}
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [old] * 60 + [{"state": "authorized"}, issued])
+        self.run_renew(pages)
+        self.assertIn("GitHub Pages has a new certificate", self.log)
 
     def test_waits_for_github_dns_check_before_restarting_provisioning(self):
         issued = {"state": "approved", "expires_at": "2027-02-20", "description": ""}

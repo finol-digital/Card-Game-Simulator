@@ -45,7 +45,6 @@ DNS_CHECK_TIMEOUT_SECONDS = 20 * 60
 PROVISIONING_TIMEOUT_SECONDS = 40 * 60
 # The workflow allows 60 minutes; reserve 10 for API calls, restoration, and the final website check.
 RENEWAL_TIMEOUT_SECONDS = 50 * 60
-FAILURE_GRACE_SECONDS = 10 * 60
 POLL_SECONDS = 30
 FAILED_CERTIFICATE_STATES = ("errored", "bad_authz", "authorization_revoked")
 
@@ -249,19 +248,24 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
         wait(POLL_SECONDS)
         pages.update(cname=cname)
 
-        started = clock()
-        deadline = started + PROVISIONING_TIMEOUT_SECONDS
+        deadline = clock() + PROVISIONING_TIMEOUT_SECONDS
+        last_seen, restarted = None, False
         while True:
             check_deadline()
             certificate = pages.get().get("https_certificate") or {}
             check_deadline()
             state, expiry = certificate.get("state"), certificate.get("expires_at") or ""
-            log(f"Certificate state: {state}, expires {expiry or 'unknown'}")
+            if (state, expiry) != last_seen:
+                log(f"Certificate state: {state}, expires {expiry or 'unknown'}")
+                last_seen = (state, expiry)
             if state == HEALTHY_CERTIFICATE_STATE and expiry > old_expiry:
                 log("GitHub Pages has a new certificate")
                 break
-            # Right after the domain is re-added, GitHub can still report the old failed state for a moment.
-            if state in FAILED_CERTIFICATE_STATES and clock() - started >= FAILURE_GRACE_SECONDS:
+            # GitHub can keep reporting the old failed state for a long time before provisioning starts (it says
+            # HTTPS can take up to an hour), so a failed state only ends the wait once provisioning has restarted.
+            if state not in FAILED_CERTIFICATE_STATES:
+                restarted = True
+            elif restarted:
                 raise ApiError(f"certificate provisioning failed with state {state!r}: "
                                f"{certificate.get('description')}")
             if clock() >= deadline:

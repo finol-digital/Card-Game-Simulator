@@ -27,7 +27,9 @@ certificate's state from the GitHub API. When the certificate has failed or expi
    for HTTPS. Cloudflare's proxied answers can be cached for 5 minutes, and GitHub will not issue a certificate
    while it still sees Cloudflare's addresses.
 3. Removes and re-adds the custom domain in GitHub Pages, which restarts provisioning.
-4. Waits up to 40 minutes for GitHub to report a new certificate.
+4. Waits up to 40 minutes for GitHub to report a new certificate. GitHub says HTTPS can take up to an hour, and it
+   can keep showing the old failed state for much of that time, so a failed state only stops the wait after
+   provisioning has visibly restarted.
 5. Turns the Cloudflare proxy back on and checks the site again. It always does this, even if renewal fails.
 
 DNS checks and certificate provisioning share a 50-minute renewal deadline, including the fixed waits and API
@@ -35,10 +37,9 @@ latency. When it expires, renewal stops and restores the domain and proxy. This 
 60-minute limit for restoration, DNS propagation, and the final website check; cleanup does not use the renewal
 deadline.
 
-While the records are DNS only, which takes at least 10 minutes, the Worker's redirects and Markdown responses do not
-run.
-Renewing 21 days early means visitors still get GitHub's valid certificate during that time. If the certificate has
-already expired, HTTPS fails for those few minutes.
+While the records are DNS only, which takes from 10 minutes to nearly an hour, the Worker's redirects and Markdown
+responses do not run. Renewing 21 days early means visitors still get GitHub's valid certificate during that time. If
+the certificate has already expired, HTTPS fails for the whole time, so run a renewal like that at a quiet time.
 
 To renew by hand, run **Website Health** from the Actions tab with **Renew the GitHub Pages certificate now**
 checked. The same steps can be run locally with `python3 tools/site-health/site_health.py renew` and the
