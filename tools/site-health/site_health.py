@@ -43,6 +43,8 @@ DNS_ONLY_TTL = 60
 PROXIED_TTL_SECONDS = 300
 DNS_CHECK_TIMEOUT_SECONDS = 20 * 60
 PROVISIONING_TIMEOUT_SECONDS = 40 * 60
+# The workflow allows 60 minutes; reserve 10 for API calls, restoration, and the final website check.
+RENEWAL_TIMEOUT_SECONDS = 50 * 60
 FAILURE_GRACE_SECONDS = 10 * 60
 POLL_SECONDS = 30
 FAILED_CERTIFICATE_STATES = ("errored", "bad_authz", "authorization_revoked")
@@ -204,6 +206,18 @@ def wait_until_https_eligible(pages: GitHubPages, log: Callable[[str], None], sl
 def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = print,
           sleep: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic) -> None:
     """Restart GitHub Pages certificate provisioning while the domain's records are DNS only."""
+    renewal_deadline = clock() + RENEWAL_TIMEOUT_SECONDS
+
+    def check_deadline() -> None:
+        if clock() >= renewal_deadline:
+            raise ApiError(f"certificate renewal exceeded {RENEWAL_TIMEOUT_SECONDS // 60} minutes; "
+                           "restoring the custom domain and Cloudflare proxy")
+
+    def wait(seconds: float) -> None:
+        check_deadline()
+        sleep(min(seconds, renewal_deadline - clock()))
+        check_deadline()
+
     site = pages.get()
     if site.get("build_type") != "workflow":
         # Removing the custom domain from a branch-built site commits a CNAME change to the protected branch.
@@ -221,22 +235,26 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
 
     try:
         for record in proxied:
+            check_deadline()
             log(f"Setting {record['type']} {record['name']} to DNS only")
             dns.update(record["id"], proxied=False, ttl=DNS_ONLY_TTL)
         # GitHub only issues a certificate once its DNS check sees the records pointing straight at GitHub Pages.
         log(f"Waiting {PROXIED_TTL_SECONDS} seconds for resolvers to drop Cloudflare's addresses")
-        sleep(PROXIED_TTL_SECONDS)
-        wait_until_https_eligible(pages, log, sleep, clock)
+        wait(PROXIED_TTL_SECONDS)
+        wait_until_https_eligible(pages, log, wait, clock)
+        check_deadline()
 
         log(f"Removing and re-adding {cname} to restart certificate provisioning")
         pages.update(cname=None)
-        sleep(POLL_SECONDS)
+        wait(POLL_SECONDS)
         pages.update(cname=cname)
 
         started = clock()
         deadline = started + PROVISIONING_TIMEOUT_SECONDS
         while True:
+            check_deadline()
             certificate = pages.get().get("https_certificate") or {}
+            check_deadline()
             state, expiry = certificate.get("state"), certificate.get("expires_at") or ""
             log(f"Certificate state: {state}, expires {expiry or 'unknown'}")
             if state == HEALTHY_CERTIFICATE_STATE and expiry > old_expiry:
@@ -249,7 +267,7 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
             if clock() >= deadline:
                 raise ApiError(f"no new certificate after {PROVISIONING_TIMEOUT_SECONDS // 60} minutes "
                                f"(state {state!r})")
-            sleep(POLL_SECONDS)
+            wait(POLL_SECONDS)
     finally:
         try:
             if pages.get().get("cname") != cname:

@@ -5,6 +5,7 @@
 
 import datetime
 import unittest
+from unittest.mock import patch
 
 import site_health
 from site_health import ApiError, certificate_problem, check_site, renew
@@ -168,6 +169,38 @@ class RenewTests(unittest.TestCase):
         with self.assertRaisesRegex(ApiError, "GitHub Actions"):
             self.run_renew(pages, dns)
         self.assertEqual((pages.calls, dns.updates), ([], []))
+
+    def test_slow_dns_and_provisioning_share_a_deadline_and_restore_the_proxy(self):
+        stale = {"state": "approved", "expires_at": "2026-12-10"}
+        pages = FakePages(pages_site(expires="2026-12-10"), [stale] * 1000,
+                          health=[eligible_health(False)] * 38 + [eligible_health()])
+        dns = FakeDns()
+        clock = Clock()
+        original_get = pages.get
+
+        def slow_get():
+            clock.sleep(60)  # Account for API latency as well as polling sleeps.
+            return original_get()
+
+        with patch.object(pages, "get", side_effect=slow_get):
+            with self.assertRaisesRegex(ApiError, "renewal exceeded 50 minutes"):
+                renew(pages, dns, log=lambda _: None, sleep=clock.sleep, clock=clock)
+        self.assertIn(("update", {"cname": None}), pages.calls)
+        self.assertEqual(pages.site["cname"], "www.cardgamesimulator.com")
+        self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
+        self.assertLess(clock(), 60 * 60)
+
+    def test_deadline_during_domain_removal_restores_domain_and_proxy(self):
+        pages = FakePages(pages_site(), [])
+        dns = FakeDns()
+        clock = Clock()
+        # Expire partway through the removal wait, before the normal re-add operation.
+        with patch.object(site_health, "RENEWAL_TIMEOUT_SECONDS", site_health.PROXIED_TTL_SECONDS + 10):
+            with self.assertRaisesRegex(ApiError, "renewal exceeded"):
+                renew(pages, dns, log=lambda _: None, sleep=clock.sleep, clock=clock)
+        self.assertEqual(pages.site["cname"], "www.cardgamesimulator.com")
+        self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
+        self.assertEqual(clock(), site_health.PROXIED_TTL_SECONDS + 10 + 2 * site_health.DNS_ONLY_TTL)
 
     def test_waits_for_github_dns_check_before_restarting_provisioning(self):
         issued = {"state": "approved", "expires_at": "2027-02-20", "description": ""}

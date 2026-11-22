@@ -30,6 +30,11 @@ certificate's state from the GitHub API. When the certificate has failed or expi
 4. Waits up to 40 minutes for GitHub to report a new certificate.
 5. Turns the Cloudflare proxy back on and checks the site again. It always does this, even if renewal fails.
 
+DNS checks and certificate provisioning share a 50-minute renewal deadline, including the fixed waits and API
+latency. When it expires, renewal stops and restores the domain and proxy. This leaves time within the workflow's
+60-minute limit for restoration, DNS propagation, and the final website check; cleanup does not use the renewal
+deadline.
+
 While the records are DNS only, which takes at least 10 minutes, the Worker's redirects and Markdown responses do not
 run.
 Renewing 21 days early means visitors still get GitHub's valid certificate during that time. If the certificate has
