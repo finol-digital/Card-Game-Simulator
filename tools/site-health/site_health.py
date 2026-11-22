@@ -12,7 +12,7 @@ the new certificate, and always restores the proxy.
   python3 tools/site-health/site_health.py check-site
   python3 tools/site-health/site_health.py check-certificate --repository OWNER/REPO   # needs GH_TOKEN
   python3 tools/site-health/site_health.py renew --repository OWNER/REPO
-      # needs GH_TOKEN (repository admin), CLOUDFLARE_API_TOKEN (Zone DNS edit) and CLOUDFLARE_ZONE_ID
+      # needs GH_TOKEN (a repository admin's token), CLOUDFLARE_API_TOKEN (Zone DNS edit) and CLOUDFLARE_ZONE_ID
 """
 
 from __future__ import annotations
@@ -140,7 +140,8 @@ class JsonApi:
 
 class GitHubPages:
     def __init__(self, repository: str, token: str):
-        self.path = f"/repos/{repository}/pages"
+        self.repository_path = f"/repos/{repository}"
+        self.path = f"{self.repository_path}/pages"
         self.api = JsonApi(GITHUB_API, {"Authorization": f"Bearer {token}",
                                         "Accept": "application/vnd.github+json",
                                         "X-GitHub-Api-Version": "2022-11-28"})
@@ -150,6 +151,10 @@ class GitHubPages:
 
     def update(self, **fields) -> None:
         self.api.request("PUT", self.path, fields)
+
+    def can_administer(self) -> bool:
+        """Whether the token's account is a repository administrator, which changing the custom domain needs."""
+        return bool((self.api.request("GET", self.repository_path).get("permissions") or {}).get("admin"))
 
 
 class CloudflareDns:
@@ -174,6 +179,9 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
     cname = site.get("cname")
     if not cname:
         raise ApiError("GitHub Pages has no custom domain")
+    # Check before touching Cloudflare, so a token without access leaves the proxy alone.
+    if not pages.can_administer():
+        raise ApiError("the GitHub token cannot change GitHub Pages settings; it needs admin access to the repository")
     old_expiry = (site.get("https_certificate") or {}).get("expires_at") or ""
     apex = cname[4:] if cname.startswith("www.") else cname
     proxied = [record for name in dict.fromkeys([apex, cname]) for record in dns.records(name)

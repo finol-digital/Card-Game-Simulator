@@ -39,11 +39,11 @@ environment variables below.
 
 | Name | Type | What it needs |
 | --- | --- | --- |
-| `PAGES_ADMIN_TOKEN` | Repository secret | A fine-grained token for this repository with **Administration** and **Pages** read and write access. Changing the custom domain requires an administrator; the workflow's own `GITHUB_TOKEN` cannot. |
+| `CGS_PAT` | Organization secret | The existing personal access token CI already uses. Changing the custom domain needs a repository administrator's token, so it must be a classic token with the `repo` scope, or a fine-grained token with **Administration** and **Pages** write access, from an admin of this repository. The daily check only reads the certificate, so it uses the workflow's own `GITHUB_TOKEN`. |
 | `CLOUDFLARE_API_TOKEN` | Repository secret | A Cloudflare API token with **Zone > DNS > Edit** for `cardgamesimulator.com`. |
 | `CLOUDFLARE_ZONE_ID` | Repository variable | The zone ID shown on the `cardgamesimulator.com` overview page in Cloudflare. |
 
-Without these, the daily check still tests the site and reports the certificate's state, but the renewal job fails.
+Without these, the daily check still tests the site and reports the certificate's state, but the renewal job fails. If the token is not an admin's, renewal stops before it changes Cloudflare or GitHub Pages.
 
 ## When the health check fails
 

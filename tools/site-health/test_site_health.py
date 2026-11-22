@@ -63,8 +63,9 @@ class CheckSiteTests(unittest.TestCase):
 
 
 class FakePages:
-    def __init__(self, site, states):
+    def __init__(self, site, states, admin=True):
         self.site = site
+        self.admin = admin
         self.states = list(states)  # Certificates reported after the domain is re-added, one per poll.
         self.calls = []
         self.readded = False
@@ -73,6 +74,9 @@ class FakePages:
         if self.readded and self.states:
             self.site["https_certificate"] = self.states.pop(0)
         return dict(self.site)
+
+    def can_administer(self):
+        return self.admin
 
     def update(self, **fields):
         self.calls.append(("update", fields))
@@ -150,6 +154,13 @@ class RenewTests(unittest.TestCase):
         pages = FakePages(pages_site(build_type="legacy"), [])
         dns = FakeDns()
         with self.assertRaisesRegex(ApiError, "GitHub Actions"):
+            self.run_renew(pages, dns)
+        self.assertEqual((pages.calls, dns.updates), ([], []))
+
+    def test_token_without_admin_access_changes_nothing(self):
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [], admin=False)
+        dns = FakeDns()
+        with self.assertRaisesRegex(ApiError, "admin access"):
             self.run_renew(pages, dns)
         self.assertEqual((pages.calls, dns.updates), ([], []))
 

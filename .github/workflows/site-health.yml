@@ -48,7 +48,7 @@ jobs:
         id: certificate
         if: ${{ !cancelled() && github.event_name != 'pull_request' }}
         env:
-          GH_TOKEN: ${{ secrets.PAGES_ADMIN_TOKEN || github.token }}
+          GH_TOKEN: ${{ github.token }}
           FORCE_RENEW: ${{ inputs.renew_certificate }}
         run: python3 tools/site-health/site_health.py check-certificate --github
 
@@ -67,7 +67,7 @@ jobs:
       # re-adding the custom domain, and always restores the proxy, even if renewal fails.
       - name: Renew the Certificate
         env:
-          GH_TOKEN: ${{ secrets.PAGES_ADMIN_TOKEN }}
+          GH_TOKEN: ${{ secrets.CGS_PAT }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
         run: python3 tools/site-health/site_health.py renew --github
