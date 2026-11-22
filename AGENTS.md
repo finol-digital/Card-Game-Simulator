@@ -25,7 +25,7 @@ Card Game Simulator (CGS) is a Unity-based digital platform for playing card gam
 
 ## Website and Developer Documentation
 
-- GitHub Pages publishes the `docs/` directory from `main` at `https://www.cardgamesimulator.com/`. Treat changes anywhere under `docs/` as public website changes, including Markdown files, game definitions, layouts, and assets.
+- `.github/workflows/pages.yml` publishes the `docs/` directory from `main` to GitHub Pages at `https://www.cardgamesimulator.com/`. Treat changes anywhere under `docs/` as public website changes, including Markdown files, game definitions, layouts, and assets. See [the website hosting guide](developer-docs/website-hosting.md) for Cloudflare, certificates, and the daily health check.
 - Keep internal debugging guides, investigation notes, test reports, and contributor instructions outside `docs/`. Use `developer-docs/` for development guides, retain existing design records under `openspec/`, and keep generated test output in ignored `Logs/` or `Temp/` directories.
 - Put repository instructions in this root `AGENTS.md`; do not add agent instruction files to the public website directory. `docs/llms.txt` is intentionally public guidance about using CGS, not internal repository instructions.
 - `docs/CNAME` defines the custom domain, `docs/_config.yml` configures Jekyll, and `docs/_layouts/` contains website templates. Preserve the domain and existing public routes unless the user requests a change; account for existing links when changing page URLs.
@@ -66,6 +66,10 @@ unity install <version>     # Install the Editor version this project uses (see 
  - `unity command "test run" --mode playmode --async-tests --filter <pattern>` - Run tests matching a case-insensitive partial name match (`--filter-type testName|assembly|category`)
  - `unity command "test cancel"` - Cancel running tests
  - Default test timeout is 600 seconds; override with `--timeout <seconds>`
+
+### Website Checks
+ - `python3 tools/site-health/site_health.py check-site` - Check the live website over HTTPS
+ - `python3 -m unittest discover -s tools/site-health -p 'test_*.py'` - Test the website health check
 
 ### Editor Log Checks
  - `python3 tools/unity-log-scan/scan_unity_log.py Logs/Editor.log` - Report Editor warnings and errors not on `tools/unity-log-scan/allowlist.txt` (exits 1 if any)

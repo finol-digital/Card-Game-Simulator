@@ -1,0 +1,76 @@
+name: Website Health
+# Checks www.cardgamesimulator.com every day and renews the GitHub Pages certificate when it is close to expiry
+# or has failed. A failed run means the site or the certificate needs attention.
+# See developer-docs/website-hosting.md for how this works and the secrets it needs.
+on:
+  schedule:
+    - cron: '23 8 * * *'
+  workflow_dispatch:
+    inputs:
+      renew_certificate:
+        description: Renew the GitHub Pages certificate now, even if it is not due
+        type: boolean
+        default: false
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'tools/site-health/**'
+      - '.github/workflows/site-health.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-health-${{ github.event_name == 'pull_request' && github.head_ref || 'scheduled' }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check Website
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      renew: ${{ steps.certificate.outputs.renew }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: tools/site-health
+      - name: Test the Health Check
+        run: python3 -m unittest discover -s tools/site-health -p 'test_*.py'
+      - name: Check the Website over HTTPS
+        run: python3 tools/site-health/site_health.py check-site --github
+      - name: Check the GitHub Pages Certificate
+        id: certificate
+        if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ secrets.PAGES_ADMIN_TOKEN || github.token }}
+          FORCE_RENEW: ${{ inputs.renew_certificate }}
+        run: python3 tools/site-health/site_health.py check-certificate --github
+
+  renew:
+    name: Renew GitHub Pages Certificate
+    needs: check
+    if: ${{ !cancelled() && needs.check.outputs.renew == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: tools/site-health
+      # Switches the Cloudflare records to DNS only for a few minutes, restarts provisioning by removing and
+      # re-adding the custom domain, and always restores the proxy, even if renewal fails.
+      - name: Renew the Certificate
+        env:
+          GH_TOKEN: ${{ secrets.PAGES_ADMIN_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+        run: python3 tools/site-health/site_health.py renew --github
+      - name: Check the Website Again
+        if: always()
+        run: python3 tools/site-health/site_health.py check-site --github
