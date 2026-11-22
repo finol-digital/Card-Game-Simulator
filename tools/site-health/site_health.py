@@ -201,11 +201,14 @@ def wait_until_https_eligible(pages: GitHubPages, log: Callable[[str], None], sl
     while True:
         health = pages.health()
         if health:
-            domains = [health[key] for key in ("domain", "alt_domain") if health.get(key)]
-            for domain in domains:
+            # The certificate covers www and the bare domain, so both must be reported and eligible.
+            domains = [health.get(key) for key in ("domain", "alt_domain")]
+            for domain in filter(None, domains):
                 log(f"GitHub DNS check for {domain.get('host')}: "
                     + ", ".join(f"{field}={domain.get(field)}" for field in HEALTH_FIELDS))
-            if all(domain.get("is_https_eligible") for domain in domains):
+            if not health.get("alt_domain"):
+                log("GitHub's DNS check did not report the alternate domain yet")
+            if all(domain and domain.get("is_https_eligible") for domain in domains):
                 return
         else:
             log("GitHub is still running its DNS check")
@@ -245,6 +248,7 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
     proxied = [record for name in dict.fromkeys([apex, cname]) for record in dns.records(name)
                if record.get("type") in ("A", "AAAA", "CNAME") and record.get("proxied")]
 
+    domain_removed = False
     try:
         for record in proxied:
             check_deadline()
@@ -257,9 +261,11 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
         check_deadline()
 
         log(f"Removing and re-adding {cname} to restart certificate provisioning")
+        domain_removed = True
         pages.update(cname=None)
         wait(POLL_SECONDS)
         pages.update(cname=cname)
+        domain_removed = False
 
         deadline = clock() + PROVISIONING_TIMEOUT_SECONDS
         last_seen, restarted = None, False
@@ -287,7 +293,8 @@ def renew(pages: GitHubPages, dns: CloudflareDns, log: Callable[[str], None] = p
             wait(POLL_SECONDS)
     finally:
         try:
-            if pages.get().get("cname") != cname:
+            # After a removal, re-add the domain without first needing a GET to succeed.
+            if domain_removed or pages.get().get("cname") != cname:
                 log(f"Restoring the custom domain {cname}")
                 pages.update(cname=cname)
         finally:

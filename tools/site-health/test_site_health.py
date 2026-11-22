@@ -269,6 +269,33 @@ class RenewTests(unittest.TestCase):
         self.assertNotIn(("update", {"cname": None}), pages.calls)
         self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
 
+    def test_missing_alternate_domain_is_not_eligible(self):
+        only_www = {"domain": {"host": "www.cardgamesimulator.com", "is_https_eligible": True}, "alt_domain": None}
+        pages = FakePages(pages_site("bad_authz", "2026-11-21"), [], health=[only_www])
+        with self.assertRaisesRegex(ApiError, "DNS check did not find the domain eligible"):
+            self.run_renew(pages)
+        self.assertNotIn(("update", {"cname": None}), pages.calls)
+
+    def test_domain_removed_when_renewal_stops_is_re_added_even_if_reading_pages_fails(self):
+        class FailingPages(FakePages):
+            def update(self, **fields):
+                super().update(**fields)
+                if fields == {"cname": None}:
+                    self.fail_reads = True
+
+            def get(self):
+                if getattr(self, "fail_reads", False):
+                    raise ApiError("GET failed")
+                return super().get()
+        pages = FailingPages(pages_site("bad_authz", "2026-11-21"), [])
+        dns = FakeDns()
+        # The deadline runs out during the wait between removing and re-adding the domain.
+        with mock.patch.object(site_health, "RENEWAL_TIMEOUT_SECONDS", site_health.PROXIED_TTL_SECONDS + 10):
+            with self.assertRaises(ApiError):
+                self.run_renew(pages, dns)
+        self.assertEqual(pages.site["cname"], "www.cardgamesimulator.com")
+        self.assertEqual(dns.updates[-2:], [("a1", True, 1), ("www", True, 1)])
+
     def test_token_without_admin_access_changes_nothing(self):
         pages = FakePages(pages_site("bad_authz", "2026-11-21"), [], admin=False)
         dns = FakeDns()
