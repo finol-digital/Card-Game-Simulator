@@ -122,6 +122,19 @@ def certificate_problem(pages: dict, today: datetime.date) -> str | None:
     return None
 
 
+def renews_without_outage(pages: dict, today: datetime.date) -> bool:
+    """Whether the certificate is still valid, so visitors keep working HTTPS while the records are DNS only.
+
+    A certificate that has failed or expired is not renewed on a schedule: visitors would get HTTPS errors for up to
+    an hour, and removing and re-adding the domain does not always restart provisioning (in November 2026 it never
+    moved a certificate stuck in 'bad_authz'). Renew it by hand, or ask GitHub Support to reset it.
+    """
+    certificate = pages.get("https_certificate") or {}
+    expires = certificate.get("expires_at")
+    return (certificate.get("state") == HEALTHY_CERTIFICATE_STATE and bool(expires)
+            and datetime.date.fromisoformat(expires) > today)
+
+
 class JsonApi:
     def __init__(self, base_url: str, headers: dict[str, str]):
         self.base_url = base_url
@@ -324,12 +337,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "check-certificate":
         site = pages.get()
         print(json.dumps(site.get("https_certificate"), indent=2))
-        problem = certificate_problem(site, datetime.date.today())
+        today = datetime.date.today()
+        problem = certificate_problem(site, today)
         force = os.environ.get("FORCE_RENEW", "").lower() == "true"
-        if problem:
+        if force:
+            print(f"Renewing as requested: {problem}" if problem else
+                  "The certificate is healthy, but renewal was requested.")
+        elif problem and renews_without_outage(site, today):
             _annotate("warning", "GitHub Pages certificate", f"Renewing: {problem}", args.github)
-        elif force:
-            print("The certificate is healthy, but renewal was requested.")
+        elif problem:
+            _annotate("error", "GitHub Pages certificate",
+                      f"Not renewing automatically because the certificate is no longer valid: {problem.rstrip('.')}. "
+                      "Visitors are unaffected while Cloudflare's SSL mode is Full. "
+                      "See developer-docs/website-hosting.md.", args.github)
+            _set_output("renew", "false")
+            return 1
         else:
             print("The GitHub Pages certificate is healthy.")
         _set_output("renew", "true" if problem or force else "false")

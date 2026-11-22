@@ -4,11 +4,14 @@
 """Tests for site_health.py. Nothing here calls GitHub, Cloudflare, or the live site."""
 
 import datetime
+import io
+import os
 import unittest
+from unittest import mock
 from unittest.mock import patch
 
 import site_health
-from site_health import ApiError, certificate_problem, check_site, renew
+from site_health import ApiError, certificate_problem, check_site, renew, renews_without_outage
 
 TODAY = datetime.date(2026, 11, 22)
 
@@ -31,6 +34,46 @@ class CertificateProblemTests(unittest.TestCase):
 
     def test_missing_certificate_is_renewed(self):
         self.assertIn("no certificate", certificate_problem({"cname": "www.example.com"}, TODAY))
+
+
+class RenewsWithoutOutageTests(unittest.TestCase):
+    def test_valid_certificate_near_expiry_renews_on_schedule(self):
+        self.assertTrue(renews_without_outage(pages_site(expires="2026-12-13"), TODAY))
+
+    def test_failed_expired_or_missing_certificate_waits_for_a_person(self):
+        self.assertFalse(renews_without_outage(pages_site("bad_authz", "2026-11-21"), TODAY))
+        self.assertFalse(renews_without_outage(pages_site(expires="2026-11-22"), TODAY))
+        self.assertFalse(renews_without_outage(pages_site("errored", "2027-01-01"), TODAY))
+        self.assertFalse(renews_without_outage({"cname": "www.example.com"}, TODAY))
+
+
+class CheckCertificateCommandTests(unittest.TestCase):
+    def run_check(self, site, force=""):
+        class Pages:
+            def __init__(self, *args):
+                pass
+
+            def get(self):
+                return site
+        outputs = {}
+        with mock.patch.object(site_health, "GitHubPages", Pages), \
+                mock.patch.object(site_health, "_set_output", outputs.__setitem__), \
+                mock.patch.dict(os.environ, {"GH_TOKEN": "token", "FORCE_RENEW": force}), \
+                mock.patch("sys.stdout", io.StringIO()) as stdout:
+            code = site_health.main(["check-certificate", "--repository", "owner/repo", "--github"])
+        return code, outputs["renew"], stdout.getvalue()
+
+    def test_stuck_certificate_fails_the_check_without_renewing(self):
+        code, renew_output, output = self.run_check(pages_site("bad_authz", "2026-11-21"))
+        self.assertEqual((code, renew_output), (1, "false"))
+        self.assertIn("::error title=GitHub Pages certificate::Not renewing automatically", output)
+
+    def test_valid_certificate_near_expiry_is_renewed(self):
+        expiring = pages_site(expires=str(datetime.date.today() + datetime.timedelta(days=10)))
+        self.assertEqual(self.run_check(expiring)[:2], (0, "true"))
+
+    def test_manual_request_renews_a_stuck_certificate(self):
+        self.assertEqual(self.run_check(pages_site("bad_authz", "2026-11-21"), force="true")[:2], (0, "true"))
 
 
 class CheckSiteTests(unittest.TestCase):
