@@ -292,7 +292,11 @@ namespace Tests.PlayMode
             deckLoadMenu.LoadFromFileAndHide();
             var refreshesAtDeckLoad = refreshes.Count;
             for (var frame = 0; frame < 10; frame++)
+            {
                 yield return null;
+                loads.Sample();
+            }
+
             Assert.IsFalse(CardGameManager.Instance.IsContentLoadScheduled);
             Assert.IsFalse(CardGameManager.Current.IsLoading);
             Assert.AreEqual(refreshesAtDeckLoad, refreshes.Count, "The screen must not refresh after a deck loads");
