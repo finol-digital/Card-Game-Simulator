@@ -1,0 +1,99 @@
+{
+  "name": "Starvoxel",
+  "allCardsUrl": "https://starvoxel.com/scripts/site/defenders.json",
+  "autoUpdateUrl": "https://www.cardgamesimulator.com/games/starvoxel/cgs.json",
+  "bannerImageUrl": "https://www.cardgamesimulator.com/games/starvoxel/Banner.png",
+  "cardBackImageUrl": "https://www.cardgamesimulator.com/games/starvoxel/CardBack.png",
+  "cardIdIdentifier": "slug",
+  "cardImageFileType": "webp",
+  "cardImageUrl": "https://starvoxel.com/assets/game/cards/{cardId}-v1.webp",
+  "cardPrimaryProperty": "text",
+  "cardProperties": [
+    {
+      "name": "cost",
+      "display": "Cost",
+      "type": "integer"
+    },
+    {
+      "name": "rarity",
+      "display": "Rarity",
+      "type": "stringEnum"
+    },
+    {
+      "name": "keyword",
+      "display": "Keyword",
+      "type": "stringEnum"
+    },
+    {
+      "name": "text",
+      "display": "Ability",
+      "type": "string"
+    },
+    {
+      "name": "attack",
+      "display": "Attack",
+      "type": "integer"
+    },
+    {
+      "name": "cooldown",
+      "display": "Cooldown (seconds)",
+      "type": "string"
+    },
+    {
+      "name": "unlock",
+      "display": "Unlock",
+      "displayEmpty": "N / A",
+      "type": "string"
+    },
+    {
+      "name": "deckId",
+      "display": "Deck Code ID",
+      "type": "integer"
+    }
+  ],
+  "cardSize": {
+    "x": 2.5,
+    "y": 3.125
+  },
+  "cgsGamesLink": "https://cgs.games/link/starvoxel",
+  "copyright": "Michal Komar",
+  "deckFileAltId": "deckId",
+  "deckFileType": "svd",
+  "deckSharePreference": "individual",
+  "deckUrls": [
+    {
+      "name": "Starter Deck",
+      "url": "https://www.cardgamesimulator.com/games/starvoxel/decks/Starter%20Deck.svd"
+    }
+  ],
+  "enums": [
+    {
+      "property": "rarity",
+      "values": {
+        "common": "Common",
+        "epic": "Epic",
+        "legendary": "Legendary"
+      }
+    },
+    {
+      "property": "keyword",
+      "values": {
+        "Fire": "Fire",
+        "Frost": "Frost",
+        "Gold": "Gold",
+        "Guard": "Guard",
+        "Pack": "Pack",
+        "Poison": "Poison",
+        "Storm": "Storm",
+        "Tide": "Tide"
+      }
+    }
+  ],
+  "gameStartDecks": [
+    {
+      "name": "Starter Deck",
+      "url": "https://www.cardgamesimulator.com/games/starvoxel/decks/Starter%20Deck.svd"
+    }
+  ],
+  "rulesUrl": "https://starvoxel.com/"
+}
