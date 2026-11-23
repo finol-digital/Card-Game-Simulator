@@ -2055,6 +2055,16 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277315
       - rid: 451339117355073537
+  - m_Id: 17272803462995968
+    m_Localized: Shake to Roll Dice
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195937
+  - m_Id: 17272803634962432
+    m_Localized: Shake your device to roll all dice on the table.
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195938
   references:
     version: 2
     RefIds:
@@ -2066,6 +2076,14 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Deck \"{deckName}\" is incomplete. Loaded cards: {loadedCount}. Missing cards: {missingCount}.\n\nThese card names or IDs could not be found in this game:\n{cards}\n\nCheck the deck list or update the game data before playing.","context":"Warning after a partial deck load. Card names, IDs and deck name are supplied data; preserve them. Counts include duplicate copies.","arguments":{"deckName":"Name of the loaded deck.","loadedCount":"Number of card copies successfully loaded.","missingCount":"Number of card copies not found.","cards":"Newline-separated quantities and missing card names or IDs."},"smart":true}'
+    - rid: 3103366582956195937
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Shake to Roll Dice","context":"Interface label or button at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle/Label in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 3103366582956195938
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Shake your device to roll all dice on the table.","context":"Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.","arguments":{},"smart":false}'
     - rid: 7133309420632277315
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

@@ -1532,6 +1532,15 @@
         "date": "2026-10-05"
       }
     },
+    "common.shake.to.roll.dice": {
+      "text": "흔들어서 주사위 굴리기",
+      "status": "machine",
+      "sourceHash": "340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057",
+      "provenance": {
+        "method": "Contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-22"
+      }
+    },
     "common.share": {
       "text": "공유",
       "status": "machine",
@@ -2502,6 +2511,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "help.die.shake": {
+      "text": "기기를 흔들면 테이블의 모든 주사위를 굴립니다.",
+      "status": "machine",
+      "sourceHash": "9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de",
+      "provenance": {
+        "method": "Contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-22"
       }
     },
     "help.draw.one": {

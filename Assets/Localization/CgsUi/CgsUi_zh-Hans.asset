@@ -1979,6 +1979,16 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648150
       - rid: 451339117355073543
+  - m_Id: 17272803462995968
+    m_Localized: "\u6447\u4E00\u6447\u63B7\u9AB0\u5B50"
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195949
+  - m_Id: 17272803634962432
+    m_Localized: "\u6447\u52A8\u8BBE\u5907\u5373\u53EF\u6295\u63B7\u684C\u4E0A\u7684\u6240\u6709\u9AB0\u5B50\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195950
   references:
     version: 2
     RefIds:
@@ -1990,6 +2000,14 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"\u724C\u7EC4\u201C{deckName}\u201D\u4E0D\u5B8C\u6574\u3002\u5DF2\u52A0\u8F7D\u5361\u724C\uFF1A{loadedCount}\u3002\u7F3A\u5931\u5361\u724C\uFF1A{missingCount}\u3002\\n\\n\u5728\u6B64\u6E38\u620F\u4E2D\u627E\u4E0D\u5230\u4EE5\u4E0B\u5361\u724C\u540D\u79F0\u6216 ID\uFF1A\\n{cards}\\n\\n\u5F00\u59CB\u6E38\u620F\u524D\uFF0C\u8BF7\u68C0\u67E5\u724C\u7EC4\u5217\u8868\u6216\u66F4\u65B0\u6E38\u620F\u6570\u636E\u3002\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 3103366582956195949
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u6447\u4E00\u6447\u63B7\u9AB0\u5B50\",\"status\":\"machine\",\"sourceHash\":\"340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
+    - rid: 3103366582956195950
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u6447\u52A8\u8BBE\u5907\u5373\u53EF\u6295\u63B7\u684C\u4E0A\u7684\u6240\u6709\u9AB0\u5B50\u3002\",\"status\":\"machine\",\"sourceHash\":\"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
     - rid: 7133309421012648150
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

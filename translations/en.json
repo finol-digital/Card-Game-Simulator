@@ -1035,6 +1035,12 @@
       "arguments": {},
       "smart": false
     },
+    "common.shake.to.roll.dice": {
+      "text": "Shake to Roll Dice",
+      "context": "Interface label or button at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle/Label in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
     "common.share": {
       "text": "Share",
       "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Share Button in Assets/Resources/CardGameManager.prefab. Keep control labels concise.",
@@ -1752,6 +1758,12 @@
     "help.die.roll": {
       "text": "Double-click on a Die to roll it.",
       "context": "Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/DoubleClickToRollDice Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
+    "help.die.shake": {
+      "text": "Shake your device to roll all dice on the table.",
+      "context": "Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },

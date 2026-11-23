@@ -7161,6 +7161,24 @@
     },
     {
       "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle",
+      "type": "Cgs.UI.ToolTip",
+      "property": "tooltip",
+      "text": "Shake your device to roll all dice on the table.",
+      "id": "GlobalObjectId_V1-1-ddf938ce2c5b322429c63267cd84d076-6369880611510531069-0",
+      "key": "help.die.shake"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle/Label",
+      "type": "UnityEngine.UI.Text",
+      "property": "text",
+      "text": "Shake to Roll Dice",
+      "id": "GlobalObjectId_V1-1-ddf938ce2c5b322429c63267cd84d076-3101775383845613707-0",
+      "key": "common.shake.to.roll.dice"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
       "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/DieFaceCount InputField/Label",
       "type": "UnityEngine.UI.Text",
       "property": "text",
