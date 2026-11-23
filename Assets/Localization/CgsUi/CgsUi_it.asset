@@ -2011,6 +2011,16 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277773
       - rid: 451339117355073541
+  - m_Id: 17272803462995968
+    m_Localized: Scuoti per tirare i dadi
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195945
+  - m_Id: 17272803634962432
+    m_Localized: Scuoti il dispositivo per tirare tutti i dadi sul tavolo.
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195946
   references:
     version: 2
     RefIds:
@@ -2022,6 +2032,14 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Il mazzo \xAB{deckName}\xBB \xE8 incompleto. Carte caricate: {loadedCount}. Carte mancanti: {missingCount}.\\n\\nQuesti nomi o identificativi di carte non sono stati trovati in questo gioco:\\n{cards}\\n\\nControlla la lista del mazzo o aggiorna i dati del gioco prima di giocare.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 3103366582956195945
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Scuoti per tirare i dadi","status":"machine","sourceHash":"340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057","provenance":{"method":"Contextual machine draft; English context and CGS glossary","date":"2026-11-22"}}'
+    - rid: 3103366582956195946
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Scuoti il dispositivo per tirare tutti i dadi sul tavolo.","status":"machine","sourceHash":"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de","provenance":{"method":"Contextual machine draft; English context and CGS glossary","date":"2026-11-22"}}'
     - rid: 7133309420632277773
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

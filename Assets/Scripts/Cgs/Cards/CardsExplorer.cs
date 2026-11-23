@@ -75,6 +75,12 @@ namespace Cgs.Cards
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
+        protected void Start()
+        {
+            // The cards fill in once the game has loaded; until then, the player sees its loading progress
+            CardGameManager.Instance.RequireContentForScene();
+        }
+
         private void ResetBannerCardsAndButtons()
         {
             bannerImage.sprite = CardGameManager.Current.BannerImageSprite;

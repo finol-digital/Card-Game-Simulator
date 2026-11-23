@@ -23,6 +23,7 @@ namespace Cgs.Play
         [SerializeField] Dropdown stackViewerOverlapDropdown;
         [SerializeField] Dropdown pieceSizeDropdown;
         [SerializeField] Toggle doubleClickToRollDiceToggle;
+        [SerializeField] Toggle shakeToRollDiceToggle;
         [SerializeField] InputField dieFaceCountInputField;
         [SerializeField] Toggle showActionsMenuToggle;
         [SerializeField] Transform launchNativeButton;
@@ -63,6 +64,7 @@ namespace Cgs.Play
             stackViewerOverlapDropdown.value = PlaySettings.StackViewerOverlap;
             pieceSizeDropdown.SetValueWithoutNotify((int)PlaySettings.PieceSize);
             doubleClickToRollDiceToggle.isOn = PlaySettings.DoubleClickToRollDice;
+            shakeToRollDiceToggle.isOn = PlaySettings.ShakeToRollDice;
             dieFaceCountInputField.text = PlaySettings.DieFaceCount.ToString();
             showActionsMenuToggle.isOn = PlaySettings.ShowActionsMenu;
 #if CGS_SINGLEGAME && CGS_SINGLEPLAYER
@@ -141,6 +143,12 @@ namespace Cgs.Play
         public void SetDoubleClickToRollDice(bool doubleClickToRollDice)
         {
             PlaySettings.DoubleClickToRollDice = doubleClickToRollDice;
+        }
+
+        [UsedImplicitly]
+        public void SetShakeToRollDice(bool shakeToRollDice)
+        {
+            PlaySettings.ShakeToRollDice = shakeToRollDice;
         }
 
         [UsedImplicitly]

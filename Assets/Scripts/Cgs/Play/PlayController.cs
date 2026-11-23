@@ -291,14 +291,15 @@ namespace Cgs.Play
         {
             StartupTimeline.Mark(StartupMilestone.PlaySceneLoaded);
             gameObject.GetOrAddComponent<CgsNetDiagnostics>();
+            gameObject.GetOrAddComponent<DiceShakeRoller>();
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
             playAreaCardZone.OnAddCardActions.Add(AddCardToPlayArea);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             yield return null;
-            while (!CardGameManager.IsCurrentContentSettled)
-                yield return null;
+            // The play area resets when the content fills in, so start only after that
+            yield return CardGameManager.WaitForCurrentContent();
 
             StartLobby();
         }

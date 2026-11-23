@@ -1979,6 +1979,16 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012649066
       - rid: 451339117355073538
+  - m_Id: 17272803462995968
+    m_Localized: "\u30B7\u30A7\u30A4\u30AF\u3067\u632F\u308B"
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195939
+  - m_Id: 17272803634962432
+    m_Localized: "\u7AEF\u672B\u3092\u632F\u308B\u3068\u3001\u30C6\u30FC\u30D6\u30EB\u4E0A\u306E\u3059\u3079\u3066\u306E\u30B5\u30A4\u30B3\u30ED\u3092\u632F\u308C\u307E\u3059\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195940
   references:
     version: 2
     RefIds:
@@ -1990,6 +2000,14 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"\u30C7\u30C3\u30AD\u300C{deckName}\u300D\u306F\u4E0D\u5B8C\u5168\u3067\u3059\u3002\u8AAD\u307F\u8FBC\u3093\u3060\u30AB\u30FC\u30C9\u6570\uFF1A{loadedCount}\u3002\u898B\u3064\u304B\u3089\u306A\u3044\u30AB\u30FC\u30C9\u6570\uFF1A{missingCount}\u3002\\n\\n\u6B21\u306E\u30AB\u30FC\u30C9\u540D\u307E\u305F\u306FID\u304C\u3053\u306E\u30B2\u30FC\u30E0\u3067\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F\uFF1A\\n{cards}\\n\\n\u30D7\u30EC\u30A4\u3059\u308B\u524D\u306B\u30C7\u30C3\u30AD\u30EA\u30B9\u30C8\u3092\u78BA\u8A8D\u3059\u308B\u304B\u3001\u30B2\u30FC\u30E0\u30C7\u30FC\u30BF\u3092\u66F4\u65B0\u3057\u3066\u304F\u3060\u3055\u3044\u3002\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 3103366582956195939
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u30B7\u30A7\u30A4\u30AF\u3067\u632F\u308B\",\"status\":\"machine\",\"sourceHash\":\"340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
+    - rid: 3103366582956195940
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u7AEF\u672B\u3092\u632F\u308B\u3068\u3001\u30C6\u30FC\u30D6\u30EB\u4E0A\u306E\u3059\u3079\u3066\u306E\u30B5\u30A4\u30B3\u30ED\u3092\u632F\u308C\u307E\u3059\u3002\",\"status\":\"machine\",\"sourceHash\":\"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
     - rid: 7133309421012649066
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

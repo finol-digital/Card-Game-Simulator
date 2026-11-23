@@ -24,6 +24,10 @@ namespace Tests.PlayMode
 {
     public class ActionPanelViewportFitTests
     {
+        // Each panel check waits about 220 frames across ten screen sizes and five tooltips, which can take longer
+        // than the default three minutes where frames are slow, as in an Editor running in the background
+        private const int PanelCheckTimeoutMs = 900000;
+
         private GameObject _container;
         private GameObject _eventSystem;
         private RenderTexture _cameraTarget;
@@ -52,18 +56,21 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
+        [Timeout(PanelCheckTimeoutMs)]
         public IEnumerator CardActionsAndTooltipsStayInViewport()
         {
             yield return CheckPanel("Card Viewer", "Card Action Panel");
         }
 
         [UnityTest]
+        [Timeout(PanelCheckTimeoutMs)]
         public IEnumerator DockedCardActionsAndTooltipsStayInViewport()
         {
             yield return CheckPanel("Card Docked Viewer", "Card Action Panel");
         }
 
         [UnityTest]
+        [Timeout(PanelCheckTimeoutMs)]
         public IEnumerator StackActionsAndTooltipsStayInViewport()
         {
             yield return CheckPanel("Playable Viewer", "Stack Action Panel");

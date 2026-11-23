@@ -136,6 +136,10 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public bool HasDownloaded { get; private set; }
         public bool IsLoading { get; private set; }
+
+        /// <summary>How much of the running load has finished, from 0 to 1, as shown in loading progress.</summary>
+        public float ContentLoadProgress { get; private set; }
+
         public bool HasLoaded { get; private set; }
         public string Error { get; private set; }
 
@@ -784,6 +788,7 @@ namespace FinolDigital.Cgs.Json.Unity
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
             IsLoading = true;
+            ContentLoadProgress = 0;
             try
             {
                 // We should have already read the cgs.json, but we need to be sure
@@ -908,6 +913,11 @@ namespace FinolDigital.Cgs.Json.Unity
                 LoadCards(cardsFilePath, SetCodeDefault);
             else
                 Debug.Log("LoadCards::NOAllCards.json");
+
+            // Card pages are most of a load's work, so they make up its progress
+            if (AllCardsUrlPageCount > 0)
+                ContentLoadProgress =
+                    Mathf.Clamp01((page - AllCardsUrlPageCountStartIndex + 1f) / AllCardsUrlPageCount);
         }
 
         public void LoadCards(string cardsFilePath, string defaultSetCode)
