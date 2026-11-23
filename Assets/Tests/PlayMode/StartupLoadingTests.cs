@@ -264,22 +264,45 @@ namespace Tests.PlayMode
             CardGameManager.Instance.OnDeepLinkActivated("cardgamesim://link/decks");
             yield return WaitUntil(() => SceneManager.GetActiveScene().buildIndex == Tags.DeckEditorSceneIndex,
                 loads);
+            // Record each refresh of the screen, and whether the cards had loaded by then
+            var refreshes = new List<bool>();
+            CardGameManager.Instance.OnSceneActions.Add(() => refreshes.Add(CardGameManager.Current.HasLoaded));
             yield return null;
             loads.Sample();
             Assert.IsFalse(CardGameManager.Current.HasLoaded, "The screen must open before the cards load");
             Assert.IsTrue(CardGameManager.Instance.Progress.gameObject.activeSelf, "The screen shows loading progress");
             Assert.IsFalse(IsDeckLoadMenuShowing(), "A deck cannot load before the game's cards");
 
-            // The saved decks are offered once the cards load, and the screen's refresh does not close them
+            // The saved decks are offered once the cards load and the screen has refreshed with them
             yield return WaitUntil(IsDeckLoadMenuShowing, loads);
             Assert.IsTrue(CardGameManager.IsCurrentContentReady);
             Assert.IsFalse(CardGameManager.Instance.Progress.gameObject.activeSelf);
-            yield return null;
-            yield return null;
-            Assert.IsTrue(IsDeckLoadMenuShowing());
+            Assert.Contains(true, refreshes, "The screen fills in with the cards before offering decks");
             Assert.AreEqual(gameId, CardGameManager.Current.Id);
             Assert.AreEqual(pages * cardsPerPage, CardGameManager.Current.Cards.Count);
             Assert.AreEqual(1, loads.Count, "The cards must load once");
+
+            // The player picks the saved deck, and no later refresh clears it
+            var deckLoadMenu = Object.FindObjectsByType<DeckLoadMenu>().Single(menu => menu.gameObject.activeSelf);
+            var deckFiles = (SortedList<string, string>)typeof(DeckLoadMenu)
+                .GetField("_deckFiles", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(deckLoadMenu);
+            Assert.IsNotNull(deckFiles);
+            typeof(DeckLoadMenu).GetField("_selectedFilePath", BindingFlags.NonPublic | BindingFlags.Instance)
+                ?.SetValue(deckLoadMenu, deckFiles.Keys.Single());
+            deckLoadMenu.LoadFromFileAndHide();
+            var refreshesAtDeckLoad = refreshes.Count;
+            for (var frame = 0; frame < 10; frame++)
+                yield return null;
+            Assert.IsFalse(CardGameManager.Instance.IsContentLoadScheduled);
+            Assert.IsFalse(CardGameManager.Current.IsLoading);
+            Assert.AreEqual(refreshesAtDeckLoad, refreshes.Count, "The screen must not refresh after a deck loads");
+            var deckEditor = Object.FindObjectsByType<DeckEditor>().Single();
+            Assert.AreEqual(1, deckEditor.CardModels.Count, "The loaded deck stays in the editor");
+            Assert.AreEqual("Card 1-0", deckEditor.CardModels.Single().Value.Name);
+            var savedDeck = (FinolDigital.Cgs.Json.Deck)typeof(DeckEditor)
+                .GetProperty("SavedDeck", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(deckEditor);
+            Assert.AreEqual("Saved", savedDeck?.Name);
+            Assert.AreEqual(1, loads.Count, "Loading a deck must not reload the cards");
         }
 
         [UnityTest]
