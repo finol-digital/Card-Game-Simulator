@@ -8,6 +8,10 @@
     "autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/cgs.json"
   },
   {
+    "name": "Starvoxel",
+    "autoUpdateUrl": "https://www.cardgamesimulator.com/games/starvoxel/cgs.json"
+  },
+  {
     "name": "ZU Tiles",
     "autoUpdateUrl": "https://www.cardgamesimulator.com/games/zu_tiles/cgs.json"
   }
