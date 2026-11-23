@@ -4,6 +4,7 @@
 
 using Cgs.Localization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -152,11 +153,18 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        protected void Start()
+        protected IEnumerator Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             dropZones.ForEach(dropZone => dropZone.DropHandler = this);
-            if (Directory.Exists(CardGameManager.Current.DecksDirectoryPath) &&
+
+            // A deck needs the game's cards, and the screen clears its cards when they fill in, so offer saved decks
+            // only once the cards have loaded; until then, the player sees their loading progress
+            CardGameManager.Instance.RequireContentForScene();
+            yield return CardGameManager.WaitForCurrentContent();
+
+            if (CardGameManager.Current.HasLoaded &&
+                Directory.Exists(CardGameManager.Current.DecksDirectoryPath) &&
                 Directory.GetFiles(CardGameManager.Current.DecksDirectoryPath).Length > 0)
                 ShowDeckLoadMenu();
         }

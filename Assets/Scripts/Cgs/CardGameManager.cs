@@ -224,6 +224,38 @@ namespace Cgs
         // A scene has loaded and its content load will start after the scene's first frame
         internal bool IsContentLoadScheduled { get; private set; }
 
+        /// <summary>
+        /// The open screen shows the current game's cards, so it shows loading progress until they have loaded. Such a
+        /// screen sets this when it starts, and it resets when the screen's scene unloads.
+        /// </summary>
+        internal bool SceneNeedsContent { get; private set; }
+
+        private readonly ContentLoadProgress _contentLoadProgress = new();
+
+        /// <summary>Reports the current game's content load to the progress bar.</summary>
+        private sealed class ContentLoadProgress : IProgressible
+        {
+            private UnityCardGame _game;
+            private UiMessage _message;
+
+            public float ProgressPercentage => Current.ContentLoadProgress;
+            public string ProgressStatus => string.Format(CardsLoadingMessage, Current.Name);
+
+            public UiMessage LocalizedProgressStatus
+            {
+                get
+                {
+                    // The progress bar refreshes its text only when given a different message
+                    if (_game == Current && _message != null)
+                        return _message;
+                    _game = Current;
+                    _message = GameContentMessage.Create(Current, display => UiMessage.With("games.cards.loading",
+                        string.Format(CardsLoadingMessage, display.GameName), ("gameName", display.GameName)));
+                    return _message;
+                }
+            }
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStaticState()
         {
@@ -465,6 +497,13 @@ namespace Cgs
             // The new scene shows the current game from its properties on its first frame. Its cards, sets, and
             // images load after that frame, and the scene fills in when they finish.
             RunSceneActions();
+            // A scene opened after the content loaded has nothing to fill in, and its actions must not run twice
+            if (!NeedsContentLoad(Current) && !Current.IsLoading)
+            {
+                ++_selectionVersion;
+                return;
+            }
+
             IsContentLoadScheduled = true;
             StartCoroutine(ResetGameSceneAsync(Current, ++_selectionVersion, true));
         }
@@ -472,6 +511,42 @@ namespace Cgs
         private void OnSceneUnloaded(Scene scene)
         {
             OnSceneActions.Clear();
+            SceneNeedsContent = false;
+        }
+
+        /// <summary>
+        /// Called by a screen that shows the current game's cards when it starts. The screen shows loading progress while
+        /// the cards load, which also keeps the player from changing the screen before it fills in.
+        /// </summary>
+        internal void RequireContentForScene()
+        {
+            SceneNeedsContent = true;
+            UpdateContentLoadProgress();
+        }
+
+        /// <summary>
+        /// Waits until the current game's content has loaded, or failed to, and the open screen has filled in with it.
+        /// </summary>
+        internal static IEnumerator WaitForCurrentContent()
+        {
+            while (!IsCurrentContentSettled)
+                yield return null;
+            // The screen fills in on the frame the load finishes, so it is done by the next frame
+            yield return null;
+        }
+
+        private void UpdateContentLoadProgress()
+        {
+            if (progress == null)
+                return;
+
+            // Downloads and updates show their own progress
+            var shouldShow = SceneNeedsContent && !IsCurrentContentSettled && Current != UnityCardGame.UnityInvalid &&
+                             !Current.IsDownloading && string.IsNullOrEmpty(Current.Error);
+            if (shouldShow && !progress.gameObject.activeSelf)
+                progress.Show(_contentLoadProgress);
+            else if (!shouldShow && progress.IsShowing(_contentLoadProgress))
+                progress.Hide();
         }
 
         // Note: Does NOT Reset Game Scene
@@ -779,7 +854,7 @@ namespace Cgs
                  page++)
             {
                 cardGame.LoadCards(page);
-                if (page == cardGame.AllCardsUrlPageCountStartIndex &&
+                if (page == cardGame.AllCardsUrlPageCountStartIndex && cardGame == Current &&
                     cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
                     Messenger.Show(GameContentMessage.Create(cardGame, display => UiMessage.With("games.cards.loading",
                         string.Format(CardsLoadingMessage, display.GameName), ("gameName", display.GameName))));
@@ -788,7 +863,7 @@ namespace Cgs
 
             if (!string.IsNullOrEmpty(cardGame.Error))
                 Debug.LogError(LoadErrorMessage + cardGame.Error);
-            else if (cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
+            else if (cardGame == Current && cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
                 Messenger.Show(GameContentMessage.Create(cardGame, display => UiMessage.With("games.cards.loaded",
                     string.Format(CardsLoadedMessage, display.GameName), ("gameName", display.GameName))));
         }
@@ -870,7 +945,8 @@ namespace Cgs
                 {
                     if (IsSuperseded(targetGame, selectionVersion))
                         yield break;
-                    if (!afterFirstFrame && string.IsNullOrEmpty(targetGame.Error))
+                    // A screen that needs the cards shows progress instead and fills in once they have loaded
+                    if (!afterFirstFrame && !SceneNeedsContent && string.IsNullOrEmpty(targetGame.Error))
                         RunSceneActions();
                     yield return null;
                 }
@@ -1089,6 +1165,7 @@ namespace Cgs
                 Settings.DeveloperMode = !Settings.DeveloperMode;
 
             ImageQueueService.Instance.ProcessQueue(this);
+            UpdateContentLoadProgress();
         }
 
         protected void OnDisable()

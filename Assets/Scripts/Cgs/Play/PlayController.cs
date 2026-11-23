@@ -297,8 +297,8 @@ namespace Cgs.Play
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             yield return null;
-            while (!CardGameManager.IsCurrentContentSettled)
-                yield return null;
+            // The play area resets when the content fills in, so start only after that
+            yield return CardGameManager.WaitForCurrentContent();
 
             StartLobby();
         }
