@@ -26,7 +26,7 @@
 - [x] 3.3 Move the automatic game-update check after the Main Menu is interactive, keeping progress UI; verify with a test that a game due for update starts updating only after the interactive milestone
 - [x] 3.4 Verify that a background load failure still shows the existing load-error prompt without blocking the menu (PlayMode test with a corrupt fixture)
 - [x] 3.5 Make Settings, Deck Editor, Cards Explorer, and warm deep links behave correctly while content is loading (progress where card data is needed, fill-in on completion, no double load), and make rapid game changes keep only the latest selection; verify with PlayMode tests that open each screen and switch games several times during a slow fixture load
-- [ ] 3.6 Measure the localization-ready milestone against the first Main Menu frame; wait for the startup locale up to a documented bound, falling back to readable English with in-place refresh and a diagnostic on delay or failure; verify with PlayMode tests for saved Korean and Japanese, command-line override, device locale, English fallback, Simplified Chinese fonts, and simulated delayed and failed initialization
+- [x] 3.6 Measure the localization-ready milestone against the first Main Menu frame; wait for the startup locale up to a documented bound, falling back to readable English with in-place refresh and a diagnostic on delay or failure; verify with PlayMode tests for saved Korean and Japanese, command-line override, device locale, English fallback, Simplified Chinese fonts, and simulated delayed and failed initialization
 
 ## 4. Defer optional services
 

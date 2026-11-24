@@ -16,7 +16,9 @@ namespace Cgs.Performance
         StartGameChosen,
         PlaySceneLoaded,
         TablePlayable,
-        FirstCardAction
+        FirstCardAction,
+        // The startup language's text and fonts are available; not reached when localization fails
+        LocalizationReady
     }
 
     public enum StartupSummaryKind

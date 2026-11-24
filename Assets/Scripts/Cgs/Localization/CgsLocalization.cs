@@ -24,7 +24,17 @@ namespace Cgs.Localization
         private static LocaleChangeQueue _queue;
 
         public static bool IsReady { get; private set; }
+
+        /// <summary>Initialization has finished, successfully (<see cref="IsReady"/>) or not.</summary>
+        public static bool IsInitializationComplete => _initializationCompleted;
         public static string CurrentLocale => IsReady ? _settings.GetSelectedLocale()?.Identifier.Code : null;
+
+        /// <summary>
+        /// The language startup selects, known before initialization finishes; null if the settings have no CGS
+        /// startup selector.
+        /// </summary>
+        public static string StartupLanguage => LocalizationSettings.Instance.GetStartupLocaleSelectors()
+            .OfType<CgsLocaleSelector>().FirstOrDefault()?.StartupCode();
         public static event Action Changed;
         public static IReadOnlyList<SupportedLanguage> Languages => Selector?.Languages ?? Array.Empty<SupportedLanguage>();
         private static CgsLocaleSelector Selector => _settings == null ? null :

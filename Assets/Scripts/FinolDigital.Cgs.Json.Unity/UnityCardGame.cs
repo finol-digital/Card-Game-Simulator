@@ -153,12 +153,8 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public Sprite BannerImageSprite
         {
-            get
-            {
-                if (_bannerImageSprite == null)
-                    _bannerImageSprite = Resources.Load<Sprite>("Banner");
-                return _bannerImageSprite;
-            }
+            // The built-in default is shared and must never be destroyed, so it is not kept in _bannerImageSprite
+            get => _bannerImageSprite != null ? _bannerImageSprite : DefaultBannerImageSprite;
             private set
             {
                 if (_bannerImageSprite != null)
@@ -173,14 +169,17 @@ namespace FinolDigital.Cgs.Json.Unity
 
         private Sprite _bannerImageSprite;
 
+        private static Sprite DefaultBannerImageSprite =>
+            _defaultBannerImageSprite != null
+                ? _defaultBannerImageSprite
+                : _defaultBannerImageSprite = Resources.Load<Sprite>("Banner");
+
+        private static Sprite _defaultBannerImageSprite;
+
         public Sprite CardBackImageSprite
         {
-            get
-            {
-                if (_cardBackImageSprite == null)
-                    _cardBackImageSprite = Resources.Load<Sprite>("CardBack");
-                return _cardBackImageSprite;
-            }
+            // The built-in default is shared and must never be destroyed, so it is not kept in _cardBackImageSprite
+            get => _cardBackImageSprite != null ? _cardBackImageSprite : DefaultCardBackImageSprite;
             private set
             {
                 if (_cardBackImageSprite != null)
@@ -196,6 +195,13 @@ namespace FinolDigital.Cgs.Json.Unity
         public Dictionary<string, Sprite> CardBackFaceImageSprites { get; } = new();
 
         private Sprite _cardBackImageSprite;
+
+        private static Sprite DefaultCardBackImageSprite =>
+            _defaultCardBackImageSprite != null
+                ? _defaultCardBackImageSprite
+                : _defaultCardBackImageSprite = Resources.Load<Sprite>("CardBack");
+
+        private static Sprite _defaultCardBackImageSprite;
 
         public Sprite PlayMatImageSprite
         {

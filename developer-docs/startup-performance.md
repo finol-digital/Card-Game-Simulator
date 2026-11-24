@@ -52,8 +52,8 @@ Record each device's details here before using its results:
 ## What the app records
 
 Every build records these in-app milestones, in milliseconds from the first managed startup callback ("elapsed
-zero"): `engineReady`, `firstSceneLoaded`, `firstFrameDrawn`, `mainMenuInteractive`, `startGameChosen`,
-`playSceneLoaded`, `tablePlayable`, `firstCardAction`.
+zero"): `engineReady`, `firstSceneLoaded`, `firstFrameDrawn`, `localizationReady`, `mainMenuInteractive`,
+`startGameChosen`, `playSceneLoaded`, `tablePlayable`, `firstCardAction`.
 
 The app writes two log lines prefixed `[CgsStartup]`:
 
@@ -69,6 +69,42 @@ Each summary carries the clock anchors that are exact on that platform:
 
 Anything that cannot be converted exactly is `null`. Android also calls `reportFullyDrawn()` when the Main Menu
 becomes interactive. Resuming from the background logs a `resume` line with its monotonic time.
+
+The launch summary's `localization` field says whether the startup language was `ready`, had `failed`, or was still
+`pending` when the summary was written. Because the language can arrive after that, a separate `localization`
+line records its outcome and `elapsedMs` when it does. `localizationReady` is `null` when the language failed or was
+still loading.
+
+## Startup language
+
+The first Main Menu after launch shows the startup language (from `-language=`, the saved choice, or the device
+language) without showing English first:
+
+- If the startup language is English, the menu shows at once, because it is authored in English.
+- Otherwise the menu stays hidden, and ignores input, until the language's text and fonts are ready, then shows on
+  the next frame.
+- The wait is at most 500 ms from the menu's first frame (`MainMenu.DefaultStartupLanguageWaitSeconds`). After
+  that, the menu shows in readable English and is usable, logs the warning `MainMenu: the startup language was not
+  ready after 500 ms`, and switches to the language in place when it arrives.
+- If localization fails, the menu shows in English straight away, and CGS logs `CGS localization initialization
+  failed`.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-23, local Mono build, `-batchmode` because the screen was locked, 5
+launches per language), the language was ready this long after the menu's first frame:
+
+| Language | Median | Range |
+|---|---|---|
+| English | 272 ms | 269–357 ms |
+| Japanese | 243 ms | 242–260 ms |
+| Korean | 308 ms | 308–323 ms |
+| Simplified Chinese | 310 ms | 298–323 ms |
+
+The bound is about 1.5 times the slowest of these, so a normal non-English launch on the slowest reference desktop
+waits for its language rather than flashing English. With the wait in place (same laptop and method), the menu
+became interactive a median of 281 ms (Japanese) to 374 ms (Korean, Simplified Chinese) after its first frame,
+shown in the startup language, and no launch reached the bound. English launches do not wait. Most of the wait is
+localization starting up rather than the CJK fonts, since English takes nearly as long to load. Re-check the
+bound against the reference devices when their baselines are next measured.
 
 ## Benchmark mode
 

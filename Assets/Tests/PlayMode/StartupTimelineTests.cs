@@ -111,6 +111,27 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void LaunchSummaryRecordsTheStartupLanguage()
+        {
+            var session = CreateSession();
+            At(250);
+            session.Mark(StartupMilestone.LocalizationReady);
+            session.LocalizationOutcome = StartupTimelineSession.LocalizationReady;
+            At(300);
+            session.Mark(StartupMilestone.MainMenuInteractive);
+
+            StringAssert.Contains("\"localization\":\"ready\"", _summaries[0].json);
+            StringAssert.Contains("\"localizationReady\":250", _summaries[0].json);
+
+            var pending = CreateSession();
+            At(300);
+            pending.Mark(StartupMilestone.MainMenuInteractive);
+
+            StringAssert.Contains("\"localization\":\"pending\"", _summaries[0].json);
+            StringAssert.Contains("\"localizationReady\":null", _summaries[0].json);
+        }
+
+        [Test]
         public void LaunchTimeoutMarksMenuNotReached()
         {
             var session = CreateSession();
