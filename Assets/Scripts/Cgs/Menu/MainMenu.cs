@@ -109,6 +109,9 @@ namespace Cgs.Menu
             StartupLanguageWaitSeconds = DefaultStartupLanguageWaitSeconds;
         }
 
+        // Later Main Menus in this session show at once
+        private static void SettleStartupLanguage() => _startupLanguageSettled = true;
+
         protected void OnEnable()
         {
             if (!_startupLanguageSettled)
@@ -116,7 +119,7 @@ namespace Cgs.Menu
                 // The menu is authored in English, so only another startup language is worth waiting for
                 if (CgsLocalization.IsInitializationComplete
                     || CgsLocalization.StartupLanguage is null or CgsLocaleSelector.EnglishCode)
-                    _startupLanguageSettled = true;
+                    SettleStartupLanguage();
                 else
                     BeginLanguageWait();
             }
@@ -218,7 +221,7 @@ namespace Cgs.Menu
             _languageWait.blocksRaycasts = true;
             Destroy(_languageWait);
             _languageWait = null;
-            _startupLanguageSettled = true;
+            SettleStartupLanguage();
             // Like a newly opened screen, ignore what was already held while the menu was hidden
             _heldInput.Arm();
             if (_isWelcomeDeferred)
