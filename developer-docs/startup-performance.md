@@ -388,7 +388,8 @@ Services the Main Menu does not need start on first use:
 - **Unity Services** (authentication, lobby, relay) start through `CgsNetManager.EnsureServicesAsync()`, the first
   time the player hosts or joins online or views the Internet game list. Concurrent requests share one sign-in, and
   a failed start is retried by the next online action (the Internet list retries on each refresh but shows the error
-  once). Searching for LAN games never starts them.
+  once). Opening Join signs in only if the Internet list is selected; with LAN selected, searching for LAN games
+  never starts them.
 - **LAN discovery** starts only when the Join menu opens or a LAN game is hosted.
 - **Steam** starts only when Steam launched CGS (or `steam_appid.txt` is present), after the Main Menu is
   interactive. See [Steam Deck validation](steam-deck-validation.md).

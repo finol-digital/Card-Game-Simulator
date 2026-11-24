@@ -60,6 +60,9 @@ namespace Tests.PlayMode
                 CardGameManager.Instance.IsSearchingForServer = false;
             if (CgsNetManager.Instance != null)
                 CgsNetManager.Instance.Stop();
+            var messenger = CardGameManager.Instance != null ? CardGameManager.Instance.Messenger : null;
+            for (var i = 0; i < 10 && messenger != null && messenger.IsShowing; i++)
+                messenger.OkClose();
 
             // Leave an empty scene so the next test does not inherit a menu that listens to input
             var empty = SceneManager.CreateScene("OptionalServicesTests " + Guid.NewGuid());
@@ -123,6 +126,22 @@ namespace Tests.PlayMode
             Assert.AreEqual(1, _serviceStarts, "The Internet list signs in as soon as it shows");
         }
 
+        [UnityTest]
+        public IEnumerator InternetListRetriesAFailedSignInQuietly()
+        {
+            CgsNetManager.InitializeServices =
+                () => CountServiceStart(Task.FromException(new InvalidOperationException(ExpectedFailure)));
+            // Only the first failure is an error; development builds show every warning and error as a dialog
+            LogAssert.Expect(LogType.Error, new Regex(Regex.Escape(CgsNetManager.GenericConnectionErrorMessage)));
+
+            yield return OpenJoinMenu(false);
+            var until = Time.realtimeSinceStartup + 7;
+            while (_serviceStarts < 2 && Time.realtimeSinceStartup < until)
+                yield return null;
+
+            Assert.GreaterOrEqual(_serviceStarts, 2, "A failed sign-in is retried on a later refresh");
+        }
+
         private IEnumerator LaunchMainMenu()
         {
             foreach (var manager in Object.FindObjectsByType<CardGameManager>())
@@ -183,8 +202,7 @@ namespace Tests.PlayMode
         {
             CgsNetManager.InitializeServices =
                 () => CountServiceStart(Task.FromException(new InvalidOperationException(ExpectedFailure)));
-            LogAssert.Expect(LogType.Exception, new Regex(Regex.Escape(ExpectedFailure)));
-            LogAssert.Expect(LogType.Error, "[CgsNet] Sign in anonymously failed!");
+            LogAssert.Expect(LogType.Log, new Regex(Regex.Escape(CgsNetManager.SignInFailedMessage)));
 
             var signIn = CgsNetManager.SignInAnonymouslyAsync();
             for (var frame = 0; frame < 10 && !signIn.IsCompleted; frame++)
@@ -205,16 +223,14 @@ namespace Tests.PlayMode
             var second = CgsNetManager.SignInAnonymouslyAsync();
             Assert.AreSame(first, second, "The lobby list and a join must not start separate sign-ins");
 
-            LogAssert.Expect(LogType.Exception, new Regex(Regex.Escape(ExpectedFailure)));
-            LogAssert.Expect(LogType.Error, "[CgsNet] Sign in anonymously failed!");
+            LogAssert.Expect(LogType.Log, new Regex(Regex.Escape(CgsNetManager.SignInFailedMessage)));
             initialization.SetException(new InvalidOperationException(ExpectedFailure));
             for (var frame = 0; frame < 10 && !first.IsCompleted; frame++)
                 yield return null;
             Assert.IsTrue(first.IsFaulted);
             Assert.AreEqual(1, _serviceStarts);
 
-            LogAssert.Expect(LogType.Exception, new Regex(Regex.Escape(ExpectedFailure)));
-            LogAssert.Expect(LogType.Error, "[CgsNet] Sign in anonymously failed!");
+            LogAssert.Expect(LogType.Log, new Regex(Regex.Escape(CgsNetManager.SignInFailedMessage)));
             var retry = CgsNetManager.SignInAnonymouslyAsync();
             for (var frame = 0; frame < 10 && !retry.IsCompleted; frame++)
                 yield return null;

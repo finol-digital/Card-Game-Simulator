@@ -134,11 +134,18 @@ namespace Cgs.Play.Multiplayer
 
             if (signInTask.IsFaulted)
             {
-                // Later refreshes retry quietly, so the player sees the error once rather than every refresh
-                Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                if (!_isSignInErrorShown)
-                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
+                var detail = signInTask.Exception?.Message;
+                // Later refreshes retry quietly: a plain log, because development builds show warnings and errors
+                if (_isSignInErrorShown)
+                {
+                    Debug.Log(CgsNetManager.GenericConnectionErrorMessage + detail);
+                    yield break;
+                }
+
                 _isSignInErrorShown = true;
+                Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + detail);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection",
+                    CgsNetManager.GenericConnectionErrorMessage + detail, ("detail", detail)));
                 yield break;
             }
 

@@ -29,6 +29,8 @@ namespace Cgs.Play.Multiplayer
         public const string GenericConnectionErrorMessage =
             "[CgsNet] ERROR: Exception thrown when attempting to connect to Server! Exception: ";
 
+        internal const string SignInFailedMessage = "[CgsNet] Sign in anonymously failed: ";
+
         private const int DefaultPort = 7777;
         private const int MaxPlayers = 10;
         private const string RelayClientDisconnectedErrorMessage = "The network client disconnected before joining the host.";
@@ -186,8 +188,8 @@ namespace Cgs.Play.Multiplayer
             }
             catch (Exception ex)
             {
-                Debug.LogException(ex);
-                Debug.LogError("[CgsNet] Sign in anonymously failed!");
+                // Callers report the failure to the player; a plain log keeps quiet retries from opening dialogs
+                Debug.Log(SignInFailedMessage + ex);
                 throw;
             }
         }
