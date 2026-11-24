@@ -6,9 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+
+[assembly: InternalsVisibleTo("PlayMode")]
 
 namespace Cgs.Localization
 {
@@ -35,7 +38,11 @@ namespace Cgs.Localization
     public sealed class CgsLocaleSelector : IStartupLocaleSelector
     {
         public const string PreferenceKey = "LanguageCode";
+        public const string EnglishCode = "en";
         private const string CommandLinePrefix = "-language=";
+
+        // Tests replace the process arguments to check the -language= override
+        internal static Func<string[]> CommandLineArgs = Environment.GetCommandLineArgs;
 
         [SerializeField] List<SupportedLanguage> languages = new();
 
@@ -48,19 +55,24 @@ namespace Cgs.Localization
 
         public Locale GetStartupLocale(ILocalesProvider availableLocales)
         {
-            var commandLine = Environment.GetCommandLineArgs()
-                .FirstOrDefault(value => value.StartsWith(CommandLinePrefix, StringComparison.OrdinalIgnoreCase));
-            var requested = commandLine?.Substring(CommandLinePrefix.Length);
-            var code = ResolveCode(requested, PlayerPrefs.GetString(PreferenceKey, string.Empty),
-                DeviceLanguage());
+            var code = StartupCode();
             // The package calls selectors after loading locales. Avoid GetLocale's implicit fallback.
             return availableLocales.Locales.FirstOrDefault(locale => locale.Identifier.Code == code)
-                   ?? availableLocales.Locales.FirstOrDefault(locale => locale.Identifier.Code == "en");
+                   ?? availableLocales.Locales.FirstOrDefault(locale => locale.Identifier.Code == EnglishCode);
+        }
+
+        /// <summary>The startup language's code, from the same choices as at startup, without loading anything.</summary>
+        public string StartupCode()
+        {
+            var commandLine = CommandLineArgs()
+                .FirstOrDefault(value => value.StartsWith(CommandLinePrefix, StringComparison.OrdinalIgnoreCase));
+            var requested = commandLine?.Substring(CommandLinePrefix.Length);
+            return ResolveCode(requested, PlayerPrefs.GetString(PreferenceKey, string.Empty), DeviceLanguage());
         }
 
         public string ResolveCode(string commandLine, string saved, string device)
         {
-            return ExactCode(commandLine) ?? ExactCode(saved) ?? MatchDevice(device) ?? "en";
+            return ExactCode(commandLine) ?? ExactCode(saved) ?? MatchDevice(device) ?? EnglishCode;
         }
 
         private static string DeviceLanguage()

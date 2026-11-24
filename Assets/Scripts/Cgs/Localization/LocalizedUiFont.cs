@@ -19,6 +19,8 @@ namespace Cgs.Localization
         private LocalizedLegacyFont _legacyReference;
         private LocalizedTmpFont _tmpReference;
 
+        internal string Key => key;
+
         private void OnEnable()
         {
             if (GetComponent<Text>() != null)

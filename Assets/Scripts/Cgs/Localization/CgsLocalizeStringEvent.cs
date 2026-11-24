@@ -12,6 +12,8 @@ namespace Cgs.Localization
     {
         [SerializeField] string english;
 
+        internal string English => english;
+
         protected override void UpdateString(string value)
         {
             if (Application.isPlaying)

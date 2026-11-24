@@ -53,6 +53,17 @@ namespace Cgs.Menu
 
         private const float AnimationDuration = 0.25f;
 
+        /// <summary>
+        /// The first Main Menu after launch stays hidden for at most this long while the startup language loads, so
+        /// it does not show English first. After that it shows in English and switches in place when the language
+        /// arrives. developer-docs/startup-performance.md records the measurements behind this bound.
+        /// </summary>
+        internal const float DefaultStartupLanguageWaitSeconds = 0.5f;
+
+        internal static float StartupLanguageWaitSeconds { get; set; } = DefaultStartupLanguageWaitSeconds;
+
+        private static bool _startupLanguageSettled;
+
         [SerializeField] GameObject gamesManagementMenuPrefab;
 
         [SerializeField] Text versionText;
@@ -83,8 +94,33 @@ namespace Cgs.Menu
         private InputAction _moveAction;
         private InputAction _pageAction;
 
+        private CanvasGroup _languageWait;
+        private float _languageWaitStarted;
+        private int _languageReadyFrame = -1;
+        private bool _isWelcomeDeferred;
+
+        /// <summary>Hidden, and ignoring input, while the first Main Menu waits for the startup language.</summary>
+        internal bool IsWaitingForLanguage => _languageWait != null;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        internal static void ResetStartupLanguageWait()
+        {
+            _startupLanguageSettled = false;
+            StartupLanguageWaitSeconds = DefaultStartupLanguageWaitSeconds;
+        }
+
         protected void OnEnable()
         {
+            if (!_startupLanguageSettled)
+            {
+                // The menu is authored in English, so only another startup language is worth waiting for
+                if (CgsLocalization.IsInitializationComplete
+                    || CgsLocalization.StartupLanguage is null or CgsLocaleSelector.EnglishCode)
+                    _startupLanguageSettled = true;
+                else
+                    BeginLanguageWait();
+            }
+
             _heldInput.Arm();
 
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
@@ -125,18 +161,77 @@ namespace Cgs.Menu
             SelectFirstControl();
 
             if (!HasSeenWelcome)
-                CardGameManager.Instance.Messenger.Ask(new UiMessage(
-#if UNITY_ANDROID || UNITY_IOS
-                    "welcome.mobile",
-#else
-                    "welcome.desktop",
-#endif
-                    WelcomeMessage), DeclineWelcomeMessage, AcceptWelcomeMessage,
-                    true);
+            {
+                if (IsWaitingForLanguage)
+                    _isWelcomeDeferred = true;
+                else
+                    AskWelcome();
+            }
 
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
+
+        private static void AskWelcome()
+        {
+            CardGameManager.Instance.Messenger.Ask(new UiMessage(
+#if UNITY_ANDROID || UNITY_IOS
+                "welcome.mobile",
+#else
+                "welcome.desktop",
+#endif
+                WelcomeMessage), DeclineWelcomeMessage, AcceptWelcomeMessage, true);
+        }
+
+        private void BeginLanguageWait()
+        {
+            _languageWait = gameObject.AddComponent<CanvasGroup>();
+            _languageWait.alpha = 0;
+            _languageWait.interactable = false;
+            _languageWait.blocksRaycasts = false;
+            _languageWaitStarted = -1;
+            _languageReadyFrame = -1;
+        }
+
+        // True once the menu is shown: the frame after the language is ready, so text and font bindings have applied
+        // it, or when the wait runs out. The wait counts from the menu's first frame, not from loading the scene.
+        private bool TryEndLanguageWait()
+        {
+            if (_languageWaitStarted < 0)
+                _languageWaitStarted = Time.realtimeSinceStartup;
+
+            if (CgsLocalization.IsInitializationComplete)
+            {
+                if (_languageReadyFrame < 0)
+                    _languageReadyFrame = Time.frameCount;
+                if (Time.frameCount == _languageReadyFrame)
+                    return false;
+            }
+            else if (Time.realtimeSinceStartup - _languageWaitStarted < StartupLanguageWaitSeconds)
+                return false;
+            else
+                Debug.LogWarning($"MainMenu: the startup language was not ready after " +
+                                 $"{StartupLanguageWaitSeconds * 1000:0} ms; showing English until it loads");
+
+            _languageWait.alpha = 1;
+            _languageWait.interactable = true;
+            _languageWait.blocksRaycasts = true;
+            Destroy(_languageWait);
+            _languageWait = null;
+            _startupLanguageSettled = true;
+            // Like a newly opened screen, ignore what was already held while the menu was hidden
+            _heldInput.Arm();
+            if (_isWelcomeDeferred)
+            {
+                _isWelcomeDeferred = false;
+                AskWelcome();
+            }
+
+            return true;
+        }
+
+        // Shortcuts and swipes act only on the visible menu, without a dialog over it
+        private bool AcceptsInput => !IsWaitingForLanguage && CardGameManager.Instance.ModalCanvas == null;
 
         // Focus the current game so the first gamepad or keyboard input acts on it, as Submit did with nothing focused.
         // Touch-first devices without a gamepad show no focus highlight.
@@ -151,13 +246,16 @@ namespace Cgs.Menu
         // Poll for Vector2 inputs
         protected void Update()
         {
+            if (IsWaitingForLanguage && !TryEndLanguageWait())
+                return;
+
             // Interactive means the Main Menu screen accepts input, which it does from its first frame. A first-launch
             // welcome prompt is part of that screen and accepts input too; budget runs use saved data, where the
             // prompt is not shown.
             StartupTimeline.Mark(StartupMilestone.MainMenuInteractive);
             _heldInput.Refresh();
 
-            if (CardGameManager.Instance.ModalCanvas != null)
+            if (!AcceptsInput)
                 return;
 
             var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
@@ -198,7 +296,7 @@ namespace Cgs.Menu
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (CardGameManager.Instance.ModalCanvas != null)
+            if (!AcceptsInput)
                 return;
 
             var dragDelta = eventData.position - eventData.pressPosition;
@@ -231,7 +329,7 @@ namespace Cgs.Menu
 
         private void InputSelectPrevious(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+            if (AcceptsInput && _heldInput.Allows(context.control))
                 DoSelectPrevious();
         }
 
@@ -305,7 +403,7 @@ namespace Cgs.Menu
 
         private void InputSelectNext(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+            if (AcceptsInput && _heldInput.Allows(context.control))
                 DoSelectNext();
         }
 
@@ -379,14 +477,14 @@ namespace Cgs.Menu
 
         private void InputSubmit(InputAction.CallbackContext context)
         {
-            if (EventSystem.current.currentSelectedGameObject == null && CardGameManager.Instance.ModalCanvas == null &&
+            if (EventSystem.current.currentSelectedGameObject == null && AcceptsInput &&
                 _heldInput.Allows(context.control))
                 DoShowGamesManagementMenu();
         }
 
         private void InputGamesManagementMenu(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+            if (AcceptsInput && _heldInput.Allows(context.control))
                 DoShowGamesManagementMenu();
         }
 
@@ -406,7 +504,7 @@ namespace Cgs.Menu
 
         private void InputSettings(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+            if (AcceptsInput && _heldInput.Allows(context.control))
                 DoShowSettings();
         }
 
@@ -424,7 +522,7 @@ namespace Cgs.Menu
 
         private void InputExploreCards(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+            if (AcceptsInput && _heldInput.Allows(context.control))
                 DoExploreCards();
         }
 
@@ -442,7 +540,7 @@ namespace Cgs.Menu
 
         private void InputEditDeck(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+            if (AcceptsInput && _heldInput.Allows(context.control))
                 DoEditDeck();
         }
 
@@ -460,7 +558,7 @@ namespace Cgs.Menu
 
         private void InputJoinGame(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+            if (AcceptsInput && _heldInput.Allows(context.control))
                 DoJoinGame();
         }
 
@@ -479,7 +577,7 @@ namespace Cgs.Menu
 
         private void InputStartGame(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas == null && _heldInput.Allows(context.control))
+            if (AcceptsInput && _heldInput.Allows(context.control))
                 DoStartGame();
         }
 
@@ -499,7 +597,7 @@ namespace Cgs.Menu
 
         private void InputCancel(InputAction.CallbackContext context)
         {
-            if (CardGameManager.Instance.ModalCanvas != null || !_heldInput.Allows(context.control))
+            if (!AcceptsInput || !_heldInput.Allows(context.control))
                 return;
             if (EventSystem.current.currentSelectedGameObject == null)
                 DoPromptQuit();

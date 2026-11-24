@@ -23,10 +23,14 @@ namespace Cgs.Performance
         public const string OutcomeFailed = "failed";
         public const string OutcomeTimeout = "timeout";
 
+        public const string LocalizationPending = "pending";
+        public const string LocalizationReady = "ready";
+        public const string LocalizationFailed = "failed";
+
         private static readonly StartupMilestone[] LaunchMilestones =
         {
             StartupMilestone.EngineReady, StartupMilestone.FirstSceneLoaded, StartupMilestone.FirstFrameDrawn,
-            StartupMilestone.MainMenuInteractive
+            StartupMilestone.LocalizationReady, StartupMilestone.MainMenuInteractive
         };
 
         private static readonly StartupMilestone[] PlayMilestones =
@@ -59,6 +63,9 @@ namespace Cgs.Performance
         public double? LaunchRequestOffsetMs { get; set; }
 
         public string ProcessClock { get; set; } = "unavailable";
+
+        /// <summary>Whether the startup language was ready, had failed, or was still loading.</summary>
+        public string LocalizationOutcome { get; set; } = LocalizationPending;
 
         public StartupTimelineSession(Func<double> elapsedMs, Action<string> log,
             double launchTimeoutMs = DefaultLaunchTimeoutMs, double playTimeoutMs = DefaultPlayTimeoutMs)
@@ -122,6 +129,7 @@ namespace Cgs.Performance
             var outcome = HasMark(StartupMilestone.MainMenuInteractive) ? OutcomeOk : OutcomeTimeout;
             var json = new StringBuilder();
             BeginSummary(json, "launch", outcome);
+            json.Append(",\"localization\":\"").Append(Escape(LocalizationOutcome)).Append('"');
             AppendMilestones(json, LaunchMilestones, true);
             EndSummary(json, outcome == OutcomeOk ? null : nameof(StartupMilestone.MainMenuInteractive),
                 outcome == OutcomeOk ? null : "timeout", null);
