@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Cgs;
 using Cgs.Menu;
 using Cgs.Performance;
+using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using NUnit.Framework;
 using UnityEngine;
@@ -55,6 +56,11 @@ namespace Tests.PlayMode
             if (!_isMenuLoaded)
                 yield break;
 
+            if (CardGameManager.Instance != null)
+                CardGameManager.Instance.IsSearchingForServer = false;
+            if (CgsNetManager.Instance != null)
+                CgsNetManager.Instance.Stop();
+
             // Leave an empty scene so the next test does not inherit a menu that listens to input
             var empty = SceneManager.CreateScene("OptionalServicesTests " + Guid.NewGuid());
             SceneManager.SetActiveScene(empty);
@@ -74,15 +80,7 @@ namespace Tests.PlayMode
         {
             CgsNetManager.InitializeServices = () => CountServiceStart(Task.CompletedTask);
 
-            foreach (var manager in Object.FindObjectsByType<CardGameManager>())
-                Object.Destroy(manager.gameObject);
-            yield return null;
-            CardGameManager.LaunchDeepLink = () => null;
-            _isMenuLoaded = true;
-            yield return SceneManager.LoadSceneAsync(Tags.MainMenuSceneIndex);
-            var mainMenu = Object.FindObjectsByType<MainMenu>().Single();
-            for (var frame = 0; frame < MenuTimeoutFrames && mainMenu.IsWaitingForLanguage; frame++)
-                yield return null;
+            yield return LaunchMainMenu();
             // Give deferred start-up work a few frames to run
             for (var frame = 0; frame < 10; frame++)
                 yield return null;
@@ -93,6 +91,62 @@ namespace Tests.PlayMode
             var discovery = netManager.GetComponent<CgsNetDiscovery>();
             Assert.IsTrue(discovery == null || !discovery.IsRunning, "LAN discovery must wait for the lobby");
             Assert.IsNull(netManager.GetComponent<BrowserLanTransport>(), "Browser LAN must wait for the lobby");
+        }
+
+        [UnityTest]
+        public IEnumerator LanJoinMenuDoesNotStartOnlineServices()
+        {
+            // Sign-in never finishes here, so a sign-in attempt would show as a started service
+            CgsNetManager.InitializeServices = () => CountServiceStart(new TaskCompletionSource<bool>().Task);
+
+            yield return OpenJoinMenu(true);
+            // Outlast the lobby's five-second refresh interval
+            var until = Time.realtimeSinceStartup + 6;
+            while (Time.realtimeSinceStartup < until)
+                yield return null;
+
+            Assert.AreEqual(0, _serviceStarts, "Searching for LAN games must not start online services");
+            Assert.IsTrue(CgsNetManager.Instance.GetComponent<CgsNetDiscovery>().IsRunning,
+                "The Join menu searches for LAN games");
+        }
+
+        [UnityTest]
+        public IEnumerator InternetJoinMenuSignsInWithoutWaitingForARefresh()
+        {
+            CgsNetManager.InitializeServices = () => CountServiceStart(new TaskCompletionSource<bool>().Task);
+
+            yield return OpenJoinMenu(false);
+            var shownAt = Time.realtimeSinceStartup;
+            while (_serviceStarts == 0 && Time.realtimeSinceStartup - shownAt < 3)
+                yield return null;
+
+            Assert.AreEqual(1, _serviceStarts, "The Internet list signs in as soon as it shows");
+        }
+
+        private IEnumerator LaunchMainMenu()
+        {
+            foreach (var manager in Object.FindObjectsByType<CardGameManager>())
+                Object.Destroy(manager.gameObject);
+            yield return null;
+            CardGameManager.LaunchDeepLink = () => null;
+            _isMenuLoaded = true;
+            yield return SceneManager.LoadSceneAsync(Tags.MainMenuSceneIndex);
+            var mainMenu = Object.FindObjectsByType<MainMenu>().Single();
+            for (var frame = 0; frame < MenuTimeoutFrames && mainMenu.IsWaitingForLanguage; frame++)
+                yield return null;
+        }
+
+        private IEnumerator OpenJoinMenu(bool isLan)
+        {
+            yield return LaunchMainMenu();
+            CardGameManager.Instance.IsSearchingForServer = true;
+            yield return SceneManager.LoadSceneAsync(Tags.PlayModeSceneIndex);
+            // Choose the source before the play screen shows the lobby once its content is ready
+            var lobby = PlayController.Instance.Lobby;
+            lobby.IsLanConnectionSource = isLan;
+            for (var frame = 0; frame < MenuTimeoutFrames && !lobby.isActiveAndEnabled; frame++)
+                yield return null;
+            Assert.IsTrue(lobby.isActiveAndEnabled, "The Join menu did not open");
         }
 
         [Test]
@@ -139,6 +193,33 @@ namespace Tests.PlayMode
             Assert.IsTrue(signIn.IsFaulted, "Sign-in must report that services could not start");
             Assert.AreEqual(1, _serviceStarts);
             Assert.IsFalse(CgsNetManager.IsSignedIn);
+        }
+
+        [UnityTest]
+        public IEnumerator ConcurrentSignInsShareOneAttemptAndALaterCallRetries()
+        {
+            var initialization = new TaskCompletionSource<bool>();
+            CgsNetManager.InitializeServices = () => CountServiceStart(initialization.Task);
+
+            var first = CgsNetManager.SignInAnonymouslyAsync();
+            var second = CgsNetManager.SignInAnonymouslyAsync();
+            Assert.AreSame(first, second, "The lobby list and a join must not start separate sign-ins");
+
+            LogAssert.Expect(LogType.Exception, new Regex(Regex.Escape(ExpectedFailure)));
+            LogAssert.Expect(LogType.Error, "[CgsNet] Sign in anonymously failed!");
+            initialization.SetException(new InvalidOperationException(ExpectedFailure));
+            for (var frame = 0; frame < 10 && !first.IsCompleted; frame++)
+                yield return null;
+            Assert.IsTrue(first.IsFaulted);
+            Assert.AreEqual(1, _serviceStarts);
+
+            LogAssert.Expect(LogType.Exception, new Regex(Regex.Escape(ExpectedFailure)));
+            LogAssert.Expect(LogType.Error, "[CgsNet] Sign in anonymously failed!");
+            var retry = CgsNetManager.SignInAnonymouslyAsync();
+            for (var frame = 0; frame < 10 && !retry.IsCompleted; frame++)
+                yield return null;
+            Assert.AreNotSame(first, retry, "A failed sign-in is tried again");
+            Assert.AreEqual(2, _serviceStarts);
         }
 
         [Test]

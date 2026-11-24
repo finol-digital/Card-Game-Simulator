@@ -38,9 +38,10 @@ namespace Cgs.Play.Multiplayer
         public static CgsNetManager Instance => (CgsNetManager)Singleton;
 
         /// <summary>Starts Unity Services; replaced by tests to observe when online services start.</summary>
-        internal static Func<Task> InitializeServices = () => UnityServices.InitializeAsync();
+        internal static Func<Task> InitializeServices { get; set; } = () => UnityServices.InitializeAsync();
 
         private static Task _servicesInitialization;
+        private static Task _signIn;
 
         public static bool IsSignedIn => UnityServices.State == ServicesInitializationState.Initialized &&
                                          AuthenticationService.Instance.IsSignedIn;
@@ -142,6 +143,7 @@ namespace Cgs.Play.Multiplayer
         internal static void ResetServices()
         {
             _servicesInitialization = null;
+            _signIn = null;
         }
 
         /// <summary>Starts Unity Services on the first online action instead of at launch.</summary>
@@ -165,7 +167,16 @@ namespace Cgs.Play.Multiplayer
             return base.StartClient();
         }
 
-        public static async Task SignInAnonymouslyAsync()
+        /// <summary>Signs in, starting Unity Services first if needed.</summary>
+        /// <remarks>Callers during an attempt share it; the next call after a failure tries again.</remarks>
+        public static Task SignInAnonymouslyAsync()
+        {
+            if (_signIn is not { IsCompleted: false })
+                _signIn = SignInOnceAsync();
+            return _signIn;
+        }
+
+        private static async Task SignInOnceAsync()
         {
             try
             {

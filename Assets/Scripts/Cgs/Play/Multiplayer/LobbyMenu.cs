@@ -59,6 +59,8 @@ namespace Cgs.Play.Multiplayer
             get => _isLanConnectionSource;
             set
             {
+                if (_isLanConnectionSource && !value)
+                    RefreshSoon();
                 _isLanConnectionSource = value;
                 LocalizedUiText.Set(roomIdIpLabel, new UiMessage(UsesIpAddress ? "network.room.ip" : "network.room.id", RoomIdIpLabel));
                 LocalizedUiText.Set((Text)roomIdIpInputField.placeholder, new UiMessage(
@@ -93,6 +95,9 @@ namespace Cgs.Play.Multiplayer
 
         private bool _shouldRedisplay;
 
+        private bool _isSigningIn;
+        private bool _isSignInErrorShown;
+
         private InputAction _moveAction;
         private InputAction _pageAction;
         private InputAction _shiftAction;
@@ -116,27 +121,28 @@ namespace Cgs.Play.Multiplayer
 
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             passwordInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
-
-            StartCoroutine(SignInAnonymouslyCoroutine());
         }
 
+        // Online services start only for the Internet list; LAN play never signs in
         private IEnumerator SignInAnonymouslyCoroutine()
         {
-            yield return null;
-
-            if (CgsNetManager.IsSignedIn)
-                yield break;
-
+            _isSigningIn = true;
             var signInTask = CgsNetManager.SignInAnonymouslyAsync();
             while (!signInTask.IsCompleted)
                 yield return null;
+            _isSigningIn = false;
 
             if (signInTask.IsFaulted)
             {
+                // Later refreshes retry quietly, so the player sees the error once rather than every refresh
                 Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
+                if (!_isSignInErrorShown)
+                    CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
+                _isSignInErrorShown = true;
+                yield break;
             }
 
+            _isSignInErrorShown = false;
             Refresh();
         }
 
@@ -152,7 +158,7 @@ namespace Cgs.Play.Multiplayer
             }
 
             _secondsSinceRefresh += Time.deltaTime;
-            if (_secondsSinceRefresh > SecondsPerRefresh)
+            if (_secondsSinceRefresh >= SecondsPerRefresh)
                 Refresh();
 
             if (_shouldRedisplay)
@@ -202,9 +208,14 @@ namespace Cgs.Play.Multiplayer
                 CgsNetManager.Instance.StartBrowserLanDiscovery();
             else
                 CgsNetManager.Instance.StartNativeLanDiscovery(OnServerFound);
+            if (IsInternetConnectionSource)
+                RefreshSoon();
 
             Redisplay();
         }
+
+        // The Internet list signs in and loads on the next frame instead of waiting for the refresh interval
+        private void RefreshSoon() => _secondsSinceRefresh = SecondsPerRefresh;
 
         private void Refresh()
         {
@@ -215,13 +226,17 @@ namespace Cgs.Play.Multiplayer
 #pragma warning restore CS4014
                 Debug.Log("LobbyMenu Refreshed Lobbies");
             }
-            else if (IsLanConnectionSource)
+            else if (IsInternetConnectionSource)
+            {
+                if (!_isSigningIn)
+                    StartCoroutine(SignInAnonymouslyCoroutine());
+                Debug.Log("LobbyMenu Signing In");
+            }
+            else
             {
                 CgsNetManager.Instance.RefreshLanDiscovery();
                 Debug.Log("LobbyMenu Refreshed Discovery");
             }
-            else
-                Debug.Log("LobbyMenu Refreshed None");
 
             _secondsSinceRefresh = 0;
         }
@@ -489,6 +504,8 @@ namespace Cgs.Play.Multiplayer
 
         protected void OnDisable()
         {
+            // Deactivation stops the sign-in coroutine; a shared attempt still in progress is reused on return
+            _isSigningIn = false;
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;
