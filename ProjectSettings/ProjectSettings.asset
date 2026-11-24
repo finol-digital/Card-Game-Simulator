@@ -16,7 +16,7 @@ PlayerSettings:
   productName: Card Game Simulator
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
+  m_SplashScreenBackgroundColor: {r: 0.16078432, g: 0.078431375, b: 0.03529412, a: 1}
   m_ShowUnitySplashScreen: 0
   m_ShowUnitySplashLogo: 0
   m_SplashScreenOverlayOpacity: 1
@@ -226,19 +226,19 @@ PlayerSettings:
   tvOSTopShelfImageLayers2x: []
   tvOSTopShelfImageWideLayers: []
   tvOSTopShelfImageWideLayers2x: []
-  iOSLaunchScreenType: 0
+  iOSLaunchScreenType: 1
   iOSLaunchScreenPortrait: {fileID: 0}
   iOSLaunchScreenLandscape: {fileID: 0}
   iOSLaunchScreenBackgroundColor:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4278785065
   iOSLaunchScreenFillPct: 100
   iOSLaunchScreenSize: 100
-  iOSLaunchScreeniPadType: 0
+  iOSLaunchScreeniPadType: 1
   iOSLaunchScreeniPadImage: {fileID: 0}
   iOSLaunchScreeniPadBackgroundColor:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4278785065
   iOSLaunchScreeniPadFillPct: 100
   iOSLaunchScreeniPadSize: 100
   iOSLaunchScreenCustomStoryboardPath: 
@@ -279,8 +279,8 @@ PlayerSettings:
   useCustomGradleSettingsTemplate: 0
   useCustomProguardFile: 0
   AndroidTargetArchitectures: 3
-  AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 2800000, guid: d7e25eb23e0516a4ea0e0426fe90336d, type: 3}
+  AndroidSplashScreenScale: 2
+  androidSplashScreen: {fileID: 2800000, guid: 9f4281763601643338c72f95b4159913, type: 3}
   AndroidKeystoreName: '{inproject}: finoldigital.keystore'
   AndroidKeyaliasName: cgs
   AndroidEnableArmv9SecurityFeatures: 0
@@ -809,7 +809,7 @@ PlayerSettings:
   monoEnv: 
   splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 9f4281763601643338c72f95b4159913, type: 3}
   splashScreenBackgroundSourcePortrait: {fileID: 21300000, guid: 2537b93f85bdc4894bf124b45ab648db, type: 3}
-  blurSplashScreenBackground: 1
+  blurSplashScreenBackground: 0
   spritePackerPolicy: 
   webGLMemorySize: 256
   webGLExceptionSupport: 1
@@ -950,7 +950,7 @@ PlayerSettings:
   metroDefaultTileSize: 1
   metroTileForegroundText: 1
   metroTileBackgroundColor: {r: 0.2627451, g: 0.18039216, b: 0.08627451, a: 1}
-  metroSplashScreenBackgroundColor: {r: 0.2627451, g: 0.18039216, b: 0.08627451, a: 1}
+  metroSplashScreenBackgroundColor: {r: 0.16078432, g: 0.078431375, b: 0.03529412, a: 1}
   metroSplashScreenUseBackgroundColor: 1
   syncCapabilities: 0
   platformCapabilities:
