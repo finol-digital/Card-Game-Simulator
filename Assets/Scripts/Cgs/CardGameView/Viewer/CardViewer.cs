@@ -166,10 +166,10 @@ namespace Cgs.CardGameView.Viewer
             get => _previewCardModel;
             set
             {
-                if (value != null)
-                    SetPreview(value, null, value.GetComponent<Image>(), value.Value);
-                else
-                    SetPreview(null, null, null, null);
+                ClearPreviewSource();
+                _previewCardModel = value;
+                _previewImage = value != null ? value.GetComponent<Image>() : null;
+                ShowPreview(value != null ? value.Value : null);
             }
         }
 
@@ -178,22 +178,28 @@ namespace Cgs.CardGameView.Viewer
             get => _previewCardStack;
             set
             {
+                ClearPreviewSource();
                 var card = value != null ? value.FaceupTopCard : null;
                 if (card != null)
-                    SetPreview(null, value, value.TopCardImage, card);
-                else
-                    SetPreview(null, null, null, null);
+                {
+                    _previewCardStack = value;
+                    _previewImage = value.TopCardImage;
+                }
+                ShowPreview(card);
             }
         }
 
-        private void SetPreview(CardModel cardModel, CardStack cardStack, Image image, UnityCard card)
+        private void ClearPreviewSource()
         {
             _previewCard?.UnregisterDisplay(this);
             _previewCard = null;
+            _previewCardModel = null;
+            _previewCardStack = null;
+            _previewImage = null;
+        }
 
-            _previewCardModel = cardModel;
-            _previewCardStack = cardStack;
-            _previewImage = image;
+        private void ShowPreview(UnityCard card)
+        {
             HidePreviewPresentation();
 
             if (card == null)
