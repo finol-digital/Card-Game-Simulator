@@ -37,6 +37,14 @@ namespace Cgs.Play.Multiplayer
 
         public static CgsNetManager Instance => (CgsNetManager)Singleton;
 
+        /// <summary>Starts Unity Services; replaced by tests to observe when online services start.</summary>
+        internal static Func<Task> InitializeServices = () => UnityServices.InitializeAsync();
+
+        private static Task _servicesInitialization;
+
+        public static bool IsSignedIn => UnityServices.State == ServicesInitializationState.Initialized &&
+                                         AuthenticationService.Instance.IsSignedIn;
+
         public bool IsOnline => IsHost || IsConnectedClient;
 
         public CgsNetPlayer LocalPlayer { get; set; }
@@ -128,7 +136,21 @@ namespace Cgs.Play.Multiplayer
         {
             gameObject.GetOrAddComponent<GameContentNetwork>();
             Transports = GetComponent<Transports>();
-            UnityServices.InitializeAsync();
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        internal static void ResetServices()
+        {
+            _servicesInitialization = null;
+        }
+
+        /// <summary>Starts Unity Services on the first online action instead of at launch.</summary>
+        /// <remarks>A failed start is retried by the next caller.</remarks>
+        public static Task EnsureServicesAsync()
+        {
+            if (_servicesInitialization is not { IsFaulted: false, IsCanceled: false })
+                _servicesInitialization = InitializeServices();
+            return _servicesInitialization;
         }
 
         public new bool StartHost()
@@ -147,6 +169,7 @@ namespace Cgs.Play.Multiplayer
         {
             try
             {
+                await EnsureServicesAsync();
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
                 Debug.Log("[CgsNet] Sign in anonymously succeeded!");
             }
@@ -166,7 +189,7 @@ namespace Cgs.Play.Multiplayer
 
         private IEnumerator BroadcastHostCoroutine(string servicePassword)
         {
-            if (!AuthenticationService.Instance.IsSignedIn)
+            if (!IsSignedIn)
             {
                 var signInTask = SignInAnonymouslyAsync();
                 while (!signInTask.IsCompleted)
@@ -380,7 +403,7 @@ namespace Cgs.Play.Multiplayer
             var reference = Guid.NewGuid().ToString("N");
             var context = new LobbyConnectionDiagnostics.Context { LobbyId = lobbyId };
             LobbyConnectionDiagnostics.Record("join-id-start", reference, context);
-            if (!AuthenticationService.Instance.IsSignedIn)
+            if (!IsSignedIn)
             {
                 var signInTask = SignInAnonymouslyAsync();
                 while (!signInTask.IsCompleted)
@@ -447,7 +470,7 @@ namespace Cgs.Play.Multiplayer
             var reference = Guid.NewGuid().ToString("N");
             var context = new LobbyConnectionDiagnostics.Context { LobbyCode = lobbyCode };
             LobbyConnectionDiagnostics.Record("join-code-start", reference, context);
-            if (!AuthenticationService.Instance.IsSignedIn)
+            if (!IsSignedIn)
             {
                 var signInTask = SignInAnonymouslyAsync();
                 while (!signInTask.IsCompleted)

@@ -381,6 +381,31 @@ For every result, report:
 
 Never report a single best run.
 
+## Optional services
+
+Services the Main Menu does not need start on first use:
+
+- **Unity Services** (authentication, lobby, relay) start through `CgsNetManager.EnsureServicesAsync()`, the first
+  time the player signs in, hosts or joins online, or opens the online lobby. A failed start is retried by the next
+  online action.
+- **LAN discovery** starts only when the Join menu opens or a LAN game is hosted.
+- **Steam** starts only when Steam launched CGS (or `steam_appid.txt` is present), after the Main Menu is
+  interactive. See [Steam Deck validation](steam-deck-validation.md).
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-24, local Mono builds, `-batchmode`, 20 alternating launches per
+build with saved data), the Main Menu became interactive this long after the first managed callback:
+
+| Build | Median | Range |
+|---|---|---|
+| Before deferring optional services | 996 ms | 984–1023 ms |
+| After | 940 ms | 927–958 ms |
+
+The first scene loaded at the same time in both (823 and 826 ms), so the 56 ms saving is in the Main Menu's first
+frames, where the Unity Services start used to run. A non-Steam build no longer loads the Steam API, so its log has
+no Steam lines. When Steam signals are present, `Steam initialized at <ms> ms`, or the warning `Steam Deck features
+unavailable`, appears after the launch summary. Moving the network components out of the `CardGameManager` prefab
+would save about 24 ms more; that move is scheduled with task 8.2 (see design D4).
+
 ## Local development check
 
 A local Mono Linux player is enough to check that benchmark mode works end to end, but its times are not baselines

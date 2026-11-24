@@ -121,6 +121,10 @@ These services are moved behind first use:
 
 Splitting the network components out of the `CardGameManager` prefab, into a lazily instantiated prefab, is evaluated with D1 data; only the timing gate is required.
 
+*Measured (task 4.4, 2026-11-24):* on the Lenovo IdeaPad Y510P (local Mono Linux build, `-batchmode`, 20 alternating launches per build with saved data), removing the network components (`CgsNetManager`, both Unity transports, `Transports`, and `CgsNetDiscovery`) from the prefab made the Main Menu interactive a median of 24 ms sooner (947 → 923 ms from the first managed callback; ranges 930–999 and 903–935 ms). About 22 ms of that is the first scene's load (831 → 810 ms), where every scene deserializes the prefab. The launch path does not use these components.
+
+*Decision:* move them into a lazily instantiated network prefab, but as part of D5 option (c) in task 8.2, not now. D5 already changes when and whether the host starts, and the play scene's networked objects depend on the network manager existing when that scene opens. Doing the move once there avoids reworking the prefab twice. If task 8.2 picks option (a) or (b), still make the move then, because the launch saving applies under every D5 option.
+
 *Alternatives:* starting services in parallel at launch, unawaited. This still costs main-thread time and, on some platforms, competes for I/O during the critical window.
 
 ### D5. Single-player hosting is a measured decision

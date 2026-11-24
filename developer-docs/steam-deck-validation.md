@@ -9,6 +9,14 @@ initialize Steam automatically. `steam_appid.txt` identifies CGS (1742850) for
 local development; do not copy this development file into Steam depots. Builds
 launched by Steam obtain their App ID from the client.
 
+Steam starts only when Steam launched CGS (the `SteamAppId` or `SteamGameId`
+environment variable is set) or `steam_appid.txt` is in the working directory.
+Other builds never load the Steam API and log nothing about it. Steam starts once
+the Main Menu is interactive (or after the first frame, if a launch link opened
+another screen), so it never delays the menu. It then logs `Steam initialized at
+<ms> ms`. Because Steam sets `SteamDeck=1` on a Deck, the 1280 × 800 display and
+controller prompts are still chosen before the first frame.
+
 On a Steam Deck, the integration selects a 1280 × 800 fullscreen framebuffer,
 including when Unity previously saved a 4:3 display mode. The Settings resolution
 selector remains a UI scaling preference, independent of the framebuffer.

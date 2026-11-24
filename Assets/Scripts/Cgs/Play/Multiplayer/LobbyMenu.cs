@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
 using JetBrains.Annotations;
-using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -125,7 +124,7 @@ namespace Cgs.Play.Multiplayer
         {
             yield return null;
 
-            if (AuthenticationService.Instance.IsSignedIn)
+            if (CgsNetManager.IsSignedIn)
                 yield break;
 
             var signInTask = CgsNetManager.SignInAnonymouslyAsync();
@@ -209,7 +208,7 @@ namespace Cgs.Play.Multiplayer
 
         private void Refresh()
         {
-            if (IsInternetConnectionSource && AuthenticationService.Instance.IsSignedIn)
+            if (IsInternetConnectionSource && CgsNetManager.IsSignedIn)
             {
 #pragma warning disable CS4014
                 RefreshLobbies();

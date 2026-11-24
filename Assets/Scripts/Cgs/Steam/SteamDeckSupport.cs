@@ -4,9 +4,11 @@
 
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX
 using System;
+using Cgs.Performance;
 using Cgs.UI;
 using Steamworks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Cgs.Steam
 {
@@ -16,29 +18,64 @@ namespace Cgs.Steam
         public event Action Dismissed;
         private bool _initialized;
         private Callback<FloatingGamepadTextInputDismissed_t> _dismissed;
+        private static bool _isDeckDisplaySet;
+        private bool _started;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
         {
 #if !UNITY_EDITOR
+            // Optional: other distributions never load the Steam API
+            if (!SteamLaunch.IsDetected())
+                return;
+            // Choose the Deck's display before the first frame, so the menu is not resized once it is showing
+            if (SteamLaunch.IsSteamDeck(Environment.GetEnvironmentVariable))
+            {
+                ResolutionManager.UseSteamDeckDisplay();
+                ActiveInputDevice.EnableSteamDeck();
+                _isDeckDisplaySet = true;
+            }
+
             var host = new GameObject(nameof(SteamDeckSupport));
             DontDestroyOnLoad(host);
             host.AddComponent<SteamDeckSupport>();
 #endif
         }
 
-        private void Awake()
+        private void Update()
+        {
+            if (_started)
+            {
+                if (_initialized)
+                    SteamAPI.RunCallbacks();
+                return;
+            }
+
+            // Steam is not needed to show or use the first screen, so it starts afterwards
+            if (!SteamLaunch.IsReadyToStart(StartupTimeline.Session, SceneManager.GetActiveScene().buildIndex))
+                return;
+            _started = true;
+            StartSteam();
+        }
+
+        private void StartSteam()
         {
             try
             {
-                // Optional: non-Steam builds must remain usable without a running Steam client.
+                // Non-Steam builds must remain usable without a running Steam client.
                 _initialized = SteamAPI.Init();
                 if (!_initialized)
+                {
+                    Debug.LogWarning(SteamUnavailableMessage + "SteamAPI.Init failed");
                     return;
+                }
+
+                Debug.Log($"Steam initialized at {StartupTimeline.ElapsedMs:0} ms");
                 if (SteamUtils.IsRunningOnSteamHardware() != ESteamHardwareType.k_ESteamHardwareTypeSteamDeck)
                     return;
+                if (!_isDeckDisplaySet)
+                    ResolutionManager.UseSteamDeckDisplay();
                 ActiveInputDevice.EnableSteamDeck();
-                ResolutionManager.UseSteamDeckDisplay();
                 _dismissed = Callback<FloatingGamepadTextInputDismissed_t>.Create(_ => Dismissed?.Invoke());
                 gameObject.AddComponent<FloatingTextKeyboard>().Configure(this);
             }
@@ -48,12 +85,6 @@ namespace Cgs.Steam
             {
                 Debug.LogWarning(SteamUnavailableMessage + exception.Message);
             }
-        }
-
-        private void Update()
-        {
-            if (_initialized)
-                SteamAPI.RunCallbacks();
         }
 
         public bool Show(bool multiline, RectInt fieldBounds)
