@@ -649,12 +649,20 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (index < 0 || index >= Cards.Count)
                 return UnityCard.Blank.Id;
+            var previousTopCard = TopCard;
             var cardId = _cards[index].Id;
             _cards.RemoveAt(index);
             if (IsOnline)
                 _cardIds.RemoveAt(index);
             else
+            {
+                if (IsTopFaceup && previousTopCard != TopCard)
+                {
+                    previousTopCard?.UnregisterDisplay(this);
+                    TopCard?.RegisterDisplay(this);
+                }
                 SyncView();
+            }
 
             if (Cards.Count == 0)
                 RequestDelete();

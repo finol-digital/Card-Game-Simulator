@@ -429,8 +429,9 @@ the table's median colour, dark brown `#291409` (41, 20, 9). The Unity splash sc
   Android launch time against the previous build.
 
 To verify, record from before the launch until the Main Menu is interactive, then step through the recording frame
-by frame. Between the launch animation and the menu, no frame may show white, grey, Unity's blue-black, or the logo
-screen. On desktop, note what the window shows before the first frame.
+by frame. Between the launch animation and the menu, no frame may show white, grey, Unity's blue-black, or the old
+Android logo screen; the Windows Store's CGS logo on `#291409` is expected. On desktop, note what the window shows
+before the first frame.
 
 - **Android:** with CGS closed, start `adb shell screenrecord /sdcard/cgs-launch.mp4`, launch CGS from the home
   screen, stop the recording with Ctrl+C once the menu appears, and `adb pull /sdcard/cgs-launch.mp4`.
