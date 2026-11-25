@@ -104,14 +104,11 @@ namespace Cgs
             _stateDirectory = stateDirectory;
         }
 
-        /// <summary>The games that have not been installed yet.</summary>
-        public IReadOnlyList<string> Pending
+        /// <summary>A copy of the games that have not been installed yet.</summary>
+        public IReadOnlyList<string> GetPending()
         {
-            get
-            {
-                lock (_pendingLock)
-                    return _pending.ToList();
-            }
+            lock (_pendingLock)
+                return _pending.ToList();
         }
 
         /// <summary>Completes when the background installation has finished, successfully or not.</summary>
@@ -148,7 +145,7 @@ namespace Cgs
         /// <summary>Installs <paramref name="gameId"/> now, if it is still pending.</summary>
         public void InstallNow(string gameId)
         {
-            if (string.IsNullOrEmpty(gameId) || !Pending.Contains(gameId))
+            if (string.IsNullOrEmpty(gameId) || !GetPending().Contains(gameId))
                 return;
             var stopwatch = Stopwatch.StartNew();
             if (TryInstall(gameId))
@@ -158,7 +155,7 @@ namespace Cgs
         /// <summary>Installs the other pending games on a background thread.</summary>
         public void StartBackground()
         {
-            var remaining = Pending;
+            var remaining = GetPending();
             if (remaining.Count == 0)
             {
                 DeleteQuietly(StagingDirectory);
@@ -168,11 +165,8 @@ namespace Cgs
             _background = Task.Run(() =>
             {
                 var stopwatch = Stopwatch.StartNew();
-                foreach (var gameId in remaining)
-                {
-                    if (TryInstall(gameId))
-                        _installed.Enqueue(gameId);
-                }
+                foreach (var gameId in remaining.Where(TryInstall))
+                    _installed.Enqueue(gameId);
 
                 DeleteQuietly(StagingDirectory);
                 Debug.Log($"BundledGameInstaller: installed {remaining.Count} more in {stopwatch.ElapsedMilliseconds} ms");
@@ -231,23 +225,31 @@ namespace Cgs
             }
         }
 
-        // Callers hold _pendingLock
+        // Callers hold _pendingLock. A failed save is only logged: a game that is in place counts as installed
+        // whatever the list says, and the next launch completes it again when it finds it there.
         private void SavePending()
         {
-            if (_pending.Count == 0)
+            try
             {
-                if (File.Exists(PendingFilePath))
-                    File.Delete(PendingFilePath);
-                return;
-            }
+                if (_pending.Count == 0)
+                {
+                    if (File.Exists(PendingFilePath))
+                        File.Delete(PendingFilePath);
+                    return;
+                }
 
-            // Replace the list in one step, so it is never seen half-written
-            var temporaryPath = PendingFilePath + ".tmp";
-            File.WriteAllLines(temporaryPath, _pending);
-            if (File.Exists(PendingFilePath))
-                File.Replace(temporaryPath, PendingFilePath, null);
-            else
-                File.Move(temporaryPath, PendingFilePath);
+                // Replace the list in one step, so it is never seen half-written
+                var temporaryPath = PendingFilePath + ".tmp";
+                File.WriteAllLines(temporaryPath, _pending);
+                if (File.Exists(PendingFilePath))
+                    File.Replace(temporaryPath, PendingFilePath, null);
+                else
+                    File.Move(temporaryPath, PendingFilePath);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"BundledGameInstaller: could not save the pending list: {e.Message}");
+            }
         }
 
         private static void DeleteQuietly(string directory)

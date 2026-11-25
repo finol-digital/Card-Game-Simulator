@@ -293,7 +293,7 @@ namespace Tests.PlayMode
                 Assert.Greater(additions, 0, "Game selection was told about the new games");
                 Assert.AreEqual(Tags.StandardPlayingCardsDirectoryName, CardGameManager.Current.Id,
                     "Installing the others does not change the selected game");
-                CollectionAssert.IsEmpty(CardGameManager.Instance.BundledGames.Pending);
+                CollectionAssert.IsEmpty(CardGameManager.Instance.BundledGames.GetPending());
             }
             finally
             {

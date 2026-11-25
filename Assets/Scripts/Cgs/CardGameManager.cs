@@ -344,11 +344,7 @@ namespace Cgs
             BundledGames = new BundledGameInstaller(BundledGamesSource(), UnityCardGame.GamesDirectoryPath,
                 BundledGamesStatePath);
             BundledGames.Prepare();
-            var preferredGameId = PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
-            var pending = BundledGames.Pending;
-            BundledGames.InstallNow(pending.Contains(preferredGameId) ? preferredGameId
-                : pending.Contains(Tags.StandardPlayingCardsDirectoryName) ? Tags.StandardPlayingCardsDirectoryName
-                : pending.FirstOrDefault());
+            BundledGames.InstallNow(FirstBundledGameToInstall(BundledGames.GetPending()));
 #endif
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
@@ -367,6 +363,19 @@ namespace Cgs
             BundledGames.StartBackground();
 #endif
         }
+
+#if !UNITY_WEBGL
+        // The game the Main Menu will show: the player's saved game, else Standard Playing Cards, else any
+        private static string FirstBundledGameToInstall(IReadOnlyList<string> pending)
+        {
+            var preferredGameId = PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            if (pending.Contains(preferredGameId))
+                return preferredGameId;
+            if (pending.Contains(Tags.StandardPlayingCardsDirectoryName))
+                return Tags.StandardPlayingCardsDirectoryName;
+            return pending.FirstOrDefault();
+        }
+#endif
 
         /// <summary>Adds the bundled games that have finished installing in the background.</summary>
         private void AddInstalledBundledGames()

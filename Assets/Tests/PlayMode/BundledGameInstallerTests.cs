@@ -89,13 +89,13 @@ namespace Tests.PlayMode
         {
             var installer = new BundledGameInstaller(new FolderBundledGames(_bundle), _games, _state);
             installer.Prepare();
-            CollectionAssert.AreEqual(new[] { Default, Second, Third }, installer.Pending);
+            CollectionAssert.AreEqual(new[] { Default, Second, Third }, installer.GetPending());
 
             installer.InstallNow(Second);
 
             CollectionAssert.AreEqual(new[] { Second }, InstalledGames());
             AssertComplete(Second);
-            CollectionAssert.AreEqual(new[] { Default, Third }, installer.Pending);
+            CollectionAssert.AreEqual(new[] { Default, Third }, installer.GetPending());
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace Tests.PlayMode
             CollectionAssert.AreEqual(new[] { Default, Second, Third }, InstalledGames());
             foreach (var gameId in InstalledGames())
                 AssertComplete(gameId);
-            CollectionAssert.IsEmpty(installer.Pending);
+            CollectionAssert.IsEmpty(installer.GetPending());
             FileAssert.DoesNotExist(PendingFile);
             DirectAssert.DoesNotExist(StagingDirectory);
         }
@@ -152,6 +152,21 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void GamesStillInstallAndAreReportedWhenThePendingListCannotBeSaved()
+        {
+            // A folder where the list's temporary file goes makes every save fail, as a locked file would
+            Directory.CreateDirectory(Path.Combine(_state, BundledGameInstaller.PendingFileName + ".tmp"));
+
+            var installer = Launch();
+
+            CollectionAssert.AreEqual(new[] { Second, Third }, TakeInstalled(installer));
+            CollectionAssert.AreEqual(new[] { Default, Second, Third }, InstalledGames());
+            foreach (var gameId in InstalledGames())
+                AssertComplete(gameId);
+            CollectionAssert.IsEmpty(installer.GetPending());
+        }
+
+        [Test]
         public void UpdatedEditedAndDeletedBundledGamesStayThatWayAfterRelaunch()
         {
             TakeInstalled(Launch());
@@ -183,7 +198,7 @@ namespace Tests.PlayMode
 
             CollectionAssert.AreEqual(new[] { Second, Third }, TakeInstalled(installer));
             Assert.AreEqual("downloaded", File.ReadAllText(Path.Combine(_games, Third, BundledGameInstaller.GameFileName)));
-            CollectionAssert.IsEmpty(installer.Pending);
+            CollectionAssert.IsEmpty(installer.GetPending());
         }
 
         [Test]
