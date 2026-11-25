@@ -450,6 +450,24 @@ namespace Cgs.Play.Drawer
                 _toggles[tabIndex].isOn = true;
         }
 
+        /// <summary>The card ids in each hand, in drawer order, so the host can keep them when hosting starts.</summary>
+        public IReadOnlyList<IReadOnlyList<string>> LocalHandCardIds => cardZoneRectTransforms
+            .Select(cardZone => (IReadOnlyList<string>)cardZone.GetComponentsInChildren<CardModel>(true)
+                .Select(cardModel => cardModel.Id).ToList())
+            .ToList();
+
+        /// <summary>The index of the hand that is shown.</summary>
+        public int SelectedHandIndex
+        {
+            get
+            {
+                for (var i = 0; i < cardZoneRectTransforms.Count; i++)
+                    if (cardZoneRectTransforms[i].gameObject.activeSelf)
+                        return i;
+                return 0;
+            }
+        }
+
         public void SyncHand(int handIndex, CgsNetString[] cardIds)
         {
             Cgs.Localization.LocalizedUiText.SetNumber(_countTexts[handIndex], cardIds.Length);

@@ -137,6 +137,10 @@ Record the result in this design before archive. The spec requires only that net
 
 *Alternatives:* deciding now. The user explicitly deferred this to measurements.
 
+*Measured (tasks 8.1 and 8.2):* on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode` benchmark mode, saved data, 15 runs each), Start Game to the first card action took a median 698 ms when hosting started before the start decks, as before. `StartHost` took about 165 ms and starting LAN discovery about 63 ms, and the decks then loaded through network requests. Without hosting at all it took 416 ms. Hosting once the start decks are dealt and no prompt or menu is open took 418 ms, and every run still started hosting. Mono runs this code more slowly than the IL2CPP release builds, so device numbers come from task 8.7.
+
+*Decision:* option (a), deferred auto-hosting. It removes all of hosting's cost from Start Game to the first card action, which is everything option (b) would gain, while solo tables stay joinable on the local network as before. The host converts the existing table when hosting starts (`PlayController.SpawnLocalTable`, `CgsNetPlayable.SpawnWithLocalState`). Option (c), the lazily created network prefab, is also made, as decided in task 4.4, because its launch saving applies under every option.
+
 ### D6. Input readiness instead of a time buffer
 Replace `StartBufferTime` with a release-then-press gate. Any button, key, or touch held when the menu becomes interactive is ignored until it is released. This keeps the original protection against carry-over presses from the previous scene without a fixed delay.
 

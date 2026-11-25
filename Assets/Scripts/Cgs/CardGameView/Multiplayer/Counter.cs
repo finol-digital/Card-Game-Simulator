@@ -78,6 +78,18 @@ namespace Cgs.CardGameView.Multiplayer
             _colorNetworkVariable.OnValueChanged += OnChangeColor;
         }
 
+        protected override void SeedNetworkStateFromLocal()
+        {
+            // The counter already shows this state, so seed it without the change callbacks
+            _valueNetworkVariable.OnValueChanged -= OnChangeValue;
+            _valueNetworkVariable.Value = _value;
+            _valueNetworkVariable.OnValueChanged += OnChangeValue;
+
+            _colorNetworkVariable.OnValueChanged -= OnChangeColor;
+            _colorNetworkVariable.Value = new Vector3(_counterColor.r, _counterColor.g, _counterColor.b);
+            _colorNetworkVariable.OnValueChanged += OnChangeColor;
+        }
+
         protected override void OnNetworkSpawnPlayable()
         {
             if (!Vector3.zero.Equals(_colorNetworkVariable.Value))

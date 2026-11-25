@@ -56,6 +56,11 @@ namespace Cgs.Play
                                   PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
                                   CardGameManager.Instance.ModalCanvas != null;
 
+        /// <summary>The points shown for the local player.</summary>
+        public int LocalPoints => int.TryParse(pointsInputField.text, out var points)
+            ? points
+            : CardGameManager.Current.GameStartPointsCount;
+
         private int Points
         {
             get => int.Parse(pointsInputField.text);

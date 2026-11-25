@@ -112,6 +112,22 @@ namespace Cgs.CardGameView.Multiplayer
             _colorNetworkVariable.OnValueChanged += OnChangeColor;
         }
 
+        protected override void SeedNetworkStateFromLocal()
+        {
+            // The die already shows this state, so seed it without the change callbacks
+            _maxNetworkVariable.OnValueChanged -= OnChangeMax;
+            _maxNetworkVariable.Value = _max;
+            _maxNetworkVariable.OnValueChanged += OnChangeMax;
+
+            _valueNetworkVariable.OnValueChanged -= OnChangeValue;
+            _valueNetworkVariable.Value = _value;
+            _valueNetworkVariable.OnValueChanged += OnChangeValue;
+
+            _colorNetworkVariable.OnValueChanged -= OnChangeColor;
+            _colorNetworkVariable.Value = new Vector3(_dieColor.r, _dieColor.g, _dieColor.b);
+            _colorNetworkVariable.OnValueChanged += OnChangeColor;
+        }
+
         protected override void OnNetworkSpawnPlayable()
         {
             // Initial synchronization does not invoke OnValueChanged for players joining an existing game.

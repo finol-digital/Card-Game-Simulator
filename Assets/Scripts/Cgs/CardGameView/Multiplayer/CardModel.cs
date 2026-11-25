@@ -213,6 +213,20 @@ namespace Cgs.CardGameView.Multiplayer
             InputSystem.actions.FindAction(Tags.ViewerZoom).performed += InputZoom;
         }
 
+        protected override void SeedNetworkStateFromLocal()
+        {
+            // The card already shows this state, so seed it without the change callbacks
+            _idNetworkVariable.OnValueChanged -= OnChangeId;
+            _idNetworkVariable.Value = _id;
+            _idNetworkVariable.OnValueChanged += OnChangeId;
+
+            _isFacedownNetworkVariable.OnValueChanged -= OnChangeIsFacedown;
+            _isFacedownNetworkVariable.Value = _isFacedown;
+            _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
+
+            _isCardSharedNetworkVariable.Value = _isCardShared;
+        }
+
         protected override void OnNetworkSpawnPlayable()
         {
             _isFacedown = _isFacedownNetworkVariable.Value;

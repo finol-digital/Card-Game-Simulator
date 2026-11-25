@@ -469,6 +469,36 @@ became interactive this long after the first managed callback:
 
 Standard Playing Cards took 69 ms to copy before the menu, and Dominoes and Mahjong 95 ms in the background.
 
+## Solo hosting
+
+A solo table is still hosted on the local network, so other players can join it as before, but hosting no longer
+delays play:
+
+- **When:** `PlayController` starts hosting (`CgsNetManager.StartLanHost`) once the start decks have been asked about
+  and dealt (or declined) and no prompt or menu is open, at least one frame after the table is drawn. Until then the
+  table is local, like the web build's.
+- **Keeping the table:** as hosting starts, the host spawns everything already on the table with its current state:
+  zones, boards, card stacks (name, cards, face-up top card), cards (face, position, rotation, zone), dice, and
+  counters. It also keeps the current deck, every hand in the drawer, and the points. A player who joins later sees
+  the same table. Each table object copies its local state into its network variables in
+  `CgsNetPlayable.SeedNetworkStateFromLocal`.
+- **Failure:** if hosting fails (for example, the port is in use), the table stays playable and the log shows
+  `Could not host this table on the local network, so other players cannot join it.` without a dialog.
+- **Web:** the web build does not host, as before.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode` benchmark mode, saved data, 15
+runs each), from Start Game:
+
+| Build | Table playable (median) | First card action (median) |
+|---|---|---|
+| Hosting before the start decks | 619 ms | 698 ms |
+| Not hosting at all (measurement only) | 374 ms | 416 ms |
+| Hosting once the table is set up | 377 ms | 418 ms |
+
+In the first build, `StartHost` took about 165 ms and starting LAN discovery about 63 ms, and the start decks then
+loaded through network requests. Mono runs this code more slowly than the IL2CPP release builds, so the saving on the
+reference devices is smaller; their numbers come from task 8.7.
+
 ## Engine modules
 
 CGS removes these built-in engine modules from `Packages/manifest.json`, because neither CGS nor its packages use

@@ -40,6 +40,8 @@ namespace Cgs.Play
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
         public const string InvalidPlayerSeatMessage = "Invalid playerSeat {0}. Supported playerSeat range is 1 through {1}.";
+        public const string SoloHostingFailedMessage =
+            "Could not host this table on the local network, so other players cannot join it.";
 
         public static string LoadStartDecksAsk
         {
@@ -236,6 +238,9 @@ namespace Cgs.Play
         // Solo play: which seat block the next deck load occupies (counts deck loads, not stacks)
         private int _soloDeckLoadCount;
 
+        // Solo play: the start decks are being asked about or loaded, so hosting waits
+        private bool _isStartingDecks;
+
         public LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;
@@ -376,23 +381,51 @@ namespace Cgs.Play
                 Lobby.Show();
             else
             {
-                Lobby.IsLanConnectionSource = true;
-#if !UNITY_WEBGL
-                Lobby.Host();
-#endif
                 StartDecks();
+                StartCoroutine(HostSoloTableWhenReady());
             }
+        }
+
+        // A solo table is still hosted on the local network so that others can join, but only once the start decks
+        // are dealt and no prompt or menu is open, so that hosting never delays play; the host then keeps what is
+        // already on the table
+        private IEnumerator HostSoloTableWhenReady()
+        {
+            // Waiting a frame each time lets the table draw before hosting starts
+            do
+            {
+                yield return null;
+            } while (_isStartingDecks || CardGameManager.Instance.ModalCanvas != null);
+
+            if (CgsNetManager.Instance.IsOnline)
+                yield break;
+
+            Lobby.IsLanConnectionSource = true;
+#if !UNITY_WEBGL
+            // A solo player who never uses a network feature is not interrupted if hosting fails
+            if (!CgsNetManager.Instance.StartLanHost())
+                Debug.Log(SoloHostingFailedMessage);
+#endif
         }
 
         private void StartDecks()
         {
             if (CardGameManager.Current.GameStartDecks.Count > 0)
+            {
+                _isStartingDecks = true;
                 CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(CardGameManager.Current, display =>
                     UiMessage.With("play.load.decks", LoadStartDecksAsk,
                         ("names", string.Join(", ", CardGameManager.Current.GameStartDecks.Select(deck =>
-                            $"'{display.DeckName(deck.Name, true)}'"))))), ShowDeckMenu, StartLoadStartDecks);
+                            $"'{display.DeckName(deck.Name, true)}'"))))), DeclineStartDecks, StartLoadStartDecks);
+            }
             else
                 ShowDeckMenu();
+        }
+
+        private void DeclineStartDecks()
+        {
+            _isStartingDecks = false;
+            ShowDeckMenu();
         }
 
         private void StartLoadStartDecks()
@@ -401,6 +434,18 @@ namespace Cgs.Play
         }
 
         private IEnumerator LoadStartDecks()
+        {
+            try
+            {
+                yield return LoadEachStartDeck();
+            }
+            finally
+            {
+                _isStartingDecks = false;
+            }
+        }
+
+        private IEnumerator LoadEachStartDeck()
         {
             foreach (var deckUrl in CardGameManager.Current.GameStartDecks)
             {
@@ -935,7 +980,11 @@ namespace Cgs.Play
                 Enum.TryParse<CardAction>(options.DefaultAction, out var cardAction))
                 cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardAction];
 
-            cardModel.HideHighlightClientRpc();
+            // An RPC can only be sent once spawned; a solo table that is not hosted yet hides it locally
+            if (cardModel.IsSpawned)
+                cardModel.HideHighlightClientRpc();
+            else
+                cardModel.HighlightMode = HighlightMode.Off;
 
             return cardModel;
         }
@@ -1018,6 +1067,48 @@ namespace Cgs.Play
                 if (!diceZone.IsSpawned && diceZone.MyNetworkObject != null)
                     diceZone.MyNetworkObject.Spawn();
         }
+
+        /// <summary>
+        /// Spawns the table objects that were created before hosting started, such as the start decks and any cards,
+        /// dice, and counters already moved onto the table, so that players who join see the same table.
+        /// Only the host calls this, as it starts hosting.
+        /// </summary>
+        /// <returns>The card stacks that were spawned.</returns>
+        public IReadOnlyList<CardStack> SpawnLocalTable()
+        {
+            SpawnUnspawnedZones();
+
+            foreach (var board in playAreaCardZone.GetComponentsInChildren<Board>())
+                if (IsLocalOnly(board))
+                    board.SpawnWithLocalState();
+
+            var cardStacks = new List<CardStack>();
+            foreach (var cardStack in playAreaCardZone.GetComponentsInChildren<CardStack>())
+            {
+                if (!IsLocalOnly(cardStack))
+                    continue;
+                cardStack.SpawnWithLocalState();
+                cardStacks.Add(cardStack);
+            }
+
+            // Zones were spawned first, so cards in a zone keep their zone
+            foreach (var cardModel in playAreaCardZone.GetComponentsInChildren<CardModel>())
+                if (IsLocalOnly(cardModel))
+                    cardModel.SpawnWithLocalState();
+
+            foreach (var die in playAreaCardZone.GetComponentsInChildren<Die>())
+                if (IsLocalOnly(die))
+                    die.SpawnWithLocalState();
+
+            foreach (var counter in playAreaCardZone.GetComponentsInChildren<Counter>())
+                if (IsLocalOnly(counter))
+                    counter.SpawnWithLocalState();
+
+            return cardStacks;
+        }
+
+        private static bool IsLocalOnly(CgsNetPlayable playable) =>
+            playable != null && !playable.IsSpawned && !playable.ToDelete && playable.MyNetworkObject != null;
 
         // A joining client's locally-created zones are superseded by the host's spawned zones
         public void DestroyUnspawnedZones()

@@ -267,6 +267,24 @@ namespace Cgs.CardGameView.Multiplayer
             _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
         }
 
+        protected override void SeedNetworkStateFromLocal()
+        {
+            // The stack already shows this state, so seed it without the change callbacks
+            _nameNetworkVariable.OnValueChanged -= OnChangeName;
+            _nameNetworkVariable.Value = _name;
+            _nameNetworkVariable.OnValueChanged += OnChangeName;
+
+            _cardIds.OnListChanged -= OnCardsUpdated;
+            _cardIds.Clear();
+            foreach (var card in _cards)
+                _cardIds.Add(card.Id);
+            _cardIds.OnListChanged += OnCardsUpdated;
+
+            _isTopFaceupNetworkVariable.OnValueChanged -= OnChangeIsTopFaceup;
+            _isTopFaceupNetworkVariable.Value = _isTopFaceup;
+            _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
+        }
+
         protected override void OnNetworkSpawnPlayable()
         {
             _name = _nameNetworkVariable.Value;

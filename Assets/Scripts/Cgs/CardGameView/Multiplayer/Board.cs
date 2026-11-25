@@ -32,6 +32,14 @@ namespace Cgs.CardGameView.Multiplayer
             _idNetworkVariable = new NetworkVariable<CgsNetString>();
         }
 
+        // Start lays the board out from Position and Size, so its transform does not hold them
+        protected override bool IsPoseInTransform => false;
+
+        protected override void SeedNetworkStateFromLocal()
+        {
+            _idNetworkVariable.Value = _gameBoardId;
+        }
+
         protected override void OnStartPlayable()
         {
             var rectTransform = (RectTransform) transform;
