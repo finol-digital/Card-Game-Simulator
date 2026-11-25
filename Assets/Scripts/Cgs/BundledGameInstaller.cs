@@ -122,10 +122,11 @@ namespace Cgs
         {
             Directory.CreateDirectory(_stateDirectory);
             List<string> pending;
+            var isListKnown = true;
             if (!Directory.Exists(_gamesDirectory) || Directory.GetDirectories(_gamesDirectory).Length < 1)
                 pending = _bundle.GameIds().ToList();
             else if (File.Exists(PendingFilePath))
-                pending = ReadPending();
+                isListKnown = TryReadPending(out pending);
             else
                 pending = new List<string>();
 
@@ -134,7 +135,7 @@ namespace Cgs
                 _pending.Clear();
                 // The list is saved before the games folder exists, so a first launch closed now starts over. A list
                 // that could not be read is left as it is, so the next launch can install those games.
-                if (pending != null)
+                if (isListKnown)
                 {
                     _pending.AddRange(pending);
                     SavePending();
@@ -146,17 +147,18 @@ namespace Cgs
             DeleteQuietly(StagingDirectory);
         }
 
-        // Null when the list cannot be read
-        private List<string> ReadPending()
+        private bool TryReadPending(out List<string> pending)
         {
             try
             {
-                return File.ReadAllLines(PendingFilePath).Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
+                pending = File.ReadAllLines(PendingFilePath).Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
+                return true;
             }
             catch (Exception e)
             {
                 Debug.LogWarning($"BundledGameInstaller: could not read the pending list, so it waits for the next launch: {e.Message}");
-                return null;
+                pending = new List<string>();
+                return false;
             }
         }
 
