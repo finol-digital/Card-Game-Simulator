@@ -185,6 +185,8 @@ Measure each of these as a separate experiment against the D1 benchmark:
 - On Android, try engine ThinLTO, IL2CPP code generation set to optimize for runtime speed, and the Vulkan-vs-GLES ordering.
 - Keep managed stripping at its current level unless the reflection/AOT audit (`AotTypeEnforcer`, Newtonsoft) supports raising it.
 
+*Measured (task 7.1):* 3D physics stays, because uGUI and UI Toolkit depend on it. Besides the modules listed above, Director, Particle System, Tilemap, Unity Analytics, Vector Graphics, and XR are also unused and removed. On the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode`, saved data, 20 alternating launches), launch time did not change (process start to launch summary 1558 ms before, 1557 ms after), and the build shrank by 0.2 MB; Mono ships every engine module. Any saving is in IL2CPP and web builds, where Strip Engine Code applies, so their sizes are compared from CI builds.
+
 ### D11. Rendering warmup per graphics backend
 Apply this only if D1 frame-time data shows first-use hitches over 100 ms:
 - **DX12, Vulkan, Metal:** record a `GraphicsStateCollection` per backend and platform in a trace build, and warm it up incrementally.

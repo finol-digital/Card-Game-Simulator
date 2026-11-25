@@ -469,6 +469,29 @@ became interactive this long after the first managed callback:
 
 Standard Playing Cards took 69 ms to copy before the menu, and Dominoes and Mahjong 95 ms in the background.
 
+## Engine modules
+
+CGS removes these built-in engine modules from `Packages/manifest.json`, because neither CGS nor its packages use
+them: AI (navigation), Cloth, Director (Timeline), Particle System, Terrain, Terrain Physics, Tilemap, Umbra (occlusion
+culling), Unity Analytics, Vector Graphics, Vehicles, Video, Wind, and XR. 3D Physics stays, because uGUI and UI
+Toolkit depend on it; CGS's own table uses 2D Physics.
+
+Before removing a module, check that no package lists it as a dependency in `Packages/packages-lock.json` and that no
+code or asset uses it. If a later feature needs one, add it back in the Package Manager.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode`, saved data, 20 alternating
+launches each):
+
+| Build | Process start to launch summary (median) | Main Menu interactive (median) | Size |
+|---|---|---|---|
+| All modules | 1558 ms | 952 ms | 182.0 MB |
+| Unused modules removed | 1557 ms | 958 ms | 181.8 MB |
+
+A Mono build ships every engine module and launches no faster. The difference is expected in IL2CPP builds (desktop,
+Android, iOS, and WSA) and web builds, where Strip Engine Code removes unused native engine code; there, packages such
+as URP no longer compile in their Terrain, Particle System, and XR code paths. This laptop does not have the memory
+for a local IL2CPP build, so those sizes come from CI builds.
+
 ## Local development check
 
 A local Mono Linux player is enough to check that benchmark mode works end to end, but its times are not baselines
