@@ -3,7 +3,7 @@
     "short_name": "cgs.gg",
     "start_url": "/",
     "display": "fullscreen",
-    "background_color": "#FFFFFF",
+    "background_color": "#291409",
     "theme_color": "#000",
     "description": "Create, Share, and Play with Card Game Simulator",
     "icons": [{

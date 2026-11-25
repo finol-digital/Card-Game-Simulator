@@ -408,6 +408,38 @@ no Steam lines. When Steam signals are present, `Steam initialized at <ms> ms`, 
 unavailable`, appears after the launch summary. Moving the network components out of the `CardGameManager` prefab
 would save about 24 ms more; that move is scheduled with task 8.2 (see design D4).
 
+## Startup visuals
+
+Anything shown before CGS draws its first frame uses the Main Menu's background. That is either the wood table
+(`Assets/Sprites and Textures/Background/Table.png`), centred and cropped to fill the screen as the menu shows it, or
+the table's median colour, dark brown `#291409` (41, 20, 9). The Unity splash screen stays off.
+
+| Platform | Before the first frame | Where it is set |
+|---|---|---|
+| Android | Android 12+ system splash in `#291409`, then the table | Player Settings > Splash Image: Background Color; Static Splash Image `Table.png`, Scale to Fill |
+| iOS, iPadOS | `#291409` | Launch screen type Image and background (relative), iPhone and iPad, no image, background `#291409` |
+| Web | `#291409`, then the table with the CGS logo and progress bar | `firebase/public/index.html`, `TemplateData/style.css`, `manifest.webmanifest` |
+| Windows Store | CGS logo on `#291409` (Windows requires an image) | Windows Store splash background colour |
+| Windows, macOS, Linux | No startup image; the window before the first frame is drawn by the OS and Unity | None |
+
+- The iOS launch screen fits its image inside the screen rather than cropping it, so it uses the colour alone.
+- The web loader's table is `Build/WebGL.jpg`, which Unity makes from the splash background image. Blur Background
+  Image is off so that it matches the menu.
+- Android now packs the 2.2 MB `Table.png` as its startup image instead of the 68 KB logo. Check the APK size and the
+  Android launch time against the previous build.
+
+To verify, record from before the launch until the Main Menu is interactive, then step through the recording frame
+by frame. Between the launch animation and the menu, no frame may show white, grey, Unity's blue-black, or the old
+Android logo screen; the Windows Store's CGS logo on `#291409` is expected. On desktop, note what the window shows
+before the first frame.
+
+- **Android:** with CGS closed, start `adb shell screenrecord /sdcard/cgs-launch.mp4`, launch CGS from the home
+  screen, stop the recording with Ctrl+C once the menu appears, and `adb pull /sdcard/cgs-launch.mp4`.
+- **iOS and iPadOS:** connect the device to a Mac and record it with QuickTime Player (File > New Movie Recording,
+  with the device as the camera), or film it as in the iOS harness.
+- **Desktop:** record the screen with OBS, or Cmd+Shift+5 on macOS, then launch the player.
+- **Web:** in Chrome's DevTools Performance panel, turn on Screenshots and record a reload of the page.
+
 ## Local development check
 
 A local Mono Linux player is enough to check that benchmark mode works end to end, but its times are not baselines

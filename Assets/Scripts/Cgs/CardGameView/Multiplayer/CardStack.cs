@@ -211,6 +211,10 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
+        public UnityCard FaceupTopCard => IsTopFaceup ? TopCard : null;
+
+        public Image TopCardImage => topCard;
+
         public bool IsTopFaceup
         {
             get => _isTopFaceup;
@@ -410,6 +414,27 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (HoldTime > DragHoldTime)
                 HighlightMode = HighlightMode.Authorized;
+        }
+
+        protected override void OnPointerEnterPlayable(PointerEventData eventData)
+        {
+            var cardViewer = CardViewer.Instance;
+            if (cardViewer != null && FaceupTopCard != null && cardViewer.CanPreviewOnHover && !cardViewer.IsVisible
+                && !(PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
+                && !cardViewer.Zoom && !IsAnyDragging)
+            {
+                cardViewer.PreviewCardStack = this;
+                return;
+            }
+
+            base.OnPointerEnterPlayable(eventData);
+        }
+
+        protected override void OnPointerExitPlayable(PointerEventData eventData)
+        {
+            base.OnPointerExitPlayable(eventData);
+            if (CardViewer.Instance != null && CardViewer.Instance.PreviewCardStack == this)
+                CardViewer.Instance.HidePreview();
         }
 
         protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
@@ -624,12 +649,20 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (index < 0 || index >= Cards.Count)
                 return UnityCard.Blank.Id;
+            var previousTopCard = TopCard;
             var cardId = _cards[index].Id;
             _cards.RemoveAt(index);
             if (IsOnline)
                 _cardIds.RemoveAt(index);
             else
+            {
+                if (IsTopFaceup && previousTopCard != TopCard)
+                {
+                    previousTopCard?.UnregisterDisplay(this);
+                    TopCard?.RegisterDisplay(this);
+                }
                 SyncView();
+            }
 
             if (Cards.Count == 0)
                 RequestDelete();

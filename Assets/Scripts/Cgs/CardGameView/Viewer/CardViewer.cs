@@ -166,29 +166,70 @@ namespace Cgs.CardGameView.Viewer
             get => _previewCardModel;
             set
             {
-                _previewCard?.UnregisterDisplay(this);
-                _previewCard = null;
-
+                ClearPreviewSource();
                 _previewCardModel = value;
                 _previewImage = value != null ? value.GetComponent<Image>() : null;
-                HidePreviewPresentation();
+                ShowPreview(value != null ? value.Value : null);
+            }
+        }
 
-                if (_previewCardModel == null)
-                    return;
+        public CardStack PreviewCardStack
+        {
+            get => _previewCardStack;
+            set
+            {
+                ClearPreviewSource();
+                var card = value != null ? value.FaceupTopCard : null;
+                if (card != null)
+                {
+                    _previewCardStack = value;
+                    _previewImage = value.TopCardImage;
+                }
+                ShowPreview(card);
+            }
+        }
 
-                UpdateHoverOverlay();
-                var card = _previewCardModel.Value;
-                _previewCard = card;
-                card.RegisterDisplay(this);
-                preview.alpha = 1;
-                foreach (var previewName in previewNameText)
-                    GameContentText.Set(previewName, card.Game, display => display.CardName(card));
-                foreach (var previewId in previewIdText)
-                    Cgs.Localization.LocalizedUiText.SetLiteral(previewId, card.Id);
+        private void ClearPreviewSource()
+        {
+            _previewCard?.UnregisterDisplay(this);
+            _previewCard = null;
+            _previewCardModel = null;
+            _previewCardStack = null;
+            _previewImage = null;
+        }
+
+        private void ShowPreview(UnityCard card)
+        {
+            HidePreviewPresentation();
+
+            if (card == null)
+                return;
+
+            UpdateHoverOverlay();
+            _previewCard = card;
+            card.RegisterDisplay(this);
+            preview.alpha = 1;
+            foreach (var previewName in previewNameText)
+                GameContentText.Set(previewName, card.Game, display => display.CardName(card));
+            foreach (var previewId in previewIdText)
+                Cgs.Localization.LocalizedUiText.SetLiteral(previewId, card.Id);
+        }
+
+        private bool HasPreviewSource => _previewCardModel != null || _previewCardStack != null;
+
+        private bool IsPreviewSourceShowable
+        {
+            get
+            {
+                if (_previewCardModel != null)
+                    return _previewCardModel.isActiveAndEnabled && !_previewCardModel.IsFacedown;
+                return _previewCardStack != null && _previewCardStack.isActiveAndEnabled
+                                                 && _previewCardStack.FaceupTopCard != null;
             }
         }
 
         private CardModel _previewCardModel;
+        private CardStack _previewCardStack;
         private UnityCard _previewCard;
         private Image _previewImage;
         private CardHoverPreview _hoverPreview;
@@ -698,13 +739,15 @@ namespace Cgs.CardGameView.Viewer
 
         protected void LateUpdate()
         {
-            if (_previewCardModel == null || !_previewCardModel.isActiveAndEnabled || _previewCardModel.IsFacedown
-                || IsVisible || Zoom || CgsNetPlayable.IsAnyDragging)
+            if (!IsPreviewSourceShowable || IsVisible || Zoom || CgsNetPlayable.IsAnyDragging)
             {
-                if (_previewCardModel != null || _previewCard != null || preview.alpha > 0)
+                if (HasPreviewSource || _previewCard != null || preview.alpha > 0)
                     HidePreview();
                 return;
             }
+
+            if (_previewCardStack != null && _previewCardStack.FaceupTopCard != _previewCard)
+                PreviewCardStack = _previewCardStack;
 
             if (!CanPreviewOnHover
                 || (PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
