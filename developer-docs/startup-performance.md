@@ -490,7 +490,18 @@ launches each):
 A Mono build ships every engine module and launches no faster. The difference is expected in IL2CPP builds (desktop,
 Android, iOS, and WSA) and web builds, where Strip Engine Code removes unused native engine code; there, packages such
 as URP no longer compile in their Terrain, Particle System, and XR code paths. This laptop does not have the memory
-for a local IL2CPP build, so those sizes come from CI builds.
+for a local IL2CPP build, so these sizes come from the Unity build reports of the CI builds before (`acd2dfd4`) and
+after (`7b47ddfc`) the change:
+
+| Platform | Shaders | Complete build (uncompressed) |
+|---|---|---|
+| Android | 2.3 MB → 2.2 MB | 1.6 GB, unchanged at this precision |
+| iOS | 1.1 MB → 1.0 MB | 1.6 GB, unchanged at this precision |
+| Linux (IL2CPP) | 2.2 MB → 2.0 MB | 2.1 GB, unchanged at this precision |
+| Web | 985 KB → 915 KB | 128.7 MB → 128.0 MB |
+
+The Android native build also had 18 fewer compile and link steps (825 → 807). The saving is small, so its effect on
+device launch time is checked with the Android measurements of task 7.2 rather than on its own.
 
 ## Local development check
 
