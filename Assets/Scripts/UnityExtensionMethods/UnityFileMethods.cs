@@ -171,56 +171,48 @@ namespace UnityExtensionMethods
 #endif
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-        public static void ExtractAndroidStreamingAssets(string targetPath)
+        /// <summary>Lists the top-level StreamingAssets folders in the APK that contain <paramref name="requiredFileName"/>.</summary>
+        public static List<string> ListAndroidStreamingAssetsDirectories(string requiredFileName)
         {
-            if (!Directory.Exists(targetPath))
-                Directory.CreateDirectory(targetPath);
-
-            if (targetPath[targetPath.Length - 1] != '/' || targetPath[targetPath.Length - 1] != '\\')
-                targetPath += '/';
-
-            HashSet<string> createdDirectories = new HashSet<string>();
-
-            ZipFile zf = null;
-            try
+            var directories = new List<string>();
+            using var zipFile = new ZipFile(File.OpenRead(Application.dataPath)) { IsStreamOwner = true };
+            foreach (ZipEntry zipEntry in zipFile)
             {
-                zf = new ZipFile(File.OpenRead(Application.dataPath));
-                foreach (ZipEntry zipEntry in zf)
-                {
-                    if (!zipEntry.IsFile)
-                        continue;
-
-                    string name = zipEntry.Name;
-                    if (!name.StartsWith(AndroidStreamingAssetsDirectory) || name.EndsWith(MetaExtension) ||
-                        name.StartsWith(AndroidStreamingAssetsInternalDataDirectory)) continue;
-
-                    name = name.Replace(AndroidStreamingAssetsDirectory, string.Empty);
-                    string relativeDir = Path.GetDirectoryName(name);
-                    if (!createdDirectories.Contains(relativeDir))
-                    {
-                        Directory.CreateDirectory(targetPath + relativeDir);
-                        createdDirectories.Add(relativeDir);
-                    }
-
-                    byte[] buffer = new byte[4096];
-                    using (Stream zipStream = zf.GetInputStream(zipEntry))
-                    {
-                        using (FileStream streamWriter = File.Create(targetPath + name))
-                            StreamUtils.Copy(zipStream, streamWriter, buffer);
-                    }
-                }
+                var name = zipEntry.Name;
+                if (!zipEntry.IsFile || !name.StartsWith(AndroidStreamingAssetsDirectory) ||
+                    name.StartsWith(AndroidStreamingAssetsInternalDataDirectory))
+                    continue;
+                var relativePath = name[AndroidStreamingAssetsDirectory.Length..];
+                var separator = relativePath.IndexOf('/');
+                if (separator > 0 && relativePath[(separator + 1)..] == requiredFileName)
+                    directories.Add(relativePath[..separator]);
             }
-            catch (Exception e)
+
+            return directories;
+        }
+
+        /// <summary>Extracts the StreamingAssets folder <paramref name="directoryName"/> from the APK.</summary>
+        public static void ExtractAndroidStreamingAssetsDirectory(string directoryName, string targetPath)
+        {
+            var prefix = AndroidStreamingAssetsDirectory + directoryName + DirectorySeparator;
+            Directory.CreateDirectory(targetPath);
+            var createdDirectories = new HashSet<string>();
+            var buffer = new byte[81920];
+            using var zipFile = new ZipFile(File.OpenRead(Application.dataPath)) { IsStreamOwner = true };
+            foreach (ZipEntry zipEntry in zipFile)
             {
-                Debug.LogError(e.Message);
-            }
-            finally
-            {
-                if (zf != null)
-                {
-                    zf.IsStreamOwner = true;
-                    zf.Close();
-                }
+                if (!zipEntry.IsFile || !zipEntry.Name.StartsWith(prefix) || zipEntry.Name.EndsWith(MetaExtension))
+                    continue;
+
+                var relativePath = zipEntry.Name[prefix.Length..];
+                var filePath = Path.Combine(targetPath, relativePath);
+                var directory = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(directory) && createdDirectories.Add(directory))
+                    Directory.CreateDirectory(directory);
+
+                using var zipStream = zipFile.GetInputStream(zipEntry);
+                using var fileStream = File.Create(filePath);
+                StreamUtils.Copy(zipStream, fileStream, buffer);
             }
         }
 #endif

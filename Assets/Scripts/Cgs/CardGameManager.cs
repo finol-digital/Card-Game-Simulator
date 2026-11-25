@@ -277,8 +277,6 @@ namespace Cgs
             UnityCardGame.UnityInvalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
 
-            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
-                CreateDefaultCardGames();
             LookupCardGames();
 
             RegisterStaticEventHandlers();
@@ -311,29 +309,46 @@ namespace Cgs
                 RegisterStaticEventHandlers();
         }
 
-#pragma warning disable S2325
-        // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateDefaultCardGames()
-#pragma warning restore S2325
+        /// <summary>The bundled games being installed in the background on a first launch, if any.</summary>
+        internal BundledGameInstaller BundledGames { get; private set; }
+
+        /// <summary>Raised when games are added to <see cref="AllCardGames"/> without the player selecting one, as when
+        /// a bundled game finishes installing.</summary>
+        public event Action GamesAdded;
+
+        /// <summary>Where the bundled games come from; tests substitute their own.</summary>
+        internal static Func<IBundledGames> BundledGamesSource { get; set; } = DefaultBundledGamesSource;
+
+        internal static IBundledGames DefaultBundledGamesSource()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#elif !UNITY_WEBGL
-            UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
-            var aaDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, AddressableAssetsFolderName);
-            if (Directory.Exists(aaDirectory))
-                Directory.Delete(aaDirectory, true);
+            return new AndroidBundledGames();
+#else
+            return new FolderBundledGames(Application.streamingAssetsPath);
 #endif
         }
 
+        internal static string BundledGamesStatePath => Path.Combine(Application.persistentDataPath, "games-install");
+
+        /// <summary>
+        /// Installs the default game if this is a first launch, starts installing the other bundled games in the
+        /// background, and reads the installed games.
+        /// </summary>
         internal void LookupCardGames()
         {
-            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath) ||
-                Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
 #if UNITY_WEBGL
+            // The web build downloads its default games instead
+            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 return;
 #else
-                CreateDefaultCardGames();
+            BundledGames = new BundledGameInstaller(BundledGamesSource(), UnityCardGame.GamesDirectoryPath,
+                BundledGamesStatePath);
+            BundledGames.Prepare();
+            var preferredGameId = PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            var pending = BundledGames.Pending;
+            BundledGames.InstallNow(pending.Contains(preferredGameId) ? preferredGameId
+                : pending.Contains(Tags.StandardPlayingCardsDirectoryName) ? Tags.StandardPlayingCardsDirectoryName
+                : pending.FirstOrDefault());
 #endif
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
@@ -348,6 +363,44 @@ namespace Cgs
                 else
                     AllCardGames[newCardGame.Id] = newCardGame;
             }
+#if !UNITY_WEBGL
+            BundledGames.StartBackground();
+#endif
+        }
+
+        /// <summary>Adds the bundled games that have finished installing in the background.</summary>
+        private void AddInstalledBundledGames()
+        {
+            if (BundledGames == null)
+                return;
+            var isAdded = false;
+            while (BundledGames.TryTakeInstalled(out var gameId))
+            {
+                if (AllCardGames.ContainsKey(gameId))
+                    continue;
+                var newCardGame = new UnityCardGame(this, gameId);
+                newCardGame.ReadProperties(false);
+                if (!string.IsNullOrEmpty(newCardGame.Error))
+                {
+                    Debug.LogError(newCardGame.Error);
+                    continue;
+                }
+
+                AllCardGames[newCardGame.Id] = newCardGame;
+                isAdded = true;
+            }
+
+            if (!isAdded)
+                return;
+            if (Current == UnityCardGame.UnityInvalid)
+            {
+                ResetCurrentToDefault();
+                ResetGameScene();
+            }
+            else
+                LoadVisiblePreviewImages();
+
+            GamesAdded?.Invoke();
         }
 
         /// <summary>
@@ -1166,6 +1219,7 @@ namespace Cgs
 
             ImageQueueService.Instance.ProcessQueue(this);
             UpdateContentLoadProgress();
+            AddInstalledBundledGames();
         }
 
         protected void OnDisable()

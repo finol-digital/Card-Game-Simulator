@@ -175,6 +175,10 @@ Instead:
 
 *Alternatives:* read-in-place with copy-on-write (deferred, for the reasons above); shipping the bundled games as one zip (fewer files, but extraction stays serial and the whole archive is redone on failure).
 
+*Measured (tasks 6.1 and 6.2):* on the Lenovo IdeaPad Y510P (2026-11-24, local Mono builds, `-batchmode`, 15 launches each, empty data folder per launch), copying all bundled games before the menu made the Main Menu interactive at a median 1006 ms after the first managed callback, against 950 ms with saved data. Installing only Standard Playing Cards first (69 ms) and the other two in the background (95 ms) brought first install to 973 ms; saved-data launches were unchanged (949 ms). The 5.5 s first-install baseline from build 1.171.24 predates the deferred loading of task groups 3 and 4.
+
+*Decision:* the default game's copy is well within the launch budget here, so the bundle-display fallback (showing its properties and banner from the bundle while Start Game waits) is not built. Revisit it if task 6.3 measures a device where the default game's copy exceeds the first-install budget. "Completion markers" are the rename itself plus a pending list: a game folder is only ever created by an atomic rename of a finished copy, and `games-install/pending.txt` lists the games still to install.
+
 ### D10. Engine and build configuration, each change measured
 Measure each of these as a separate experiment against the D1 benchmark:
 - Remove unused built-in modules: terrain, terrain physics, cloth, vehicles, wind, Umbra, AI, video, and 3D physics if no dependency needs them.

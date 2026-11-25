@@ -440,6 +440,35 @@ before the first frame.
 - **Desktop:** record the screen with OBS, or Cmd+Shift+5 on macOS, then launch the player.
 - **Web:** in Chrome's DevTools Performance panel, turn on Screenshots and record a reload of the page.
 
+## First-launch installation
+
+On a first launch (no `games` folder, or one with no games), CGS installs the bundled games from StreamingAssets, or
+on Android from the APK, without making the Main Menu wait for all of them:
+
+- **Before the menu:** the default game (the saved game if it is bundled, otherwise Standard Playing Cards) is copied
+  first, so the first Main Menu shows it and Start Game can use it at once.
+- **In the background:** the other bundled games are copied on a background thread. Each appears in game selection
+  (the Main Menu carousel and Games Management) as soon as it is installed, without a restart.
+- **Interrupted installs:** each game is copied into `games-install/staging/<id>` and then renamed into `games/<id>`,
+  so a game in the `games` folder is always complete. The games still to install are listed in
+  `games-install/pending.txt`, so a launch that is closed early finishes them on the next launch.
+- **Player changes:** bundled games are installed only on a first launch, as before. Updates, edits, and deletions
+  persist, and a deleted bundled game is not reinstalled.
+- **Web:** the web build downloads its default games instead and is unchanged.
+
+The log shows `BundledGameInstaller: installed <id> in <ms> ms` for the default game, then
+`BundledGameInstaller: installed <n> more in <ms> ms` when the rest finish.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-24, local Mono builds, `-batchmode`, 15 launches each), the Main Menu
+became interactive this long after the first managed callback:
+
+| Build | First install (median) | Saved data (median) |
+|---|---|---|
+| Copying all bundled games before the menu | 1006 ms | 950 ms |
+| Default game first, others in the background | 973 ms | 949 ms |
+
+Standard Playing Cards took 69 ms to copy before the menu, and Dominoes and Mahjong 95 ms in the background.
+
 ## Local development check
 
 A local Mono Linux player is enough to check that benchmark mode works end to end, but its times are not baselines

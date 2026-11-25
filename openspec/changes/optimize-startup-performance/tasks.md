@@ -43,7 +43,7 @@
 ## 6. Non-blocking first-launch installation
 
 - [ ] 6.1 Install the default selected game first, showing its properties and banner from the bundle if its copy exceeds the launch budget and making Start Game wait for the copy with progress; verify with a first-launch test that the Main Menu shows the default game within the first-install budget
-- [ ] 6.2 Install the remaining bundled games in the background via temporary directories, atomic rename, and completion markers, refreshing the game list as each becomes available; verify with tests for the list update, repair after a simulated interrupted install, and updating, editing, and deleting a bundled game followed by a relaunch (a deleted game stays deleted)
+- [x] 6.2 Install the remaining bundled games in the background via temporary directories, atomic rename, and completion markers, refreshing the game list as each becomes available; verify with tests for the list update, repair after a simulated interrupted install, and updating, editing, and deleting a bundled game followed by a relaunch (a deleted game stays deleted)
 - [ ] 6.3 Measure the first-install condition on Android, iOS, and desktop, and set first-install budgets in the guide; verify that the measurements and budgets are recorded
 
 ## 7. Engine and build configuration

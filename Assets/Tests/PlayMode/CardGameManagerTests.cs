@@ -246,16 +246,67 @@ namespace Tests.PlayMode
                 .ToList();
         }
 
-        [UnityTest]
-        public IEnumerator CanLoadDefaultGames()
+        /// <summary>Simulates a first launch: no games are installed, and the bundled games install again.</summary>
+        private static IEnumerator StartFirstLaunch()
         {
+            // A background installation from an earlier launch must not write into the folder being removed
+            var earlier = CardGameManager.Instance.BundledGames;
+            if (earlier != null)
+                yield return new WaitUntil(() => earlier.Background.IsCompleted);
             if (Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 Directory.Delete(UnityCardGame.GamesDirectoryPath, true);
             PlayerPrefs.SetString(CardGameManager.PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
-
-            // Default is Standard Playing Cards
             CardGameManager.Instance.AllCardGames.Clear();
             CardGameManager.Instance.LookupCardGames();
+        }
+
+        private static IEnumerator FinishBundledGamesInstallation()
+        {
+            var installer = CardGameManager.Instance.BundledGames;
+            yield return new WaitUntil(() => installer.Background.IsCompleted);
+            // The manager adds the finished games on its next update
+            yield return null;
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator FirstLaunchShowsTheDefaultGameAndAddsTheOthersOnceInstalled()
+        {
+            var additions = 0;
+            void CountAddition() => additions++;
+            yield return StartFirstLaunch();
+            CardGameManager.Instance.GamesAdded += CountAddition;
+            try
+            {
+                CollectionAssert.AreEqual(new[] { Tags.StandardPlayingCardsDirectoryName },
+                    CardGameManager.Instance.AllCardGames.Keys, "Only the default game is installed before the menu");
+                CardGameManager.Instance.ResetCurrentToDefault();
+                Assert.AreEqual(Tags.StandardPlayingCardsDirectoryName, CardGameManager.Current.Id);
+
+                yield return FinishBundledGamesInstallation();
+
+                CollectionAssert.AreEquivalent(new[]
+                    {
+                        Tags.StandardPlayingCardsDirectoryName, "Dominoes@www.cardgamesimulator.com",
+                        "Mahjong@www.cardgamesimulator.com"
+                    }, CardGameManager.Instance.AllCardGames.Keys);
+                Assert.Greater(additions, 0, "Game selection was told about the new games");
+                Assert.AreEqual(Tags.StandardPlayingCardsDirectoryName, CardGameManager.Current.Id,
+                    "Installing the others does not change the selected game");
+                CollectionAssert.IsEmpty(CardGameManager.Instance.BundledGames.Pending);
+            }
+            finally
+            {
+                CardGameManager.Instance.GamesAdded -= CountAddition;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CanLoadDefaultGames()
+        {
+            // Default is Standard Playing Cards
+            yield return StartFirstLaunch();
+            yield return FinishBundledGamesInstallation();
             CardGameManager.Instance.ResetCurrentToDefault();
             CardGameManager.Instance.ResetGameScene();
             yield return new WaitUntil(() =>
