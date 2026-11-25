@@ -269,7 +269,7 @@ namespace Cgs.Play.Multiplayer
 
             Points = playController.Scoreboard.LocalPoints;
 
-            var hands = playController.Drawer.LocalHandCardIds;
+            var hands = playController.Drawer.GetLocalHandCardIds();
             if (hands.Count == 0)
             {
                 RequestNewHand(CardDrawer.DefaultHandName);

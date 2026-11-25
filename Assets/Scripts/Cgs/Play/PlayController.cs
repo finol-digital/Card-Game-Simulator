@@ -1078,34 +1078,28 @@ namespace Cgs.Play
         {
             SpawnUnspawnedZones();
 
-            foreach (var board in playAreaCardZone.GetComponentsInChildren<Board>())
-                if (IsLocalOnly(board))
-                    board.SpawnWithLocalState();
+            foreach (var board in LocalOnly<Board>())
+                board.SpawnWithLocalState();
 
-            var cardStacks = new List<CardStack>();
-            foreach (var cardStack in playAreaCardZone.GetComponentsInChildren<CardStack>())
-            {
-                if (!IsLocalOnly(cardStack))
-                    continue;
+            var cardStacks = LocalOnly<CardStack>();
+            foreach (var cardStack in cardStacks)
                 cardStack.SpawnWithLocalState();
-                cardStacks.Add(cardStack);
-            }
 
             // Zones were spawned first, so cards in a zone keep their zone
-            foreach (var cardModel in playAreaCardZone.GetComponentsInChildren<CardModel>())
-                if (IsLocalOnly(cardModel))
-                    cardModel.SpawnWithLocalState();
+            foreach (var cardModel in LocalOnly<CardModel>())
+                cardModel.SpawnWithLocalState();
 
-            foreach (var die in playAreaCardZone.GetComponentsInChildren<Die>())
-                if (IsLocalOnly(die))
-                    die.SpawnWithLocalState();
+            foreach (var die in LocalOnly<Die>())
+                die.SpawnWithLocalState();
 
-            foreach (var counter in playAreaCardZone.GetComponentsInChildren<Counter>())
-                if (IsLocalOnly(counter))
-                    counter.SpawnWithLocalState();
+            foreach (var counter in LocalOnly<Counter>())
+                counter.SpawnWithLocalState();
 
             return cardStacks;
         }
+
+        private List<T> LocalOnly<T>() where T : CgsNetPlayable =>
+            playAreaCardZone.GetComponentsInChildren<T>().Where(IsLocalOnly).ToList();
 
         private static bool IsLocalOnly(CgsNetPlayable playable) =>
             playable != null && !playable.IsSpawned && !playable.ToDelete && playable.MyNetworkObject != null;

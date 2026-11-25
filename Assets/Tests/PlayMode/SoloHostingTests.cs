@@ -185,7 +185,7 @@ namespace Tests.PlayMode
             card.Position = new Vector2(-50, -150);
             card.Rotation = Quaternion.Euler(0, 0, 90);
             controller.Scoreboard.ChangePoints("12");
-            var hand = controller.Drawer.LocalHandCardIds[0].ToList();
+            var hand = controller.Drawer.GetLocalHandCardIds()[0].ToList();
             Assert.IsNotEmpty(hand, "The starting hand was dealt");
 
             var table = Snapshot(controller);

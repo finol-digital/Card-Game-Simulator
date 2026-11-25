@@ -451,7 +451,7 @@ namespace Cgs.Play.Drawer
         }
 
         /// <summary>The card ids in each hand, in drawer order, so the host can keep them when hosting starts.</summary>
-        public IReadOnlyList<IReadOnlyList<string>> LocalHandCardIds => cardZoneRectTransforms
+        public IReadOnlyList<IReadOnlyList<string>> GetLocalHandCardIds() => cardZoneRectTransforms
             .Select(cardZone => (IReadOnlyList<string>)cardZone.GetComponentsInChildren<CardModel>(true)
                 .Select(cardModel => cardModel.Id).ToList())
             .ToList();
