@@ -276,6 +276,7 @@ namespace Cgs.Play
         protected void Awake()
         {
             Instance = this;
+            CgsNetManager.GetOrCreate();
         }
 
         protected void OnEnable()

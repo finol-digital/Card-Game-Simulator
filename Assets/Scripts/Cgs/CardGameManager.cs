@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Cgs.Menu;
+using Cgs.Play.Multiplayer;
 using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
@@ -1247,8 +1248,12 @@ namespace Cgs
         protected void OnDestroy()
         {
             UnregisterStaticEventHandlers();
-            if (_instance == this)
-                Instance = null;
+            if (_instance != this)
+                return;
+            Instance = null;
+            // The network manager used to be part of this object, so it still goes with it
+            if (!IsQuitting)
+                CgsNetManager.DestroyCreated();
         }
 
 #pragma warning disable S2325

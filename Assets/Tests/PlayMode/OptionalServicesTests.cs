@@ -84,13 +84,20 @@ namespace Tests.PlayMode
             CgsNetManager.InitializeServices = () => CountServiceStart(Task.CompletedTask);
 
             yield return LaunchMainMenu();
+            Assert.IsNull(CgsNetManager.Instance, "The network components must stay out of launch");
+
+            // The menu creates the network manager once it has been shown for a moment
+            var until = Time.realtimeSinceStartup + MainMenu.NetworkPrepareDelaySeconds + 2;
+            while (CgsNetManager.Instance == null && Time.realtimeSinceStartup < until)
+                yield return null;
             // Give deferred start-up work a few frames to run
             for (var frame = 0; frame < 10; frame++)
                 yield return null;
 
             Assert.AreEqual(0, _serviceStarts, "Online services must wait for the first online action");
             var netManager = CgsNetManager.Instance;
-            Assert.IsFalse(netManager.IsListening, "Nothing may host or join at launch");
+            Assert.IsNotNull(netManager, "The menu prepares the network manager while it is shown");
+            Assert.IsFalse(netManager.IsListening, "Nothing may host or join from the menu");
             var discovery = netManager.GetComponent<CgsNetDiscovery>();
             Assert.IsTrue(discovery == null || !discovery.IsRunning, "LAN discovery must wait for the lobby");
             Assert.IsNull(netManager.GetComponent<BrowserLanTransport>(), "Browser LAN must wait for the lobby");

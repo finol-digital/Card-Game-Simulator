@@ -5,9 +5,11 @@
 using Cgs.Performance;
 using Cgs.Localization;
 using Cgs.GameContent;
+using Cgs.Play.Multiplayer;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using PrimeTween;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -98,6 +100,11 @@ namespace Cgs.Menu
         private float _languageWaitStarted;
         private int _languageReadyFrame = -1;
         private bool _isWelcomeDeferred;
+
+        /// <summary>How long the menu is shown before it creates the network manager.</summary>
+        internal const float NetworkPrepareDelaySeconds = 0.5f;
+
+        private float _interactiveTime = -1;
 
         /// <summary>Hidden, and ignoring input, while the first Main Menu waits for the startup language.</summary>
         internal bool IsWaitingForLanguage => _languageWait != null;
@@ -258,6 +265,7 @@ namespace Cgs.Menu
             // welcome prompt is part of that screen and accepts input too; budget runs use saved data, where the
             // prompt is not shown.
             StartupTimeline.Mark(StartupMilestone.MainMenuInteractive);
+            PrepareNetworkWhenIdle();
             _heldInput.Refresh();
 
             if (!AcceptsInput)
@@ -292,6 +300,17 @@ namespace Cgs.Menu
                      Mathf.Abs(moveVertical) > 0 &&
                      !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
+        }
+
+        // The play screen needs the network manager. Creating it while the menu is shown keeps it out of both launch
+        // and Start Game; if Start Game comes first, the play screen creates it.
+        private void PrepareNetworkWhenIdle()
+        {
+            if (_interactiveTime < 0)
+                _interactiveTime = Time.realtimeSinceStartup;
+            else if (Time.realtimeSinceStartup - _interactiveTime >= NetworkPrepareDelaySeconds &&
+                     NetworkManager.Singleton == null)
+                CgsNetManager.GetOrCreate();
         }
 
         public void OnDrag(PointerEventData eventData)

@@ -141,6 +141,8 @@ Record the result in this design before archive. The spec requires only that net
 
 *Decision:* option (a), deferred auto-hosting. It removes all of hosting's cost from Start Game to the first card action, which is everything option (b) would gain, while solo tables stay joinable on the local network as before. The host converts the existing table when hosting starts (`PlayController.SpawnLocalTable`, `CgsNetPlayable.SpawnWithLocalState`). Option (c), the lazily created network prefab, is also made, as decided in task 4.4, because its launch saving applies under every option.
 
+*Measured (option (c), task 8.2):* on the same laptop (2026-11-25, local Mono builds, `-batchmode`, saved data), moving the network components into `Assets/Resources/CgsNetManager.prefab` made the Main Menu interactive 14 ms sooner (median 948 → 934 ms from the first managed callback, 20 alternating launches). Creating the network manager when the play screen opens only moved that cost into Start Game: first card action 413 → 430 ms with Start Game chosen at once (15 runs each). So the Main Menu creates it half a second after it becomes interactive, and the play screen creates it only if Start Game comes sooner. With Start Game after 1 s on the menu, the first card action took 276 ms instead of 303 ms; at once, it took 425 ms instead of 413 ms.
+
 ### D6. Input readiness instead of a time buffer
 Replace `StartBufferTime` with a release-then-press gate. Any button, key, or touch held when the menu becomes interactive is ignored until it is released. This keeps the original protection against carry-over presses from the previous scene without a fixed delay.
 

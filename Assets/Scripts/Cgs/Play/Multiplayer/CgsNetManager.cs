@@ -37,7 +37,31 @@ namespace Cgs.Play.Multiplayer
         private string _relayJoinReference;
         private LobbyConnectionDiagnostics.Context _relayJoinContext;
 
+        private const string PrefabResourcePath = "CgsNetManager";
+
+        /// <summary>The network manager, or null until the Main Menu or the play screen creates it.</summary>
         public static CgsNetManager Instance => (CgsNetManager)Singleton;
+
+        /// <summary>Creates the network manager from its prefab, if it does not exist yet.</summary>
+        /// <remarks>It stays out of the launch path, and then lasts as long as the CardGameManager.</remarks>
+        public static CgsNetManager GetOrCreate()
+        {
+            if (Instance != null)
+                return Instance;
+            _created = Instantiate(Resources.Load<CgsNetManager>(PrefabResourcePath));
+            _created.name = PrefabResourcePath;
+            return _created;
+        }
+
+        private static CgsNetManager _created;
+
+        /// <summary>Removes the network manager that <see cref="GetOrCreate"/> made, if any.</summary>
+        internal static void DestroyCreated()
+        {
+            if (_created != null)
+                Destroy(_created.gameObject);
+            _created = null;
+        }
 
         /// <summary>Starts Unity Services; replaced by tests to observe when online services start.</summary>
         internal static Func<Task> InitializeServices { get; set; } = () => UnityServices.InitializeAsync();

@@ -405,8 +405,8 @@ build with saved data), the Main Menu became interactive this long after the fir
 The first scene loaded at the same time in both (823 and 826 ms), so the 56 ms saving is in the Main Menu's first
 frames, where the Unity Services start used to run. A non-Steam build no longer loads the Steam API, so its log has
 no Steam lines. When Steam signals are present, `Steam initialized at <ms> ms`, or the warning `Steam Deck features
-unavailable`, appears after the launch summary. Moving the network components out of the `CardGameManager` prefab
-would save about 24 ms more; that move is scheduled with task 8.2 (see design D4).
+unavailable`, appears after the launch summary. The network components have since moved out of the
+`CardGameManager` prefab as well; see [Network manager](#network-manager).
 
 ## Startup visuals
 
@@ -498,6 +498,33 @@ runs each), from Start Game:
 In the first build, `StartHost` took about 165 ms and starting LAN discovery about 63 ms, and the start decks then
 loaded through network requests. Mono runs this code more slowly than the IL2CPP release builds, so the saving on the
 reference devices is smaller; their numbers come from task 8.7.
+
+## Network manager
+
+The network components (`CgsNetManager`, both Unity transports, `Transports`, and `CgsNetDiscovery`) are in their own
+prefab, `Assets/Resources/CgsNetManager.prefab`, instead of the `CardGameManager` prefab that every scene loads.
+`CgsNetManager.GetOrCreate()` creates the network manager:
+
+- **Main Menu:** half a second after the menu becomes interactive (`MainMenu.NetworkPrepareDelaySeconds`), while the
+  player looks at it. It does not host, join, or start LAN discovery then.
+- **Play screen:** if Start Game, Join Game, or a link opens the play screen sooner, `PlayController` creates it on
+  entry.
+
+Once created, it lasts as long as the `CardGameManager`. Before then `CgsNetManager.Instance` is null, so code outside
+the play screen must check for null.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode`, saved data; 20 alternating launches,
+then 15 benchmark-mode runs per row), medians:
+
+| Measure | Network components in `CardGameManager` | In their own prefab |
+|---|---|---|
+| First managed callback → Main Menu interactive | 948 ms | 934 ms |
+| Start Game at once → table playable / first card action | 370 / 413 ms | 387 / 425 ms |
+| Start Game after 1 s on the menu → table playable / first card action | 268 / 303 ms | 241 / 276 ms |
+
+Choosing Start Game at once is the benchmark's fastest case. Then the play screen creates the network manager, which
+costs about 12–17 ms. A player who spends at least half a second on the menu has it already, and the play screen
+opens sooner.
 
 ## Engine modules
 
