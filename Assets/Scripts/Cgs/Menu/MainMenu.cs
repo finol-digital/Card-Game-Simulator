@@ -128,6 +128,8 @@ namespace Cgs.Menu
 
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
             CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
+            _gamesSource = CardGameManager.Instance;
+            _gamesSource.GamesAdded += ResetGameSelectionCarousel;
 
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
@@ -640,8 +642,15 @@ namespace Cgs.Menu
             Application.Quit();
 #endif
 
+        // The manager this menu listens to for newly installed games
+        private CardGameManager _gamesSource;
+
         protected void OnDisable()
         {
+            if (_gamesSource != null)
+                _gamesSource.GamesAdded -= ResetGameSelectionCarousel;
+            _gamesSource = null;
+
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputSelectNext;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
