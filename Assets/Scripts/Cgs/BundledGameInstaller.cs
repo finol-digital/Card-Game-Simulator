@@ -125,21 +125,39 @@ namespace Cgs
             if (!Directory.Exists(_gamesDirectory) || Directory.GetDirectories(_gamesDirectory).Length < 1)
                 pending = _bundle.GameIds().ToList();
             else if (File.Exists(PendingFilePath))
-                pending = File.ReadAllLines(PendingFilePath).Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
+                pending = ReadPending();
             else
                 pending = new List<string>();
 
             lock (_pendingLock)
             {
                 _pending.Clear();
-                _pending.AddRange(pending);
-                // The list is saved before the games folder exists, so a first launch closed now starts over
-                SavePending();
+                // The list is saved before the games folder exists, so a first launch closed now starts over. A list
+                // that could not be read is left as it is, so the next launch can install those games.
+                if (pending != null)
+                {
+                    _pending.AddRange(pending);
+                    SavePending();
+                }
             }
 
             Directory.CreateDirectory(_gamesDirectory);
-            if (Directory.Exists(StagingDirectory))
-                Directory.Delete(StagingDirectory, true);
+            // Each install also clears its own staging folder first, so this is only housekeeping
+            DeleteQuietly(StagingDirectory);
+        }
+
+        // Null when the list cannot be read
+        private List<string> ReadPending()
+        {
+            try
+            {
+                return File.ReadAllLines(PendingFilePath).Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"BundledGameInstaller: could not read the pending list, so it waits for the next launch: {e.Message}");
+                return null;
+            }
         }
 
         /// <summary>Installs <paramref name="gameId"/> now, if it is still pending.</summary>
