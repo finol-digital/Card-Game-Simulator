@@ -316,6 +316,35 @@ reports the play phase as failed (`benchmarkGameUnavailable`); use only `launchT
 with the change described in [Default games on the web](#default-games-on-the-web) select Standard Playing Cards as
 soon as it has downloaded, so the play phase can be measured on first visits too.
 
+#### Compression and caching
+
+The web build is not compressed by Unity (`webGLCompressionFormat` is Disabled), because Firebase Hosting compresses
+it on the fly: it serves the build with `Content-Encoding: br` to browsers that accept Brotli, and gzip otherwise.
+Checked on 2026-11-26 against `https://card-game-simulator.web.app` (the 2026-11-11 deploy):
+
+| File | Uncompressed | Brotli (served) | gzip |
+|---|---|---|---|
+| `WebGL.wasm` | 66.7 MB | 11.2 MB | 17.4 MB |
+| `WebGL.data` | 26.8 MB | 13.6 MB | 15.9 MB |
+| `WebGL.framework.js` | 526 KB | 86 KB | 104 KB |
+| `WebGL.loader.js` | 27 KB | 8 KB | 9 KB |
+
+Unity's own Brotli compression would make the files smaller to store but not to send, and Firebase does not add
+`Content-Encoding` to `.br` files by itself, so it would also need headers in `firebase/firebase.json`; it is not used.
+Data caching (`webGLDataCaching`) stays on. Responses carry `Cache-Control: max-age=3600` and an `ETag`.
+
+A first and a repeat visit in headless Chromium with one browser profile, recording each finished request and its
+transferred size with Playwright, showed:
+
+- **First visit:** the build (about 25 MB transferred), the Addressables bundles (about 4.7 MB), and the three
+  default games' definitions, images, and cards through `cgs.games/api/proxy` (about 0.7 MB).
+- **Repeat visit:** the build files came from the browser cache (nothing transferred), the bundles were revalidated
+  with `304 Not Modified`, and no game data was requested: the games load from the browser's saved files.
+
+On a first visit with an English browser, the `localization-assets-japanese(ja)` bundle (3.6 MB) is also
+downloaded. It holds the Japanese font, Noto Sans JP, which the English interface does not use; why an English
+session loads it is not known yet, so check it when the web first-visit budgets are set (task 10.3).
+
 ## Minimal reference build
 
 `tools/startup-reference/` is a one-scene, one-button Unity 6.6.8f1 project with CGS's startup-relevant player

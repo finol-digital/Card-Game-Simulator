@@ -50,7 +50,7 @@
 
 - [ ] 7.1 Remove unused built-in modules after checking package dependencies; verify that all platform builds succeed, the PlayMode tests pass, and the benchmark delta is recorded
 - [ ] 7.2 Benchmark Android engine ThinLTO (documenting its build-setting prerequisites), then IL2CPP runtime-speed code generation, then Vulkan/GLES ordering, one at a time, keeping only measured improvements; verify that the results table is in the guide and the chosen settings are committed
-- [ ] 7.3 Review managed stripping against the AOT/reflection needs (`AotTypeEnforcer`, Newtonsoft) and change it only if it is measured as safe and beneficial; verify with a full IL2CPP build smoke test across all scenes
+- [x] 7.3 Review managed stripping against the AOT/reflection needs (`AotTypeEnforcer`, Newtonsoft) and change it only if it is measured as safe and beneficial; verify with a full IL2CPP build smoke test across all scenes (reviewed in design D10; kept at Low, so no build changed)
 
 ## 8. Fast single-player start
 
@@ -71,7 +71,7 @@
 ## 10. Web startup
 
 - [x] 10.1 Stop blocking web play on sequential default-game downloads: download the selected game first and the rest in the background, or bundle the default game data, and document the choice; verify that a first-visit web session can start the selected game before other downloads finish
-- [ ] 10.2 Enable Brotli compression, or confirm correct pre-compressed serving with `Content-Encoding` on the hosting path, keeping data caching enabled; verify with response headers from the deployed or preview host and a repeat-visit run that does not re-download game data
+- [x] 10.2 Enable Brotli compression, or confirm correct pre-compressed serving with `Content-Encoding` on the hosting path, keeping data caching enabled; verify with response headers from the deployed or preview host and a repeat-visit run that does not re-download game data
 - [ ] 10.3 Record web first-visit and repeat-visit milestones under the documented network and cache settings, and set the web budgets in the guide; verify that the results are recorded
 
 ## 11. Regression guard and final verification
