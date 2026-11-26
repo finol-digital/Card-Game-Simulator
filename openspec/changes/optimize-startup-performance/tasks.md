@@ -76,7 +76,7 @@
 
 ## 11. Regression guard and final verification
 
-- [ ] 11.1 Add a script that builds or uses a standalone Linux player, runs benchmark mode N times, and fails above the documented loose thresholds; verify that it fails on an artificially delayed build and passes on the current build. If wiring it into CI requires `.github` changes, hand that to the maintainer instead of editing workflows
+- [x] 11.1 Add a script that builds or uses a standalone Linux player, runs benchmark mode N times, and fails above the documented loose thresholds; verify that it fails on an artificially delayed build and passes on the current build. If wiring it into CI requires `.github` changes, hand that to the maintainer instead of editing workflows
 - [ ] 11.2 Run the full benchmark on every reference device and condition, and confirm the `app-launch` and `single-player-start` budgets at p95; verify that the final results table in the guide shows every budget met, or an explicit exception approved by the maintainer
 - [ ] 11.3 Run the full PlayMode suite and the multiplayer, LAN, and Steam Deck manual checks; verify that all pass
 

@@ -675,6 +675,31 @@ Opening directly on the Main Menu removed the title screen's scene load and the 
 launch → menu fell by about 515 ms at the median, and the first managed callback → menu interval fell from about
 1608 ms to 1104 ms. Start → action is unaffected by this change.
 
+## Regression check
+
+`tools/startup-benchmark/regression_check.py` runs a standalone Linux player in benchmark mode, in `-batchmode` and
+with a new data folder, and fails if any run fails or the median of an interval is above its threshold in
+`tools/startup-benchmark/regression_thresholds.json`:
+
+```bash
+python3 tools/startup-benchmark/regression_check.py --player Builds/Linux/CardGameSimulator.x86_64 --runs 10
+```
+
+Two uncounted warm-up runs install the bundled games first, so the counted runs use saved data. The player can be a
+local Mono build or the `cgs-StandaloneLinux64` artifact from CI. The thresholds are loose on purpose (median launch
+→ menu 3000 ms, start → action 1500 ms, launch → action 4500 ms), well above this laptop's Mono times, so that a slower
+or shared CI machine still passes and only a large regression fails. Tighten them once there are CI timings to base
+them on. `test_regression_check.py` covers the pass and fail rules.
+
+Checked on the Lenovo IdeaPad Y510P (2026-11-26, local Mono builds, 10 runs each). The current build passed with medians
+of 1541 ms launch → menu, 353 ms start → action, and 2107 ms launch → action, also with no display (`DISPLAY` unset).
+A build with an extra 2.5 s sleep in `MainMenu.Start` failed with 4070 ms launch → menu and 4635 ms launch → action,
+and the script exited with status 1.
+
+Running it in CI needs a workflow change, which maintainers make: after the `StandaloneLinux64` build, unzip its
+artifact, `chmod +x` the player, and run the command above. The player runs in `-batchmode`, so the runner needs no
+display. The script needs Python 3.10 or newer and no packages.
+
 ## Baselines
 
 | Device | Condition | Build | Launch → menu (median / p95) | Start → action | Launch → action | Reference launch → button | Failures |
