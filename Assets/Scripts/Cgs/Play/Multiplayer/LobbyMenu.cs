@@ -6,6 +6,7 @@ using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
@@ -391,7 +392,11 @@ namespace Cgs.Play.Multiplayer
             if (!ValidatePassword())
                 return;
             if (StartHost())
+            {
                 Hide();
+                if (!PlayController.Instance.AllCardStacks.Any())
+                    PlayController.Instance.StartDecks();
+            }
             else
                 ShowConnectionStartError();
         }

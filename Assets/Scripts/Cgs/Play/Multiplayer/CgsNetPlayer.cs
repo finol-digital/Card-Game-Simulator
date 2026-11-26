@@ -385,7 +385,7 @@ namespace Cgs.Play.Multiplayer
             switch (CardGameManager.Current.DeckSharePreference)
             {
                 case SharePreference.Individual:
-                    PlayController.Instance.ShowDeckMenu();
+                    PlayController.Instance.StartDecks();
                     break;
                 case SharePreference.Share:
                     RequestSharedDeck();
@@ -393,7 +393,7 @@ namespace Cgs.Play.Multiplayer
                 case SharePreference.Ask:
                 default:
                     CardGameManager.Instance.Messenger.Ask(new UiMessage("network.share.deck", ShareDeckRequest),
-                        PlayController.Instance.ShowDeckMenu, RequestSharedDeck);
+                        PlayController.Instance.StartDecks, RequestSharedDeck);
                     break;
             }
 
@@ -979,7 +979,7 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsServer || CardGameManager.Current.DeckSharePreference == SharePreference.Individual)
             {
-                PlayController.Instance.ShowDeckMenu();
+                PlayController.Instance.StartDecks();
                 Debug.Log("[CgsNet Player] Game restarted!");
                 yield break;
             }
@@ -991,7 +991,7 @@ namespace Cgs.Play.Multiplayer
             switch (CardGameManager.Current.DeckSharePreference)
             {
                 case SharePreference.Individual:
-                    PlayController.Instance.ShowDeckMenu();
+                    PlayController.Instance.StartDecks();
                     break;
                 case SharePreference.Share:
                     RequestSharedDeck();
@@ -999,7 +999,7 @@ namespace Cgs.Play.Multiplayer
                 case SharePreference.Ask:
                 default:
                     CardGameManager.Instance.Messenger.Ask(new UiMessage("network.share.deck", ShareDeckRequest),
-                        PlayController.Instance.ShowDeckMenu, RequestSharedDeck);
+                        PlayController.Instance.StartDecks, RequestSharedDeck);
                     break;
             }
         }
