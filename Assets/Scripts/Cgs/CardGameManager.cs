@@ -916,7 +916,8 @@ namespace Cgs
                  page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount;
                  page++)
             {
-                cardGame.LoadCards(page);
+                // Card files parse off the main thread and fill in over several frames, so the screen stays responsive
+                yield return cardGame.LoadCardsRoutine(page);
                 if (page == cardGame.AllCardsUrlPageCountStartIndex && cardGame == Current &&
                     cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
                     Messenger.Show(GameContentMessage.Create(cardGame, display => UiMessage.With("games.cards.loading",
@@ -947,7 +948,7 @@ namespace Cgs
                 if (!File.Exists(setCardsFilePath))
                     yield return UnityFileMethods.SaveUrlToFile(set.CardsUrl, setCardsFilePath);
                 if (File.Exists(setCardsFilePath))
-                    cardGame.LoadCards(setCardsFilePath, set.Code);
+                    yield return cardGame.LoadCardsRoutine(setCardsFilePath, set.Code);
                 else
                 {
                     Debug.LogError(LoadErrorMessage + set.CardsUrl);

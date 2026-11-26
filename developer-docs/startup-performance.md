@@ -504,6 +504,18 @@ progress did not change the time to the first card action with Start Game chosen
 with it; median of two alternating rounds of 10 runs each). `StartupLoadingTests` covers this with a slow-loading
 fixture game.
 
+## Loading card files
+
+`CardGameManager` loads a game's card files with `UnityCardGame.LoadCardsRoutine`. Each file is read and parsed on a
+worker thread (on the main thread in web builds, which have no threads), and its cards are then created on the main
+thread for at most `UnityCardGame.CardCreationBudgetMs` (8 ms) per frame. Loading a whole file in one call, as
+`UnityCardGame.LoadCards` still does for callers that need it at once, froze a frame for 1.8 s or more with a
+30,000-card file on the Lenovo IdeaPad Y510P. Spread over frames, the same file loads in about 1.9 s over about 670
+frames, and no frame spends more than about 90 ms on it. Bundled games load in about 100–135 ms and are not on the Start
+Game critical path, so a saved snapshot of parsed cards was not built; see design D8 for the data and decision.
+`CardFileLoadingTests` checks that both ways give the same cards, that a large file does not stall a frame, and that a
+corrupt file reports its error.
+
 ## Remembered start-deck choice
 
 The start-deck prompt offers a third answer, **Always**, through `Dialog.Ask` with an `alwaysAction`; other questions

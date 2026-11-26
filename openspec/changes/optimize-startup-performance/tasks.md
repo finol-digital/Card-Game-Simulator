@@ -64,8 +64,8 @@
 
 ## 9. Data-driven deep optimizations
 
-- [ ] 9.1 Using the group 3 and group 8 data plus a large-game fixture, decide whether the card-data cache and off-thread parse (D8) are needed, and record the decision in design.md; verify that the decision and data are recorded
-- [ ] 9.2 If needed, implement the versioned card snapshot with off-thread parse (non-WebGL) and frame-budgeted object creation; verify with tests for cache hit, stale invalidation, corrupt-cache fallback, and identical card results versus a JSON load
+- [x] 9.1 Using the group 3 and group 8 data plus a large-game fixture, decide whether the card-data cache and off-thread parse (D8) are needed, and record the decision in design.md; verify that the decision and data are recorded
+- [x] 9.2 If needed, implement the versioned card snapshot with off-thread parse (non-WebGL) and frame-budgeted object creation; verify with tests for cache hit, stale invalidation, corrupt-cache fallback, and identical card results versus a JSON load (9.1 decided the snapshot is not needed; the off-thread parse and frame-budgeted creation are implemented and tested for identical results, no frame stall, and corrupt files)
 - [ ] 9.3 Record frame times from an immediate Start Game to the first card action with cold caches on each graphics backend the reference devices use; if any frame exceeds 100 ms from first-use rendering, add the per-backend incremental warmup from design D11; verify by re-measuring with cold caches and zero menu idle time that no frame exceeds 100 ms
 
 ## 10. Web startup
