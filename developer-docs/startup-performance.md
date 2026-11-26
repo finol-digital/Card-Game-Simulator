@@ -312,7 +312,9 @@ days after that deploy. Record the network type and browser version with the res
   visits used a normal tab, and the harness then cleared the site's data from the phone's profile.
 
 On a first visit the Main Menu accepts input while the default games are still downloading, so build 1.171.24
-reports the play phase as failed (`benchmarkGameUnavailable`); use only `launchToMenuMs` from those runs.
+reports the play phase as failed (`benchmarkGameUnavailable`); use only `launchToMenuMs` from those runs. Builds
+with the change described in [Default games on the web](#default-games-on-the-web) select Standard Playing Cards as
+soon as it has downloaded, so the play phase can be measured on first visits too.
 
 ## Minimal reference build
 
@@ -515,6 +517,17 @@ frames, and no frame spends more than about 90 ms on it. Bundled games load in a
 Game critical path, so a saved snapshot of parsed cards was not built; see design D8 for the data and decision.
 `CardFileLoadingTests` checks that both ways give the same cards, that a large file does not stall a frame, and that a
 corrupt file reports its error.
+
+## Default games on the web
+
+When the web app has no games, as on a first visit, it downloads the default games itself instead of installing them
+from the build. `CardGameManager.GetDefaultCardGames` downloads the player's saved game first (Standard Playing Cards
+on a first visit), with progress, and selects it. The Main Menu can then start it while Dominoes and Mahjong download
+in the background, without progress, without changing the selection, and without blocking the menu
+(`CardGameManager.IsDownloadingDefaultGames`). A download the player starts waits for a background download to finish,
+because a game downloads into a folder named for it only once its definition has been read. Before, the web app
+downloaded all three in a row, each behind the progress bar, and selected each in turn.
+`DefaultGameDownloadTests` covers this with games served from local files.
 
 ## Remembered start-deck choice
 

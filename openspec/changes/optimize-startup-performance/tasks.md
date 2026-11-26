@@ -70,7 +70,7 @@
 
 ## 10. Web startup
 
-- [ ] 10.1 Stop blocking web play on sequential default-game downloads: download the selected game first and the rest in the background, or bundle the default game data, and document the choice; verify that a first-visit web session can start the selected game before other downloads finish
+- [x] 10.1 Stop blocking web play on sequential default-game downloads: download the selected game first and the rest in the background, or bundle the default game data, and document the choice; verify that a first-visit web session can start the selected game before other downloads finish
 - [ ] 10.2 Enable Brotli compression, or confirm correct pre-compressed serving with `Content-Encoding` on the hosting path, keeping data caching enabled; verify with response headers from the deployed or preview host and a repeat-visit run that does not re-download game data
 - [ ] 10.3 Record web first-visit and repeat-visit milestones under the documented network and cache settings, and set the web budgets in the guide; verify that the results are recorded
 

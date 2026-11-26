@@ -775,19 +775,95 @@ namespace Cgs
             var isMissingGame =
  Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Current.HasLoaded;
             if (isMissingGame)
-                yield return StartGetDefaultCardGames();
+                yield return GetDefaultCardGames(DefaultWebGames);
 #endif
 
             HasStartedUp = true;
             StartCoroutine(LoadPreviewImagesInBackground());
         }
 
-        // ReSharper disable once UnusedMember.Local
-        private IEnumerator StartGetDefaultCardGames()
+        // The games the web app downloads when it has none, by ID and definition URL
+        internal static readonly (string Id, string Url)[] DefaultWebGames =
         {
-            yield return GetCardGame(Tags.DominoesUrl);
-            yield return GetCardGame(Tags.MahjongUrl);
-            yield return GetCardGame(Tags.StandardPlayingCardsUrl);
+            (Tags.StandardPlayingCardsDirectoryName, Tags.StandardPlayingCardsUrl),
+            ("Dominoes@www.cardgamesimulator.com", Tags.DominoesUrl),
+            ("Mahjong@www.cardgamesimulator.com", Tags.MahjongUrl)
+        };
+
+        // A default game downloading in the background; other downloads wait for it, since a game downloads into a
+        // folder named for it only once its definition has been read
+        private UnityCardGame _backgroundDownload;
+
+        /// <summary>Whether default games are still downloading in the background.</summary>
+        internal bool IsDownloadingDefaultGames { get; private set; }
+
+        /// <summary>
+        /// Downloads <paramref name="games"/> when CGS has none, as on a first web visit. The player's saved game, else
+        /// Standard Playing Cards, downloads first and is selected, so that it can be started; the others then download
+        /// in the background without selecting them, showing progress, or keeping the menu from Start Game.
+        /// </summary>
+        internal IEnumerator GetDefaultCardGames(IReadOnlyList<(string Id, string Url)> games)
+        {
+            if (games.Count == 0)
+                yield break;
+            var preferredId = PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            var first = games.FirstOrDefault(game => game.Id == preferredId);
+            if (first.Url == null)
+                first = games.FirstOrDefault(game => game.Id == Tags.StandardPlayingCardsDirectoryName);
+            if (first.Url == null)
+                first = games[0];
+
+            IsDownloadingDefaultGames = true;
+            yield return GetCardGame(first.Url);
+            StartCoroutine(DownloadGamesInBackground(games.Where(game => game.Url != first.Url)
+                .Select(game => game.Url).ToList()));
+        }
+
+        private IEnumerator DownloadGamesInBackground(IEnumerable<string> gameUrls)
+        {
+            // The selected game's screen draws first
+            yield return null;
+            foreach (var gameUrl in gameUrls)
+            {
+                var url = new Uri(gameUrl);
+                if (AllCardGames.Values.Any(game => game?.AutoUpdateUrl != null && game.AutoUpdateUrl.Equals(url)))
+                    continue;
+                // Let a download the player started finish first
+                while (Current is { IsDownloading: true })
+                    yield return null;
+
+                var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
+                _backgroundDownload = cardGame;
+                yield return cardGame.Download();
+                _backgroundDownload = null;
+                if (!string.IsNullOrEmpty(cardGame.Error) || !cardGame.HasReadProperties)
+                {
+                    Debug.LogWarning(DownloadErrorMessage + cardGame.Error);
+                    DeleteFailedDownload(cardGame);
+                    continue;
+                }
+
+                AllCardGames[cardGame.Id] = cardGame;
+                LoadVisiblePreviewImages();
+                GamesAdded?.Invoke();
+            }
+
+            IsDownloadingDefaultGames = false;
+        }
+
+        private static void DeleteFailedDownload(UnityCardGame cardGame)
+        {
+            if (!Directory.Exists(cardGame.GameDirectoryPath))
+                return;
+            try
+            {
+                LocalizationCache.Invalidate(cardGame.GameDirectoryPath);
+                Directory.Delete(cardGame.GameDirectoryPath, true);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(DeleteErrorMessage + ex.Message);
+            }
         }
 
         [PublicAPI]
@@ -842,6 +918,8 @@ namespace Cgs
             var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
 
             Progress.Show(cardGame);
+            while (_backgroundDownload is { IsDownloading: true })
+                yield return null;
             yield return cardGame.Download();
             Progress.Hide();
 
@@ -851,19 +929,7 @@ namespace Cgs
             {
                 Debug.LogError(DownloadErrorMessage + cardGame.Error);
                 ShowDownloadError(cardGame.Error);
-
-                if (!Directory.Exists(cardGame.GameDirectoryPath))
-                    yield break;
-
-                try
-                {
-                    LocalizationCache.Invalidate(cardGame.GameDirectoryPath);
-                    Directory.Delete(cardGame.GameDirectoryPath, true);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError(DeleteErrorMessage + ex.Message);
-                }
+                DeleteFailedDownload(cardGame);
             }
             else
             {
