@@ -48,12 +48,24 @@ namespace Cgs.Play
             get
             {
                 var text = new StringBuilder("Load ");
-                var deckUrls = CardGameManager.Current.GameStartDecks;
+                var deckUrls = StartDeckUrls;
                 text.Append($"'{deckUrls[0].Name}'");
                 for (var i = 1; i < deckUrls.Count; i++)
                     text.Append($", '{deckUrls[i].Name}'");
                 text.Append("?");
                 return text.ToString();
+            }
+        }
+
+        private static IReadOnlyList<DeckUrl> StartDeckUrls
+        {
+            get
+            {
+                var deckUrls = CardGameManager.Current.GameStartDecks;
+                var localPlayer = CgsNetManager.Instance.LocalPlayer;
+                if (!CgsNetManager.Instance.IsOnline || localPlayer == null || deckUrls.Count == 0)
+                    return deckUrls;
+                return new List<DeckUrl> { deckUrls[localPlayer.SeatIndex % deckUrls.Count] };
             }
         }
 
@@ -428,7 +440,7 @@ namespace Cgs.Play
 #endif
         }
 
-        private void StartDecks()
+        public void StartDecks()
         {
             var game = CardGameManager.Current;
             if (game.GameStartDecks.Count > 0)
@@ -439,7 +451,7 @@ namespace Cgs.Play
                 else
                     CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(game, display =>
                             UiMessage.With("play.load.decks", LoadStartDecksAsk,
-                                ("names", string.Join(", ", game.GameStartDecks.Select(deck =>
+                                ("names", string.Join(", ", StartDeckUrls.Select(deck =>
                                     $"'{display.DeckName(deck.Name, true)}'"))))), DeclineStartDecks,
                         StartLoadStartDecks, () => AlwaysLoadStartDecks(game.Id));
             }
@@ -478,7 +490,7 @@ namespace Cgs.Play
 
         private IEnumerator LoadEachStartDeck()
         {
-            foreach (var deckUrl in CardGameManager.Current.GameStartDecks)
+            foreach (var deckUrl in StartDeckUrls)
             {
                 if (string.IsNullOrEmpty(deckUrl.Name) || !deckUrl.IsAvailable)
                 {
