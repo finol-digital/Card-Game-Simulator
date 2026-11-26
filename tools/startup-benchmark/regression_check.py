@@ -63,6 +63,8 @@ def main() -> int:
     parser.add_argument("--thresholds", default=str(DEFAULT_THRESHOLDS))
     parser.add_argument("--timeout", type=float, default=120.0, help="Seconds to wait for each run's result")
     parser.add_argument("--keep-data", action="store_true", help="Keep the data folder and player logs")
+    parser.add_argument("--nographics", action="store_true",
+                        help="Start the player without a graphics device, for machines with no GPU or display")
     args = parser.parse_args()
 
     thresholds = json.loads(Path(args.thresholds).read_text(encoding="utf-8"))["medianMs"]
@@ -72,10 +74,14 @@ def main() -> int:
     work_dir = data_dir / "work"
     work_dir.mkdir(parents=True)
 
+    def log_path(index: int) -> Path:
+        return work_dir / f"player-{index}.log"
+
     def run(index: int) -> stats.RunRecord:
         options = argparse.Namespace(player=args.player, build="", timeout=args.timeout, start_delay_ms=0,
                                      steam=False,
-                                     player_args=["-batchmode", "-logFile", str(work_dir / f"player-{index}.log")])
+                                     player_args=["-batchmode", *(["-nographics"] if args.nographics else []),
+                                                  "-logFile", str(log_path(index))])
         return desktop_benchmark.run_once(options, index, work_dir)
 
     for index in range(1, args.warmup_runs + 1):
@@ -93,6 +99,13 @@ def main() -> int:
     for line in lines:
         print(line)
     print("PASS" if passed else "FAIL")
+    failed = next((index for index, record in enumerate(records, 1) if not record.ok), None)
+    if failed is not None:
+        # The player's own log usually says why a run failed
+        log = log_path(failed)
+        tail = log.read_text(encoding="utf-8", errors="replace").splitlines()[-60:] if log.exists() else []
+        print(f"--- end of the player log for run {failed} ({log}) ---")
+        print("\n".join(tail) if tail else "(no log was written)")
     if args.keep_data:
         print(f"data and logs kept in {data_dir}", file=sys.stderr)
     else:

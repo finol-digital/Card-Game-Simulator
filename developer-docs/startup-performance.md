@@ -697,8 +697,11 @@ A build with an extra 2.5 s sleep in `MainMenu.Start` failed with 4070 ms launch
 and the script exited with status 1.
 
 CI runs it in the **Startup Regression Check** step of `.github/workflows/main.yml`, right after the
-`StandaloneLinux64` build, with 10 runs; a failure fails that build job. The player runs in `-batchmode`, so the runner
-needs no display, and the script needs only the runner's Python (3.10 or newer, no packages).
+`StandaloneLinux64` build, with 10 runs; a failure fails that build job. CI runners have no GPU or display, so the
+step passes `--nographics`, which starts the player with `-nographics` as well as `-batchmode`; benchmark mode works
+the same without a graphics device (median launch → menu 1411 ms and start → action 369 ms over 5 runs here). When a
+run fails, the script prints the end of that run's player log. The script needs only the runner's Python (3.10 or
+newer, no packages).
 
 ## Baselines
 

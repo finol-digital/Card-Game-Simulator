@@ -300,7 +300,9 @@ jobs:
           player="${data%_Data}"
           if [ ! -f "$player" ] && [ -f "$player.x86_64" ]; then player="$player.x86_64"; fi
           sudo chmod +x "$player"
-          python3 tools/startup-benchmark/regression_check.py --player "$player" --runs 10
+          # Shows a missing system library, which would stop the player before it writes a log
+          ldd "$player" | grep "not found" || true
+          python3 tools/startup-benchmark/regression_check.py --player "$player" --runs 10 --nographics
       - name: Upload Build
         uses: actions/upload-artifact@v7
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
