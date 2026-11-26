@@ -496,6 +496,14 @@ Started at once, the table used to wait for the game's cards, which were still l
 load; now they load during it. With the asynchronous load alone, the play screen finished loading later (169 ms) and
 started 1 s later took 303 ms to the first card action; creating the viewers later made up for that.
 
+Start Game never waits for the selected game to finish loading. The play screen calls
+`CardGameManager.RequireContentForScene` as it starts, as the Deck Editor and Cards Explorer do. It then shows the
+cards' loading progress until they have loaded (`CardGameManager.WaitForCurrentContent`), and offers the start decks
+after that. The cards are not loaded again: the scene load waits for the load that is already running. Showing the
+progress did not change the time to the first card action with Start Game chosen at once (283 ms without it, 282 ms
+with it; median of two alternating rounds of 10 runs each). `StartupLoadingTests` covers this with a slow-loading
+fixture game.
+
 ## Solo hosting
 
 A solo table is still hosted on the local network, so other players can join it as before, but hosting no longer

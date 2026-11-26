@@ -126,7 +126,8 @@ namespace Tests.PlayMode
 
             Assert.IsNull(CardViewer.Existing, "The card viewer is not created while the play screen opens");
             Assert.IsNull(PlayableViewer.Existing, "The playable viewer is not created while the play screen opens");
-            Assert.IsFalse(PlayController.Instance.IsBlocked, "Checking for a shown viewer does not create one");
+            // The table may still be blocked by the cards' loading progress, but checking it must not create a viewer
+            _ = PlayController.Instance.IsBlocked;
             Assert.IsNull(CardViewer.Existing, "Checking whether the table is blocked does not create a viewer");
 
             var until = Time.realtimeSinceStartup + PlayController.ViewerPrepareDelaySeconds + 10;

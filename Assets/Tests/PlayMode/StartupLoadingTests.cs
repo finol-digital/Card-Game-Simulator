@@ -9,9 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Cgs;
+using Cgs.CardGameView.Multiplayer;
 using Cgs.Cards;
 using Cgs.Decks;
 using Cgs.Menu;
+using Cgs.Play;
 using FinolDigital.Cgs.Json.Unity;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -32,6 +34,8 @@ namespace Tests.PlayMode
         private const string HasSeenWelcome = "HasSeenWelcome";
         private const int TimeoutFrames = 1200;
         private const string UnreachableGameUrl = "http://127.0.0.1:9/cgs.json";
+        private const string UnreachableDeckUrl = "http://127.0.0.1:9/Start.txt";
+        private const string StartDecksMessage = "play.load.decks";
 
         private static readonly string[] SceneNames =
             { "MainMenu", "PlayGame", "DeckEditor", "CardsExplorer", "Settings" };
@@ -348,12 +352,69 @@ namespace Tests.PlayMode
             Assert.AreEqual("StartupLoadingRapidC", nameText.text);
         }
 
+        [UnityTest]
+        public IEnumerator StartGameWhileCardsLoadShowsProgressThenOffersStartDecks()
+        {
+            const int pages = 120;
+            const int cardsPerPage = 20;
+            const string startDeck = "Start";
+            yield return ColdStart();
+            var gameId = CreateFixture("StartupLoadingStart", pages, cardsPerPage, startDeck: startDeck);
+            var loads = new LoadCounter();
+
+            yield return ColdStart();
+            var mainMenu = Object.FindObjectsByType<MainMenu>().Single();
+            yield return WaitUntil(() => !mainMenu.IsWaitingForLanguage, loads);
+            // Let the held-input gate see a frame without presses
+            yield return null;
+            loads.Sample();
+            Assert.IsFalse(CardGameManager.Current.HasLoaded, "Start Game must be chosen while the cards load");
+
+            // The play screen opens without waiting for the cards, and shows their progress
+            mainMenu.StartGame();
+            yield return WaitUntil(() => PlayController.Instance != null, loads);
+            yield return null;
+            loads.Sample();
+            Assert.IsFalse(CardGameManager.Current.HasLoaded, "The play screen must open before the cards load");
+            Assert.IsTrue(CardGameManager.Instance.Progress.gameObject.activeSelf, "The play screen shows loading progress");
+            var messenger = CardGameManager.Instance.Messenger;
+            Assert.AreNotEqual(StartDecksMessage, messenger.CurrentMessageKey, "Start decks wait for the cards");
+
+            // The start decks are offered once the cards have loaded, and load without reloading the cards
+            var offeredBeforeLoad = false;
+            yield return WaitUntil(() =>
+            {
+                var isOffered = messenger.CurrentMessageKey == StartDecksMessage;
+                offeredBeforeLoad |= isOffered && !CardGameManager.IsCurrentContentReady;
+                // A large game also tells the player when its cards have loaded
+                if (!isOffered && messenger.IsShowing && CardGameManager.IsCurrentContentReady)
+                    messenger.OkClose();
+                return isOffered;
+            }, loads);
+            Assert.IsFalse(offeredBeforeLoad, "Start decks wait for the cards");
+            Assert.IsFalse(CardGameManager.Instance.Progress.gameObject.activeSelf);
+            messenger.ChooseYes();
+            var playArea = PlayController.Instance.PlayAreaCardZone;
+            yield return WaitUntil(() => playArea.GetComponentsInChildren<CardStack>().Any(), loads);
+            for (var frame = 0; frame < 10; frame++)
+            {
+                yield return null;
+                loads.Sample();
+            }
+
+            Assert.AreEqual(gameId, CardGameManager.Current.Id);
+            Assert.AreEqual(pages * cardsPerPage, CardGameManager.Current.Cards.Count);
+            Assert.AreEqual(2, playArea.GetComponentsInChildren<CardStack>().Sum(stack => stack.Cards.Count),
+                "The start deck is on the table");
+            Assert.AreEqual(1, loads.Count, "The cards must load once");
+        }
+
         /// <summary>
         /// Writes a game with <paramref name="pages"/> card files and selects it as the saved default. The game loads
         /// one card file per frame, so a game with many pages keeps loading for many frames.
         /// </summary>
         private string CreateFixture(string name, int pages, int cardsPerPage, int autoUpdate = -1,
-            string autoUpdateUrl = null)
+            string autoUpdateUrl = null, string startDeck = null)
         {
             var directory = Path.Combine(UnityCardGame.GamesDirectoryPath, name);
             if (Directory.Exists(directory))
@@ -370,6 +431,14 @@ namespace Tests.PlayMode
             };
             if (autoUpdateUrl != null)
                 definition["autoUpdateUrl"] = autoUpdateUrl;
+            if (startDeck != null)
+            {
+                // The deck file is already in place, so nothing is downloaded from the unreachable URL
+                definition["gameStartDecks"] = new[]
+                    { new Dictionary<string, string> { ["name"] = startDeck, ["url"] = UnreachableDeckUrl } };
+                Directory.CreateDirectory(Path.Combine(directory, "decks"));
+                File.WriteAllText(Path.Combine(directory, "decks", startDeck + ".txt"), "2 Card 1-0");
+            }
             File.WriteAllText(Path.Combine(directory, "cgs.json"), JsonConvert.SerializeObject(definition));
 
             for (var page = 1; page <= pages; page++)

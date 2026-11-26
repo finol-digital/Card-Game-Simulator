@@ -309,6 +309,8 @@ namespace Cgs.Play
 
             playAreaCardZone.OnAddCardActions.Add(AddCardToPlayArea);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
+            // Start Game does not wait for a game that is still loading; the table shows the load's progress instead
+            CardGameManager.Instance.RequireContentForScene();
 
             yield return null;
             // The play area resets when the content fills in, so start only after that
