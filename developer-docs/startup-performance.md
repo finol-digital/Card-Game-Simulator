@@ -696,9 +696,9 @@ of 1541 ms launch → menu, 353 ms start → action, and 2107 ms launch → acti
 A build with an extra 2.5 s sleep in `MainMenu.Start` failed with 4070 ms launch → menu and 4635 ms launch → action,
 and the script exited with status 1.
 
-Running it in CI needs a workflow change, which maintainers make: after the `StandaloneLinux64` build, unzip its
-artifact, `chmod +x` the player, and run the command above. The player runs in `-batchmode`, so the runner needs no
-display. The script needs Python 3.10 or newer and no packages.
+CI runs it in the **Startup Regression Check** step of `.github/workflows/main.yml`, right after the
+`StandaloneLinux64` build, with 10 runs; a failure fails that build job. The player runs in `-batchmode`, so the runner
+needs no display, and the script needs only the runner's Python (3.10 or newer, no packages).
 
 ## Baselines
 

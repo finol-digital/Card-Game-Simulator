@@ -291,6 +291,16 @@ jobs:
           androidKeyaliasName: cgs
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
           androidTargetSdkVersion: AndroidApiLevel36
+      - name: Startup Regression Check
+        if: matrix.targetPlatform == 'StandaloneLinux64'
+        timeout-minutes: 20
+        run: |
+          # The player sits next to its <name>_Data folder
+          data=$(ls -d build/StandaloneLinux64/*_Data | head -n 1)
+          player="${data%_Data}"
+          if [ ! -f "$player" ] && [ -f "$player.x86_64" ]; then player="$player.x86_64"; fi
+          sudo chmod +x "$player"
+          python3 tools/startup-benchmark/regression_check.py --player "$player" --runs 10
       - name: Upload Build
         uses: actions/upload-artifact@v7
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
