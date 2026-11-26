@@ -59,7 +59,7 @@
 - [x] 8.3 Switch Start Game to an unheld `LoadSceneAsync` and cut PlayGame's first-frame cost (lazy menus and viewers per design D7); verify with PlayMode tests that the Main Menu keeps rendering during the load and that the Start Game → play-screen-loaded milestone improves
 - [ ] 8.4 Only if 8.3 data misses the budget, add the gated additive preload from design D7; verify with PlayMode tests that navigating to Settings, Deck Editor, and Cards Explorer during and after the preload adds no delay and creates no host, decks, scene-reset callbacks, or blocked localization loads
 - [x] 8.5 Open the play screen immediately when content is still loading, showing progress and loading start decks once content is ready without reloading cards; verify with a PlayMode test using a slow-loading fixture
-- [ ] 8.6 Add the "always load start decks" choice to the start-deck prompt and Settings, localized in all shipped languages; verify with PlayMode tests for remembering, auto-loading, and resetting the choice, and with localization coverage tests
+- [x] 8.6 Add the "always load start decks" choice to the start-deck prompt and Settings, localized in all shipped languages; verify with PlayMode tests for remembering, auto-loading, and resetting the choice, and with localization coverage tests
 - [ ] 8.7 Measure Start Game → playable (benchmark delay zero) and launch → playable (external harness, saved data) over at least 30 runs per reference device, plus first install separately, and record them; verify against the `single-player-start` budgets
 
 ## 9. Data-driven deep optimizations

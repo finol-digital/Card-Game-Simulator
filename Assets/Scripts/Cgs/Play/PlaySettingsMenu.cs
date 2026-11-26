@@ -26,6 +26,7 @@ namespace Cgs.Play
         [SerializeField] Toggle shakeToRollDiceToggle;
         [SerializeField] InputField dieFaceCountInputField;
         [SerializeField] Toggle showActionsMenuToggle;
+        [SerializeField] Toggle alwaysLoadStartDecksToggle;
         [SerializeField] Transform launchNativeButton;
         [SerializeField] Transform viewRulesButton;
         [SerializeField] ScrollRect scrollRect;
@@ -67,6 +68,10 @@ namespace Cgs.Play
             shakeToRollDiceToggle.isOn = PlaySettings.ShakeToRollDice;
             dieFaceCountInputField.text = PlaySettings.DieFaceCount.ToString();
             showActionsMenuToggle.isOn = PlaySettings.ShowActionsMenu;
+            // The remembered start-deck choice belongs to the game being played, and only games with start decks ask
+            var game = CardGameManager.Current;
+            alwaysLoadStartDecksToggle.gameObject.SetActive(game.GameStartDecks.Count > 0);
+            alwaysLoadStartDecksToggle.SetIsOnWithoutNotify(PlaySettings.GetAlwaysLoadStartDecks(game.Id));
 #if CGS_SINGLEGAME && CGS_SINGLEPLAYER
             launchNativeButton.gameObject.SetActive(true);
             viewRulesButton.gameObject.SetActive(false);
@@ -149,6 +154,12 @@ namespace Cgs.Play
         public void SetShakeToRollDice(bool shakeToRollDice)
         {
             PlaySettings.ShakeToRollDice = shakeToRollDice;
+        }
+
+        [UsedImplicitly]
+        public void SetAlwaysLoadStartDecks(bool alwaysLoad)
+        {
+            PlaySettings.SetAlwaysLoadStartDecks(CardGameManager.Current.Id, alwaysLoad);
         }
 
         [UsedImplicitly]

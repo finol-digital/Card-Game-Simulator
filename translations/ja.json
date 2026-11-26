@@ -128,6 +128,24 @@
         "date": "2026-10-05"
       }
     },
+    "common.always": {
+      "text": "常に",
+      "status": "machine",
+      "sourceHash": "f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
+    "common.always.load.start.decks": {
+      "text": "開始デッキを常に読み込む",
+      "status": "machine",
+      "sourceHash": "0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
     "common.auto.stack.cards": {
       "text": "カードを自動で重ねる",
       "status": "machine",
@@ -2430,6 +2448,24 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "help.always": {
+      "text": "はい（今後は確認しない）",
+      "status": "machine",
+      "sourceHash": "c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
+    "help.always.load.start.decks": {
+      "text": "このゲームの開始時に、確認せずに開始デッキを読み込みます。",
+      "status": "machine",
+      "sourceHash": "7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
       }
     },
     "help.auto.stack": {

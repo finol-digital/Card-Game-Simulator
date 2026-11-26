@@ -504,6 +504,16 @@ progress did not change the time to the first card action with Start Game chosen
 with it; median of two alternating rounds of 10 runs each). `StartupLoadingTests` covers this with a slow-loading
 fixture game.
 
+## Remembered start-deck choice
+
+The start-deck prompt offers a third answer, **Always**, through `Dialog.Ask` with an `alwaysAction`; other questions
+do not show that button. Choosing it saves `PlaySettings.SetAlwaysLoadStartDecks` for that game only (PlayerPrefs key
+`AlwaysLoadStartDecks:<game id>`), and later starts of that game load the start decks without asking. The play
+settings menu shows **Always Load Start Decks** for the game being played, when it has start decks, and turning it off
+deletes the key. The benchmark answers the prompt with Yes, never Always, so it does not change the saved choice.
+`StartDeckChoiceTests` covers remembering, auto-loading, and turning the choice off. The two button labels and two
+tooltips are in every shipped language's catalog as machine drafts.
+
 ## Solo hosting
 
 A solo table is still hosted on the local network, so other players can join it as before, but hosting no longer

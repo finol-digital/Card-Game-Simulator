@@ -22,6 +22,8 @@ namespace Cgs.Menu
         [SerializeField] Text messageText;
         [SerializeField] Button noButton;
         [SerializeField] Button yesButton;
+        // Optional third answer that also remembers yes; shown only for messages that offer it
+        [SerializeField] GameObject alwaysButton;
         private bool _ignoreClose;
         private string _shareText;
         private int _messageVersion;
@@ -39,6 +41,7 @@ namespace Cgs.Menu
             public UiMessage Localized;
             public UnityAction NoAction;
             public UnityAction YesAction;
+            public UnityAction AlwaysAction;
             public Action Closed { get; set; }
             public bool Unskippable;
             public bool CanCopy { get; set; }
@@ -126,6 +129,15 @@ namespace Cgs.Menu
                 yesButton.onClick?.Invoke();
         }
 
+        /// <summary>Presses the displayed message's always button, as a player would, if it offers one.</summary>
+        public void ChooseAlways()
+        {
+            if (IsShowing && alwaysButton != null && alwaysButton.activeInHierarchy)
+                AlwaysButton.onClick?.Invoke();
+        }
+
+        private Button AlwaysButton => alwaysButton.GetComponentInChildren<Button>(true);
+
         /// <summary>Presses the displayed message's no button, or closes a message that has none.</summary>
         public void ChooseNo()
         {
@@ -188,6 +200,13 @@ namespace Cgs.Menu
             => ShowMessage(new Message { Text = text.English, Localized = text, NoAction = noAction,
                 YesAction = yesAction, Unskippable = unskippable, CanCopy = true, Closed = closed });
 
+        /// <summary>
+        /// Asks a yes/no question that also offers to always answer yes, as <paramref name="alwaysAction"/> remembers.
+        /// </summary>
+        public void Ask(UiMessage text, UnityAction noAction, UnityAction yesAction, UnityAction alwaysAction)
+            => ShowMessage(new Message { Text = text.English, Localized = text, NoAction = noAction,
+                YesAction = yesAction, AlwaysAction = alwaysAction, CanCopy = true });
+
         private void ShowMessage(Message message)
         {
             if (gameObject.activeSelf)
@@ -232,6 +251,16 @@ namespace Cgs.Menu
             if (message.NoAction != null)
                 noButton.onClick.AddListener(message.NoAction);
             noButton.onClick.AddListener(OkClose);
+
+            if (alwaysButton != null)
+            {
+                alwaysButton.SetActive(message.YesAction != null && message.AlwaysAction != null);
+                var always = AlwaysButton;
+                always.onClick.RemoveAllListeners();
+                if (message.AlwaysAction != null)
+                    always.onClick.AddListener(message.AlwaysAction);
+                always.onClick.AddListener(OkClose);
+            }
 
             _ignoreClose = message.Unskippable;
 

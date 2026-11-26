@@ -41,6 +41,8 @@ This practice session uses **Standard Playing Cards**, included with CGS. It tea
 
    *Choose the green checkmark, or press Enter, to load the deck.*
 
+   To load this game's starting decks without the prompt from now on, choose **Always** instead. To be asked again, open the play settings during a game and turn off **Always Load Start Decks**.
+
 4. **Put cards in your hand.** If a deal/draw prompt appears, set the number of cards and confirm. For practice, use two cards. Your hand is in the drawer at the bottom of the screen; open it to see your cards. Use **Deal X** to choose a hand size or **Draw 1** to draw one card from your play deck. On a keyboard, with no card selected or dialog open, the corresponding shortcuts are **0** and **1**.
 5. **Play a card.** Drag one card from your hand onto an empty part of the table. Select it and use **Flip** in its action panel to turn it over. The card stays on the table and its displayed face changes.
 

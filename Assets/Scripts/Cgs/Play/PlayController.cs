@@ -430,16 +430,27 @@ namespace Cgs.Play
 
         private void StartDecks()
         {
-            if (CardGameManager.Current.GameStartDecks.Count > 0)
+            var game = CardGameManager.Current;
+            if (game.GameStartDecks.Count > 0)
             {
                 _isStartingDecks = true;
-                CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(CardGameManager.Current, display =>
-                    UiMessage.With("play.load.decks", LoadStartDecksAsk,
-                        ("names", string.Join(", ", CardGameManager.Current.GameStartDecks.Select(deck =>
-                            $"'{display.DeckName(deck.Name, true)}'"))))), DeclineStartDecks, StartLoadStartDecks);
+                if (PlaySettings.GetAlwaysLoadStartDecks(game.Id))
+                    StartLoadStartDecks();
+                else
+                    CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(game, display =>
+                            UiMessage.With("play.load.decks", LoadStartDecksAsk,
+                                ("names", string.Join(", ", game.GameStartDecks.Select(deck =>
+                                    $"'{display.DeckName(deck.Name, true)}'"))))), DeclineStartDecks,
+                        StartLoadStartDecks, () => AlwaysLoadStartDecks(game.Id));
             }
             else
                 ShowDeckMenu();
+        }
+
+        private void AlwaysLoadStartDecks(string gameId)
+        {
+            PlaySettings.SetAlwaysLoadStartDecks(gameId, true);
+            StartLoadStartDecks();
         }
 
         private void DeclineStartDecks()

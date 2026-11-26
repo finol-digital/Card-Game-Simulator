@@ -1989,6 +1989,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 3103366582956195940
+  - m_Id: 18564103522996224
+    m_Localized: "\u5E38\u306B"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323144
+  - m_Id: 18564103636242432
+    m_Localized: "\u958B\u59CB\u30C7\u30C3\u30AD\u3092\u5E38\u306B\u8AAD\u307F\u8FBC\u3080"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323145
+  - m_Id: 18564103665602560
+    m_Localized: "\u306F\u3044\uFF08\u4ECA\u5F8C\u306F\u78BA\u8A8D\u3057\u306A\u3044\uFF09"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323146
+  - m_Id: 18564103665602561
+    m_Localized: "\u3053\u306E\u30B2\u30FC\u30E0\u306E\u958B\u59CB\u6642\u306B\u3001\u78BA\u8A8D\u305B\u305A\u306B\u958B\u59CB\u30C7\u30C3\u30AD\u3092\u8AAD\u307F\u8FBC\u307F\u307E\u3059\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323147
   references:
     version: 2
     RefIds:
@@ -2000,6 +2020,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"\u30C7\u30C3\u30AD\u300C{deckName}\u300D\u306F\u4E0D\u5B8C\u5168\u3067\u3059\u3002\u8AAD\u307F\u8FBC\u3093\u3060\u30AB\u30FC\u30C9\u6570\uFF1A{loadedCount}\u3002\u898B\u3064\u304B\u3089\u306A\u3044\u30AB\u30FC\u30C9\u6570\uFF1A{missingCount}\u3002\\n\\n\u6B21\u306E\u30AB\u30FC\u30C9\u540D\u307E\u305F\u306FID\u304C\u3053\u306E\u30B2\u30FC\u30E0\u3067\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F\uFF1A\\n{cards}\\n\\n\u30D7\u30EC\u30A4\u3059\u308B\u524D\u306B\u30C7\u30C3\u30AD\u30EA\u30B9\u30C8\u3092\u78BA\u8A8D\u3059\u308B\u304B\u3001\u30B2\u30FC\u30E0\u30C7\u30FC\u30BF\u3092\u66F4\u65B0\u3057\u3066\u304F\u3060\u3055\u3044\u3002\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 1812176077519323144
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u5E38\u306B\",\"status\":\"machine\",\"sourceHash\":\"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323145
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u958B\u59CB\u30C7\u30C3\u30AD\u3092\u5E38\u306B\u8AAD\u307F\u8FBC\u3080\",\"status\":\"machine\",\"sourceHash\":\"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323146
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u306F\u3044\uFF08\u4ECA\u5F8C\u306F\u78BA\u8A8D\u3057\u306A\u3044\uFF09\",\"status\":\"machine\",\"sourceHash\":\"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323147
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u3053\u306E\u30B2\u30FC\u30E0\u306E\u958B\u59CB\u6642\u306B\u3001\u78BA\u8A8D\u305B\u305A\u306B\u958B\u59CB\u30C7\u30C3\u30AD\u3092\u8AAD\u307F\u8FBC\u307F\u307E\u3059\u3002\",\"status\":\"machine\",\"sourceHash\":\"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 3103366582956195939
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

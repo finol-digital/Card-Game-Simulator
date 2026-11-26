@@ -1930,6 +1930,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 3103366582956195948
+  - m_Id: 18564103522996224
+    m_Key: common.always
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323160
+  - m_Id: 18564103636242432
+    m_Key: common.always.load.start.decks
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323161
+  - m_Id: 18564103665602560
+    m_Key: help.always
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323162
+  - m_Id: 18564103665602561
+    m_Key: help.always.load.start.decks
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323163
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
@@ -1945,6 +1965,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Deck \"{deckName}\" is incomplete. Loaded cards: {loadedCount}. Missing cards: {missingCount}.\n\nThese card names or IDs could not be found in this game:\n{cards}\n\nCheck the deck list or update the game data before playing.","context":"Warning after a partial deck load. Card names, IDs and deck name are supplied data; preserve them. Counts include duplicate copies.","arguments":{"deckName":"Name of the loaded deck.","loadedCount":"Number of card copies successfully loaded.","missingCount":"Number of card copies not found.","cards":"Newline-separated quantities and missing card names or IDs."},"smart":true}'
+    - rid: 1812176077519323160
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Always","context":"Button label in a yes/no dialog at Dialog/Frame/Response ButtonGroup/Always Button/Labeled Button/Label in Assets/Prefabs/Menus/Dialog.prefab. It answers yes and remembers that answer so the question is not asked again, as when loading a game''s start decks. The button is narrow and also shows an icon; keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 1812176077519323161
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Always Load Start Decks","context":"Interface label at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AlwaysLoadStartDecks Toggle/Label in Assets/Prefabs/Menus/Play Settings Menu.prefab. When on, starting the current game loads its start decks without asking. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 1812176077519323162
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Yes, and do not ask again","context":"Tooltip explaining a control at Dialog/Frame/Response ButtonGroup/Always Button/Labeled Button in Assets/Prefabs/Menus/Dialog.prefab. The button answers yes and stops asking this question, for example whether to load a game''s start decks. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 1812176077519323163
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Load this game''s start decks without asking when it starts.","context":"Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AlwaysLoadStartDecks Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. The setting applies only to the game being played. Keep control labels concise.","arguments":{},"smart":false}'
     - rid: 3103366582956195947
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
