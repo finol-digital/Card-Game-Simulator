@@ -914,11 +914,14 @@ namespace Cgs.CardGameView.Multiplayer
                 });
             else if (!IsFacedown)
                 unityCard.RegisterDisplay(this);
-            if (CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
-                CardViewer.Instance.SelectedCardModel == this)
-                CardViewer.Instance.SelectedCardModel = this;
-            if (CardViewer.Instance != null && CardViewer.Instance.PreviewCardModel == this)
-                CardViewer.Instance.PreviewCardModel = this;
+            // Refresh a viewer that shows this card; a viewer that does not exist yet shows nothing
+            var cardViewer = CardViewer.Existing;
+            if (cardViewer == null)
+                return;
+            if (cardViewer.IsVisible && cardViewer.SelectedCardModel == this)
+                cardViewer.SelectedCardModel = this;
+            if (cardViewer.PreviewCardModel == this)
+                cardViewer.PreviewCardModel = this;
         }
 
         private static bool IsFaceFlip(string oldId, string newId, out UnityCard oldCard)

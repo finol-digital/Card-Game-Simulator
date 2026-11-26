@@ -469,6 +469,33 @@ became interactive this long after the first managed callback:
 
 Standard Playing Cards took 69 ms to copy before the menu, and Dominoes and Mahjong 95 ms in the background.
 
+## Opening the play screen
+
+Start Game loads the play screen with `SceneManager.LoadSceneAsync`, so the Main Menu keeps drawing frames while it
+loads, and the selected game's cards keep loading at the same time. From Start Game until the play screen replaces it,
+the menu ignores input (`MainMenu.IsOpeningPlayScreen`), so a second press cannot load another screen. Raising
+`Application.backgroundLoadingPriority` during the load made it slower here, so it stays at its default.
+
+The play screen no longer creates the card viewer and the playable viewer as it opens. They are created half a
+second after the table starts (`PlayController.ViewerPrepareDelaySeconds`), or sooner by the first use of
+`CardViewer.Instance` or `PlayableViewer.Instance`. Code that only asks whether a viewer is shown uses
+`CardViewer.IsShown`, `WasShown`, `IsZoomed`, `PlayableViewer.IsShown`, `WasShown`, or `Existing`, which do not create
+one. Creating both cost about 25 ms of the play screen's opening on this laptop.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode` benchmark mode, saved data, 20 runs
+each), medians from Start Game:
+
+| Start Game | Build | Play screen loaded | Table playable | First card action |
+|---|---|---|---|---|
+| As soon as the menu is interactive | Before | 146 ms | 393 ms | 431 ms |
+| As soon as the menu is interactive | After | 140 ms | 238 ms | 282 ms |
+| After 1 s on the menu | Before | 144 ms | 243 ms | 278 ms |
+| After 1 s on the menu | After | 146 ms | 231 ms | 270 ms |
+
+Started at once, the table used to wait for the game's cards, which were still loading after the synchronous scene
+load; now they load during it. With the asynchronous load alone, the play screen finished loading later (169 ms) and
+started 1 s later took 303 ms to the first card action; creating the viewers later made up for that.
+
 ## Solo hosting
 
 A solo table is still hosted on the local network, so other players can join it as before, but hosting no longer

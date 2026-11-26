@@ -51,9 +51,9 @@ namespace Cgs.Play
         private bool IsPointsOutOfSync => IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
                                           CgsNetManager.Instance.LocalPlayer.Points != Points;
 
-        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
-                                  CardViewer.Instance.Zoom || nameInputField.isFocused ||
-                                  PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
+        private bool IsBlocked => CardViewer.IsShown || CardViewer.WasShown ||
+                                  CardViewer.IsZoomed || nameInputField.isFocused ||
+                                  PlayableViewer.IsShown || PlayableViewer.WasShown ||
                                   CardGameManager.Instance.ModalCanvas != null;
 
         /// <summary>The points shown for the local player.</summary>

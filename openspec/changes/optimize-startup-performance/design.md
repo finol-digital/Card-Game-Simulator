@@ -160,6 +160,8 @@ Only if D1 data shows that PlayGame activation alone still misses the budget, ev
 - Leaving for any other screen: wait for the additive load to finish (it is never held), then `UnloadSceneAsync` it before or alongside the navigation, and measure that this adds no delay.
 - Tests navigate away both while the preload is in progress and once it has completed, and assert no hosting, decks, callbacks, or blocked localization loads.
 
+*Measured (task 8.3):* on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode` benchmark mode, saved data, 20 runs each), with Start Game chosen as soon as the Main Menu is interactive, the unheld `LoadSceneAsync` plus creating `CardViewer` and `PlayableViewer` half a second after the table starts (or on first use) took Start Game → play screen loaded from 146 to 140 ms, → table playable from 393 to 238 ms, and → first card action from 431 to 282 ms. The table used to wait for the game's cards to finish loading after the synchronous scene load; now they load during it. With Start Game after 1 s on the menu, the first card action took 270 ms instead of 278 ms. The asynchronous load alone delayed the play screen (169 ms) and the 1 s case (303 ms); the later viewers made up for it. Raising `Application.backgroundLoadingPriority` during the load was slower (335 ms to the first card action) and is not used. The 500 ms budget is met on this laptop without the preload, so task 8.4 is checked against the reference-device data from task 8.7.
+
 *Alternatives:* a held preload (rejected for the reasons above); persistent additive scenes (more memory, more complexity, and invasive for multiplayer object lifetimes).
 
 ### D8. Card data cache and off-thread parse

@@ -127,9 +127,9 @@ namespace Cgs.Play
 
         public Scoreboard Scoreboard => scoreboard;
 
-        public bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
-                                 CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible ||
-                                 PlayableViewer.Instance.WasVisible || scoreboard.NameInputField.isFocused ||
+        public bool IsBlocked => CardViewer.IsShown || CardViewer.WasShown ||
+                                 CardViewer.IsZoomed || PlayableViewer.IsShown ||
+                                 PlayableViewer.WasShown || scoreboard.NameInputField.isFocused ||
                                  scoreboard.PointsInputField.isFocused || CardGameManager.Instance.ModalCanvas != null;
 
         public Vector2 NewPlayablePosition
@@ -273,6 +273,9 @@ namespace Cgs.Play
 
         private PlayHelpMenu _playHelpMenu;
 
+        /// <summary>How long after the table starts the card and playable viewers are created, unless used sooner.</summary>
+        internal const float ViewerPrepareDelaySeconds = 0.5f;
+
         protected void Awake()
         {
             Instance = this;
@@ -281,11 +284,15 @@ namespace Cgs.Play
 
         protected void OnEnable()
         {
-            Instantiate(cardViewerPrefab);
-            Instantiate(playableViewerPrefab);
-            if (Cgs.Menu.Settings.PreviewOnMouseOver)
-                CardViewer.Instance.Mode = CardViewerMode.Expanded;
-            CardViewer.Instance.IsActionable = true;
+            // The viewers are created when first used, so they are not on the way to a playable table
+            CardViewer.Create = () => Instantiate(cardViewerPrefab).GetOrAddComponent<CardViewer>();
+            CardViewer.Created = cardViewer =>
+            {
+                if (Cgs.Menu.Settings.PreviewOnMouseOver)
+                    cardViewer.Mode = CardViewerMode.Expanded;
+                cardViewer.IsActionable = true;
+            };
+            PlayableViewer.Create = () => Instantiate(playableViewerPrefab).GetOrAddComponent<PlayableViewer>();
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
 
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed += InputPlayGameMenu;
@@ -308,6 +315,16 @@ namespace Cgs.Play
             yield return CardGameManager.WaitForCurrentContent();
 
             StartLobby();
+
+            // The table does not need the viewers to show, so they are created once it is up, or sooner if used
+            yield return new WaitForSecondsRealtime(ViewerPrepareDelaySeconds);
+            PrepareViewers();
+        }
+
+        private static void PrepareViewers()
+        {
+            if (CardViewer.Instance == null || PlayableViewer.Instance == null)
+                Debug.LogWarning("PlayController: a viewer could not be created");
         }
 
         private void Restart()
@@ -1282,6 +1299,9 @@ namespace Cgs.Play
 
         protected void OnDisable()
         {
+            CardViewer.Create = null;
+            CardViewer.Created = null;
+            PlayableViewer.Create = null;
             StopNetworking();
 
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed -= InputPlayGameMenu;

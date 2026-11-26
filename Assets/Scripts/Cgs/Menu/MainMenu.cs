@@ -106,6 +106,11 @@ namespace Cgs.Menu
 
         private float _interactiveTime = -1;
 
+        private AsyncOperation _playScreenLoad;
+
+        /// <summary>Start Game was chosen and the play screen is loading, so the menu ignores further input.</summary>
+        internal bool IsOpeningPlayScreen => _playScreenLoad != null;
+
         /// <summary>Hidden, and ignoring input, while the first Main Menu waits for the startup language.</summary>
         internal bool IsWaitingForLanguage => _languageWait != null;
 
@@ -243,7 +248,11 @@ namespace Cgs.Menu
         }
 
         // Shortcuts and swipes act only on the visible menu, without a dialog over it
-        private bool AcceptsInput => !IsWaitingForLanguage && CardGameManager.Instance.ModalCanvas == null;
+        private bool AcceptsInput => !IsWaitingForLanguage && !IsOpeningPlayScreen &&
+                                     CardGameManager.Instance.ModalCanvas == null;
+
+        // Buttons and swipes do nothing while the play screen loads, and ignore a press held over from before
+        private bool AllowsPointerAction => !IsOpeningPlayScreen && _heldInput.AllowsPointerAction;
 
         // Focus the current game so the first gamepad or keyboard input acts on it, as Submit did with nothing focused.
         // Touch-first devices without a gamepad show no focus highlight.
@@ -360,7 +369,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void SelectPrevious()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoSelectPrevious();
         }
 
@@ -434,7 +443,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void SelectNext()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoSelectNext();
         }
 
@@ -515,7 +524,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void ShowGamesManagementMenu()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoShowGamesManagementMenu();
         }
 
@@ -535,7 +544,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void ShowSettings()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoShowSettings();
         }
 
@@ -553,7 +562,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void ExploreCards()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoExploreCards();
         }
 
@@ -571,7 +580,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void EditDeck()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoEditDeck();
         }
 
@@ -589,7 +598,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void JoinGame()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoJoinGame();
         }
 
@@ -608,15 +617,19 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void StartGame()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoStartGame();
         }
 
-        private static void DoStartGame()
+        private void DoStartGame()
         {
+            if (IsOpeningPlayScreen)
+                return;
             CardGameManager.Instance.IsSearchingForServer = false;
             StartupTimeline.Mark(StartupMilestone.StartGameChosen);
-            SceneManager.LoadScene(Tags.PlayModeSceneIndex);
+            // Unlike LoadScene, this keeps the menu drawing while the play screen loads, and lets the selected game's
+            // cards keep loading meanwhile
+            _playScreenLoad = SceneManager.LoadSceneAsync(Tags.PlayModeSceneIndex);
         }
 
         private void InputCancel(InputAction.CallbackContext context)
@@ -632,7 +645,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void PromptQuit()
         {
-            if (_heldInput.AllowsPointerAction)
+            if (AllowsPointerAction)
                 DoPromptQuit();
         }
 
