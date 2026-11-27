@@ -2023,6 +2023,7 @@ MonoBehaviour:
   shakeToRollDiceToggle: {fileID: 7517611020213418185}
   dieFaceCountInputField: {fileID: 6699655156933817983}
   showActionsMenuToggle: {fileID: 3752212551069594467}
+  alwaysLoadStartDecksToggle: {fileID: 1657941042143449071}
   launchNativeButton: {fileID: 5482379275272839251}
   viewRulesButton: {fileID: 7190487691602351902}
   scrollRect: {fileID: 3655811990248489395}
@@ -2154,7 +2155,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 707491489704095531, guid: bcd6c8c8d8b4b004ab05978ff2d32058, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1600
+      value: 1800
       objectReference: {fileID: 0}
     - target: {fileID: 6729428304007553494, guid: bcd6c8c8d8b4b004ab05978ff2d32058, type: 3}
       propertyPath: m_Pivot.x
@@ -2295,6 +2296,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 707491489704095531, guid: bcd6c8c8d8b4b004ab05978ff2d32058, type: 3}
       insertIndex: -1
       addedObject: {fileID: 321186455380123748}
+    - targetCorrespondingSourceObject: {fileID: 707491489704095531, guid: bcd6c8c8d8b4b004ab05978ff2d32058, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1657941042143449064}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 593864689913038249, guid: bcd6c8c8d8b4b004ab05978ff2d32058, type: 3}
       insertIndex: -1
@@ -4402,6 +4406,223 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &8461118449533162349
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 487570543223040858}
+    m_Modifications:
+    - target: {fileID: 212072498232861229, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_Text
+      value: Always Load Start Decks
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8737743237939570206}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetAlwaysLoadStartDecks
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.Play.PlaySettingsMenu, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: tooltip
+      value: Load this game's start decks without asking when it starts.
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: localizationKey
+      value: help.always.load.start.decks
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413316, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_Name
+      value: AlwaysLoadStartDecks Toggle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 850
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4969804493695059703}
+    - targetCorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6982006401944638519}
+  m_SourcePrefab: {fileID: 100100000, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+--- !u!224 &1657941042143449064 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+  m_PrefabInstance: {fileID: 8461118449533162349}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1657941042143449071 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+  m_PrefabInstance: {fileID: 8461118449533162349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8618342359876317504 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 212072498232861229, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+  m_PrefabInstance: {fileID: 8461118449533162349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8979427641878484064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8979427641878484064 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 717967603025315597, guid: 941097a8539264a49b1d8dce6757b667, type: 3}
+  m_PrefabInstance: {fileID: 8461118449533162349}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4969804493695059703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8979427641878484064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8182d6c8e6f8e1428fac06d283419f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.LocalizedUiFont
+  key: body.regular
+--- !u!114 &6982006401944638519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8979427641878484064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9977dcfd2d964e34cad62ad50d22adc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs.Localization::Cgs.Localization.CgsLocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: CgsUi
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: common.always.load.start.decks
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8618342359876317504}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  english: Always Load Start Decks
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &8750810712129032746
 PrefabInstance:
   m_ObjectHideFlags: 0

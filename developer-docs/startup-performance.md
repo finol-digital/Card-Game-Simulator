@@ -312,7 +312,38 @@ days after that deploy. Record the network type and browser version with the res
   visits used a normal tab, and the harness then cleared the site's data from the phone's profile.
 
 On a first visit the Main Menu accepts input while the default games are still downloading, so build 1.171.24
-reports the play phase as failed (`benchmarkGameUnavailable`); use only `launchToMenuMs` from those runs.
+reports the play phase as failed (`benchmarkGameUnavailable`); use only `launchToMenuMs` from those runs. Builds
+with the change described in [Default games on the web](#default-games-on-the-web) select Standard Playing Cards as
+soon as it has downloaded, so the play phase can be measured on first visits too.
+
+#### Compression and caching
+
+The web build is not compressed by Unity (`webGLCompressionFormat` is Disabled), because Firebase Hosting compresses
+it on the fly: it serves the build with `Content-Encoding: br` to browsers that accept Brotli, and gzip otherwise.
+Checked on 2026-11-26 against `https://card-game-simulator.web.app` (the 2026-11-11 deploy):
+
+| File | Uncompressed | Brotli (served) | gzip |
+|---|---|---|---|
+| `WebGL.wasm` | 66.7 MB | 11.2 MB | 17.4 MB |
+| `WebGL.data` | 26.8 MB | 13.6 MB | 15.9 MB |
+| `WebGL.framework.js` | 526 KB | 86 KB | 104 KB |
+| `WebGL.loader.js` | 27 KB | 8 KB | 9 KB |
+
+Unity's own Brotli compression would make the files smaller to store but not to send, and Firebase does not add
+`Content-Encoding` to `.br` files by itself, so it would also need headers in `firebase/firebase.json`; it is not used.
+Data caching (`webGLDataCaching`) stays on. Responses carry `Cache-Control: max-age=3600` and an `ETag`.
+
+A first and a repeat visit in headless Chromium with one browser profile, recording each finished request and its
+transferred size with Playwright, showed:
+
+- **First visit:** the build (about 25 MB transferred), the Addressables bundles (about 4.7 MB), and the three
+  default games' definitions, images, and cards through `cgs.games/api/proxy` (about 0.7 MB).
+- **Repeat visit:** the build files came from the browser cache (nothing transferred), the bundles were revalidated
+  with `304 Not Modified`, and no game data was requested: the games load from the browser's saved files.
+
+On a first visit with an English browser, the `localization-assets-japanese(ja)` bundle (3.6 MB) is also
+downloaded. It holds the Japanese font, Noto Sans JP, which the English interface does not use; why an English
+session loads it is not known yet, so check it when the web first-visit budgets are set (task 10.3).
 
 ## Minimal reference build
 
@@ -405,8 +436,8 @@ build with saved data), the Main Menu became interactive this long after the fir
 The first scene loaded at the same time in both (823 and 826 ms), so the 56 ms saving is in the Main Menu's first
 frames, where the Unity Services start used to run. A non-Steam build no longer loads the Steam API, so its log has
 no Steam lines. When Steam signals are present, `Steam initialized at <ms> ms`, or the warning `Steam Deck features
-unavailable`, appears after the launch summary. Moving the network components out of the `CardGameManager` prefab
-would save about 24 ms more; that move is scheduled with task 8.2 (see design D4).
+unavailable`, appears after the launch summary. The network components have since moved out of the
+`CardGameManager` prefab as well; see [Network manager](#network-manager).
 
 ## Startup visuals
 
@@ -469,6 +500,165 @@ became interactive this long after the first managed callback:
 
 Standard Playing Cards took 69 ms to copy before the menu, and Dominoes and Mahjong 95 ms in the background.
 
+## Opening the play screen
+
+Start Game loads the play screen with `SceneManager.LoadSceneAsync`, so the Main Menu keeps drawing frames while it
+loads, and the selected game's cards keep loading at the same time. From Start Game until the play screen replaces it,
+the menu ignores input (`MainMenu.IsOpeningPlayScreen`), so a second press cannot load another screen. Raising
+`Application.backgroundLoadingPriority` during the load made it slower here, so it stays at its default.
+
+The play screen no longer creates the card viewer and the playable viewer as it opens. They are created half a
+second after the table starts (`PlayController.ViewerPrepareDelaySeconds`), or sooner by the first use of
+`CardViewer.Instance` or `PlayableViewer.Instance`. Code that only asks whether a viewer is shown uses
+`CardViewer.IsShown`, `WasShown`, `IsZoomed`, `PlayableViewer.IsShown`, `WasShown`, or `Existing`, which do not create
+one. Creating both cost about 25 ms of the play screen's opening on this laptop.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode` benchmark mode, saved data, 20 runs
+each), medians from Start Game:
+
+| Start Game | Build | Play screen loaded | Table playable | First card action |
+|---|---|---|---|---|
+| As soon as the menu is interactive | Before | 146 ms | 393 ms | 431 ms |
+| As soon as the menu is interactive | After | 140 ms | 238 ms | 282 ms |
+| After 1 s on the menu | Before | 144 ms | 243 ms | 278 ms |
+| After 1 s on the menu | After | 146 ms | 231 ms | 270 ms |
+
+Started at once, the table used to wait for the game's cards, which were still loading after the synchronous scene
+load; now they load during it. With the asynchronous load alone, the play screen finished loading later (169 ms) and
+started 1 s later took 303 ms to the first card action; creating the viewers later made up for that.
+
+Start Game never waits for the selected game to finish loading. The play screen calls
+`CardGameManager.RequireContentForScene` as it starts, as the Deck Editor and Cards Explorer do. It then shows the
+cards' loading progress until they have loaded (`CardGameManager.WaitForCurrentContent`), and offers the start decks
+after that. The cards are not loaded again: the scene load waits for the load that is already running. Showing the
+progress did not change the time to the first card action with Start Game chosen at once (283 ms without it, 282 ms
+with it; median of two alternating rounds of 10 runs each). `StartupLoadingTests` covers this with a slow-loading
+fixture game.
+
+## Loading card files
+
+`CardGameManager` loads a game's card files with `UnityCardGame.LoadCardsRoutine`. Each file is read and parsed on a
+worker thread (on the main thread in web builds, which have no threads), and its cards are then created on the main
+thread for at most `UnityCardGame.CardCreationBudgetMs` (8 ms) per frame. Loading a whole file in one call, as
+`UnityCardGame.LoadCards` still does for callers that need it at once, froze a frame for 1.8 s or more with a
+30,000-card file on the Lenovo IdeaPad Y510P. Spread over frames, the same file loads in about 1.9 s over about 670
+frames, and no frame spends more than about 90 ms on it. Bundled games load in about 100–135 ms and are not on the Start
+Game critical path, so a saved snapshot of parsed cards was not built; see design D8 for the data and decision.
+`CardFileLoadingTests` checks that both ways give the same cards, that a large file does not stall a frame, and that a
+corrupt file reports its error.
+
+## Default games on the web
+
+When the web app has no games, as on a first visit, it downloads the default games itself instead of installing them
+from the build. `CardGameManager.GetDefaultCardGames` downloads the player's saved game first (Standard Playing Cards
+on a first visit), with progress, and selects it. The Main Menu can then start it while Dominoes and Mahjong download
+in the background, without progress, without changing the selection, and without blocking the menu
+(`CardGameManager.IsDownloadingDefaultGames`). A download the player starts waits for a background download to finish,
+because a game downloads into a folder named for it only once its definition has been read. Before, the web app
+downloaded all three in a row, each behind the progress bar, and selected each in turn.
+`DefaultGameDownloadTests` covers this with games served from local files.
+
+## Remembered start-deck choice
+
+The start-deck prompt offers a third answer, **Always**, through `Dialog.Ask` with an `alwaysAction`; other questions
+do not show that button. Choosing it saves `PlaySettings.SetAlwaysLoadStartDecks` for that game only (PlayerPrefs key
+`AlwaysLoadStartDecks:<game id>`), and later starts of that game load the start decks without asking. The play
+settings menu shows **Always Load Start Decks** for the game being played, when it has start decks, and turning it off
+deletes the key. The benchmark answers the prompt with Yes, never Always, so it does not change the saved choice.
+`StartDeckChoiceTests` covers remembering, auto-loading, and turning the choice off. The two button labels and two
+tooltips are in every shipped language's catalog as machine drafts.
+
+## Solo hosting
+
+A solo table is still hosted on the local network, so other players can join it as before, but hosting no longer
+delays play:
+
+- **When:** `PlayController` starts hosting (`CgsNetManager.StartLanHost`) once the start decks have been asked about
+  and dealt (or declined) and no prompt or menu is open, at least one frame after the table is drawn. Until then the
+  table is local, like the web build's.
+- **Keeping the table:** as hosting starts, the host spawns everything already on the table with its current state:
+  zones, boards, card stacks (name, cards, face-up top card), cards (face, position, rotation, zone), dice, and
+  counters. It also keeps the current deck, every hand in the drawer, and the points. A player who joins later sees
+  the same table. Each table object copies its local state into its network variables in
+  `CgsNetPlayable.SeedNetworkStateFromLocal`.
+- **Failure:** if hosting fails (for example, the port is in use), the table stays playable and the log shows
+  `Could not host this table on the local network, so other players cannot join it.` without a dialog.
+- **Web:** the web build does not host, as before.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode` benchmark mode, saved data, 15
+runs each), from Start Game:
+
+| Build | Table playable (median) | First card action (median) |
+|---|---|---|
+| Hosting before the start decks | 619 ms | 698 ms |
+| Not hosting at all (measurement only) | 374 ms | 416 ms |
+| Hosting once the table is set up | 377 ms | 418 ms |
+
+In the first build, `StartHost` took about 165 ms and starting LAN discovery about 63 ms, and the start decks then
+loaded through network requests. Mono runs this code more slowly than the IL2CPP release builds, so the saving on the
+reference devices is smaller; their numbers come from task 8.7.
+
+## Network manager
+
+The network components (`CgsNetManager`, both Unity transports, `Transports`, and `CgsNetDiscovery`) are in their own
+prefab, `Assets/Resources/CgsNetManager.prefab`, instead of the `CardGameManager` prefab that every scene loads.
+`CgsNetManager.GetOrCreate()` creates the network manager:
+
+- **Main Menu:** half a second after the menu becomes interactive (`MainMenu.NetworkPrepareDelaySeconds`), while the
+  player looks at it. It does not host, join, or start LAN discovery then.
+- **Play screen:** if Start Game, Join Game, or a link opens the play screen sooner, `PlayController` creates it on
+  entry.
+
+Once created, it lasts as long as the `CardGameManager`. Before then `CgsNetManager.Instance` is null, so code outside
+the play screen must check for null.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode`, saved data; 20 alternating launches,
+then 15 benchmark-mode runs per row), medians:
+
+| Measure | Network components in `CardGameManager` | In their own prefab |
+|---|---|---|
+| First managed callback → Main Menu interactive | 948 ms | 934 ms |
+| Start Game at once → table playable / first card action | 370 / 413 ms | 387 / 425 ms |
+| Start Game after 1 s on the menu → table playable / first card action | 268 / 303 ms | 241 / 276 ms |
+
+Choosing Start Game at once is the benchmark's fastest case. Then the play screen creates the network manager, which
+costs about 12–17 ms. A player who spends at least half a second on the menu has it already, and the play screen
+opens sooner.
+
+## Engine modules
+
+CGS removes these built-in engine modules from `Packages/manifest.json`, because neither CGS nor its packages use
+them: AI (navigation), Cloth, Director (Timeline), Particle System, Terrain, Terrain Physics, Tilemap, Umbra (occlusion
+culling), Unity Analytics, Vector Graphics, Vehicles, Video, Wind, and XR. 3D Physics stays, because uGUI and UI
+Toolkit depend on it; CGS's own table uses 2D Physics.
+
+Before removing a module, check that no package lists it as a dependency in `Packages/packages-lock.json` and that no
+code or asset uses it. If a later feature needs one, add it back in the Package Manager.
+
+Measured on the Lenovo IdeaPad Y510P (2026-11-25, local Mono builds, `-batchmode`, saved data, 20 alternating
+launches each):
+
+| Build | Process start to launch summary (median) | Main Menu interactive (median) | Size |
+|---|---|---|---|
+| All modules | 1558 ms | 952 ms | 182.0 MB |
+| Unused modules removed | 1557 ms | 958 ms | 181.8 MB |
+
+A Mono build ships every engine module and launches no faster. The difference is expected in IL2CPP builds (desktop,
+Android, iOS, and WSA) and web builds, where Strip Engine Code removes unused native engine code; there, packages such
+as URP no longer compile in their Terrain, Particle System, and XR code paths. This laptop does not have the memory
+for a local IL2CPP build, so these sizes come from the Unity build reports of the CI builds before (`acd2dfd4`) and
+after (`7b47ddfc`) the change:
+
+| Platform | Shaders | Complete build (uncompressed) |
+|---|---|---|
+| Android | 2.3 MB → 2.2 MB | 1.6 GB, unchanged at this precision |
+| iOS | 1.1 MB → 1.0 MB | 1.6 GB, unchanged at this precision |
+| Linux (IL2CPP) | 2.2 MB → 2.0 MB | 2.1 GB, unchanged at this precision |
+| Web | 985 KB → 915 KB | 128.7 MB → 128.0 MB |
+
+The Android native build also had 18 fewer compile and link steps (825 → 807). The saving is small, so its effect on
+device launch time is checked with the Android measurements of task 7.2 rather than on its own.
+
 ## Local development check
 
 A local Mono Linux player is enough to check that benchmark mode works end to end, but its times are not baselines
@@ -484,6 +674,34 @@ A local Mono Linux player is enough to check that benchmark mode works end to en
 Opening directly on the Main Menu removed the title screen's scene load and the Main Menu's 100 ms input delay:
 launch → menu fell by about 515 ms at the median, and the first managed callback → menu interval fell from about
 1608 ms to 1104 ms. Start → action is unaffected by this change.
+
+## Regression check
+
+`tools/startup-benchmark/regression_check.py` runs a standalone Linux player in benchmark mode, in `-batchmode` and
+with a new data folder, and fails if any run fails or the median of an interval is above its threshold in
+`tools/startup-benchmark/regression_thresholds.json`:
+
+```bash
+python3 tools/startup-benchmark/regression_check.py --player Builds/Linux/CardGameSimulator.x86_64 --runs 10
+```
+
+Two uncounted warm-up runs install the bundled games first, so the counted runs use saved data. The player can be a
+local Mono build or the `cgs-StandaloneLinux64` artifact from CI. The thresholds are loose on purpose (median launch
+→ menu 3000 ms, start → action 1500 ms, launch → action 4500 ms), well above this laptop's Mono times, so that a slower
+or shared CI machine still passes and only a large regression fails. Tighten them once there are CI timings to base
+them on. `test_regression_check.py` covers the pass and fail rules.
+
+Checked on the Lenovo IdeaPad Y510P (2026-11-26, local Mono builds, 10 runs each). The current build passed with medians
+of 1541 ms launch → menu, 353 ms start → action, and 2107 ms launch → action, also with no display (`DISPLAY` unset).
+A build with an extra 2.5 s sleep in `MainMenu.Start` failed with 4070 ms launch → menu and 4635 ms launch → action,
+and the script exited with status 1.
+
+CI runs it in the **Startup Regression Check** step of `.github/workflows/main.yml`, right after the
+`StandaloneLinux64` build, with 10 runs; a failure fails that build job. CI runners have no GPU or display, so the
+step passes `--nographics`, which starts the player with `-nographics` as well as `-batchmode`; benchmark mode works
+the same without a graphics device (median launch → menu 1411 ms and start → action 369 ms over 5 runs here). When a
+run fails, the script prints the end of that run's player log. The script needs only the runner's Python (3.10 or
+newer, no packages).
 
 ## Baselines
 

@@ -40,18 +40,32 @@ namespace Cgs.Play
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
         public const string InvalidPlayerSeatMessage = "Invalid playerSeat {0}. Supported playerSeat range is 1 through {1}.";
+        public const string SoloHostingFailedMessage =
+            "Could not host this table on the local network, so other players cannot join it.";
 
         public static string LoadStartDecksAsk
         {
             get
             {
                 var text = new StringBuilder("Load ");
-                var deckUrls = CardGameManager.Current.GameStartDecks;
+                var deckUrls = StartDeckUrls;
                 text.Append($"'{deckUrls[0].Name}'");
                 for (var i = 1; i < deckUrls.Count; i++)
                     text.Append($", '{deckUrls[i].Name}'");
                 text.Append("?");
                 return text.ToString();
+            }
+        }
+
+        private static IReadOnlyList<DeckUrl> StartDeckUrls
+        {
+            get
+            {
+                var deckUrls = CardGameManager.Current.GameStartDecks;
+                var localPlayer = CgsNetManager.Instance.LocalPlayer;
+                if (!CgsNetManager.Instance.IsOnline || localPlayer == null || deckUrls.Count == 0)
+                    return deckUrls;
+                return new List<DeckUrl> { deckUrls[localPlayer.SeatIndex % deckUrls.Count] };
             }
         }
 
@@ -125,9 +139,9 @@ namespace Cgs.Play
 
         public Scoreboard Scoreboard => scoreboard;
 
-        public bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
-                                 CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible ||
-                                 PlayableViewer.Instance.WasVisible || scoreboard.NameInputField.isFocused ||
+        public bool IsBlocked => CardViewer.IsShown || CardViewer.WasShown ||
+                                 CardViewer.IsZoomed || PlayableViewer.IsShown ||
+                                 PlayableViewer.WasShown || scoreboard.NameInputField.isFocused ||
                                  scoreboard.PointsInputField.isFocused || CardGameManager.Instance.ModalCanvas != null;
 
         public Vector2 NewPlayablePosition
@@ -236,6 +250,9 @@ namespace Cgs.Play
         // Solo play: which seat block the next deck load occupies (counts deck loads, not stacks)
         private int _soloDeckLoadCount;
 
+        // Solo play: the start decks are being asked about or loaded, so hosting waits
+        private bool _isStartingDecks;
+
         public LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;
@@ -268,18 +285,26 @@ namespace Cgs.Play
 
         private PlayHelpMenu _playHelpMenu;
 
+        /// <summary>How long after the table starts the card and playable viewers are created, unless used sooner.</summary>
+        internal const float ViewerPrepareDelaySeconds = 0.5f;
+
         protected void Awake()
         {
             Instance = this;
+            CgsNetManager.GetOrCreate();
         }
 
         protected void OnEnable()
         {
-            Instantiate(cardViewerPrefab);
-            Instantiate(playableViewerPrefab);
-            if (Cgs.Menu.Settings.PreviewOnMouseOver)
-                CardViewer.Instance.Mode = CardViewerMode.Expanded;
-            CardViewer.Instance.IsActionable = true;
+            // The viewers are created when first used, so they are not on the way to a playable table
+            CardViewer.Create = () => Instantiate(cardViewerPrefab).GetOrAddComponent<CardViewer>();
+            CardViewer.Created = cardViewer =>
+            {
+                if (Cgs.Menu.Settings.PreviewOnMouseOver)
+                    cardViewer.Mode = CardViewerMode.Expanded;
+                cardViewer.IsActionable = true;
+            };
+            PlayableViewer.Create = () => Instantiate(playableViewerPrefab).GetOrAddComponent<PlayableViewer>();
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
 
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed += InputPlayGameMenu;
@@ -296,12 +321,24 @@ namespace Cgs.Play
 
             playAreaCardZone.OnAddCardActions.Add(AddCardToPlayArea);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
+            // Start Game does not wait for a game that is still loading; the table shows the load's progress instead
+            CardGameManager.Instance.RequireContentForScene();
 
             yield return null;
             // The play area resets when the content fills in, so start only after that
             yield return CardGameManager.WaitForCurrentContent();
 
             StartLobby();
+
+            // The table does not need the viewers to show, so they are created once it is up, or sooner if used
+            yield return new WaitForSecondsRealtime(ViewerPrepareDelaySeconds);
+            PrepareViewers();
+        }
+
+        private static void PrepareViewers()
+        {
+            if (CardViewer.Instance == null || PlayableViewer.Instance == null)
+                Debug.LogWarning("PlayController: a viewer could not be created");
         }
 
         private void Restart()
@@ -376,23 +413,112 @@ namespace Cgs.Play
                 Lobby.Show();
             else
             {
-                Lobby.IsLanConnectionSource = true;
-#if !UNITY_WEBGL
-                Lobby.Host();
-#endif
                 StartDecks();
+                StartCoroutine(HostSoloTableWhenReady());
             }
         }
 
-        private void StartDecks()
+        // A solo table is still hosted on the local network so that others can join, but only once the start decks
+        // are dealt and no prompt or menu is open, so that hosting never delays play; the host then keeps what is
+        // already on the table
+        private IEnumerator HostSoloTableWhenReady()
         {
-            if (CardGameManager.Current.GameStartDecks.Count > 0)
-                CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(CardGameManager.Current, display =>
-                    UiMessage.With("play.load.decks", LoadStartDecksAsk,
-                        ("names", string.Join(", ", CardGameManager.Current.GameStartDecks.Select(deck =>
-                            $"'{display.DeckName(deck.Name, true)}'"))))), ShowDeckMenu, StartLoadStartDecks);
+            // Waiting a frame each time lets the table draw before hosting starts
+            do
+            {
+                yield return null;
+            } while (_isStartingDecks || CardGameManager.Instance.ModalCanvas != null);
+
+            if (CgsNetManager.Instance.IsOnline)
+                yield break;
+
+            Lobby.IsLanConnectionSource = true;
+#if !UNITY_WEBGL
+            // A solo player who never uses a network feature is not interrupted if hosting fails
+            if (!CgsNetManager.Instance.StartLanHost())
+                Debug.Log(SoloHostingFailedMessage);
+#endif
+        }
+
+        public void StartDecks()
+        {
+            var game = CardGameManager.Current;
+            if (game.GameStartDecks.Count > 0)
+            {
+                _isStartingDecks = true;
+                if (PlaySettings.GetAlwaysLoadStartDecks(game.Id))
+                {
+                    StartLoadStartDecks();
+                    return;
+                }
+
+                var isAnswered = false;
+                CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(game, display =>
+                        UiMessage.With("play.load.decks", LoadStartDecksAsk,
+                            ("names", string.Join(", ", StartDeckUrls.Select(deck =>
+                                $"'{display.DeckName(deck.Name, true)}'"))))),
+                    () =>
+                    {
+                        isAnswered = true;
+                        DeclineStartDecks();
+                    },
+                    () =>
+                    {
+                        isAnswered = true;
+                        StartLoadStartDecks();
+                    },
+                    () =>
+                    {
+                        isAnswered = true;
+                        AlwaysLoadStartDecks(game.Id);
+                    },
+                    () =>
+                    {
+                        // Escape closes the prompt without an answer; the table is then set up, so hosting may start
+                        if (!isAnswered)
+                            _isStartingDecks = false;
+                    });
+            }
             else
                 ShowDeckMenu();
+        }
+
+        /// <summary>
+        /// Offers the start decks once hosting from the lobby has started, so that each player gets their seat's deck.
+        /// Hosting on the Internet first signs in and allocates a relay, which can take a while, so there is no time limit.
+        /// </summary>
+        public void StartDecksOnceHosting()
+        {
+            StartCoroutine(StartDecksOnceHostingRoutine());
+        }
+
+        private IEnumerator StartDecksOnceHostingRoutine()
+        {
+            var netManager = CgsNetManager.Instance;
+            // Signing in and allocating a relay can take a while; IsStartingHost clears when hosting starts or fails
+            while (netManager.IsStartingHost)
+                yield return null;
+            // The host's player spawns once hosting starts; this ends with the play screen if it never does
+            while (netManager.IsOnline && netManager.LocalPlayer == null)
+                yield return null;
+            // If hosting failed or stopped, the lobby has already reported it; offline start decks would not be this
+            // player's seat deck
+            if (!netManager.IsOnline)
+                yield break;
+            if (!AllCardStacks.Any())
+                StartDecks();
+        }
+
+        private void AlwaysLoadStartDecks(string gameId)
+        {
+            PlaySettings.SetAlwaysLoadStartDecks(gameId, true);
+            StartLoadStartDecks();
+        }
+
+        private void DeclineStartDecks()
+        {
+            _isStartingDecks = false;
+            ShowDeckMenu();
         }
 
         private void StartLoadStartDecks()
@@ -402,7 +528,19 @@ namespace Cgs.Play
 
         private IEnumerator LoadStartDecks()
         {
-            foreach (var deckUrl in CardGameManager.Current.GameStartDecks)
+            try
+            {
+                yield return LoadEachStartDeck();
+            }
+            finally
+            {
+                _isStartingDecks = false;
+            }
+        }
+
+        private IEnumerator LoadEachStartDeck()
+        {
+            foreach (var deckUrl in StartDeckUrls)
             {
                 if (string.IsNullOrEmpty(deckUrl.Name) || !deckUrl.IsAvailable)
                 {
@@ -935,7 +1073,11 @@ namespace Cgs.Play
                 Enum.TryParse<CardAction>(options.DefaultAction, out var cardAction))
                 cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardAction];
 
-            cardModel.HideHighlightClientRpc();
+            // An RPC can only be sent once spawned; a solo table that is not hosted yet hides it locally
+            if (cardModel.IsSpawned)
+                cardModel.HideHighlightClientRpc();
+            else
+                cardModel.HighlightMode = HighlightMode.Off;
 
             return cardModel;
         }
@@ -1018,6 +1160,42 @@ namespace Cgs.Play
                 if (!diceZone.IsSpawned && diceZone.MyNetworkObject != null)
                     diceZone.MyNetworkObject.Spawn();
         }
+
+        /// <summary>
+        /// Spawns the table objects that were created before hosting started, such as the start decks and any cards,
+        /// dice, and counters already moved onto the table, so that players who join see the same table.
+        /// Only the host calls this, as it starts hosting.
+        /// </summary>
+        /// <returns>The card stacks that were spawned.</returns>
+        public IReadOnlyList<CardStack> SpawnLocalTable()
+        {
+            SpawnUnspawnedZones();
+
+            foreach (var board in LocalOnly<Board>())
+                board.SpawnWithLocalState();
+
+            var cardStacks = LocalOnly<CardStack>();
+            foreach (var cardStack in cardStacks)
+                cardStack.SpawnWithLocalState();
+
+            // Zones were spawned first, so cards in a zone keep their zone
+            foreach (var cardModel in LocalOnly<CardModel>())
+                cardModel.SpawnWithLocalState();
+
+            foreach (var die in LocalOnly<Die>())
+                die.SpawnWithLocalState();
+
+            foreach (var counter in LocalOnly<Counter>())
+                counter.SpawnWithLocalState();
+
+            return cardStacks;
+        }
+
+        private List<T> LocalOnly<T>() where T : CgsNetPlayable =>
+            playAreaCardZone.GetComponentsInChildren<T>().Where(IsLocalOnly).ToList();
+
+        private static bool IsLocalOnly(CgsNetPlayable playable) =>
+            playable != null && !playable.IsSpawned && !playable.ToDelete && playable.MyNetworkObject != null;
 
         // A joining client's locally-created zones are superseded by the host's spawned zones
         public void DestroyUnspawnedZones()
@@ -1196,6 +1374,9 @@ namespace Cgs.Play
 
         protected void OnDisable()
         {
+            CardViewer.Create = null;
+            CardViewer.Created = null;
+            PlayableViewer.Create = null;
             StopNetworking();
 
             InputSystem.actions.FindAction(Tags.PlayGameMenu).performed -= InputPlayGameMenu;

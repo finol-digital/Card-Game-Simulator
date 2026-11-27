@@ -1989,6 +1989,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 3103366582956195950
+  - m_Id: 18564103522996224
+    m_Localized: "\u603B\u662F"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323164
+  - m_Id: 18564103636242432
+    m_Localized: "\u603B\u662F\u52A0\u8F7D\u521D\u59CB\u724C\u7EC4"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323165
+  - m_Id: 18564103665602560
+    m_Localized: "\u662F\uFF0C\u4E14\u4E0D\u518D\u8BE2\u95EE"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323166
+  - m_Id: 18564103665602561
+    m_Localized: "\u5F00\u59CB\u6B64\u6E38\u620F\u65F6\u4E0D\u518D\u8BE2\u95EE\uFF0C\u76F4\u63A5\u52A0\u8F7D\u521D\u59CB\u724C\u7EC4\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323167
   references:
     version: 2
     RefIds:
@@ -2000,6 +2020,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"\u724C\u7EC4\u201C{deckName}\u201D\u4E0D\u5B8C\u6574\u3002\u5DF2\u52A0\u8F7D\u5361\u724C\uFF1A{loadedCount}\u3002\u7F3A\u5931\u5361\u724C\uFF1A{missingCount}\u3002\\n\\n\u5728\u6B64\u6E38\u620F\u4E2D\u627E\u4E0D\u5230\u4EE5\u4E0B\u5361\u724C\u540D\u79F0\u6216 ID\uFF1A\\n{cards}\\n\\n\u5F00\u59CB\u6E38\u620F\u524D\uFF0C\u8BF7\u68C0\u67E5\u724C\u7EC4\u5217\u8868\u6216\u66F4\u65B0\u6E38\u620F\u6570\u636E\u3002\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 1812176077519323164
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u603B\u662F\",\"status\":\"machine\",\"sourceHash\":\"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323165
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u603B\u662F\u52A0\u8F7D\u521D\u59CB\u724C\u7EC4\",\"status\":\"machine\",\"sourceHash\":\"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323166
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u662F\uFF0C\u4E14\u4E0D\u518D\u8BE2\u95EE\",\"status\":\"machine\",\"sourceHash\":\"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323167
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u5F00\u59CB\u6B64\u6E38\u620F\u65F6\u4E0D\u518D\u8BE2\u95EE\uFF0C\u76F4\u63A5\u52A0\u8F7D\u521D\u59CB\u724C\u7EC4\u3002\",\"status\":\"machine\",\"sourceHash\":\"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 3103366582956195949
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

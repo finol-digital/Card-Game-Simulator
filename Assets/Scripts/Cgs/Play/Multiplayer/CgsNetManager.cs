@@ -37,7 +37,31 @@ namespace Cgs.Play.Multiplayer
         private string _relayJoinReference;
         private LobbyConnectionDiagnostics.Context _relayJoinContext;
 
+        private const string PrefabResourcePath = "CgsNetManager";
+
+        /// <summary>The network manager, or null until the Main Menu or the play screen creates it.</summary>
         public static CgsNetManager Instance => (CgsNetManager)Singleton;
+
+        /// <summary>Creates the network manager from its prefab, if it does not exist yet.</summary>
+        /// <remarks>It stays out of the launch path, and then lasts as long as the CardGameManager.</remarks>
+        public static CgsNetManager GetOrCreate()
+        {
+            if (Instance != null)
+                return Instance;
+            _created = Instantiate(Resources.Load<CgsNetManager>(PrefabResourcePath));
+            _created.name = PrefabResourcePath;
+            return _created;
+        }
+
+        private static CgsNetManager _created;
+
+        /// <summary>Removes the network manager that <see cref="GetOrCreate"/> made, if any.</summary>
+        internal static void DestroyCreated()
+        {
+            if (_created != null)
+                Destroy(_created.gameObject);
+            _created = null;
+        }
 
         /// <summary>Starts Unity Services; replaced by tests to observe when online services start.</summary>
         internal static Func<Task> InitializeServices { get; set; } = () => UnityServices.InitializeAsync();
@@ -194,9 +218,13 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
+        /// <summary>Whether Internet hosting is signing in or allocating its relay, before the host starts.</summary>
+        public bool IsStartingHost { get; private set; }
+
         public void StartBroadcastHost(string password = "")
         {
             var servicePassword = LobbyPassword.ToServicePassword(password);
+            IsStartingHost = true;
             StartCoroutine(BroadcastHostCoroutine(servicePassword));
         }
 
@@ -211,6 +239,7 @@ namespace Cgs.Play.Multiplayer
                 {
                     Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
                     CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
+                    IsStartingHost = false;
                     yield break;
                 }
             }
@@ -223,6 +252,7 @@ namespace Cgs.Play.Multiplayer
             {
                 Debug.LogError(GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message);
                 CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message, ("detail", serverRelayUtilityTask.Exception?.Message)));
+                IsStartingHost = false;
                 yield break;
             }
 
@@ -233,6 +263,7 @@ namespace Cgs.Play.Multiplayer
             Transport.UseWebSockets = true;
 #endif
             StartHost();
+            IsStartingHost = false;
 
             yield return null;
 
@@ -675,6 +706,8 @@ namespace Cgs.Play.Multiplayer
             StopLanDiscovery();
             Shutdown();
             CurrentLobby = null;
+            // Stopping ends a hosting attempt before it can clear this itself
+            IsStartingHost = false;
             StopAllCoroutines();
         }
 

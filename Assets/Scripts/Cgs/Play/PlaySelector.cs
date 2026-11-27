@@ -37,9 +37,9 @@ namespace Cgs.Play
                 return;
 
             CgsNetPlayable selectedPlayable = null;
-            if (CardViewer.Instance.IsVisible)
+            if (CardViewer.IsShown)
                 selectedPlayable = CardViewer.Instance.SelectedCardModel;
-            else if (PlayableViewer.Instance.IsVisible)
+            else if (PlayableViewer.IsShown)
                 selectedPlayable = PlayableViewer.Instance.SelectedPlayable;
 
             var mainCamera = Camera.main;

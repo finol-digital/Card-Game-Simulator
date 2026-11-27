@@ -189,8 +189,8 @@ namespace Cgs.CardGameView.Viewer
 
         private void InputShuffle(InputAction.CallbackContext context)
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom
-                || PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible
+            if (CardViewer.IsShown || CardViewer.WasShown || CardViewer.IsZoomed
+                || PlayableViewer.IsShown || PlayableViewer.WasShown
                 || CardGameManager.Instance.ModalCanvas != null
                 || PlayController.Instance.Scoreboard.NameInputField.isFocused)
                 return;

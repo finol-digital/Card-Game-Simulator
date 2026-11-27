@@ -2021,6 +2021,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 3103366582956195946
+  - m_Id: 18564103522996224
+    m_Localized: Sempre
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323156
+  - m_Id: 18564103636242432
+    m_Localized: Carica sempre i mazzi iniziali
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323157
+  - m_Id: 18564103665602560
+    m_Localized: "S\xEC, e non chiedere pi\xF9"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323158
+  - m_Id: 18564103665602561
+    m_Localized: Carica i mazzi iniziali di questo gioco all'avvio, senza chiedere.
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323159
   references:
     version: 2
     RefIds:
@@ -2032,6 +2052,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Il mazzo \xAB{deckName}\xBB \xE8 incompleto. Carte caricate: {loadedCount}. Carte mancanti: {missingCount}.\\n\\nQuesti nomi o identificativi di carte non sono stati trovati in questo gioco:\\n{cards}\\n\\nControlla la lista del mazzo o aggiorna i dati del gioco prima di giocare.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 1812176077519323156
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Sempre","status":"machine","sourceHash":"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323157
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Carica sempre i mazzi iniziali","status":"machine","sourceHash":"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323158
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"S\xEC, e non chiedere pi\xF9\",\"status\":\"machine\",\"sourceHash\":\"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323159
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Carica i mazzi iniziali di questo gioco all''avvio, senza chiedere.","status":"machine","sourceHash":"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
     - rid: 3103366582956195945
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

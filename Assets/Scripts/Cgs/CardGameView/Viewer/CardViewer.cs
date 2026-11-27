@@ -33,7 +33,23 @@ namespace Cgs.CardGameView.Viewer
         private const string Delimiter = ": ";
         private const float PageAxisPressDeadZone = 0.5f;
 
+        /// <summary>The viewer, created on first use on a screen that does not include one.</summary>
         public static CardViewer Instance
+        {
+            get
+            {
+                var existing = Existing;
+                if (existing != null || Create == null)
+                    return existing;
+
+                _instance = Create();
+                Created?.Invoke(_instance);
+                return _instance;
+            }
+        }
+
+        /// <summary>The viewer if it exists, without creating it.</summary>
+        public static CardViewer Existing
         {
             get
             {
@@ -41,11 +57,25 @@ namespace Cgs.CardGameView.Viewer
                     return _instance;
 
                 var cardViewerGameObject = GameObject.FindWithTag(Tags.CardViewer);
-                if (cardViewerGameObject != null)
-                    _instance = cardViewerGameObject.GetOrAddComponent<CardViewer>();
+                _instance = cardViewerGameObject != null ? cardViewerGameObject.GetOrAddComponent<CardViewer>() : null;
                 return _instance;
             }
         }
+
+        /// <summary>Whether the viewer is shown, without creating it.</summary>
+        public static bool IsShown => Existing != null && Existing.IsVisible;
+
+        /// <summary>Whether the viewer was shown as of its last update, without creating it.</summary>
+        public static bool WasShown => Existing != null && Existing.WasVisible;
+
+        /// <summary>Whether the viewer is zoomed in, without creating it.</summary>
+        public static bool IsZoomed => Existing != null && Existing.Zoom;
+
+        /// <summary>Creates the viewer the first time it is needed, on a screen that does not include one.</summary>
+        internal static System.Func<CardViewer> Create { get; set; }
+
+        /// <summary>Sets up a viewer that <see cref="Create"/> made, once it is the instance.</summary>
+        internal static System.Action<CardViewer> Created { get; set; }
 
         private static CardViewer _instance;
 
@@ -53,6 +83,8 @@ namespace Cgs.CardGameView.Viewer
         private static void ResetStaticState()
         {
             _instance = null;
+            Create = null;
+            Created = null;
         }
 
         public CardViewerMode Mode

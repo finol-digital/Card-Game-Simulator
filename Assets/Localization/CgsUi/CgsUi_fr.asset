@@ -1997,6 +1997,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 3103366582956195944
+  - m_Id: 18564103522996224
+    m_Localized: Toujours
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323152
+  - m_Id: 18564103636242432
+    m_Localized: "Toujours charger les decks de d\xE9part"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323153
+  - m_Id: 18564103665602560
+    m_Localized: Oui, et ne plus demander
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323154
+  - m_Id: 18564103665602561
+    m_Localized: "Charger les decks de d\xE9part de ce jeu au lancement, sans demander."
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323155
   references:
     version: 2
     RefIds:
@@ -2008,6 +2028,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Le deck \xAB {deckName} \xBB est incomplet. Cartes charg\xE9es : {loadedCount}. Cartes manquantes : {missingCount}.\\n\\nCes noms ou identifiants de cartes sont introuvables dans ce jeu :\\n{cards}\\n\\nV\xE9rifiez la liste du deck ou mettez \xE0 jour les donn\xE9es du jeu avant de jouer.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 1812176077519323152
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Toujours","status":"machine","sourceHash":"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323153
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Toujours charger les decks de d\xE9part\",\"status\":\"machine\",\"sourceHash\":\"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323154
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Oui, et ne plus demander","status":"machine","sourceHash":"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323155
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Charger les decks de d\xE9part de ce jeu au lancement, sans demander.\",\"status\":\"machine\",\"sourceHash\":\"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 3103366582956195943
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

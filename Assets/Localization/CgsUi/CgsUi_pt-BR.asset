@@ -2007,6 +2007,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 3103366582956195954
+  - m_Id: 18564103522996224
+    m_Localized: Sempre
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323168
+  - m_Id: 18564103636242432
+    m_Localized: Sempre carregar os baralhos iniciais
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323169
+  - m_Id: 18564103665602560
+    m_Localized: "Sim, e n\xE3o perguntar novamente"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323170
+  - m_Id: 18564103665602561
+    m_Localized: "Carregar os baralhos iniciais deste jogo ao come\xE7ar, sem perguntar."
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323171
   references:
     version: 2
     RefIds:
@@ -2018,6 +2038,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"O deck \\\"{deckName}\\\" est\xE1 incompleto. Cartas carregadas: {loadedCount}. Cartas ausentes: {missingCount}.\\n\\nEstes nomes ou IDs de cartas n\xE3o foram encontrados neste jogo:\\n{cards}\\n\\nConfira a lista do deck ou atualize os dados do jogo antes de jogar.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 1812176077519323168
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Sempre","status":"machine","sourceHash":"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323169
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Sempre carregar os baralhos iniciais","status":"machine","sourceHash":"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323170
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Sim, e n\xE3o perguntar novamente\",\"status\":\"machine\",\"sourceHash\":\"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323171
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Carregar os baralhos iniciais deste jogo ao come\xE7ar, sem perguntar.\",\"status\":\"machine\",\"sourceHash\":\"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 3103366582956195953
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

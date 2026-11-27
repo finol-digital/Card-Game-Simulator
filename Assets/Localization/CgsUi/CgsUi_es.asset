@@ -1999,6 +1999,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 3103366582956195952
+  - m_Id: 18564103522996224
+    m_Localized: Siempre
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323172
+  - m_Id: 18564103636242432
+    m_Localized: Cargar siempre las barajas iniciales
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323173
+  - m_Id: 18564103665602560
+    m_Localized: "S\xED, y no volver a preguntar"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323174
+  - m_Id: 18564103665602561
+    m_Localized: Cargar las barajas iniciales de este juego al empezar, sin preguntar.
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323175
   references:
     version: 2
     RefIds:
@@ -2010,6 +2030,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"El mazo \xAB{deckName}\xBB est\xE1 incompleto. Cartas cargadas: {loadedCount}. Cartas faltantes: {missingCount}.\\n\\nNo se encontraron estos nombres o identificadores de cartas en este juego:\\n{cards}\\n\\nRevisa la lista del mazo o actualiza los datos del juego antes de jugar.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 1812176077519323172
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Siempre","status":"machine","sourceHash":"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323173
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Cargar siempre las barajas iniciales","status":"machine","sourceHash":"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323174
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"S\xED, y no volver a preguntar\",\"status\":\"machine\",\"sourceHash\":\"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323175
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Cargar las barajas iniciales de este juego al empezar, sin preguntar.","status":"machine","sourceHash":"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
     - rid: 3103366582956195951
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

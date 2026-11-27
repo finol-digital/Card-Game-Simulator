@@ -20,6 +20,7 @@ namespace Cgs.Play
         private const string PlayerPrefsShowActionsMenu = "ShowActionsMenu";
         private const string PlayerPrefsDefaultZoom = "DefaultZoom";
         private const string PlayerPrefsPieceSize = "DiceAndCounterDisplaySize";
+        private const string PlayerPrefsAlwaysLoadStartDecksPrefix = "AlwaysLoadStartDecks:";
 
         public static event Action PieceSizeChanged;
 
@@ -88,6 +89,20 @@ namespace Cgs.Play
         {
             get => PlayerPrefs.GetFloat(PlayerPrefsDefaultZoom, RotateZoomableScrollRect.DefaultZoom);
             set => PlayerPrefs.SetFloat(PlayerPrefsDefaultZoom, value);
+        }
+
+        /// <summary>Whether starting the game with <paramref name="gameId"/> loads its start decks without asking.</summary>
+        public static bool GetAlwaysLoadStartDecks(string gameId) =>
+            !string.IsNullOrEmpty(gameId) && PlayerPrefs.GetInt(PlayerPrefsAlwaysLoadStartDecksPrefix + gameId, 0) == 1;
+
+        public static void SetAlwaysLoadStartDecks(string gameId, bool alwaysLoad)
+        {
+            if (string.IsNullOrEmpty(gameId))
+                return;
+            if (alwaysLoad)
+                PlayerPrefs.SetInt(PlayerPrefsAlwaysLoadStartDecksPrefix + gameId, 1);
+            else
+                PlayerPrefs.DeleteKey(PlayerPrefsAlwaysLoadStartDecksPrefix + gameId);
         }
     }
 }

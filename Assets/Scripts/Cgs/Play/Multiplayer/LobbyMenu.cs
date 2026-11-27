@@ -391,7 +391,10 @@ namespace Cgs.Play.Multiplayer
             if (!ValidatePassword())
                 return;
             if (StartHost())
+            {
                 Hide();
+                PlayController.Instance.StartDecksOnceHosting();
+            }
             else
                 ShowConnectionStartError();
         }

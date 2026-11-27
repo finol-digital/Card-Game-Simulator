@@ -213,6 +213,20 @@ namespace Cgs.CardGameView.Multiplayer
             InputSystem.actions.FindAction(Tags.ViewerZoom).performed += InputZoom;
         }
 
+        protected override void SeedNetworkStateFromLocal()
+        {
+            // The card already shows this state, so seed it without the change callbacks
+            _idNetworkVariable.OnValueChanged -= OnChangeId;
+            _idNetworkVariable.Value = _id;
+            _idNetworkVariable.OnValueChanged += OnChangeId;
+
+            _isFacedownNetworkVariable.OnValueChanged -= OnChangeIsFacedown;
+            _isFacedownNetworkVariable.Value = _isFacedown;
+            _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
+
+            _isCardSharedNetworkVariable.Value = _isCardShared;
+        }
+
         protected override void OnNetworkSpawnPlayable()
         {
             _isFacedown = _isFacedownNetworkVariable.Value;
@@ -815,6 +829,9 @@ namespace Cgs.CardGameView.Multiplayer
             cachedTransform.SetParent(PlaceHolder.parent);
             cachedTransform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
             cachedTransform.localScale = Vector3.one;
+            // A table hosted later sends each card's container to joining players, so keep it in step with the zone
+            if (!IsSpawned && ParentCardZone != null)
+                Container = ParentCardZone.gameObject;
 
             // The move is over before the zones are notified, since their add behaviors,
             // like capture into an overlapping card zone, may start a new move
@@ -900,11 +917,14 @@ namespace Cgs.CardGameView.Multiplayer
                 });
             else if (!IsFacedown)
                 unityCard.RegisterDisplay(this);
-            if (CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
-                CardViewer.Instance.SelectedCardModel == this)
-                CardViewer.Instance.SelectedCardModel = this;
-            if (CardViewer.Instance != null && CardViewer.Instance.PreviewCardModel == this)
-                CardViewer.Instance.PreviewCardModel = this;
+            // Refresh a viewer that shows this card; a viewer that does not exist yet shows nothing
+            var cardViewer = CardViewer.Existing;
+            if (cardViewer == null)
+                return;
+            if (cardViewer.IsVisible && cardViewer.SelectedCardModel == this)
+                cardViewer.SelectedCardModel = this;
+            if (cardViewer.PreviewCardModel == this)
+                cardViewer.PreviewCardModel = this;
         }
 
         private static bool IsFaceFlip(string oldId, string newId, out UnityCard oldCard)

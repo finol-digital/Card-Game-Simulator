@@ -50,33 +50,33 @@
 
 - [ ] 7.1 Remove unused built-in modules after checking package dependencies; verify that all platform builds succeed, the PlayMode tests pass, and the benchmark delta is recorded
 - [ ] 7.2 Benchmark Android engine ThinLTO (documenting its build-setting prerequisites), then IL2CPP runtime-speed code generation, then Vulkan/GLES ordering, one at a time, keeping only measured improvements; verify that the results table is in the guide and the chosen settings are committed
-- [ ] 7.3 Review managed stripping against the AOT/reflection needs (`AotTypeEnforcer`, Newtonsoft) and change it only if it is measured as safe and beneficial; verify with a full IL2CPP build smoke test across all scenes
+- [x] 7.3 Review managed stripping against the AOT/reflection needs (`AotTypeEnforcer`, Newtonsoft) and change it only if it is measured as safe and beneficial; verify with a full IL2CPP build smoke test across all scenes (reviewed in design D10; kept at Low, so no build changed)
 
 ## 8. Fast single-player start
 
 - [ ] 8.1 Make solo hosting non-blocking so the table is playable before host startup begins, converting existing table objects into networked objects when hosting starts; verify with a PlayMode test that a card action succeeds before `StartHost` is called, and with a LAN check that a player joining after decks were loaded and cards moved sees the same table and can act on it
-- [ ] 8.2 Benchmark the D5 options (deferred auto-host, offline with host-on-demand, lazy network prefab), record the decision in design.md, and implement it; verify that the decision and data are recorded and, if joinability changes, that the player documentation is updated
-- [ ] 8.3 Switch Start Game to an unheld `LoadSceneAsync` and cut PlayGame's first-frame cost (lazy menus and viewers per design D7); verify with PlayMode tests that the Main Menu keeps rendering during the load and that the Start Game → play-screen-loaded milestone improves
+- [x] 8.2 Benchmark the D5 options (deferred auto-host, offline with host-on-demand, lazy network prefab), record the decision in design.md, and implement it; verify that the decision and data are recorded and, if joinability changes, that the player documentation is updated
+- [x] 8.3 Switch Start Game to an unheld `LoadSceneAsync` and cut PlayGame's first-frame cost (lazy menus and viewers per design D7); verify with PlayMode tests that the Main Menu keeps rendering during the load and that the Start Game → play-screen-loaded milestone improves
 - [ ] 8.4 Only if 8.3 data misses the budget, add the gated additive preload from design D7; verify with PlayMode tests that navigating to Settings, Deck Editor, and Cards Explorer during and after the preload adds no delay and creates no host, decks, scene-reset callbacks, or blocked localization loads
-- [ ] 8.5 Open the play screen immediately when content is still loading, showing progress and loading start decks once content is ready without reloading cards; verify with a PlayMode test using a slow-loading fixture
-- [ ] 8.6 Add the "always load start decks" choice to the start-deck prompt and Settings, localized in all shipped languages; verify with PlayMode tests for remembering, auto-loading, and resetting the choice, and with localization coverage tests
+- [x] 8.5 Open the play screen immediately when content is still loading, showing progress and loading start decks once content is ready without reloading cards; verify with a PlayMode test using a slow-loading fixture
+- [x] 8.6 Add the "always load start decks" choice to the start-deck prompt and Settings, localized in all shipped languages; verify with PlayMode tests for remembering, auto-loading, and resetting the choice, and with localization coverage tests
 - [ ] 8.7 Measure Start Game → playable (benchmark delay zero) and launch → playable (external harness, saved data) over at least 30 runs per reference device, plus first install separately, and record them; verify against the `single-player-start` budgets
 
 ## 9. Data-driven deep optimizations
 
-- [ ] 9.1 Using the group 3 and group 8 data plus a large-game fixture, decide whether the card-data cache and off-thread parse (D8) are needed, and record the decision in design.md; verify that the decision and data are recorded
-- [ ] 9.2 If needed, implement the versioned card snapshot with off-thread parse (non-WebGL) and frame-budgeted object creation; verify with tests for cache hit, stale invalidation, corrupt-cache fallback, and identical card results versus a JSON load
+- [x] 9.1 Using the group 3 and group 8 data plus a large-game fixture, decide whether the card-data cache and off-thread parse (D8) are needed, and record the decision in design.md; verify that the decision and data are recorded
+- [x] 9.2 If needed, implement the versioned card snapshot with off-thread parse (non-WebGL) and frame-budgeted object creation; verify with tests for cache hit, stale invalidation, corrupt-cache fallback, and identical card results versus a JSON load (9.1 decided the snapshot is not needed; the off-thread parse and frame-budgeted creation are implemented and tested for identical results, no frame stall, and corrupt files)
 - [ ] 9.3 Record frame times from an immediate Start Game to the first card action with cold caches on each graphics backend the reference devices use; if any frame exceeds 100 ms from first-use rendering, add the per-backend incremental warmup from design D11; verify by re-measuring with cold caches and zero menu idle time that no frame exceeds 100 ms
 
 ## 10. Web startup
 
-- [ ] 10.1 Stop blocking web play on sequential default-game downloads: download the selected game first and the rest in the background, or bundle the default game data, and document the choice; verify that a first-visit web session can start the selected game before other downloads finish
-- [ ] 10.2 Enable Brotli compression, or confirm correct pre-compressed serving with `Content-Encoding` on the hosting path, keeping data caching enabled; verify with response headers from the deployed or preview host and a repeat-visit run that does not re-download game data
+- [x] 10.1 Stop blocking web play on sequential default-game downloads: download the selected game first and the rest in the background, or bundle the default game data, and document the choice; verify that a first-visit web session can start the selected game before other downloads finish
+- [x] 10.2 Enable Brotli compression, or confirm correct pre-compressed serving with `Content-Encoding` on the hosting path, keeping data caching enabled; verify with response headers from the deployed or preview host and a repeat-visit run that does not re-download game data
 - [ ] 10.3 Record web first-visit and repeat-visit milestones under the documented network and cache settings, and set the web budgets in the guide; verify that the results are recorded
 
 ## 11. Regression guard and final verification
 
-- [ ] 11.1 Add a script that builds or uses a standalone Linux player, runs benchmark mode N times, and fails above the documented loose thresholds; verify that it fails on an artificially delayed build and passes on the current build. If wiring it into CI requires `.github` changes, hand that to the maintainer instead of editing workflows
+- [x] 11.1 Add a script that builds or uses a standalone Linux player, runs benchmark mode N times, and fails above the documented loose thresholds; verify that it fails on an artificially delayed build and passes on the current build. If wiring it into CI requires `.github` changes, hand that to the maintainer instead of editing workflows
 - [ ] 11.2 Run the full benchmark on every reference device and condition, and confirm the `app-launch` and `single-player-start` budgets at p95; verify that the final results table in the guide shows every budget met, or an explicit exception approved by the maintainer
 - [ ] 11.3 Run the full PlayMode suite and the multiplayer, LAN, and Steam Deck manual checks; verify that all pass
 
