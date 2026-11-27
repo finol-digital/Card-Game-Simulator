@@ -287,7 +287,6 @@ namespace Cgs.Play
 
         /// <summary>How long after the table starts the card and playable viewers are created, unless used sooner.</summary>
         internal const float ViewerPrepareDelaySeconds = 0.5f;
-        private const float HostingWaitSeconds = 30;
 
         protected void Awake()
         {
@@ -486,7 +485,7 @@ namespace Cgs.Play
 
         /// <summary>
         /// Offers the start decks once hosting from the lobby has started, so that each player gets their seat's deck.
-        /// Hosting on the Internet first signs in and allocates a relay, which takes a moment.
+        /// Hosting on the Internet first signs in and allocates a relay, which can take a while, so there is no time limit.
         /// </summary>
         public void StartDecksOnceHosting()
         {
@@ -499,12 +498,12 @@ namespace Cgs.Play
             // Signing in and allocating a relay can take a while; IsStartingHost clears when hosting starts or fails
             while (netManager.IsStartingHost)
                 yield return null;
-            var giveUpTime = Time.realtimeSinceStartup + HostingWaitSeconds;
-            while (netManager.IsOnline && netManager.LocalPlayer == null && Time.realtimeSinceStartup < giveUpTime)
+            // The host's player spawns once hosting starts; this ends with the play screen if it never does
+            while (netManager.IsOnline && netManager.LocalPlayer == null)
                 yield return null;
-            // If hosting failed or is still not ready, the lobby has already reported it; offline start decks would
-            // not be this player's seat deck
-            if (!netManager.IsOnline || netManager.LocalPlayer == null)
+            // If hosting failed or stopped, the lobby has already reported it; offline start decks would not be this
+            // player's seat deck
+            if (!netManager.IsOnline)
                 yield break;
             if (!AllCardStacks.Any())
                 StartDecks();

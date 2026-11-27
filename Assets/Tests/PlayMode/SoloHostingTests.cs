@@ -220,7 +220,10 @@ namespace Tests.PlayMode
 
         private static string Describe(CgsNetPlayable playable)
         {
-            var pose = $"{playable.GetType().Name} at {playable.Position} turned {playable.Rotation.eulerAngles.z:F0}";
+            // Whole units: a position can differ in its last float digits after a round trip through the network
+            var position = playable.Position;
+            var pose = $"{playable.GetType().Name} at ({position.x:F0}, {position.y:F0}) " +
+                       $"turned {playable.Rotation.eulerAngles.z:F0}";
             return playable switch
             {
                 CardStack stack => $"{pose} named {stack.Name}, faceup {stack.IsTopFaceup}: " +
