@@ -553,7 +553,8 @@ When the web app has no games, as on a first visit, it downloads the default gam
 from the build. `CardGameManager.GetDefaultCardGames` downloads the player's saved game first (Standard Playing Cards
 on a first visit), with progress, and selects it. The Main Menu can then start it while Dominoes and Mahjong download
 in the background, without progress, without changing the selection, and without blocking the menu
-(`CardGameManager.IsDownloadingDefaultGames`). A download the player starts waits for a background download to finish,
+(`CardGameManager.IsDownloadingDefaultGames`). Each background game's banner and card back are decoded when it
+finishes downloading, so game selection shows them before the game is ever selected. A download the player starts waits for a background download to finish,
 because a game downloads into a folder named for it only once its definition has been read. Before, the web app
 downloaded all three in a row, each behind the progress bar, and selected each in turn.
 `DefaultGameDownloadTests` covers this with games served from local files.
