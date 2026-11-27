@@ -829,6 +829,9 @@ namespace Cgs.CardGameView.Multiplayer
             cachedTransform.SetParent(PlaceHolder.parent);
             cachedTransform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
             cachedTransform.localScale = Vector3.one;
+            // A table hosted later sends each card's container to joining players, so keep it in step with the zone
+            if (!IsSpawned && ParentCardZone != null)
+                Container = ParentCardZone.gameObject;
 
             // The move is over before the zones are notified, since their add behaviors,
             // like capture into an overlapping card zone, may start a new move

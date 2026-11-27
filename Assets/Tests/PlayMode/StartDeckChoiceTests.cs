@@ -117,10 +117,12 @@ namespace Tests.PlayMode
             yield return OpenSoloTable();
             yield return WaitFor(() => IsAskingForStartDecks, "The start decks are offered");
             Assert.IsTrue(IsAlwaysOffered, "The start-deck prompt offers to always load them");
+            const string otherGameId = "Mahjong@www.cardgamesimulator.com";
+            var otherGameChoice = PlaySettings.GetAlwaysLoadStartDecks(otherGameId);
 
             Messenger.ChooseAlways();
             Assert.IsTrue(PlaySettings.GetAlwaysLoadStartDecks(GameId), "The choice is remembered for this game");
-            Assert.IsFalse(PlaySettings.GetAlwaysLoadStartDecks("Mahjong@www.cardgamesimulator.com"),
+            Assert.AreEqual(otherGameChoice, PlaySettings.GetAlwaysLoadStartDecks(otherGameId),
                 "The choice is remembered for this game only");
             yield return WaitFor(() => HasStartDecks, "Always also loads the start decks now");
 
@@ -174,5 +176,20 @@ namespace Tests.PlayMode
             yield return WaitFor(() => IsAskingForStartDecks, "The next game start asks again");
             Assert.IsTrue(IsAlwaysOffered);
         }
+
+#if !UNITY_WEBGL
+        [UnityTest]
+        public IEnumerator DismissingTheStartDeckPromptLetsTheTableBeHosted()
+        {
+            yield return OpenSoloTable();
+            yield return WaitFor(() => IsAskingForStartDecks, "The start decks are offered");
+
+            // Escape closes the prompt without answering it
+            Messenger.OkClose();
+            Assert.IsFalse(HasStartDecks, "Dismissing the prompt loads no decks");
+            yield return WaitFor(() => CgsNetManager.Instance != null && CgsNetManager.Instance.IsHost,
+                "The solo table is hosted once the prompt is dismissed");
+        }
+#endif
     }
 }

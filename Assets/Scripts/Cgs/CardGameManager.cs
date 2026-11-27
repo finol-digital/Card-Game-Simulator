@@ -790,9 +790,17 @@ namespace Cgs
             ("Mahjong@www.cardgamesimulator.com", Tags.MahjongUrl)
         };
 
-        // A default game downloading in the background; other downloads wait for it, since a game downloads into a
-        // folder named for it only once its definition has been read
-        private UnityCardGame _backgroundDownload;
+        // The new game downloading now. A new game downloads into a folder named for it only once its definition has
+        // been read, so new games download one at a time.
+        private UnityCardGame _gameDownload;
+
+        private bool IsDownloadingGame => _gameDownload is { IsDownloading: true };
+
+        private UnityCardGame InstalledGameFrom(string gameUrl)
+        {
+            var url = new Uri(gameUrl);
+            return AllCardGames.Values.FirstOrDefault(game => game?.AutoUpdateUrl != null && game.AutoUpdateUrl.Equals(url));
+        }
 
         /// <summary>Whether default games are still downloading in the background.</summary>
         internal bool IsDownloadingDefaultGames { get; private set; }
@@ -825,17 +833,17 @@ namespace Cgs
             yield return null;
             foreach (var gameUrl in gameUrls)
             {
-                var url = new Uri(gameUrl);
-                if (AllCardGames.Values.Any(game => game?.AutoUpdateUrl != null && game.AutoUpdateUrl.Equals(url)))
-                    continue;
-                // Let a download the player started finish first
-                while (Current is { IsDownloading: true })
+                // Let a download the player started finish first, then check again whether it installed this game
+                while (IsDownloadingGame || Current is { IsDownloading: true })
                     yield return null;
+                if (InstalledGameFrom(gameUrl) != null)
+                    continue;
 
                 var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
-                _backgroundDownload = cardGame;
+                _gameDownload = cardGame;
                 yield return cardGame.Download();
-                _backgroundDownload = null;
+                if (_gameDownload == cardGame)
+                    _gameDownload = null;
                 if (!string.IsNullOrEmpty(cardGame.Error) || !cardGame.HasReadProperties)
                 {
                     Debug.LogWarning(DownloadErrorMessage + cardGame.Error);
@@ -844,7 +852,14 @@ namespace Cgs
                 }
 
                 AllCardGames[cardGame.Id] = cardGame;
-                LoadVisiblePreviewImages();
+                // If the player's game failed to download, show one that did
+                if (Current == UnityCardGame.UnityInvalid)
+                {
+                    ResetCurrentToDefault();
+                    ResetGameScene();
+                }
+                else
+                    LoadVisiblePreviewImages();
                 GamesAdded?.Invoke();
             }
 
@@ -918,9 +933,21 @@ namespace Cgs
             var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
 
             Progress.Show(cardGame);
-            while (_backgroundDownload is { IsDownloading: true })
+            while (IsDownloadingGame)
                 yield return null;
+            // A background download may have installed this game while this one waited
+            var installedGame = InstalledGameFrom(gameUrl);
+            if (installedGame != null)
+            {
+                Progress.Hide();
+                Select(installedGame.Id);
+                yield break;
+            }
+
+            _gameDownload = cardGame;
             yield return cardGame.Download();
+            if (_gameDownload == cardGame)
+                _gameDownload = null;
             Progress.Hide();
 
             yield return cardGame.LoadRoutine(UpdateCardGame, LoadCards, LoadSetCards);

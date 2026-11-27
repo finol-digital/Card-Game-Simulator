@@ -178,7 +178,9 @@ namespace Cgs.CardGameView.Viewer
         protected void Start()
         {
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
-            Reset();
+            // A viewer created by its first use already shows that selection
+            if (_selectedPlayable == null)
+                Reset();
         }
 
         protected void Update()

@@ -376,7 +376,8 @@ namespace Cgs.Play.Multiplayer
 
         private IEnumerator WaitToStartGame()
         {
-            while (CardGameManager.Current.IsDownloading)
+            // The start decks need the game's cards, which may still be loading
+            while (CardGameManager.Current.IsDownloading || !CardGameManager.IsCurrentContentSettled)
                 yield return null;
 
             Debug.Log("[CgsNet Player] Game loaded and ready!");

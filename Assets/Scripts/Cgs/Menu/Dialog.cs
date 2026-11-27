@@ -203,9 +203,10 @@ namespace Cgs.Menu
         /// <summary>
         /// Asks a yes/no question that also offers to always answer yes, as <paramref name="alwaysAction"/> remembers.
         /// </summary>
-        public void Ask(UiMessage text, UnityAction noAction, UnityAction yesAction, UnityAction alwaysAction)
+        public void Ask(UiMessage text, UnityAction noAction, UnityAction yesAction, UnityAction alwaysAction,
+            Action closed = null)
             => ShowMessage(new Message { Text = text.English, Localized = text, NoAction = noAction,
-                YesAction = yesAction, AlwaysAction = alwaysAction, CanCopy = true });
+                YesAction = yesAction, AlwaysAction = alwaysAction, CanCopy = true, Closed = closed });
 
         private void ShowMessage(Message message)
         {

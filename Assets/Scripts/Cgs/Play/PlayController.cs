@@ -287,6 +287,7 @@ namespace Cgs.Play
 
         /// <summary>How long after the table starts the card and playable viewers are created, unless used sooner.</summary>
         internal const float ViewerPrepareDelaySeconds = 0.5f;
+        private const float HostingWaitSeconds = 30;
 
         protected void Awake()
         {
@@ -447,16 +448,60 @@ namespace Cgs.Play
             {
                 _isStartingDecks = true;
                 if (PlaySettings.GetAlwaysLoadStartDecks(game.Id))
+                {
                     StartLoadStartDecks();
-                else
-                    CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(game, display =>
-                            UiMessage.With("play.load.decks", LoadStartDecksAsk,
-                                ("names", string.Join(", ", StartDeckUrls.Select(deck =>
-                                    $"'{display.DeckName(deck.Name, true)}'"))))), DeclineStartDecks,
-                        StartLoadStartDecks, () => AlwaysLoadStartDecks(game.Id));
+                    return;
+                }
+
+                var isAnswered = false;
+                CardGameManager.Instance.Messenger.Ask(GameContentMessage.Create(game, display =>
+                        UiMessage.With("play.load.decks", LoadStartDecksAsk,
+                            ("names", string.Join(", ", StartDeckUrls.Select(deck =>
+                                $"'{display.DeckName(deck.Name, true)}'"))))),
+                    () =>
+                    {
+                        isAnswered = true;
+                        DeclineStartDecks();
+                    },
+                    () =>
+                    {
+                        isAnswered = true;
+                        StartLoadStartDecks();
+                    },
+                    () =>
+                    {
+                        isAnswered = true;
+                        AlwaysLoadStartDecks(game.Id);
+                    },
+                    () =>
+                    {
+                        // Escape closes the prompt without an answer; the table is then set up, so hosting may start
+                        if (!isAnswered)
+                            _isStartingDecks = false;
+                    });
             }
             else
                 ShowDeckMenu();
+        }
+
+        /// <summary>
+        /// Offers the start decks once hosting from the lobby has started, so that each player gets their seat's deck.
+        /// Hosting on the Internet first signs in and allocates a relay, which takes a moment.
+        /// </summary>
+        public void StartDecksOnceHosting()
+        {
+            StartCoroutine(StartDecksOnceHostingRoutine());
+        }
+
+        private IEnumerator StartDecksOnceHostingRoutine()
+        {
+            var netManager = CgsNetManager.Instance;
+            var giveUpTime = Time.realtimeSinceStartup + HostingWaitSeconds;
+            while ((netManager.IsStartingHost || (netManager.IsOnline && netManager.LocalPlayer == null)) &&
+                   Time.realtimeSinceStartup < giveUpTime)
+                yield return null;
+            if (!AllCardStacks.Any())
+                StartDecks();
         }
 
         private void AlwaysLoadStartDecks(string gameId)

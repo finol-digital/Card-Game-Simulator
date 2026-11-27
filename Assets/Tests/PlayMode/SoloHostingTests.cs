@@ -20,6 +20,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
+#if !UNITY_WEBGL
 namespace Tests.PlayMode
 {
     /// <summary>A solo table is playable before CGS hosts it, and hosting keeps what is already on the table.</summary>
@@ -268,3 +269,4 @@ namespace Tests.PlayMode
         }
     }
 }
+#endif

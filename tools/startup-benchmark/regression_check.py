@@ -39,7 +39,8 @@ def check(records: list[stats.RunRecord], thresholds: dict[str, float]) -> tuple
     for record in failed:
         lines.append(f"run {record.run_id} failed: {record.failure}")
         passed = False
-    usable = [r for r in records if r.ok]
+    # Like startup_stats.summarize, flagged runs (such as another run's result) are not used
+    usable = [r for r in records if r.ok and not r.flags]
     for name, threshold in thresholds.items():
         values = [r.intervals_ms[name] for r in usable if r.intervals_ms.get(name) is not None]
         if not values:

@@ -218,9 +218,13 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
+        /// <summary>Whether Internet hosting is signing in or allocating its relay, before the host starts.</summary>
+        public bool IsStartingHost { get; private set; }
+
         public void StartBroadcastHost(string password = "")
         {
             var servicePassword = LobbyPassword.ToServicePassword(password);
+            IsStartingHost = true;
             StartCoroutine(BroadcastHostCoroutine(servicePassword));
         }
 
@@ -235,6 +239,7 @@ namespace Cgs.Play.Multiplayer
                 {
                     Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
                     CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + signInTask.Exception?.Message, ("detail", signInTask.Exception?.Message)));
+                    IsStartingHost = false;
                     yield break;
                 }
             }
@@ -247,6 +252,7 @@ namespace Cgs.Play.Multiplayer
             {
                 Debug.LogError(GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message);
                 CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.connection", GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message, ("detail", serverRelayUtilityTask.Exception?.Message)));
+                IsStartingHost = false;
                 yield break;
             }
 
@@ -257,6 +263,7 @@ namespace Cgs.Play.Multiplayer
             Transport.UseWebSockets = true;
 #endif
             StartHost();
+            IsStartingHost = false;
 
             yield return null;
 

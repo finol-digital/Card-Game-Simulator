@@ -34,6 +34,12 @@ class CheckTests(unittest.TestCase):
         self.assertFalse(passed)
         self.assertTrue(any("failed" in line for line in lines))
 
+    def test_ignores_flagged_runs(self):
+        flagged = run(3, 9000, 9000)
+        flagged.flags.append("runIdMismatch")
+        passed, _ = check([run(1, 1200, 300), run(2, 1300, 280), flagged, flagged], THRESHOLDS)
+        self.assertTrue(passed, "another run's result must not count")
+
     def test_fails_when_an_interval_has_no_values(self):
         passed, _ = check([run(1, 1200, None)], THRESHOLDS)
         self.assertFalse(passed)

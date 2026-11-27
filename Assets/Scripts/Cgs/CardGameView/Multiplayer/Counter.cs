@@ -92,6 +92,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnNetworkSpawnPlayable()
         {
+            // Initial synchronization does not invoke OnValueChanged for players joining an existing game
+            OnChangeValue(_value, _valueNetworkVariable.Value);
             if (!Vector3.zero.Equals(_colorNetworkVariable.Value))
                 counterImage.color = new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
                     _colorNetworkVariable.Value.z);
