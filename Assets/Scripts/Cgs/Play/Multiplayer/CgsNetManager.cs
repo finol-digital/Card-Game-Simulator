@@ -706,6 +706,8 @@ namespace Cgs.Play.Multiplayer
             StopLanDiscovery();
             Shutdown();
             CurrentLobby = null;
+            // Stopping ends a hosting attempt before it can clear this itself
+            IsStartingHost = false;
             StopAllCoroutines();
         }
 
