@@ -103,6 +103,7 @@ def to_record(run_id: str, result: dict) -> stats.RunRecord:
         "launchToMenuMs": None if offset is None or menu is None else offset + menu,
         "launchToActionMs": None if offset is None or action is None else offset + action,
         "startToActionMs": None if start is None or action is None else action - start,
+        "longestFrameMs": stats.longest_frame(play),
         "managedToMenuMs": menu,  # elapsed zero (first managed callback) to menu; diagnostic only
     }
     ok = result.get("outcome") == "ok"
@@ -140,9 +141,7 @@ def main() -> int:
               file=sys.stderr)
         time.sleep(1.0)
 
-    report = stats.summarize(records, {"launchToMenuMs": stats.LAUNCH_TO_MENU_BUDGET_MS,
-                                       "launchToActionMs": stats.LAUNCH_TO_ACTION_BUDGET_MS,
-                                       "startToActionMs": stats.START_TO_ACTION_BUDGET_MS})
+    report = stats.summarize(records, stats.BUDGETS)
     report["condition"] = "steam" if args.steam else "direct"
     if aborted:
         report["aborted"] = aborted

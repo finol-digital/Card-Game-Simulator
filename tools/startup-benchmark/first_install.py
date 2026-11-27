@@ -267,9 +267,7 @@ def main() -> int:
     finally:
         data.restore()
 
-    report = stats.summarize(records, {"launchToMenuMs": stats.LAUNCH_TO_MENU_BUDGET_MS,
-                                       "launchToActionMs": stats.LAUNCH_TO_ACTION_BUDGET_MS,
-                                       "startToActionMs": stats.START_TO_ACTION_BUDGET_MS})
+    report = stats.summarize(records, stats.BUDGETS)
     report["condition"] = "firstInstall"
     stats.write_reports(records, report, args.csv)
     return 0 if report["failures"] == 0 else 1
