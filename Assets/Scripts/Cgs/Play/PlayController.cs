@@ -500,6 +500,10 @@ namespace Cgs.Play
             while ((netManager.IsStartingHost || (netManager.IsOnline && netManager.LocalPlayer == null)) &&
                    Time.realtimeSinceStartup < giveUpTime)
                 yield return null;
+            // If hosting failed or is still not ready, the lobby has already reported it; offline start decks would
+            // not be this player's seat deck
+            if (!netManager.IsOnline || netManager.LocalPlayer == null)
+                yield break;
             if (!AllCardStacks.Any())
                 StartDecks();
         }

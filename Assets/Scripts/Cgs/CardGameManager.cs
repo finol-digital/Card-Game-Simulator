@@ -790,11 +790,11 @@ namespace Cgs
             ("Mahjong@www.cardgamesimulator.com", Tags.MahjongUrl)
         };
 
-        // The new game downloading now. A new game downloads into a folder named for it only once its definition has
-        // been read, so new games download one at a time.
+        // The new game downloading now, until it has loaded and been added to the games. A new game downloads into a
+        // folder named for it only once its definition has been read, so new games download one at a time.
         private UnityCardGame _gameDownload;
 
-        private bool IsDownloadingGame => _gameDownload is { IsDownloading: true };
+        private bool IsDownloadingGame => _gameDownload != null;
 
         private UnityCardGame InstalledGameFrom(string gameUrl)
         {
@@ -851,6 +851,7 @@ namespace Cgs
                     continue;
                 }
 
+                // Added in the same frame that its download is released, so no other request downloads it again
                 AllCardGames[cardGame.Id] = cardGame;
                 // If the player's game failed to download, show one that did
                 if (Current == UnityCardGame.UnityInvalid)
@@ -944,10 +945,10 @@ namespace Cgs
                 yield break;
             }
 
+            // The download keeps its slot until the game has loaded and been added, since a load reads the files that
+            // another download of the same game would write
             _gameDownload = cardGame;
             yield return cardGame.Download();
-            if (_gameDownload == cardGame)
-                _gameDownload = null;
             Progress.Hide();
 
             yield return cardGame.LoadRoutine(UpdateCardGame, LoadCards, LoadSetCards);
@@ -963,6 +964,9 @@ namespace Cgs
                 AllCardGames[cardGame.Id] = cardGame;
                 Select(cardGame.Id);
             }
+
+            if (_gameDownload == cardGame)
+                _gameDownload = null;
 
             Debug.Log("DownloadCardGame: end");
         }
