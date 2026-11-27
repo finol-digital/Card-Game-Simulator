@@ -496,9 +496,11 @@ namespace Cgs.Play
         private IEnumerator StartDecksOnceHostingRoutine()
         {
             var netManager = CgsNetManager.Instance;
+            // Signing in and allocating a relay can take a while; IsStartingHost clears when hosting starts or fails
+            while (netManager.IsStartingHost)
+                yield return null;
             var giveUpTime = Time.realtimeSinceStartup + HostingWaitSeconds;
-            while ((netManager.IsStartingHost || (netManager.IsOnline && netManager.LocalPlayer == null)) &&
-                   Time.realtimeSinceStartup < giveUpTime)
+            while (netManager.IsOnline && netManager.LocalPlayer == null && Time.realtimeSinceStartup < giveUpTime)
                 yield return null;
             // If hosting failed or is still not ready, the lobby has already reported it; offline start decks would
             // not be this player's seat deck
