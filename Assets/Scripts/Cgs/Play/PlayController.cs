@@ -433,11 +433,9 @@ namespace Cgs.Play
                 yield break;
 
             Lobby.IsLanConnectionSource = true;
-#if !UNITY_WEBGL
             // A solo player who never uses a network feature is not interrupted if hosting fails
             if (!CgsNetManager.Instance.StartLanHost())
                 Debug.Log(SoloHostingFailedMessage);
-#endif
         }
 
         public void StartDecks()

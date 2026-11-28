@@ -26,11 +26,6 @@ namespace Cgs.Cards
 #if UNITY_WEBGL && !UNITY_EDITOR
         private Action _releaseBrowserFolder;
 #endif
-#if ENABLE_WINMD_SUPPORT
-        public const string UwpWarningMessage =
- "The CGS Windows Store client cannot access folders; please use the Steam client or other native app";
-#endif
-
         public const string SelectFolderPrompt = "Select Folder";
         public const string ImportFolderWarningMessage = "No folder found for import! ";
         public const string ImportCardFailedWarningMessage = "Failed to find card: ";
@@ -137,12 +132,16 @@ namespace Cgs.Cards
                 _releaseBrowserFolder = release;
                 SetFolderPath = path;
             });
-#elif ENABLE_WINMD_SUPPORT
-            Debug.LogWarning(UwpWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.uwp.unavailable", UwpWarningMessage));
 #else
-            FileBrowser.ShowLoadDialog((paths) => { SetFolderPath = paths[0]; }, () => { },
-                FileBrowser.PickMode.Folders, false, null, null, CgsLocalization.Text(new UiMessage("files.select.folder", SelectFolderPrompt)));
+            FolderPicker.Pick(nameof(SetImportMenu), new UiMessage("files.select.folder", SelectFolderPrompt),
+                path =>
+                {
+                    // A closed menu rejects the folder, so the picker keeps the menu's earlier copy.
+                    if (!this || !isActiveAndEnabled)
+                        return false;
+                    SetFolderPath = path;
+                    return true;
+                });
 #endif
         }
 

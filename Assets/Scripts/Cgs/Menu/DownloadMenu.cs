@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Menu
 {
@@ -25,6 +26,10 @@ namespace Cgs.Menu
 
         private DownloadCoroutineDelegate _downloadCoroutine;
 
+        private int _pasteRequest;
+
+        private void InvalidatePaste(string _) => _pasteRequest++;
+
         public override bool IsBlocked => base.IsBlocked || urlInputField.isFocused;
 
         protected void OnEnable()
@@ -35,6 +40,7 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            urlInputField.onValueChanged.AddListener(InvalidatePaste);
         }
 
         public void Show(string label, string prompt, DownloadCoroutineDelegate downloadCoroutine,
@@ -94,8 +100,22 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void Paste()
         {
-            if (urlInputField.interactable)
-                urlInputField.text = UniClipboard.GetText();
+            if (!urlInputField.interactable)
+                return;
+
+            // Browsers read the clipboard asynchronously; any edit or clear meanwhile cancels this paste.
+            var request = ++_pasteRequest;
+            TextSharing.Paste(text =>
+            {
+                if (!this || !isActiveAndEnabled || !urlInputField.interactable || request != _pasteRequest)
+                    return;
+                urlInputField.text = text;
+            }, error =>
+            {
+                if (!this || !isActiveAndEnabled || request != _pasteRequest)
+                    return;
+                CardGameManager.Instance.Messenger.ShowSharingStatus(error);
+            });
         }
 
         [UsedImplicitly]
@@ -122,6 +142,7 @@ namespace Cgs.Menu
         private void Clear()
         {
             urlInputField.text = string.Empty;
+            _pasteRequest++;
         }
 
         private void InputSubmit(InputAction.CallbackContext callbackContext)
@@ -170,6 +191,9 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            urlInputField.onValueChanged.RemoveListener(InvalidatePaste);
+            // Closing the menu ends this session, so cancel any pending paste
+            _pasteRequest++;
         }
     }
 }

@@ -69,6 +69,10 @@ namespace Cgs.Decks
 
         private string _selectedFilePath;
 
+        private int _pasteRequest;
+
+        private void InvalidatePaste(string _) => _pasteRequest++;
+
         private readonly SortedList<string, string> _deckFiles = new();
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
@@ -92,6 +96,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            textInputField.onValueChanged.AddListener(InvalidatePaste);
         }
 
         protected void Start()
@@ -139,6 +144,7 @@ namespace Cgs.Decks
 
             nameInputField.text = originalName ?? Deck.DefaultName;
             textInputField.text = originalText ?? string.Empty;
+            _pasteRequest++;
             switch (CardGameManager.Current.DeckFileType)
             {
                 case DeckFileType.Dec:
@@ -295,6 +301,7 @@ namespace Cgs.Decks
             }
 
             newDeckPanel.gameObject.SetActive(true);
+            _pasteRequest++;
 
             try
             {
@@ -380,6 +387,7 @@ namespace Cgs.Decks
             newDeckPanel.gameObject.SetActive(true);
             nameInputField.text = Untitled;
             textInputField.text = string.Empty;
+            _pasteRequest++;
         }
 
         private void InputFocusName(InputAction.CallbackContext callbackContext)
@@ -415,6 +423,7 @@ namespace Cgs.Decks
         private void Clear()
         {
             textInputField.text = string.Empty;
+            _pasteRequest++;
         }
 
         private void InputPaste(InputAction.CallbackContext callbackContext)
@@ -429,7 +438,19 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void PasteClipboardIntoText()
         {
-            textInputField.text = UniClipboard.GetText();
+            // Browsers read the clipboard asynchronously; any edit, clear, or new deck meanwhile cancels this paste.
+            var request = ++_pasteRequest;
+            TextSharing.Paste(text =>
+            {
+                if (!this || !isActiveAndEnabled || request != _pasteRequest)
+                    return;
+                textInputField.text = text;
+            }, error =>
+            {
+                if (!this || !isActiveAndEnabled || request != _pasteRequest)
+                    return;
+                CardGameManager.Instance.Messenger.ShowSharingStatus(error);
+            });
         }
 
         [UsedImplicitly]
@@ -511,6 +532,8 @@ namespace Cgs.Decks
         public void HideNewDeckPanel()
         {
             newDeckPanel.gameObject.SetActive(false);
+            // A paste still pending from this editing session must not reach a later one
+            _pasteRequest++;
         }
 
         [UsedImplicitly]
@@ -530,6 +553,9 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            textInputField.onValueChanged.RemoveListener(InvalidatePaste);
+            // Closing the menu ends the editing session, so cancel any pending paste
+            _pasteRequest++;
         }
     }
 }

@@ -2017,6 +2017,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 1812176077519323155
+  - m_Id: 19303456526295040
+    m_Localized: Fichiers
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252560
+  - m_Id: 19303456593403904
+    m_Localized: Photos
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252561
+  - m_Id: 19303456593403905
+    m_Localized: "Impossible de se connecter \xE0 cette partie via le r\xE9seau local. V\xE9rifiez que les deux appareils sont sur le m\xEAme r\xE9seau et que la partie est toujours h\xE9berg\xE9e, ou utilisez le multijoueur par Internet."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252562
+  - m_Id: 19303456605986816
+    m_Localized: "Le navigateur n\u2019a pas pu lire le presse-papiers. Autorisez l\u2019acc\xE8s au presse-papiers, ou cliquez dans le champ de texte et collez avec Ctrl+V (Commande+V sur un Mac)."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252563
   references:
     version: 2
     RefIds:
@@ -2052,6 +2072,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Secouez l'appareil pour lancer tous les d\xE9s sur la table.\",\"status\":\"machine\",\"sourceHash\":\"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
+    - rid: 4921527936870252560
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Fichiers","status":"machine","sourceHash":"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527936870252561
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Photos","status":"machine","sourceHash":"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527936870252562
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Impossible de se connecter \xE0 cette partie via le r\xE9seau local. V\xE9rifiez que les deux appareils sont sur le m\xEAme r\xE9seau et que la partie est toujours h\xE9berg\xE9e, ou utilisez le multijoueur par Internet.\",\"status\":\"machine\",\"sourceHash\":\"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-27\"}}"
+    - rid: 4921527936870252563
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Le navigateur n\u2019a pas pu lire le presse-papiers. Autorisez l\u2019acc\xE8s au presse-papiers, ou cliquez dans le champ de texte et collez avec Ctrl+V (Commande+V sur un Mac).\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 7133309420632277544
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

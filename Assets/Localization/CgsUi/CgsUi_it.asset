@@ -2041,6 +2041,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 1812176077519323159
+  - m_Id: 19303456526295040
+    m_Localized: File
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252564
+  - m_Id: 19303456593403904
+    m_Localized: Foto
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252565
+  - m_Id: 19303456593403905
+    m_Localized: Impossibile connettersi a quella partita tramite la rete locale. Assicurati che entrambi i dispositivi siano sulla stessa rete e che la partita sia ancora ospitata, oppure usa il multigiocatore via Internet.
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252566
+  - m_Id: 19303456605986816
+    m_Localized: "Il browser non ha potuto leggere gli appunti. Consenti l\u2019accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac)."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252567
   references:
     version: 2
     RefIds:
@@ -2076,6 +2096,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Scuoti il dispositivo per tirare tutti i dadi sul tavolo.","status":"machine","sourceHash":"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de","provenance":{"method":"Contextual machine draft; English context and CGS glossary","date":"2026-11-22"}}'
+    - rid: 4921527936870252564
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"File","status":"machine","sourceHash":"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527936870252565
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Foto","status":"machine","sourceHash":"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527936870252566
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Impossibile connettersi a quella partita tramite la rete locale. Assicurati che entrambi i dispositivi siano sulla stessa rete e che la partita sia ancora ospitata, oppure usa il multigiocatore via Internet.","status":"machine","sourceHash":"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-27"}}'
+    - rid: 4921527936870252567
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Il browser non ha potuto leggere gli appunti. Consenti l\u2019accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac).\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 7133309420632277773
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

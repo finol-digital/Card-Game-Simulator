@@ -2756,6 +2756,24 @@
         "date": "2026-10-05"
       }
     },
+    "images.source.files": {
+      "text": "File",
+      "status": "machine",
+      "sourceHash": "8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
+    "images.source.photos": {
+      "text": "Foto",
+      "status": "machine",
+      "sourceHash": "3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
     "images.type.warning": {
       "text": "Attenzione: il tipo del file immagine non corrisponde a {extension}.",
       "status": "machine",
@@ -2782,6 +2800,15 @@
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05",
         "note": "2026-10-20: Removed obsolete minimum-length guidance to match optional passwords of 1-64 characters."
+      }
+    },
+    "network.browser.lan.failed": {
+      "text": "Impossibile connettersi a quella partita tramite la rete locale. Assicurati che entrambi i dispositivi siano sulla stessa rete e che la partita sia ancora ospitata, oppure usa il multigiocatore via Internet.",
+      "status": "machine",
+      "sourceHash": "462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-27"
       }
     },
     "network.browser.start.failed": {
@@ -3322,6 +3349,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "sharing.browser.paste.failed": {
+      "text": "Il browser non ha potuto leggere gli appunti. Consenti l’accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac).",
+      "status": "machine",
+      "sourceHash": "18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
       }
     },
     "sharing.cancelled": {

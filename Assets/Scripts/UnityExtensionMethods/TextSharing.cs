@@ -14,6 +14,7 @@ namespace UnityExtensionMethods
         public const string CopyErrorMessage = "Couldn't copy to the clipboard. Please try again.";
         public const string CopyUnconfirmedMessage = "Couldn't confirm the copy. Try pasting to check, or copy again.";
         public const string BrowserCopyErrorMessage = "The browser couldn't copy the text. Try again from an HTTPS page in a supported browser, and check clipboard permissions.";
+        public const string BrowserPasteErrorMessage = "The browser couldn't read the clipboard. Allow clipboard access, or click the text field and paste with Ctrl+V (Command+V on a Mac).";
         public const string EmptyMessage = "There is no text to copy or share.";
         public const string ShareErrorMessage = "Couldn't open sharing. Please try again.";
         public const string ShareUnavailableMessage = "Sharing is not available on this platform.";
@@ -37,6 +38,30 @@ namespace UnityExtensionMethods
             WebClipboard.Copy(text, succeeded => report(succeeded ? copiedMessage : BrowserCopyErrorMessage));
 #else
             report(Copy(text, copiedMessage, UniClipboard.SetText, UniClipboard.GetText));
+#endif
+        }
+
+        /// <summary>
+        /// Reads clipboard text into <paramref name="pasted"/>, or reports a failure message to
+        /// <paramref name="failed"/> when the browser can't read the clipboard.
+        /// </summary>
+        public static void Paste(Action<string> pasted, Action<string> failed)
+        {
+            if (pasted == null)
+                throw new ArgumentNullException(nameof(pasted));
+            if (failed == null)
+                throw new ArgumentNullException(nameof(failed));
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+            WebClipboard.Paste(text =>
+            {
+                if (text == null)
+                    failed(BrowserPasteErrorMessage);
+                else
+                    pasted(text);
+            });
+#else
+            pasted(UniClipboard.GetText());
 #endif
         }
 

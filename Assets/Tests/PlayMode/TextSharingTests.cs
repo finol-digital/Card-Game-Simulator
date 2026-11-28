@@ -63,6 +63,56 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void UnavailableBrowserClipboardReadCompletesWithNullAndClearsPendingRequest()
+        {
+            var bridge = typeof(TextSharing).Assembly.GetType("UnityExtensionMethods.WebClipboard");
+            var pending = (System.Collections.IDictionary)bridge.GetField("PendingReads",
+                BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+            var previousCount = pending.Count;
+            var calls = 0;
+            Action<string> completed = text =>
+            {
+                calls++;
+                Assert.IsNull(text);
+                Assert.AreEqual(previousCount, pending.Count, "Remove the request before notifying the caller.");
+            };
+
+            bridge.GetMethod("Paste").Invoke(null, new object[] { completed });
+
+            Assert.AreEqual(1, calls);
+            Assert.AreEqual(previousCount, pending.Count);
+        }
+
+        [Test]
+        public void PasteReadsClipboardTextOnce()
+        {
+            var previousClipboard = GUIUtility.systemCopyBuffer;
+            try
+            {
+                GUIUtility.systemCopyBuffer = "Pasted deck";
+                var calls = 0;
+                TextSharing.Paste(text =>
+                {
+                    calls++;
+                    Assert.AreEqual("Pasted deck", text);
+                }, error => Assert.Fail(error));
+                Assert.AreEqual(1, calls);
+            }
+            finally
+            {
+                GUIUtility.systemCopyBuffer = previousClipboard;
+            }
+        }
+
+        [Test]
+        public void BrowserPasteFailureHasLocalizedMessage()
+        {
+            var message = SharingMessages.FromFeedback(TextSharing.BrowserPasteErrorMessage);
+            Assert.AreEqual("sharing.browser.paste.failed", message.Key);
+            Assert.AreEqual(TextSharing.BrowserPasteErrorMessage, message.English);
+        }
+
+        [Test]
         public void FileSharingInEditorDoesNotReportNativeShareSuccess()
         {
             var path = Path.GetTempFileName();
@@ -249,9 +299,7 @@ namespace Tests.PlayMode
                     "A status notice must not overwrite the clipboard, even via the keyboard shortcut.");
                 dialog.OkClose();
                 dialog.Show("Another message");
-#if !UNITY_STANDALONE_OSX || UNITY_EDITOR
                 Assert.IsTrue(copyButton.activeSelf, "Normal messages must restore the copy button.");
-#endif
             }
             finally
             {

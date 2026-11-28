@@ -35,7 +35,6 @@ namespace Cgs.Decks
 
         [SerializeField] InputField nameInputField;
         [SerializeField] TMP_Text textOutputArea;
-        [SerializeField] Button printPdfButton;
 
         private UnityDeck _currentDeck;
         private OnNameChangeDelegate _nameChangeCallback;
@@ -63,9 +62,6 @@ namespace Cgs.Decks
             _doesAutoOverwrite = overwrite;
             nameInputField.text = _currentDeck.Name;
             textOutputArea.text = _currentDeck.ToString();
-#if UNITY_WEBGL
-            printPdfButton.interactable = false;
-#endif
         }
 
         private void InputFocus(InputAction.CallbackContext callbackContext)
@@ -152,6 +148,17 @@ namespace Cgs.Decks
                     CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.check.path", DeckPrintOpenPathErrorMessage + pdfUri.LocalPath, ("detail", pdfUri.LocalPath)));
                 }
             }, false);
+#elif UNITY_WEBGL && !UNITY_EDITOR
+            try
+            {
+                BrowserFileBrowser.Download(pdfUri.LocalPath);
+            }
+            catch (IOException e)
+            {
+                Debug.LogError(DeckPrintOpenPathErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.check.path",
+                    DeckPrintOpenPathErrorMessage + e.Message, ("detail", e.Message)));
+            }
 #elif UNITY_ANDROID && !UNITY_EDITOR
             StartCoroutine(OpenPdf(pdfUri));
 #elif UNITY_IOS && !UNITY_EDITOR

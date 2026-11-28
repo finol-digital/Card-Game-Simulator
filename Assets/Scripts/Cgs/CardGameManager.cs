@@ -626,7 +626,8 @@ namespace Cgs
         }
 
         /// <summary>The link that launched CGS; tests substitute it to simulate a cold start from a link.</summary>
-        internal static Func<string> LaunchDeepLink { get; set; } = () => Application.absoluteURL;
+        internal static Func<string> LaunchDeepLink { get; set; } = () =>
+            string.IsNullOrEmpty(Application.absoluteURL) ? DesktopDeepLinks.LaunchLink : Application.absoluteURL;
 
         private void CheckDeepLinks()
         {

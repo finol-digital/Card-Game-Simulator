@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using Application = UnityEngine.WSA.Application;
 using Windows.Storage;
@@ -73,6 +74,69 @@ namespace UnityExtensionMethods
             IsBusy = false;
 
             Debug.Log("OpenFile end: " + Selection.Count);
+        }
+
+        /// <summary>
+        /// Lets the player choose a folder, then copies it into the app's cache, because the Store app can read
+        /// a chosen folder only through the Windows storage APIs. Returns the copy's path, or null if cancelled.
+        /// </summary>
+        public static async Task<string> OpenFolderAsync()
+        {
+            var picked = new TaskCompletionSource<StorageFolder>();
+            Application.InvokeOnUIThread(async () =>
+            {
+                try
+                {
+                    var folderPicker = new FolderPicker
+                    {
+                        ViewMode = CurrentViewMode,
+                        SuggestedStartLocation = CurrentLocation
+                    };
+                    folderPicker.FileTypeFilter.Add("*");
+                    picked.TrySetResult(await folderPicker.PickSingleFolderAsync());
+                }
+                catch (Exception exception)
+                {
+                    picked.TrySetException(exception);
+                }
+            }, false);
+
+            var sourceFolder = await picked.Task;
+            if (sourceFolder == null)
+                return null;
+
+            var cacheFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(
+                "CgsImport-" + Guid.NewGuid().ToString("N"), CreationCollisionOption.GenerateUniqueName);
+            try
+            {
+                var targetFolder = await cacheFolder.CreateFolderAsync(sourceFolder.Name,
+                    CreationCollisionOption.ReplaceExisting);
+                await CopyFolderAsync(sourceFolder, targetFolder);
+                return targetFolder.Path;
+            }
+            catch
+            {
+                // The cache persists across sessions, so don't leave a partial copy behind.
+                try
+                {
+                    await cacheFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+                catch (Exception cleanupException)
+                {
+                    Debug.LogWarning("UwpFileBrowser::CleanupFailed: " + cleanupException.Message);
+                }
+
+                throw;
+            }
+        }
+
+        private static async Task CopyFolderAsync(StorageFolder sourceFolder, StorageFolder targetFolder)
+        {
+            foreach (var file in await sourceFolder.GetFilesAsync())
+                await file.CopyAsync(targetFolder, file.Name, NameCollisionOption.ReplaceExisting);
+            foreach (var folder in await sourceFolder.GetFoldersAsync())
+                await CopyFolderAsync(folder,
+                    await targetFolder.CreateFolderAsync(folder.Name, CreationCollisionOption.OpenIfExists));
         }
     }
 

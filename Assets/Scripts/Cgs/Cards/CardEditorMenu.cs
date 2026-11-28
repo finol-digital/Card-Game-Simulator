@@ -251,7 +251,7 @@ namespace Cgs.Cards
             BrowserFileBrowser.OpenImage(new UiMessage("files.select.card", SelectCardImageFilePrompt),
                 path => { if (this != null && isActiveAndEnabled) ImportCardImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportCardImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
+            MobileImagePicker.Pick(new UiMessage("images.import", ImportImage), ImportCardImageFromFile);
 #elif ENABLE_WINMD_SUPPORT
             ImportCardImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
@@ -282,6 +282,9 @@ namespace Cgs.Cards
             CardImageUri = new Uri(await UnityFileMethods.CacheFileAsync(uri));
 #elif UNITY_STANDALONE || UNITY_WEBGL
             CardImageUri = new Uri(UnityFileMethods.CacheFile(uri));
+#elif UNITY_ANDROID || UNITY_IOS
+            // Images from the Files app can be HEIC, which Unity can't decode, so cache a PNG copy.
+            CardImageUri = new Uri(UnityFileMethods.CacheFile(uri, Guid.NewGuid().ToString("N") + ".png"));
 #else
             CardImageUri = new Uri(uri);
 #endif

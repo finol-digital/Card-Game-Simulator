@@ -2085,6 +2085,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 1812176077519323143
+  - m_Id: 19303456526295040
+    m_Localized: Files
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252548
+  - m_Id: 19303456593403904
+    m_Localized: Photos
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252549
+  - m_Id: 19303456593403905
+    m_Localized: Couldn't connect to that game over the local network. Make sure both devices are on the same network and the game is still hosted, or use Internet multiplayer.
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252550
+  - m_Id: 19303456605986816
+    m_Localized: The browser couldn't read the clipboard. Allow clipboard access, or click the text field and paste with Ctrl+V (Command+V on a Mac).
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252551
   references:
     version: 2
     RefIds:
@@ -2120,6 +2140,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Shake your device to roll all dice on the table.","context":"Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 4921527936870252548
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Files","context":"Choice in the iOS Import Image menu that opens Apple''s Files app to pick an image file. Use the Files app''s localized name; keep it short.","arguments":{},"smart":false}'
+    - rid: 4921527936870252549
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Photos","context":"Choice in the iOS Import Image menu that opens the photo library to pick an image. Keep it short; it is a menu button.","arguments":{},"smart":false}'
+    - rid: 4921527936870252550
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Couldn''t connect to that game over the local network. Make sure both devices are on the same network and the game is still hosted, or use Internet multiplayer.","context":"Message in the Web version when joining a LAN game hosted by a browser on another device fails; LAN means local network, and Internet multiplayer is the other connection option.","arguments":{},"smart":false}'
+    - rid: 4921527936870252551
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"The browser couldn''t read the clipboard. Allow clipboard access, or click the text field and paste with Ctrl+V (Command+V on a Mac).","context":"Message in the Web version after a Paste button could not read the browser clipboard; it explains the keyboard alternative. Keep key names Ctrl+V and Command+V recognizable.","arguments":{},"smart":false}'
     - rid: 7133309420632277315
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

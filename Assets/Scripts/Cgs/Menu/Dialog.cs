@@ -321,9 +321,6 @@ namespace Cgs.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             copyButton.SetActive(false);
             shareButton.SetActive(_canCopy);
-#elif UNITY_STANDALONE_OSX && !UNITY_EDITOR
-            copyButton.SetActive(false);
-            shareButton.SetActive(false);
 #else
             copyButton.SetActive(_canCopy);
             shareButton.SetActive(false);

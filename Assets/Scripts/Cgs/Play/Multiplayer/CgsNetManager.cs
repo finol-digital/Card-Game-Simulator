@@ -108,6 +108,15 @@ namespace Cgs.Play.Multiplayer
 
         private BrowserLanTransport _browserTransport;
 
+        public BrowserNetworkLan BrowserNetworkLan =>
+            _browserNetworkLan ??= new BrowserNetworkLan(BrowserTransport, new UnityBrowserLanLobbies());
+
+        private BrowserNetworkLan _browserNetworkLan;
+
+        public const string BrowserNetworkJoinErrorMessage =
+            "Couldn't connect to that game over the local network. Make sure both devices are on the same network " +
+            "and the game is still hosted, or use Internet multiplayer.";
+
         public string RoomIdIp
         {
             get
@@ -375,7 +384,14 @@ namespace Cgs.Play.Multiplayer
             {
                 NetworkConfig.NetworkTransport = BrowserTransport;
                 BrowserTransport.ServerName = CardGameManager.Current.Name;
-                return StartHost();
+                if (!StartHost())
+                    return false;
+                // Tabs of this browser find the room through BroadcastChannel; other devices through Lobby.
+                var roomId = BrowserTransport.RoomId;
+                StartCoroutine(BrowserNetworkLan.Advertise(roomId, CardGameManager.Current.Name,
+                    () => IsServer && NetworkConfig.NetworkTransport == BrowserTransport &&
+                          BrowserTransport.RoomId == roomId));
+                return true;
             }
 
             Transport = Transports.UnityTransport;
@@ -434,6 +450,20 @@ namespace Cgs.Play.Multiplayer
             Transport = Transports.UnityTransport;
             Transport.SetConnectionData(address, port);
             return StartClient();
+        }
+
+        /// <summary>Joins a browser on another device on this network; see <see cref="BrowserNetworkLan"/>.</summary>
+        public void StartJoinBrowserNetworkRoom(BrowserLanRoom room)
+        {
+            StopLanDiscovery();
+            StartCoroutine(BrowserNetworkLan.Join(room, joined =>
+            {
+                if (joined && StartJoin(room.RoomId))
+                    return;
+                Debug.LogWarning(BrowserNetworkJoinErrorMessage);
+                CardGameManager.Instance.Messenger.Show(new UiMessage("network.browser.lan.failed",
+                    BrowserNetworkJoinErrorMessage));
+            }));
         }
 
         public void StartJoinLobby(string lobbyId, string password = "")
@@ -708,6 +738,8 @@ namespace Cgs.Play.Multiplayer
             CurrentLobby = null;
             // Stopping ends a hosting attempt before it can clear this itself
             IsStartingHost = false;
+            // Stopping coroutines also stops browser LAN advertising before it can remove its lobby
+            _browserNetworkLan?.StopAdvertising();
             StopAllCoroutines();
         }
 

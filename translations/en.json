@@ -1930,6 +1930,18 @@
       },
       "smart": true
     },
+    "images.source.files": {
+      "text": "Files",
+      "context": "Choice in the iOS Import Image menu that opens Apple's Files app to pick an image file. Use the Files app's localized name; keep it short.",
+      "arguments": {},
+      "smart": false
+    },
+    "images.source.photos": {
+      "text": "Photos",
+      "context": "Choice in the iOS Import Image menu that opens the photo library to pick an image. Keep it short; it is a menu button.",
+      "arguments": {},
+      "smart": false
+    },
     "images.type.warning": {
       "text": "Warning: the image file type does not match {extension}.",
       "context": "CGS runtime images.type.warning presentation; keep supplied names and model data unchanged.",
@@ -1949,6 +1961,12 @@
     "multiplayer.password.placeholder": {
       "text": "[Optional]",
       "context": "Input placeholder at Lobby Menu/Frame/Connection Panel/Password/Password InputField/Placeholder in Assets/Prefabs/Menus/Lobby Menu.prefab. Keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
+    "network.browser.lan.failed": {
+      "text": "Couldn't connect to that game over the local network. Make sure both devices are on the same network and the game is still hosted, or use Internet multiplayer.",
+      "context": "Message in the Web version when joining a LAN game hosted by a browser on another device fails; LAN means local network, and Internet multiplayer is the other connection option.",
       "arguments": {},
       "smart": false
     },
@@ -2338,6 +2356,12 @@
     "sharing.browser.failed": {
       "text": "The browser couldn't copy the text. Try again from an HTTPS page in a supported browser, and check clipboard permissions.",
       "context": "CGS runtime sharing.browser.failed presentation; keep supplied names and model data unchanged.",
+      "arguments": {},
+      "smart": false
+    },
+    "sharing.browser.paste.failed": {
+      "text": "The browser couldn't read the clipboard. Allow clipboard access, or click the text field and paste with Ctrl+V (Command+V on a Mac).",
+      "context": "Message in the Web version after a Paste button could not read the browser clipboard; it explains the keyboard alternative. Keep key names Ctrl+V and Command+V recognizable.",
       "arguments": {},
       "smart": false
     },

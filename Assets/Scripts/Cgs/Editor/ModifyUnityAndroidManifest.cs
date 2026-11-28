@@ -117,10 +117,9 @@ namespace Cgs.Editor
             category2.Attributes.Append(category2Attribute);
             XmlElement data = CreateElement("data");
             intentFilter.AppendChild(data);
+            // Match every cardgamesim:// link, as iOS, macOS and Windows do; scene links use other hosts.
             XmlAttribute dataAttribute = CreateAndroidAttribute("scheme", "cardgamesim");
             data.Attributes.Append(dataAttribute);
-            XmlAttribute dataAttribute2 = CreateAndroidAttribute("host", "main");
-            data.Attributes.Append(dataAttribute2);
         }
     }
 }

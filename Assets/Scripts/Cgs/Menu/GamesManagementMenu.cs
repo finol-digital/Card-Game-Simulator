@@ -15,7 +15,9 @@ using UnityExtensionMethods;
 using System;
 using UnityEngine.Events;
 
-#if !UNITY_ANDROID && !UNITY_IOS
+#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+using SFB;
+#elif !UNITY_ANDROID && !UNITY_IOS
 using SimpleFileBrowser;
 #endif
 
@@ -225,12 +227,50 @@ namespace Cgs.Menu
                 else
                     CardGameManager.Instance.ImportCardGame(path);
             }, ZipFileType);
+#elif ENABLE_WINMD_SUPPORT
+            ImportCardGameFromUwpFile();
+#elif UNITY_STANDALONE_OSX && !UNITY_EDITOR
+            // The sandboxed Mac app can read only files chosen in the system dialog.
+            StandaloneFileBrowser.OpenFilePanelAsync(
+                CgsLocalization.Text(new UiMessage("files.select.zip", SelectZipFilePrompt)), string.Empty,
+                new[] { new ExtensionFilter(string.Empty, "zip") }, false, paths =>
+                {
+                    if (paths is { Length: > 0 } && !string.IsNullOrEmpty(paths[0]))
+                        CardGameManager.Instance.ImportCardGame(paths[0]);
+                    else
+                        Debug.Log("Operation cancelled");
+                });
 #else
             FileBrowser.ShowLoadDialog((paths) => CardGameManager.Instance.ImportCardGame(paths[0]),
                 () => { }, FileBrowser.PickMode.Files, false, null, null,
                 CgsLocalization.Text(new UiMessage("files.select.zip", SelectZipFilePrompt)));
 #endif
         }
+
+#if ENABLE_WINMD_SUPPORT
+        // The Store app can read only files chosen in the Windows picker, so import a cached copy.
+        private static async void ImportCardGameFromUwpFile()
+        {
+            var path = UwpFileBrowser.OpenFilePanel();
+            // A picked file can lack a filesystem path, so only a missing file means cancellation.
+            if (UwpFileBrowser.LastOpenFile == null)
+            {
+                Debug.Log("Operation cancelled");
+                return;
+            }
+
+            try
+            {
+                CardGameManager.Instance.ImportCardGame(await UnityFileMethods.CacheFileAsync(path));
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning(CardGameManager.ImportFailureErrorMessage + exception.Message);
+                CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.import",
+                    CardGameManager.ImportFailureErrorMessage + exception.Message, ("detail", exception.Message)));
+            }
+        }
+#endif
 
         private void InputCopyShare(InputAction.CallbackContext callbackContext)
         {

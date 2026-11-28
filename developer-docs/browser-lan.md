@@ -1,15 +1,45 @@
 # Browser LAN multiplayer
 
-Web builds use a Netcode `BrowserLanTransport` backed by `BroadcastChannel` for
-the LAN option. Browsers cannot listen for incoming UDP/WebSocket connections,
-so Unity Transport plus UDP discovery cannot host a LAN game inside a tab.
+Web builds use a Netcode `BrowserLanTransport` for the LAN option. Browsers cannot listen for incoming
+UDP/WebSocket connections, so Unity Transport plus UDP discovery cannot host a LAN game inside a tab. The
+transport speaks one small message protocol (join, welcome, data, ping, leave) over two kinds of link:
 
-This supports tabs/windows in the **same browser profile and same website
-origin** (scheme, hostname, port, and storage partition). It requires no local
-server, sign-in, or Internet connection after the game has loaded. It does not
-connect different computers, browsers, profiles, or normal/private windows.
-Use Internet multiplayer for those connections. Native builds retain UDP LAN
-networking; Internet multiplayer retains its existing transport.
+- **Same browser:** `BroadcastChannel` connects tabs/windows in the same browser profile and website origin.
+  It needs no server, sign-in, or Internet connection after the game has loaded.
+- **Other devices on the same network:** WebRTC data channels (`BrowserNetworkLan`). The game data travels
+  directly over the local network; Unity Lobby is used only to find rooms and exchange connection details.
+
+A hosting browser offers both. Native builds retain UDP LAN networking and cannot join browser LAN rooms (they
+have no WebRTC); use Internet multiplayer between Web and native players.
+
+## How network rooms work
+
+1. Each browser asks public STUN servers (`stun.l.google.com`, `stun.cloudflare.com`) for its network's public
+   address and hashes it (SHA-256 with a fixed salt, first 128 bits). IPv6 uses the /64 prefix, because each
+   IPv6 device has its own address. Browsers behind the same router therefore share a *network key*. Searches
+   reuse a key for at most a minute; hosting looks it up afresh, and the host re-checks it with each heartbeat
+   and moves its lobby to the new key if the device changed networks.
+2. The host creates a public Lobby named `<game> (Web LAN)` with the network key in indexed field `S1`
+   (`WebLanNetwork`) and its room ID (`WebLanRoom`). Joining browsers query lobbies by their own key.
+3. A joining browser creates a WebRTC offer (about 1 KB, with all ICE candidates) and joins the lobby with it as
+   member-only player data. The host polls the lobby every 1.5 seconds, answers each offer in member-only
+   lobby data (`Answer<player ID prefix>`), and heartbeats the lobby every 15 seconds. Lobby stores each value
+   in at most 2 KB, so a longer offer or answer keeps only its host candidates, and the join fails if it is
+   still too long. An answer that fails to publish is retried with the same peer connection.
+4. The client applies the answer, leaves the lobby, and starts Netcode over the new data channel. The host
+   removes answers of players who left, and closes their peer connections when their data channels close.
+   When hosting stops, the host deletes the lobby, even if stopping cancels the advertising coroutine.
+
+Large Netcode packets are split into ordered 16 KB chunks, and sending waits while a channel buffers more than
+4 MB. Each data channel speaks only for the player that joined through it.
+
+Limits and privacy: discovery needs an Internet connection (Lobby and STUN); play itself does not route through
+the Internet. Networks that isolate Wi-Fi clients or block multicast DNS can prevent the direct connection; the
+player then sees `network.browser.lan.failed` and can use Internet multiplayer. Lobby data is public, so only
+the salted hash of the public address is published; the descriptions are visible only to lobby members. Lobby
+rate limits allow roughly one query per second per player. Older native versions show `(Web LAN)` lobbies in
+their Internet list but cannot join them; current versions hide them there. Starting local play in a browser
+also hosts a LAN room, like native builds.
 
 ## Two-tab reproduction
 
@@ -34,6 +64,14 @@ missing hosts time out after 10 seconds. Closing a tab notifies its peers using
 LAN passwords have the same behavior as native LAN (the password field is for
 Internet rooms).
 
+## Two-device reproduction
+
+1. Connect two devices (for example a computer and a phone or tablet) to the same Wi-Fi network. Open the Web
+   player on both and load the same card game.
+2. Host LAN on the first device. On the second, open Multiplayer and select LAN; the room appears within the
+   five-second refresh. Join, then repeat the gameplay and disconnect checks below in both directions.
+3. Repeat with one device on a different network (such as a phone hotspot): the room must not appear.
+
 ## Automated checks
 
 - `node --test scripts/browser-lan.test.cjs` executes the actual JavaScript plugin
@@ -41,7 +79,10 @@ Internet rooms).
   binary/large packet ordering, client routing, room isolation, disconnects,
   reconnects, timeouts, and unsupported browsers. In a process-restricted shell,
   add `--test-isolation=none`.
-- Run the Unity PlayMode `BrowserLanTests` for the room-ID/transport integration
+  The WebRTC tests use fake peer connections; for real WebRTC, load the plugin in two browser tabs with an
+  isolated `BroadcastChannel` and exchange the offer and answer by hand.
+- Run the Unity PlayMode `BrowserNetworkLanTests` for Lobby signaling (with in-memory fakes), and
+  `BrowserLanTests` for the room-ID/transport integration
   and selecting a deck that has already despawned after drawing its last card.
 - Compile a Web player as well as Editor scripts: browser bridge imports are
   enabled only in the Web player and must survive IL2CPP stripping/linking.

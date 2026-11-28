@@ -139,8 +139,9 @@ namespace UnityExtensionMethods
 #if ENABLE_WINMD_SUPPORT
         public static async System.Threading.Tasks.Task<string> CacheFileAsync(string sourceFilePath)
         {
-            string fileName = Path.GetFileName(sourceFilePath);
             Windows.Storage.StorageFile sourceStorageFile = UwpFileBrowser.LastOpenFile;
+            // Picked files need not have a filesystem path, so prefer the picked file's own name.
+            string fileName = sourceStorageFile?.Name ?? Path.GetFileName(sourceFilePath);
             Windows.Storage.StorageFolder cacheStorageFolder = Windows.Storage.ApplicationData.Current.LocalCacheFolder;
             var cacheStorageFile = await sourceStorageFile.CopyAsync(
                 cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
@@ -152,7 +153,17 @@ namespace UnityExtensionMethods
         {
             var cacheFilePath = Application.temporaryCachePath + "/" + GetSafeFileName(fileName);
             var texture2D = NativeGallery.LoadImageAtPath(sourceFilePath, -1, false);
-            File.WriteAllBytes(cacheFilePath, texture2D.EncodeToPNG());
+            try
+            {
+                File.WriteAllBytes(cacheFilePath, texture2D.EncodeToPNG());
+            }
+            finally
+            {
+                // NativeGallery leaves the loaded texture to the caller.
+                if (texture2D != null)
+                    UnityEngine.Object.Destroy(texture2D);
+            }
+
             return cacheFilePath;
         }
 #else

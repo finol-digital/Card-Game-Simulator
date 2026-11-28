@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FinolDigital.Cgs.Json.Decks;
+using UnityEngine;
 using UnityExtensionMethods;
 #if !UNITY_WEBGL
 using Didstopia.PDFSharp;
 using Didstopia.PDFSharp.Drawing;
 using Didstopia.PDFSharp.Pdf;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
-using UnityEngine;
 #endif
 
 namespace FinolDigital.Cgs.Json.Unity
@@ -361,7 +361,7 @@ namespace FinolDigital.Cgs.Json.Unity
         public Uri PrintPdf()
         {
 #if UNITY_WEBGL
-            throw new System.NotImplementedException();
+            return PrintJpegPdf();
 #else
             if (!Directory.Exists(PrintPdfDirectory))
                 Directory.CreateDirectory(PrintPdfDirectory);
@@ -435,8 +435,134 @@ namespace FinolDigital.Cgs.Json.Unity
             pdfDocument.Close();
             pdfDocument.Dispose();
 
-            return new Uri(UnityFileMethods.FilePrefix + PrintPdfFilePath);
+            // Deck names can contain URI characters such as #, so build the URI from the path itself.
+            return new Uri(Path.GetFullPath(PrintPdfFilePath));
 #endif
+        }
+
+        /// <summary>
+        /// Prints with the same layout as <see cref="PrintPdf"/> without PdfSharp, which Web players exclude:
+        /// each card image is embedded once as a JPEG.
+        /// </summary>
+        // NOTE: CAN THROW EXCEPTION
+        public Uri PrintJpegPdf()
+        {
+            if (!Directory.Exists(PrintPdfDirectory))
+                Directory.CreateDirectory(PrintPdfDirectory);
+
+            var cardWidth = SourceGame.CardSize.X;
+            var cardHeight = SourceGame.CardSize.Y;
+            var cardsPerRow = (int) Math.Floor((PrintPdfWidth - PrintPdfMargin * 2) / cardWidth);
+            var rowsPerPage = (int) Math.Floor((PrintPdfHeight - PrintPdfMargin * 2) / cardHeight);
+            var cardsPerPage = cardsPerRow * rowsPerPage;
+            if (cardsPerPage < 1)
+                throw new InvalidOperationException("The cards are too large to print on a letter-size page.");
+
+            var pdf = new JpegPdfWriter(PrintPdfWidth * PrintPdfPixelsPerInch, PrintPdfHeight * PrintPdfPixelsPerInch);
+            for (var cardNumber = 0; cardNumber < _cards.Count; cardNumber++)
+            {
+                if (cardNumber % cardsPerPage == 0)
+                    pdf.AddPage();
+
+                var imageFilePath = _cards[cardNumber].ImageFilePath;
+                if (!pdf.HasImage(imageFilePath))
+                    AddJpegImage(pdf, imageFilePath);
+
+                var slot = cardNumber % cardsPerPage;
+                pdf.DrawImage(imageFilePath,
+                    (PrintPdfMargin + slot % cardsPerRow * cardWidth) * PrintPdfPixelsPerInch,
+                    (PrintPdfMargin + slot / cardsPerRow * cardHeight) * PrintPdfPixelsPerInch,
+                    cardWidth * PrintPdfPixelsPerInch, cardHeight * PrintPdfPixelsPerInch);
+            }
+
+            if (pdf.PageCount == 0)
+                pdf.AddPage();
+            pdf.Save(PrintPdfFilePath);
+            // Deck names can contain URI characters such as #, so build the URI from the path itself.
+            return new Uri(Path.GetFullPath(PrintPdfFilePath));
+        }
+
+        // JPEG has no transparency, so show transparent areas as white paper. Export runs within one frame, and Web
+        // builds collect garbage only between frames, so edit 32-bit pixels in place rather than through a copy.
+        private static void ShowTransparencyAsPaper(Texture2D texture)
+        {
+            // Byte offsets of red, green, blue, and alpha in each pixel
+            int r, g, b, a;
+            switch (texture.format)
+            {
+                case TextureFormat.RGB24:
+                    return;
+                case TextureFormat.RGBA32:
+                    (r, g, b, a) = (0, 1, 2, 3);
+                    break;
+                case TextureFormat.ARGB32:
+                    (r, g, b, a) = (1, 2, 3, 0);
+                    break;
+                case TextureFormat.BGRA32:
+                    (r, g, b, a) = (2, 1, 0, 3);
+                    break;
+                default:
+                    var copy = texture.GetPixels32();
+                    for (var i = 0; i < copy.Length; i++)
+                        copy[i] = OnPaper(copy[i]);
+                    texture.SetPixels32(copy);
+                    return;
+            }
+
+            var bytes = texture.GetPixelData<byte>(0);
+            for (var i = 0; i + 3 < bytes.Length; i += 4)
+            {
+                var pixel = OnPaper(new Color32(bytes[i + r], bytes[i + g], bytes[i + b], bytes[i + a]));
+                bytes[i + r] = pixel.r;
+                bytes[i + g] = pixel.g;
+                bytes[i + b] = pixel.b;
+                bytes[i + a] = pixel.a;
+            }
+        }
+
+        private static Color32 OnPaper(Color32 pixel)
+        {
+            var alpha = pixel.a;
+            if (alpha == byte.MaxValue)
+                return pixel;
+            var paper = byte.MaxValue * (byte.MaxValue - alpha);
+            return new Color32((byte) ((pixel.r * alpha + paper) / byte.MaxValue),
+                (byte) ((pixel.g * alpha + paper) / byte.MaxValue),
+                (byte) ((pixel.b * alpha + paper) / byte.MaxValue), byte.MaxValue);
+        }
+
+        private static void AddJpegImage(JpegPdfWriter pdf, string imageFilePath)
+        {
+            Texture2D texture = null;
+            try
+            {
+                var bytes = File.ReadAllBytes(imageFilePath);
+                texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                if (!texture.LoadImage(bytes))
+                {
+                    // Texture2D.LoadImage() reads only png and jpg; some hosts serve webp under those names.
+                    UnityEngine.Object.DestroyImmediate(texture);
+                    texture = UnityFileMethods.DecodeWebpReadable(bytes);
+                }
+
+                if (texture == null)
+                    throw new InvalidOperationException("Unable to decode image: " + imageFilePath);
+
+                ShowTransparencyAsPaper(texture);
+                pdf.AddImage(imageFilePath, texture.EncodeToJPG(90), texture.width, texture.height);
+            }
+            catch (Exception e)
+            {
+                const string FileOpErrorMessage = "Failed to load image file for PDF rendering: ";
+                Debug.LogError(FileOpErrorMessage + imageFilePath + " - " + e.Message);
+                throw;
+            }
+            finally
+            {
+                // Export runs within one frame, so free each decoded image now rather than at the frame's end.
+                if (texture != null)
+                    UnityEngine.Object.DestroyImmediate(texture);
+            }
         }
     }
 }

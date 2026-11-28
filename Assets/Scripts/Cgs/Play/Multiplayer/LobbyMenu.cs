@@ -6,6 +6,7 @@ using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
@@ -34,6 +35,8 @@ namespace Cgs.Play.Multiplayer
         public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
 
+        private const int MaxInternetLobbies = 15;
+        private const int MaxLobbyQueryCount = 100;
         private const string ConnectionStartErrorMessage = "Unable to start the multiplayer connection.";
         private const string BrowserConnectionStartErrorMessage =
             "Unable to connect. For browser LAN, open this site in another tab of the same browser, host there, " +
@@ -78,6 +81,13 @@ namespace Cgs.Play.Multiplayer
         }
 
         private Dictionary<string, DiscoveryResponseData> DiscoveredServers { get; } = new();
+
+        // Browser LAN lists rooms in this browser (by room ID) and on this network (by lobby ID).
+        private Dictionary<string, DiscoveryResponseData> BrowserRooms { get; } = new();
+
+        private Dictionary<string, BrowserLanRoom> NetworkRooms { get; } = new();
+
+        private bool _isFindingNetworkRooms;
 
         private Dictionary<string, LobbyData> Lobbies { get; } = new();
 
@@ -158,10 +168,10 @@ namespace Cgs.Play.Multiplayer
             if (IsLanConnectionSource && BrowserLanTransport.IsBrowser &&
                 CgsNetManager.Instance.BrowserTransport.TryReadDiscoveredRooms(out var rooms))
             {
-                DiscoveredServers.Clear();
+                BrowserRooms.Clear();
                 foreach (var room in rooms)
-                    DiscoveredServers[room.Key] = room.Value;
-                _shouldRedisplay = true;
+                    BrowserRooms[room.Key] = room.Value;
+                RebuildBrowserServers();
             }
 
             _secondsSinceRefresh += Time.deltaTime;
@@ -211,6 +221,8 @@ namespace Cgs.Play.Multiplayer
 
             _selectedServer = string.Empty;
             DiscoveredServers.Clear();
+            BrowserRooms.Clear();
+            NetworkRooms.Clear();
             if (BrowserLanTransport.IsBrowser)
                 CgsNetManager.Instance.StartBrowserLanDiscovery();
             else
@@ -242,17 +254,51 @@ namespace Cgs.Play.Multiplayer
             else
             {
                 CgsNetManager.Instance.RefreshLanDiscovery();
+                if (BrowserLanTransport.IsBrowser && !_isFindingNetworkRooms)
+                    StartCoroutine(FindNetworkRooms());
                 Debug.Log("LobbyMenu Refreshed Discovery");
             }
 
             _secondsSinceRefresh = 0;
         }
 
+        private IEnumerator FindNetworkRooms()
+        {
+            _isFindingNetworkRooms = true;
+            IReadOnlyList<BrowserLanRoom> found = null;
+            yield return CgsNetManager.Instance.BrowserNetworkLan.FindRooms(rooms => found = rooms);
+            _isFindingNetworkRooms = false;
+            if (!IsLanConnectionSource)
+                yield break;
+
+            NetworkRooms.Clear();
+            foreach (var room in found)
+                NetworkRooms[room.LobbyId] = room;
+            RebuildBrowserServers();
+        }
+
+        private void RebuildBrowserServers()
+        {
+            DiscoveredServers.Clear();
+            foreach (var room in BrowserRooms)
+                DiscoveredServers[room.Key] = room.Value;
+            // A room hosted in this browser appears once, through its faster same-browser connection.
+            foreach (var room in NetworkRooms.Values)
+            {
+                if (!BrowserRooms.ContainsKey(room.RoomId))
+                    DiscoveredServers[room.LobbyId] = new DiscoveryResponseData { ServerName = room.Name };
+                else if (_selectedServer == room.LobbyId)
+                    _selectedServer = room.RoomId;
+            }
+            _shouldRedisplay = true;
+        }
+
         private async Task RefreshLobbies()
         {
             var queryLobbiesOptions = new QueryLobbiesOptions
             {
-                Count = 15,
+                // Browser LAN rooms are also lobbies, so fetch extra and list at most MaxInternetLobbies of the rest
+                Count = MaxLobbyQueryCount,
                 // Filter for open lobbies only
                 Filters = new List<QueryFilter>
                 {
@@ -273,7 +319,9 @@ namespace Cgs.Play.Multiplayer
             var response = await LobbyService.Instance.QueryLobbiesAsync(queryLobbiesOptions);
 
             Lobbies.Clear();
-            foreach (var lobby in response.Results)
+            // Browser LAN rooms are listed under LAN by browsers on the same network.
+            foreach (var lobby in response.Results.Where(lobby => !UnityBrowserLanLobbies.IsBrowserLanLobby(lobby))
+                         .Take(MaxInternetLobbies))
             {
                 var lobbyData = new LobbyData
                 {
@@ -458,6 +506,11 @@ namespace Cgs.Play.Multiplayer
                         CgsNetManager.Instance.StartJoinLobbyCode(_selectedServer, _password);
                 }
             }
+            else if (BrowserLanTransport.IsBrowser && NetworkRooms.TryGetValue(_selectedServer, out var networkRoom)
+                                                   && !BrowserRooms.ContainsKey(networkRoom.RoomId))
+            {
+                CgsNetManager.Instance.StartJoinBrowserNetworkRoom(networkRoom);
+            }
             else
             {
                 if (DiscoveredServers.TryGetValue(_selectedServer, out var discoveryResponse))
@@ -516,6 +569,8 @@ namespace Cgs.Play.Multiplayer
         {
             // Deactivation stops the sign-in coroutine; a shared attempt still in progress is reused on return
             _isSigningIn = false;
+            // It also stops the browser LAN room search, so let the next refresh start a new one
+            _isFindingNetworkRooms = false;
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;
