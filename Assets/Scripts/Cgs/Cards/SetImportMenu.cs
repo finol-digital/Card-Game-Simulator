@@ -135,8 +135,9 @@ namespace Cgs.Cards
 #else
             FolderPicker.Pick(new UiMessage("files.select.folder", SelectFolderPrompt), path =>
             {
-                if (this != null && isActiveAndEnabled)
-                    SetFolderPath = path;
+                if (this == null || !isActiveAndEnabled)
+                    return;
+                SetFolderPath = path;
             });
 #endif
         }

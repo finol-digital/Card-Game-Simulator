@@ -91,12 +91,11 @@ namespace Tests.PlayMode
             {
                 GUIUtility.systemCopyBuffer = "Pasted deck";
                 var calls = 0;
-                TextSharing.Paste((text, error) =>
+                TextSharing.Paste(text =>
                 {
                     calls++;
                     Assert.AreEqual("Pasted deck", text);
-                    Assert.IsNull(error);
-                });
+                }, error => Assert.Fail(error));
                 Assert.AreEqual(1, calls);
             }
             finally

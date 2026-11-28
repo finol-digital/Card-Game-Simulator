@@ -98,14 +98,16 @@ namespace Cgs.Menu
             if (!urlInputField.interactable)
                 return;
 
-            TextSharing.Paste((text, error) =>
+            TextSharing.Paste(text =>
             {
                 if (this == null || !isActiveAndEnabled || !urlInputField.interactable)
                     return;
-                if (error != null)
-                    CardGameManager.Instance.Messenger.ShowSharingStatus(error);
-                else
-                    urlInputField.text = text;
+                urlInputField.text = text;
+            }, error =>
+            {
+                if (this == null || !isActiveAndEnabled)
+                    return;
+                CardGameManager.Instance.Messenger.ShowSharingStatus(error);
             });
         }
 

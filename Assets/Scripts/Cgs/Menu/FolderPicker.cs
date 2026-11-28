@@ -4,7 +4,6 @@
 
 using System;
 using Cgs.Localization;
-using UnityEngine;
 #if UNITY_STANDALONE_OSX && !UNITY_EDITOR
 using SFB;
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -66,12 +65,13 @@ namespace Cgs.Menu
         }
 #endif
 
-        // ReSharper disable once UnusedMember.Local
+#if ENABLE_WINMD_SUPPORT || (UNITY_IOS && !UNITY_EDITOR)
         private static void ReportError(string detail)
         {
-            Debug.LogWarning(CardGameManager.ImportFailureErrorMessage + detail);
+            UnityEngine.Debug.LogWarning(CardGameManager.ImportFailureErrorMessage + detail);
             CardGameManager.Instance.Messenger.Show(UiMessage.With("errors.import",
                 CardGameManager.ImportFailureErrorMessage + detail, ("detail", detail)));
         }
+#endif
     }
 }

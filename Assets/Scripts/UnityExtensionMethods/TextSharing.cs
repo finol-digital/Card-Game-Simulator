@@ -42,17 +42,26 @@ namespace UnityExtensionMethods
         }
 
         /// <summary>
-        /// Reads clipboard text. <paramref name="pasted"/> receives the text, or null and a failure message.
+        /// Reads clipboard text into <paramref name="pasted"/>, or reports a failure message to
+        /// <paramref name="failed"/> when the browser can't read the clipboard.
         /// </summary>
-        public static void Paste(Action<string, string> pasted)
+        public static void Paste(Action<string> pasted, Action<string> failed)
         {
             if (pasted == null)
                 throw new ArgumentNullException(nameof(pasted));
+            if (failed == null)
+                throw new ArgumentNullException(nameof(failed));
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-            WebClipboard.Paste(text => pasted(text, text == null ? BrowserPasteErrorMessage : null));
+            WebClipboard.Paste(text =>
+            {
+                if (text == null)
+                    failed(BrowserPasteErrorMessage);
+                else
+                    pasted(text);
+            });
 #else
-            pasted(UniClipboard.GetText(), null);
+            pasted(UniClipboard.GetText());
 #endif
         }
 

@@ -646,8 +646,9 @@ namespace Cgs.Menu
 #else
             FolderPicker.Pick(new UiMessage("files.select.folder", SelectFolderPrompt), path =>
             {
-                if (this != null && isActiveAndEnabled)
-                    BacksFolderPath = path;
+                if (this == null || !isActiveAndEnabled)
+                    return;
+                BacksFolderPath = path;
             });
 #endif
         }

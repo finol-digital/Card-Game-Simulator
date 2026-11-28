@@ -6,6 +6,7 @@ using Cgs.Localization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
@@ -280,9 +281,8 @@ namespace Cgs.Play.Multiplayer
             foreach (var room in BrowserRooms)
                 DiscoveredServers[room.Key] = room.Value;
             // A room hosted in this browser appears once, through its faster same-browser connection.
-            foreach (var room in NetworkRooms.Values)
-                if (!BrowserRooms.ContainsKey(room.RoomId))
-                    DiscoveredServers[room.LobbyId] = new DiscoveryResponseData { ServerName = room.Name };
+            foreach (var room in NetworkRooms.Values.Where(room => !BrowserRooms.ContainsKey(room.RoomId)))
+                DiscoveredServers[room.LobbyId] = new DiscoveryResponseData { ServerName = room.Name };
             _shouldRedisplay = true;
         }
 

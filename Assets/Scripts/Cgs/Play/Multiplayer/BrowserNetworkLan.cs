@@ -100,28 +100,27 @@ namespace Cgs.Play.Multiplayer
                 ? lobbyName[..^LobbyNameSuffix.Length]
                 : lobbyName;
 
-        private IEnumerator NetworkKey(Action<string> found)
+        // Leaves the key in _networkKey, which stays null if the browser can't find one.
+        private IEnumerator RequestNetworkKey()
         {
-            if (string.IsNullOrEmpty(_networkKey))
-            {
-                var done = false;
-                _signals.RequestNetworkKey(key =>
-                {
-                    _networkKey = key;
-                    done = true;
-                });
-                while (!done)
-                    yield return null;
-            }
+            if (!string.IsNullOrEmpty(_networkKey))
+                yield break;
 
-            found(_networkKey);
+            var done = false;
+            _signals.RequestNetworkKey(key =>
+            {
+                _networkKey = key;
+                done = true;
+            });
+            while (!done)
+                yield return null;
         }
 
         /// <summary>Finds rooms hosted by browsers on this network; reports an empty list if there are none.</summary>
         public IEnumerator FindRooms(Action<IReadOnlyList<BrowserLanRoom>> found)
         {
-            string networkKey = null;
-            yield return NetworkKey(key => networkKey = key);
+            yield return RequestNetworkKey();
+            var networkKey = _networkKey;
             if (string.IsNullOrEmpty(networkKey))
             {
                 found(Array.Empty<BrowserLanRoom>());
@@ -139,8 +138,8 @@ namespace Cgs.Play.Multiplayer
         /// </summary>
         public IEnumerator Advertise(string roomId, string gameName, Func<bool> isHosting)
         {
-            string networkKey = null;
-            yield return NetworkKey(key => networkKey = key);
+            yield return RequestNetworkKey();
+            var networkKey = _networkKey;
             if (string.IsNullOrEmpty(networkKey) || !isHosting())
                 yield break;
 

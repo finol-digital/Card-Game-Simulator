@@ -429,14 +429,16 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void PasteClipboardIntoText()
         {
-            TextSharing.Paste((text, error) =>
+            TextSharing.Paste(text =>
             {
                 if (this == null || !isActiveAndEnabled)
                     return;
-                if (error != null)
-                    CardGameManager.Instance.Messenger.ShowSharingStatus(error);
-                else
-                    textInputField.text = text;
+                textInputField.text = text;
+            }, error =>
+            {
+                if (this == null || !isActiveAndEnabled)
+                    return;
+                CardGameManager.Instance.Messenger.ShowSharingStatus(error);
             });
         }
 
