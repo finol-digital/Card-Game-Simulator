@@ -48,7 +48,7 @@
 
 ## 7. Engine and build configuration
 
-- [ ] 7.1 Remove unused built-in modules after checking package dependencies; verify that all platform builds succeed, the PlayMode tests pass, and the benchmark delta is recorded
+- [x] 7.1 Remove unused built-in modules after checking package dependencies; verify that all platform builds succeed, the PlayMode tests pass, and the benchmark delta is recorded (all platform builds and the PlayMode tests passed in the develop → main PR run for build 1.171.154; the delta is in the guide's "Engine modules" section)
 - [ ] 7.2 Benchmark Android engine ThinLTO (documenting its build-setting prerequisites), then IL2CPP runtime-speed code generation, then Vulkan/GLES ordering, one at a time, keeping only measured improvements; verify that the results table is in the guide and the chosen settings are committed
 - [x] 7.3 Review managed stripping against the AOT/reflection needs (`AotTypeEnforcer`, Newtonsoft) and change it only if it is measured as safe and beneficial; verify with a full IL2CPP build smoke test across all scenes (reviewed in design D10; kept at Low, so no build changed)
 

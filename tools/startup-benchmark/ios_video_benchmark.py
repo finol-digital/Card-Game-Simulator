@@ -97,6 +97,8 @@ def main() -> int:
                 "launchToMenuMs": frame_interval(frames["tap"], frames["menu"], args.fps, margin_ms),
                 "launchToActionMs": None if reference
                 else frame_interval(frames["tap"], frames["action"], args.fps, margin_ms),
+                # Frame times come from the app's own results; the video cannot show them
+                "longestFrameMs": None if reference or result is None else stats.longest_frame(result.get("play")),
                 "startToActionMs": None if reference
                 else frame_interval(frames["start"], frames["action"], args.fps, margin_ms),
             }
@@ -120,9 +122,7 @@ def main() -> int:
                 failure = "missingFrames"
             records.append(stats.RunRecord(run_id, ok, failure, intervals, flags))
 
-    report = stats.summarize(records, {"launchToMenuMs": stats.LAUNCH_TO_MENU_BUDGET_MS,
-                                       "launchToActionMs": stats.LAUNCH_TO_ACTION_BUDGET_MS,
-                                       "startToActionMs": stats.START_TO_ACTION_BUDGET_MS})
+    report = stats.summarize(records, stats.BUDGETS)
     report["condition"] = "ios-video-reference" if args.reference else "ios-video"
     report["uncertaintyMarginMs"] = margin_ms
     stats.write_reports(records, report, args.csv)

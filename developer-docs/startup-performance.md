@@ -60,6 +60,8 @@ The app writes two log lines prefixed `[CgsStartup]`:
 - **Launch summary**: when the Main Menu becomes interactive, or after 30 s.
 - **Play summary**: after the session's first card action succeeds or fails, or 60 s after Start Game.
   `tablePlayable` counts only when that action succeeded; otherwise it appears as `diagnostics.tableReadyMs`.
+  Its `frames` field times every frame from Start Game until the summary is written: `count`, `longestMs`, and
+  `over100Ms` (the frames longer than the 100 ms budget). Frames before Start Game do not count.
 
 Each summary carries the clock anchors that are exact on that platform:
 
@@ -143,10 +145,31 @@ Start Game is dispatched only after the frame with the menu marker has been pres
 | iOS | `os_log` line (Console or `log stream` on a Mac), `Documents/benchmark/run-<id>.json` in the app's container, and an on-screen panel: tap it to share the JSON | The tester or the harness closes the app |
 | Web | `window.cgsBenchmarkResult` and a console line | The harness |
 
+## Frame times
+
+Task 9.3 checks the frame budget with cold caches, because first-use rendering (shader compilation and pipeline
+creation) is slowest then. Each benchmark result names its graphics backend in `graphics`. Run one 30-run set per
+backend the reference devices use, with Start Game chosen at once (the default delay of 0):
+
+| Backend | Device | Cold caches |
+|---|---|---|
+| OpenGL | Lenovo IdeaPad Y510P, Steam Deck | `first_install.py` |
+| Direct3D 11 or 12 | Surface Laptop Studio | `first_install.py` |
+| Metal | Mac mini, iPhone 11, iPad | `first_install.py` on the Mac mini; on iOS, the first launch after installing |
+| Vulkan or OpenGL ES | Galaxy Z Flip 3, Pixel 10 Pro Fold | `android_benchmark.py --clear-data` |
+| WebGL | Web | `web_benchmark.mjs --mode first` |
+
+A first install clears CGS's own data, but the GPU driver may keep its own shader cache elsewhere, so a later set can
+be warmer than the first; report the first set on a device. If a run's `longestFrameMs` is over 100 ms, the play summary's `frames.over100Ms` says how many
+frames missed; a CPU profile of a local build shows whether first-use rendering caused them, which design D11's
+warmup would address.
+
 ## Harnesses
 
 The scripts are in `tools/startup-benchmark/` and need Python 3.9 or later (3.10 or later on Windows). Each prints
-the median, p95, failure count, and pass/fail per interval. Runs flagged `gameSwitched`, with a start delay, or with
+the median, p95, failure count, and pass/fail per interval. `longestFrameMs` is each run's longest frame between
+Start Game and the first card action, from the play summary's `frames`, judged against the 100 ms frame budget; it is
+empty for builds from before it was recorded (1.171.154 and earlier). Runs flagged `gameSwitched`, with a start delay, or with
 a run-file error are excluded from budget statistics.
 
 ### Desktop (Lenovo IdeaPad Y510P, Linux, Steam Deck direct)
@@ -553,7 +576,8 @@ When the web app has no games, as on a first visit, it downloads the default gam
 from the build. `CardGameManager.GetDefaultCardGames` downloads the player's saved game first (Standard Playing Cards
 on a first visit), with progress, and selects it. The Main Menu can then start it while Dominoes and Mahjong download
 in the background, without progress, without changing the selection, and without blocking the menu
-(`CardGameManager.IsDownloadingDefaultGames`). A download the player starts waits for a background download to finish,
+(`CardGameManager.IsDownloadingDefaultGames`). Each background game's banner and card back are decoded when it
+finishes downloading, so game selection shows them before the game is ever selected. A download the player starts waits for a background download to finish,
 because a game downloads into a folder named for it only once its definition has been read. Before, the web app
 downloaded all three in a row, each behind the progress bar, and selected each in turn.
 `DefaultGameDownloadTests` covers this with games served from local files.

@@ -76,7 +76,10 @@ namespace Tests.PlayMode
                 Directory.Delete(directory, true);
         }
 
-        /// <summary>Writes a downloadable game whose definition and cards are local file URLs.</summary>
+        private const int CardBackWidth = 6;
+        private const int CardBackHeight = 9;
+
+        /// <summary>Writes a downloadable game whose definition, cards, and card back are local file URLs.</summary>
         private string CreateSource(string name, int cards)
         {
             var directory = Path.Combine(_sourceDirectory, name);
@@ -85,16 +88,29 @@ namespace Tests.PlayMode
             var cardsPath = Path.Combine(directory, "AllCards.json");
             File.WriteAllText(cardsPath, JsonConvert.SerializeObject(Enumerable.Range(0, cards).Select(index =>
                 new Dictionary<string, string> { ["id"] = $"{name}-{index}", ["name"] = $"{name} {index}" })));
+            var cardBackPath = Path.Combine(directory, "CardBack.png");
+            var cardBack = new Texture2D(CardBackWidth, CardBackHeight);
+            File.WriteAllBytes(cardBackPath, cardBack.EncodeToPNG());
+            Object.Destroy(cardBack);
             var definitionUrl = new Uri(definitionPath).AbsoluteUri;
             File.WriteAllText(definitionPath, JsonConvert.SerializeObject(new Dictionary<string, object>
             {
                 ["name"] = name,
                 ["autoUpdate"] = -1,
                 ["autoUpdateUrl"] = definitionUrl,
-                ["allCardsUrl"] = new Uri(cardsPath).AbsoluteUri
+                ["allCardsUrl"] = new Uri(cardsPath).AbsoluteUri,
+                ["cardBackImageUrl"] = new Uri(cardBackPath).AbsoluteUri
             }));
             return definitionUrl;
         }
+
+        private static UnityCardGame GameFrom(string url) => CardGameManager.Instance.AllCardGames.Values.Single(game =>
+            game.AutoUpdateUrl != null && game.AutoUpdateUrl.AbsoluteUri == url);
+
+        // The game's own card back, not the default one shown until it is decoded
+        private static bool ShowsItsCardBack(UnityCardGame game) => game.CardBackImageSprite != null &&
+                                                                    game.CardBackImageSprite.texture.width == CardBackWidth &&
+                                                                    game.CardBackImageSprite.texture.height == CardBackHeight;
 
         private static bool HasGameFrom(string url) => CardGameManager.Instance.AllCardGames.Values.Any(game =>
             game.AutoUpdateUrl != null && game.AutoUpdateUrl.AbsoluteUri == url);
@@ -156,6 +172,11 @@ namespace Tests.PlayMode
                 Assert.IsTrue(HasGameFrom(last), "The other default games download in the background");
                 Assert.AreEqual(preferred, CardGameManager.Current.AutoUpdateUrl?.AbsoluteUri,
                     "Background downloads keep the player's selection");
+                Assert.IsTrue(ShowsItsCardBack(CardGameManager.Current), "The selected game shows its card back");
+                Assert.IsTrue(ShowsItsCardBack(GameFrom(first)),
+                    "Game selection shows a background-downloaded game's card back before it is selected");
+                Assert.IsTrue(ShowsItsCardBack(GameFrom(last)),
+                    "Game selection shows a background-downloaded game's card back before it is selected");
                 for (var frame = 0; frame < TimeoutFrames && mainMenu != null && mainMenu.IsOpeningPlayScreen; frame++)
                     yield return null;
             }

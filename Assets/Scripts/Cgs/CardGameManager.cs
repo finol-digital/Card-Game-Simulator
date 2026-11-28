@@ -851,6 +851,10 @@ namespace Cgs
                     continue;
                 }
 
+                // The download read the definition before the banner and card back had arrived, so decode them now, as
+                // a full load would; game selection shows them before the game is ever selected
+                cardGame.LoadPreviewImages();
+
                 // Added in the same frame that its download is released, so no other request downloads it again
                 AllCardGames[cardGame.Id] = cardGame;
                 // If the player's game failed to download, show one that did

@@ -88,6 +88,39 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        public void PlaySummaryRecordsFrameTimesFromStartGameToTheFirstCardAction()
+        {
+            var session = CreateSession();
+            session.Mark(StartupMilestone.MainMenuInteractive);
+            // Frames before Start Game do not count, even a long one
+            At(100);
+            session.Tick();
+            At(390);
+            session.Tick();
+            // Start Game is chosen mid-frame, so only the rest of that frame counts
+            At(400);
+            session.Mark(StartupMilestone.StartGameChosen);
+            At(416);
+            session.Tick();
+            // Loading the play screen holds one frame for 150 ms
+            At(566);
+            session.Tick();
+            At(582);
+            session.Tick();
+            // The first card action comes mid-frame and ends the summary
+            At(590);
+            session.Mark(StartupMilestone.FirstCardAction);
+            // Frames after the summary do not count
+            At(900);
+            session.Tick();
+
+            var play = _summaries.Find(summary => summary.kind == StartupSummaryKind.Play).json;
+            StringAssert.Contains("\"frames\":{\"count\":4,\"longestMs\":150,\"over100Ms\":1}", play);
+            Assert.AreEqual(150, session.LongestPlayFrameMs);
+            Assert.AreEqual(1, session.LongPlayFrameCount);
+        }
+
+        [Test]
         public void TableReadyButFirstActionFailsReportsNoPlayableTime()
         {
             var session = CreateSession();

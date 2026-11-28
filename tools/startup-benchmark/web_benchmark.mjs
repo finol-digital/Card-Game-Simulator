@@ -113,6 +113,7 @@ async function measure(page, run) {
         launchToMenuMs: offset != null && menu != null ? offset + menu : null,
         launchToActionMs: offset != null && action != null ? offset + action : null,
         startToActionMs: start != null && action != null ? action - start : null,
+        longestFrameMs: play.frames?.longestMs ?? null,
     };
 }
 
@@ -170,7 +171,7 @@ if (mode === 'repeat') {
 }
 await remote?.close();
 
-const names = ['launchToMenuMs', 'launchToActionMs', 'startToActionMs'];
+const names = ['launchToMenuMs', 'launchToActionMs', 'startToActionMs', 'longestFrameMs'];
 const usable = records.filter(r => r.ok && (r.flags ?? []).length === 0);
 const report = {
     mode, runs: records.length, usableRuns: usable.length, failures: records.filter(r => !r.ok).length, intervals: {},
