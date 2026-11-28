@@ -112,7 +112,7 @@ namespace Cgs.Menu
                 urlInputField.text = text;
             }, error =>
             {
-                if (!this || !isActiveAndEnabled)
+                if (!this || !isActiveAndEnabled || request != _pasteRequest)
                     return;
                 CardGameManager.Instance.Messenger.ShowSharingStatus(error);
             });
@@ -192,6 +192,8 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             urlInputField.onValueChanged.RemoveListener(InvalidatePaste);
+            // Closing the menu ends this session, so cancel any pending paste
+            _pasteRequest++;
         }
     }
 }

@@ -178,8 +178,9 @@ namespace Cgs.Play.Multiplayer
 
             var lobbyId = create.Result;
             _advertisedLobbyId = lobbyId;
-            var answered = new HashSet<string>();
-            var unpublished = new Dictionary<string, string>();
+            // By player: the offer last answered (or found unanswerable), and answers not yet published.
+            var answered = new Dictionary<string, string>();
+            var unpublished = new Dictionary<string, (string Offer, string Answer)>();
             var sinceHeartbeat = 0f;
             while (isHosting() && _advertisedLobbyId == lobbyId)
             {
@@ -246,22 +247,26 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private IEnumerator Answer(string lobbyId, BrowserLanLobbySnapshot snapshot, HashSet<string> answered,
-            Dictionary<string, string> unpublished)
+        private IEnumerator Answer(string lobbyId, BrowserLanLobbySnapshot snapshot,
+            Dictionary<string, string> answered, Dictionary<string, (string Offer, string Answer)> unpublished)
         {
             var answers = new Dictionary<string, string>();
             foreach (var (playerId, offer) in snapshot.Offers)
             {
-                if (playerId == snapshot.HostId || answered.Contains(playerId) ||
-                    snapshot.Answers.ContainsKey(playerId) || string.IsNullOrEmpty(offer))
+                if (playerId == snapshot.HostId || string.IsNullOrEmpty(offer) ||
+                    (answered.TryGetValue(playerId, out var answeredOffer) && answeredOffer == offer))
                     continue;
 
-                // Retry an answer whose publication failed; its peer connection is still waiting for the player.
-                if (unpublished.TryGetValue(playerId, out var unpublishedAnswer))
+                // Retry an answer whose publication failed; its peer connection is still waiting for that offer.
+                if (unpublished.TryGetValue(playerId, out var pending) && pending.Offer == offer)
                 {
-                    answers[playerId] = unpublishedAnswer;
+                    answers[playerId] = pending.Answer;
                     continue;
                 }
+
+                // A player who joined again has a new offer, which needs a new answer and connection.
+                answered.Remove(playerId);
+                unpublished.Remove(playerId);
 
                 string answer = null;
                 var done = false;
@@ -276,19 +281,21 @@ namespace Cgs.Play.Multiplayer
                 // An offer this browser can't answer is not retried.
                 if (string.IsNullOrEmpty(answer))
                 {
-                    answered.Add(playerId);
+                    answered[playerId] = offer;
                     continue;
                 }
 
                 answers[playerId] = answer;
-                unpublished[playerId] = answer;
+                unpublished[playerId] = (offer, answer);
             }
 
             // Players leave the lobby once connected; drop their answers to stay within Lobby's data limits.
-            answered.RemoveWhere(playerId => !snapshot.PlayerIds.Contains(playerId));
-            foreach (var playerId in unpublished.Keys.Where(playerId => !snapshot.PlayerIds.Contains(playerId))
-                         .ToList())
+            foreach (var playerId in answered.Keys.Concat(unpublished.Keys)
+                         .Where(playerId => !snapshot.PlayerIds.Contains(playerId)).ToList())
+            {
+                answered.Remove(playerId);
                 unpublished.Remove(playerId);
+            }
             if (answers.Count == 0 && snapshot.StaleAnswerKeys.Count == 0)
                 yield break;
 
@@ -298,8 +305,8 @@ namespace Cgs.Play.Multiplayer
                 yield break;
             foreach (var playerId in answers.Keys)
             {
+                answered[playerId] = unpublished[playerId].Offer;
                 unpublished.Remove(playerId);
-                answered.Add(playerId);
             }
         }
 

@@ -420,6 +420,41 @@ namespace Tests.PlayMode
             UnityEngine.Object.Destroy(runner.gameObject);
         }
 
+        [UnityTest]
+        public IEnumerator APlayerWhoJoinsAgainGetsAnAnswerForTheNewOffer()
+        {
+            var service = new FakeLobbyService { FailingUpdates = 1 };
+            var hostSignals = new FakeSignals("host");
+            var lan = Lan(hostSignals, new FakeLobbies(service, "host-player"));
+            var hosting = true;
+            var runner = new GameObject("Host").AddComponent<Runner>();
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("Rate limited"));
+            runner.StartCoroutine(lan.Advertise(Room, "Cards", () => hosting));
+            yield return new WaitUntil(() => service.Lobbies.Count == 1);
+            var lobby = service.Lobbies.Values.Single();
+
+            // The first answer fails to publish; the player then joins again before the host sees them leave.
+            lobby.Offers["player"] = "offer:first";
+            yield return new WaitUntil(() => service.Updates >= 1);
+            lobby.Offers["player"] = "offer:second";
+            var started = Time.realtimeSinceStartup;
+            while (!lobby.Answers.ContainsKey("player") && Time.realtimeSinceStartup - started < 5)
+                yield return null;
+            Assert.AreEqual("answer:offer:second", lobby.Answers["player"]);
+
+            // An answered offer is not answered again, but a newer one is.
+            var answerCount = hostSignals.AnswerCount;
+            yield return new WaitForSecondsRealtime(0.3f);
+            Assert.AreEqual(answerCount, hostSignals.AnswerCount);
+            lobby.Offers["player"] = "offer:third";
+            started = Time.realtimeSinceStartup;
+            while (lobby.Answers["player"] != "answer:offer:third" && Time.realtimeSinceStartup - started < 5)
+                yield return null;
+            Assert.AreEqual("answer:offer:third", lobby.Answers["player"]);
+            hosting = false;
+            UnityEngine.Object.Destroy(runner.gameObject);
+        }
+
         [Test]
         public void DisplayNameRemovesTheWebLanMarker()
         {

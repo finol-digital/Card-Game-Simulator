@@ -153,7 +153,17 @@ namespace UnityExtensionMethods
         {
             var cacheFilePath = Application.temporaryCachePath + "/" + GetSafeFileName(fileName);
             var texture2D = NativeGallery.LoadImageAtPath(sourceFilePath, -1, false);
-            File.WriteAllBytes(cacheFilePath, texture2D.EncodeToPNG());
+            try
+            {
+                File.WriteAllBytes(cacheFilePath, texture2D.EncodeToPNG());
+            }
+            finally
+            {
+                // NativeGallery leaves the loaded texture to the caller.
+                if (texture2D != null)
+                    UnityEngine.Object.Destroy(texture2D);
+            }
+
             return cacheFilePath;
         }
 #else

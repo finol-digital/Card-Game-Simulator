@@ -482,6 +482,55 @@ namespace FinolDigital.Cgs.Json.Unity
             return new Uri(Path.GetFullPath(PrintPdfFilePath));
         }
 
+        // JPEG has no transparency, so show transparent areas as white paper. Export runs within one frame, and Web
+        // builds collect garbage only between frames, so edit 32-bit pixels in place rather than through a copy.
+        private static void ShowTransparencyAsPaper(Texture2D texture)
+        {
+            // Byte offsets of red, green, blue, and alpha in each pixel
+            int r, g, b, a;
+            switch (texture.format)
+            {
+                case TextureFormat.RGB24:
+                    return;
+                case TextureFormat.RGBA32:
+                    (r, g, b, a) = (0, 1, 2, 3);
+                    break;
+                case TextureFormat.ARGB32:
+                    (r, g, b, a) = (1, 2, 3, 0);
+                    break;
+                case TextureFormat.BGRA32:
+                    (r, g, b, a) = (2, 1, 0, 3);
+                    break;
+                default:
+                    var copy = texture.GetPixels32();
+                    for (var i = 0; i < copy.Length; i++)
+                        copy[i] = OnPaper(copy[i]);
+                    texture.SetPixels32(copy);
+                    return;
+            }
+
+            var bytes = texture.GetPixelData<byte>(0);
+            for (var i = 0; i + 3 < bytes.Length; i += 4)
+            {
+                var pixel = OnPaper(new Color32(bytes[i + r], bytes[i + g], bytes[i + b], bytes[i + a]));
+                bytes[i + r] = pixel.r;
+                bytes[i + g] = pixel.g;
+                bytes[i + b] = pixel.b;
+                bytes[i + a] = pixel.a;
+            }
+        }
+
+        private static Color32 OnPaper(Color32 pixel)
+        {
+            var alpha = pixel.a;
+            if (alpha == byte.MaxValue)
+                return pixel;
+            var paper = byte.MaxValue * (byte.MaxValue - alpha);
+            return new Color32((byte) ((pixel.r * alpha + paper) / byte.MaxValue),
+                (byte) ((pixel.g * alpha + paper) / byte.MaxValue),
+                (byte) ((pixel.b * alpha + paper) / byte.MaxValue), byte.MaxValue);
+        }
+
         private static void AddJpegImage(JpegPdfWriter pdf, string imageFilePath)
         {
             Texture2D texture = null;
@@ -499,20 +548,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (texture == null)
                     throw new InvalidOperationException("Unable to decode image: " + imageFilePath);
 
-                // JPEG has no transparency, so show transparent areas as white paper.
-                var pixels = texture.GetPixels32();
-                for (var i = 0; i < pixels.Length; i++)
-                {
-                    var alpha = pixels[i].a;
-                    if (alpha == byte.MaxValue)
-                        continue;
-                    var paper = byte.MaxValue * (byte.MaxValue - alpha);
-                    pixels[i] = new Color32((byte) ((pixels[i].r * alpha + paper) / byte.MaxValue),
-                        (byte) ((pixels[i].g * alpha + paper) / byte.MaxValue),
-                        (byte) ((pixels[i].b * alpha + paper) / byte.MaxValue), byte.MaxValue);
-                }
-
-                texture.SetPixels32(pixels);
+                ShowTransparencyAsPaper(texture);
                 pdf.AddImage(imageFilePath, texture.EncodeToJPG(90), texture.width, texture.height);
             }
             catch (Exception e)

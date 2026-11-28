@@ -447,7 +447,7 @@ namespace Cgs.Decks
                 textInputField.text = text;
             }, error =>
             {
-                if (!this || !isActiveAndEnabled)
+                if (!this || !isActiveAndEnabled || request != _pasteRequest)
                     return;
                 CardGameManager.Instance.Messenger.ShowSharingStatus(error);
             });
@@ -554,6 +554,8 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             textInputField.onValueChanged.RemoveListener(InvalidatePaste);
+            // Closing the menu ends the editing session, so cancel any pending paste
+            _pasteRequest++;
         }
     }
 }

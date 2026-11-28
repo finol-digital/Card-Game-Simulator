@@ -136,9 +136,11 @@ namespace Cgs.Cards
             FolderPicker.Pick(nameof(SetImportMenu), new UiMessage("files.select.folder", SelectFolderPrompt),
                 path =>
                 {
+                    // A closed menu rejects the folder, so the picker keeps the menu's earlier copy.
                     if (!this || !isActiveAndEnabled)
-                        return;
+                        return false;
                     SetFolderPath = path;
+                    return true;
                 });
 #endif
         }

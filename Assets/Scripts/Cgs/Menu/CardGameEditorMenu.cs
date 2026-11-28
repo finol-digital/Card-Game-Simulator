@@ -647,9 +647,11 @@ namespace Cgs.Menu
             FolderPicker.Pick(nameof(CardGameEditorMenu), new UiMessage("files.select.folder", SelectFolderPrompt),
                 path =>
                 {
+                    // A closed menu rejects the folder, so the picker keeps the menu's earlier copy.
                     if (!this || !isActiveAndEnabled)
-                        return;
+                        return false;
                     BacksFolderPath = path;
+                    return true;
                 });
 #endif
         }

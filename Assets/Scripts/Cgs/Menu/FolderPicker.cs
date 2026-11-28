@@ -20,10 +20,11 @@ namespace Cgs.Menu
     internal static class FolderPicker
     {
         /// <summary>
-        /// Calls <paramref name="picked"/> with a readable folder path; not called if cancelled. Platforms that
-        /// copy the folder keep one copy per <paramref name="owner"/>.
+        /// Calls <paramref name="picked"/> with a readable folder path; not called if cancelled. It returns whether
+        /// the owner accepted the folder: platforms that copy the folder keep one accepted copy per
+        /// <paramref name="owner"/>, and delete a rejected one.
         /// </summary>
-        public static void Pick(string owner, UiMessage title, Action<string> picked)
+        public static void Pick(string owner, UiMessage title, Func<string, bool> picked)
         {
             if (picked == null)
                 throw new ArgumentNullException(nameof(picked));
@@ -42,9 +43,10 @@ namespace Cgs.Menu
             IosFilePicker.PickFolder(owner, (path, error) =>
             {
                 if (!string.IsNullOrEmpty(path))
-                    picked(path);
-                else if (!string.IsNullOrEmpty(error))
+                    return picked(path);
+                if (!string.IsNullOrEmpty(error))
                     ReportError(error);
+                return false;
             });
 #else
             FileBrowser.ShowLoadDialog(paths => picked(paths[0]), () => { }, FileBrowser.PickMode.Folders, false,
@@ -53,7 +55,7 @@ namespace Cgs.Menu
         }
 
 #if ENABLE_WINMD_SUPPORT
-        private static async void PickWithWindowsPicker(Action<string> picked)
+        private static async void PickWithWindowsPicker(Func<string, bool> picked)
         {
             try
             {

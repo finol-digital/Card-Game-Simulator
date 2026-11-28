@@ -32,7 +32,7 @@ namespace UnityExtensionMethods
 
         private delegate void ImageSourceCallback(int choice);
 
-        private static Action<string, string> _folderPicked;
+        private static Func<string, string, bool> _folderPicked;
         private static Action<PickedImageSource> _imageSourceChosen;
         // Each menu keeps its own copy, so one menu's pick never deletes a folder another menu still shows.
         private static readonly Dictionary<string, string> FolderCopies = new();
@@ -48,10 +48,11 @@ namespace UnityExtensionMethods
 
         /// <summary>
         /// Copies a folder chosen in the Files app into the cache. <paramref name="picked"/> receives the copy's
-        /// path, or a null path and an error message; both are null when the player cancels. A new copy replaces
-        /// only the previous copy made for the same <paramref name="owner"/>.
+        /// path, or a null path and an error message; both are null when the player cancels. For a copy, it returns
+        /// whether its <paramref name="owner"/> accepted it: an accepted copy replaces the owner's previous copy,
+        /// and a rejected copy is deleted while the previous one stays.
         /// </summary>
-        public static void PickFolder(string owner, Action<string, string> picked)
+        public static void PickFolder(string owner, Func<string, string, bool> picked)
         {
             if (owner == null)
                 throw new ArgumentNullException(nameof(owner));
@@ -86,24 +87,28 @@ namespace UnityExtensionMethods
             var picked = _folderPicked;
             _folderPicked = null;
             var text = value == IntPtr.Zero ? null : Marshal.PtrToStringUTF8(value);
-            // Keep the owner's previous copy until a new one replaces it; the menu may still show it.
-            if (status == PickSucceeded)
-            {
-                if (FolderCopies.TryGetValue(_pendingOwner, out var previousCopy))
-                    DeleteFolderCopy(previousCopy);
-                FolderCopies[_pendingOwner] = _pendingFolderCopy;
-            }
-            else
-                DeleteFolderCopy(_pendingFolderCopy);
+            var copy = _pendingFolderCopy;
+            var owner = _pendingOwner;
             _pendingFolderCopy = null;
             _pendingOwner = null;
 
-            if (status == PickSucceeded)
-                picked?.Invoke(text, null);
-            else if (status == PickFailed)
-                picked?.Invoke(null, text);
-            else
-                picked?.Invoke(null, null);
+            if (status != PickSucceeded)
+            {
+                DeleteFolderCopy(copy);
+                picked?.Invoke(null, status == PickFailed ? text : null);
+                return;
+            }
+
+            // Keep the owner's previous copy until the owner accepts this one; the menu may still show it.
+            if (picked == null || !picked(text, null))
+            {
+                DeleteFolderCopy(copy);
+                return;
+            }
+
+            if (FolderCopies.TryGetValue(owner, out var previousCopy))
+                DeleteFolderCopy(previousCopy);
+            FolderCopies[owner] = copy;
         }
 
         [MonoPInvokeCallback(typeof(ImageSourceCallback))]
