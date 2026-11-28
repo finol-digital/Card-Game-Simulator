@@ -420,9 +420,10 @@ mergeInto(LibraryManager.library, {
         },
 
         networkKey: function (fresh) {
-            // A lookup in progress is always current; a found key is reused only briefly, and not when fresh.
-            if (this.networkKeyPromise && (!this.networkKeyFound ||
-                (!fresh && Date.now() - this.networkKeyFound < this.networkKeyMilliseconds)))
+            // Unless fresh, reuse a lookup in progress or a key found within the last minute. A fresh lookup
+            // ignores both, since an earlier lookup may have started on another network.
+            if (!fresh && this.networkKeyPromise &&
+                (!this.networkKeyFound || Date.now() - this.networkKeyFound < this.networkKeyMilliseconds))
                 return this.networkKeyPromise;
             var self = this;
             var promise = new Promise(function (resolve) {

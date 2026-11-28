@@ -499,9 +499,11 @@ test('a fresh network key request looks the key up again', async t => {
     }
     const { bridge } = device(t, Stun);
     const first = bridge.networkKey();
-    assert.equal(bridge.networkKey(true), first, 'a lookup in progress is shared');
-    await first;
-    assert.equal(bridge.networkKey(), first);
-    assert.notEqual(bridge.networkKey(true), first);
-    assert.equal(lookups, 2);
+    assert.equal(bridge.networkKey(), first, 'a lookup in progress is shared');
+    const fresh = bridge.networkKey(true);
+    assert.notEqual(fresh, first, 'a fresh lookup does not join one that began on another network');
+    await Promise.all([first, fresh]);
+    assert.equal(bridge.networkKey(), fresh, 'later requests reuse the newest key');
+    assert.notEqual(bridge.networkKey(true), fresh);
+    assert.equal(lookups, 3);
 });

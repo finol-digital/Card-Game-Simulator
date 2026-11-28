@@ -301,6 +301,7 @@ namespace Cgs.Decks
             }
 
             newDeckPanel.gameObject.SetActive(true);
+            _pasteRequest++;
 
             try
             {
@@ -531,6 +532,8 @@ namespace Cgs.Decks
         public void HideNewDeckPanel()
         {
             newDeckPanel.gameObject.SetActive(false);
+            // A paste still pending from this editing session must not reach a later one
+            _pasteRequest++;
         }
 
         [UsedImplicitly]
