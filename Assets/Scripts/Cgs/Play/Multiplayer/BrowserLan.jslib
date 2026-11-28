@@ -17,6 +17,11 @@ mergeInto(LibraryManager.library, {
         rtcConfig: { iceServers: [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun.cloudflare.com:3478'] }] },
         pendingLinks: {},
         networkKeyPromise: null,
+        networkKeyFound: 0,
+        // A network key is reused briefly, so that moving to another network soon gives a new one.
+        networkKeyMilliseconds: 60000,
+        // Lobby stores each offer or answer as one value of at most 2 KB.
+        maxSignal: 1900,
         chunkSize: 16000,
         maxBuffered: 4 * 1024 * 1024,
         maxMessage: 24 * 1024 * 1024,
@@ -180,7 +185,9 @@ mergeInto(LibraryManager.library, {
                 if (peer.id === id) {
                     self.post('leave', token);
                     c.peers.delete(token);
-                    self.closeLink(c.links.get(token));
+                    var link = c.links.get(token);
+                    if (link) self.releaseRtc(c, link.pc);
+                    self.closeLink(link);
                     c.links.delete(token);
                 }
             });
@@ -311,16 +318,36 @@ mergeInto(LibraryManager.library, {
                 if (!c.server) self.shutdown();
                 self.enqueue(2, peer.id);
             });
+            // Closing a data channel leaves its peer connection open, so a host releases it here.
+            if (c.server && this.connection === c && c.rtc.indexOf(link.pc) >= 0) {
+                this.releaseRtc(c, link.pc);
+                this.closeLink(link);
+            }
+        },
+
+        releaseRtc: function (c, pc) {
+            var index = c.rtc.indexOf(pc);
+            if (index >= 0) c.rtc.splice(index, 1);
+        },
+
+        compact: function (sdp) {
+            // Hosts on this network need only host candidates, so drop the others if the description is too long.
+            if (!sdp || sdp.length <= this.maxSignal) return sdp;
+            sdp = sdp.split('\r\n').filter(function (line) {
+                return line.indexOf('a=candidate:') !== 0 || / typ host( |$)/.test(line);
+            }).join('\r\n');
+            return sdp.length <= this.maxSignal ? sdp : null;
         },
 
         gathered: function (pc) {
             // Signaling sends one complete description, so wait for ICE candidates (briefly).
+            var self = this;
             return new Promise(function (resolve) {
                 var finished = false;
                 function done() {
                     if (finished) return;
                     finished = true;
-                    resolve(pc.localDescription ? pc.localDescription.sdp : null);
+                    resolve(pc.localDescription ? self.compact(pc.localDescription.sdp) : null);
                 }
                 if (pc.iceGatheringState === 'complete') { done(); return; }
                 pc.addEventListener('icegatheringstatechange', function () {
@@ -341,6 +368,7 @@ mergeInto(LibraryManager.library, {
             return pc.createOffer()
                 .then(function (description) { return pc.setLocalDescription(description); })
                 .then(function () { return self.gathered(pc); })
+                .then(function (sdp) { if (!sdp) self.discardPending(room); return sdp; })
                 .catch(function () { self.discardPending(room); return null; });
         },
 
@@ -367,7 +395,11 @@ mergeInto(LibraryManager.library, {
                 .then(function () { return pc.createAnswer(); })
                 .then(function (description) { return pc.setLocalDescription(description); })
                 .then(function () { return self.gathered(pc); })
-                .catch(function () { try { pc.close(); } catch (error) { } return null; });
+                .then(function (sdp) {
+                    if (!sdp) { self.releaseRtc(c, pc); try { pc.close(); } catch (error) { } }
+                    return sdp;
+                })
+                .catch(function () { self.releaseRtc(c, pc); try { pc.close(); } catch (error) { } return null; });
         },
 
         discardPending: function (room) {
@@ -388,14 +420,24 @@ mergeInto(LibraryManager.library, {
         },
 
         networkKey: function () {
-            if (this.networkKeyPromise) return this.networkKeyPromise;
+            if (this.networkKeyPromise &&
+                (!this.networkKeyFound || Date.now() - this.networkKeyFound < this.networkKeyMilliseconds))
+                return this.networkKeyPromise;
             var self = this;
             var promise = new Promise(function (resolve) {
                 if (typeof RTCPeerConnection === 'undefined' || typeof crypto === 'undefined' || !crypto.subtle) {
                     resolve(null);
                     return;
                 }
-                var pc = new RTCPeerConnection(self.rtcConfig);
+                var pc;
+                try {
+                    pc = new RTCPeerConnection(self.rtcConfig);
+                    pc.createDataChannel('probe');
+                } catch (error) {
+                    // Treat a failed WebRTC setup like an unavailable network address.
+                    resolve(null);
+                    return;
+                }
                 var addresses = [];
                 var finished = false;
                 function finish() {
@@ -417,15 +459,20 @@ mergeInto(LibraryManager.library, {
                     var parts = event.candidate.candidate.split(' ');
                     if (parts[7] === 'srflx' && parts[4]) addresses.push(parts[4]);
                 };
-                pc.createDataChannel('probe');
                 pc.createOffer()
                     .then(function (description) { return pc.setLocalDescription(description); })
                     .catch(finish);
                 setTimeout(finish, 4000);
             });
             this.networkKeyPromise = promise;
-            // Retry later if this attempt found no public address (offline, or STUN blocked).
-            promise.then(function (key) { if (!key && self.networkKeyPromise === promise) self.networkKeyPromise = null; });
+            this.networkKeyFound = 0;
+            // Retry later if this attempt found no public address (offline, or STUN blocked); a found key expires
+            // after a while in case the device moved to another network.
+            promise.then(function (key) {
+                if (self.networkKeyPromise !== promise) return;
+                if (key) self.networkKeyFound = Date.now();
+                else self.networkKeyPromise = null;
+            });
             return promise;
         },
 

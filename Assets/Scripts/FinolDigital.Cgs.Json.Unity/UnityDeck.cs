@@ -435,7 +435,8 @@ namespace FinolDigital.Cgs.Json.Unity
             pdfDocument.Close();
             pdfDocument.Dispose();
 
-            return new Uri(UnityFileMethods.FilePrefix + PrintPdfFilePath);
+            // Deck names can contain URI characters such as #, so build the URI from the path itself.
+            return new Uri(Path.GetFullPath(PrintPdfFilePath));
 #endif
         }
 
@@ -477,7 +478,8 @@ namespace FinolDigital.Cgs.Json.Unity
             if (pdf.PageCount == 0)
                 pdf.AddPage();
             pdf.Save(PrintPdfFilePath);
-            return new Uri(UnityFileMethods.FilePrefix + PrintPdfFilePath);
+            // Deck names can contain URI characters such as #, so build the URI from the path itself.
+            return new Uri(Path.GetFullPath(PrintPdfFilePath));
         }
 
         private static void AddJpegImage(JpegPdfWriter pdf, string imageFilePath)
@@ -490,7 +492,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (!texture.LoadImage(bytes))
                 {
                     // Texture2D.LoadImage() reads only png and jpg; some hosts serve webp under those names.
-                    UnityEngine.Object.Destroy(texture);
+                    UnityEngine.Object.DestroyImmediate(texture);
                     texture = UnityFileMethods.DecodeWebpReadable(bytes);
                 }
 
@@ -521,8 +523,9 @@ namespace FinolDigital.Cgs.Json.Unity
             }
             finally
             {
+                // Export runs within one frame, so free each decoded image now rather than at the frame's end.
                 if (texture != null)
-                    UnityEngine.Object.Destroy(texture);
+                    UnityEngine.Object.DestroyImmediate(texture);
             }
         }
     }

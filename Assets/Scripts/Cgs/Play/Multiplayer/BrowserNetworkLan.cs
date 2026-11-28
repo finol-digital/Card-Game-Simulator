@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -89,6 +90,11 @@ namespace Cgs.Play.Multiplayer
         private readonly IBrowserLanLobbies _lobbies;
         private string _networkKey;
 
+        // The advertised lobby, or the request creating it, so that StopAdvertising can remove it even after the
+        // advertising coroutine is stopped.
+        private string _advertisedLobbyId;
+        private Task<string> _pendingCreate;
+
         public BrowserNetworkLan(IBrowserLanSignals signals, IBrowserLanLobbies lobbies)
         {
             _signals = signals ?? throw new ArgumentNullException(nameof(signals));
@@ -100,12 +106,11 @@ namespace Cgs.Play.Multiplayer
                 ? lobbyName[..^LobbyNameSuffix.Length]
                 : lobbyName;
 
-        // Leaves the key in _networkKey, which stays null if the browser can't find one.
+        // Leaves the key in _networkKey, which stays null if the browser can't find one. Each search and hosting
+        // session asks again, since the browser may have moved to another network.
         private IEnumerator RequestNetworkKey()
         {
-            if (!string.IsNullOrEmpty(_networkKey))
-                yield break;
-
+            _networkKey = null;
             var done = false;
             _signals.RequestNetworkKey(key =>
             {
@@ -143,8 +148,14 @@ namespace Cgs.Play.Multiplayer
             if (string.IsNullOrEmpty(networkKey) || !isHosting())
                 yield break;
 
+            StopAdvertising();
             var create = _lobbies.CreateAsync(gameName + LobbyNameSuffix, networkKey, roomId);
+            _pendingCreate = create;
             yield return Wait(create);
+            // StopAdvertising has taken over this request, and deletes the lobby once it exists.
+            if (_pendingCreate != create)
+                yield break;
+            _pendingCreate = null;
             if (!create.IsCompletedSuccessfully)
             {
                 Debug.LogWarning("[CgsNet] Browser LAN rooms can't be listed on this network: " +
@@ -153,27 +164,66 @@ namespace Cgs.Play.Multiplayer
             }
 
             var lobbyId = create.Result;
+            _advertisedLobbyId = lobbyId;
             var answered = new HashSet<string>();
+            var unpublished = new Dictionary<string, string>();
             var sinceHeartbeat = 0f;
-            while (isHosting())
+            while (isHosting() && _advertisedLobbyId == lobbyId)
             {
                 var get = _lobbies.GetAsync(lobbyId);
                 yield return Wait(get);
                 if (get.IsCompletedSuccessfully)
-                    yield return Answer(lobbyId, get.Result, answered);
+                    yield return Answer(lobbyId, get.Result, answered, unpublished);
 
                 yield return new WaitForSecondsRealtime(PollSeconds);
                 sinceHeartbeat += PollSeconds;
-                if (sinceHeartbeat < HeartbeatSeconds || !isHosting())
+                if (sinceHeartbeat < HeartbeatSeconds || !isHosting() || _advertisedLobbyId != lobbyId)
                     continue;
                 sinceHeartbeat = 0;
                 yield return Wait(_lobbies.HeartbeatAsync(lobbyId));
             }
 
+            // Otherwise StopAdvertising, or a newer advertisement, has already deleted this lobby.
+            if (_advertisedLobbyId != lobbyId)
+                yield break;
+            _advertisedLobbyId = null;
             yield return Wait(_lobbies.DeleteAsync(lobbyId));
         }
 
-        private IEnumerator Answer(string lobbyId, BrowserLanLobbySnapshot snapshot, HashSet<string> answered)
+        /// <summary>
+        /// Removes the advertised lobby. Hosts call this when they stop, since stopping their coroutines would
+        /// otherwise leave the room listed until Lobby expires it.
+        /// </summary>
+        public void StopAdvertising()
+        {
+            var lobbyId = _advertisedLobbyId;
+            _advertisedLobbyId = null;
+            if (lobbyId != null)
+                _ = DeleteQuietlyAsync(lobbyId);
+
+            var create = _pendingCreate;
+            _pendingCreate = null;
+            create?.ContinueWith(created =>
+            {
+                if (created.IsCompletedSuccessfully)
+                    _ = DeleteQuietlyAsync(created.Result);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private async Task DeleteQuietlyAsync(string lobbyId)
+        {
+            try
+            {
+                await _lobbies.DeleteAsync(lobbyId);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("[CgsNet] Browser LAN lobby request failed: " + exception.Message);
+            }
+        }
+
+        private IEnumerator Answer(string lobbyId, BrowserLanLobbySnapshot snapshot, HashSet<string> answered,
+            Dictionary<string, string> unpublished)
         {
             var answers = new Dictionary<string, string>();
             foreach (var (playerId, offer) in snapshot.Offers)
@@ -181,6 +231,13 @@ namespace Cgs.Play.Multiplayer
                 if (playerId == snapshot.HostId || answered.Contains(playerId) ||
                     snapshot.Answers.ContainsKey(playerId) || string.IsNullOrEmpty(offer))
                     continue;
+
+                // Retry an answer whose publication failed; its peer connection is still waiting for the player.
+                if (unpublished.TryGetValue(playerId, out var unpublishedAnswer))
+                {
+                    answers[playerId] = unpublishedAnswer;
+                    continue;
+                }
 
                 string answer = null;
                 var done = false;
@@ -192,15 +249,34 @@ namespace Cgs.Play.Multiplayer
                 while (!done)
                     yield return null;
 
-                answered.Add(playerId);
-                if (!string.IsNullOrEmpty(answer))
-                    answers[playerId] = answer;
+                // An offer this browser can't answer is not retried.
+                if (string.IsNullOrEmpty(answer))
+                {
+                    answered.Add(playerId);
+                    continue;
+                }
+
+                answers[playerId] = answer;
+                unpublished[playerId] = answer;
             }
 
             // Players leave the lobby once connected; drop their answers to stay within Lobby's data limits.
             answered.RemoveWhere(playerId => !snapshot.PlayerIds.Contains(playerId));
-            if (answers.Count > 0 || snapshot.StaleAnswerKeys.Count > 0)
-                yield return Wait(_lobbies.UpdateAnswersAsync(lobbyId, answers, snapshot.StaleAnswerKeys));
+            foreach (var playerId in unpublished.Keys.Where(playerId => !snapshot.PlayerIds.Contains(playerId))
+                         .ToList())
+                unpublished.Remove(playerId);
+            if (answers.Count == 0 && snapshot.StaleAnswerKeys.Count == 0)
+                yield break;
+
+            var update = _lobbies.UpdateAnswersAsync(lobbyId, answers, snapshot.StaleAnswerKeys);
+            yield return Wait(update);
+            if (!update.IsCompletedSuccessfully)
+                yield break;
+            foreach (var playerId in answers.Keys)
+            {
+                unpublished.Remove(playerId);
+                answered.Add(playerId);
+            }
         }
 
         /// <summary>

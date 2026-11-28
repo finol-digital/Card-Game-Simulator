@@ -107,10 +107,27 @@ namespace UnityExtensionMethods
 
             var cacheFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(
                 "CgsImport-" + Guid.NewGuid().ToString("N"), CreationCollisionOption.GenerateUniqueName);
-            var targetFolder = await cacheFolder.CreateFolderAsync(sourceFolder.Name,
-                CreationCollisionOption.ReplaceExisting);
-            await CopyFolderAsync(sourceFolder, targetFolder);
-            return targetFolder.Path;
+            try
+            {
+                var targetFolder = await cacheFolder.CreateFolderAsync(sourceFolder.Name,
+                    CreationCollisionOption.ReplaceExisting);
+                await CopyFolderAsync(sourceFolder, targetFolder);
+                return targetFolder.Path;
+            }
+            catch
+            {
+                // The cache persists across sessions, so don't leave a partial copy behind.
+                try
+                {
+                    await cacheFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+                catch (Exception cleanupException)
+                {
+                    Debug.LogWarning("UwpFileBrowser::CleanupFailed: " + cleanupException.Message);
+                }
+
+                throw;
+            }
         }
 
         private static async Task CopyFolderAsync(StorageFolder sourceFolder, StorageFolder targetFolder)

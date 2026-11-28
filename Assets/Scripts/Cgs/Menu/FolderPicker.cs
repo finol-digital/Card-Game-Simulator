@@ -19,8 +19,11 @@ namespace Cgs.Menu
     /// </summary>
     internal static class FolderPicker
     {
-        /// <summary>Calls <paramref name="picked"/> with a readable folder path; not called if cancelled.</summary>
-        public static void Pick(UiMessage title, Action<string> picked)
+        /// <summary>
+        /// Calls <paramref name="picked"/> with a readable folder path; not called if cancelled. Platforms that
+        /// copy the folder keep one copy per <paramref name="owner"/>.
+        /// </summary>
+        public static void Pick(string owner, UiMessage title, Action<string> picked)
         {
             if (picked == null)
                 throw new ArgumentNullException(nameof(picked));
@@ -36,7 +39,7 @@ namespace Cgs.Menu
             });
 #elif UNITY_IOS && !UNITY_EDITOR
             // SimpleFileBrowser sees only the app's own storage on iOS, not the Files app.
-            IosFilePicker.PickFolder((path, error) =>
+            IosFilePicker.PickFolder(owner, (path, error) =>
             {
                 if (!string.IsNullOrEmpty(path))
                     picked(path);

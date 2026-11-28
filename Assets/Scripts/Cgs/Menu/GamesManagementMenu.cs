@@ -252,7 +252,8 @@ namespace Cgs.Menu
         private static async void ImportCardGameFromUwpFile()
         {
             var path = UwpFileBrowser.OpenFilePanel();
-            if (string.IsNullOrEmpty(path))
+            // A picked file can lack a filesystem path, so only a missing file means cancellation.
+            if (UwpFileBrowser.LastOpenFile == null)
             {
                 Debug.Log("Operation cancelled");
                 return;

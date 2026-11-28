@@ -133,12 +133,13 @@ namespace Cgs.Cards
                 SetFolderPath = path;
             });
 #else
-            FolderPicker.Pick(new UiMessage("files.select.folder", SelectFolderPrompt), path =>
-            {
-                if (this == null || !isActiveAndEnabled)
-                    return;
-                SetFolderPath = path;
-            });
+            FolderPicker.Pick(nameof(SetImportMenu), new UiMessage("files.select.folder", SelectFolderPrompt),
+                path =>
+                {
+                    if (this == null || !isActiveAndEnabled)
+                        return;
+                    SetFolderPath = path;
+                });
 #endif
         }
 

@@ -433,3 +433,53 @@ test('network keys hash the public IPv4 address, or the IPv6 /64 prefix', async 
     assert.notEqual(await key([v6]), both);
     assert.equal(await key([host]), null, 'no public address means no network discovery');
 });
+
+test('a host releases the peer connection of a departed WebRTC client', async t => {
+    const closed = await signaledPair(t);
+    const closedPc = closed.host.bridge.connection.rtc[0];
+    closed.client.bridge.connection.links.get('host').channel.close();
+    await until(() => closed.host.bridge.events.length);
+    assert.equal(closed.host.bridge.connection.rtc.length, 0);
+    await until(() => closedPc.closed);
+
+    const kicked = await signaledPair(t);
+    const kickedPc = kicked.host.bridge.connection.rtc[0];
+    kicked.host.bridge.disconnect(1);
+    assert.equal(kicked.host.bridge.connection.rtc.length, 0);
+    await until(() => kickedPc.closed);
+});
+
+test('long descriptions keep only host candidates, and fail if still too long for Lobby', t => {
+    const { bridge } = device(t, undefined);
+    const host = 'a=candidate:1 1 udp 2122260223 abc.local 50000 typ host generation 0';
+    const srflx = 'a=candidate:2 1 udp 1686052607 203.0.113.7 50001 typ srflx raddr 0.0.0.0 rport 0';
+    const header = 'v=0\r\no=- 1 2 IN IP4 127.0.0.1\r\ns=-';
+    const short = [header, host, srflx].join('\r\n');
+    assert.equal(bridge.compact(short), short, 'descriptions that fit are unchanged');
+    const long = [header, host].concat(new Array(40).fill(srflx)).join('\r\n');
+    assert.equal(bridge.compact(long), [header, host].join('\r\n'));
+    assert.equal(bridge.compact([header].concat(new Array(40).fill(host)).join('\r\n')), null);
+});
+
+test('network keys retry after a WebRTC setup error and expire after a while', async t => {
+    let failing = true;
+    class Stun {
+        constructor() { if (failing) throw new Error('NotSupportedError'); }
+        createDataChannel() {}
+        async createOffer() { return {}; }
+        async setLocalDescription() {
+            this.onicecandidate({ candidate: { candidate:
+                'candidate:2 1 udp 1686052607 203.0.113.7 50001 typ srflx raddr 0.0.0.0 rport 0' } });
+            this.onicecandidate({ candidate: null });
+        }
+        close() {}
+    }
+    const { bridge } = device(t, Stun);
+    assert.equal(await bridge.networkKey(), null);
+    failing = false;
+    const first = bridge.networkKey();
+    assert.match(await first, /^[a-f0-9]{32}$/);
+    assert.equal(bridge.networkKey(), first, 'a recent key is reused');
+    bridge.networkKeyFound -= bridge.networkKeyMilliseconds;
+    assert.notEqual(bridge.networkKey(), first, 'an old key is looked up again');
+});

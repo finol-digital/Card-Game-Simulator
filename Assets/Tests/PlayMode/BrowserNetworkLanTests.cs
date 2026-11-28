@@ -23,6 +23,7 @@ namespace Tests.PlayMode
         {
             public string NetworkKey = Network;
             public bool AnswerFails;
+            public int AnswerCount;
             public readonly List<string> Offers = new();
             public readonly List<string> Accepted = new();
             public readonly List<string> Discarded = new();
@@ -45,8 +46,11 @@ namespace Tests.PlayMode
                 completed(answer.StartsWith("answer:", StringComparison.Ordinal));
             }
 
-            public void AnswerOffer(string offer, Action<string> completed) =>
+            public void AnswerOffer(string offer, Action<string> completed)
+            {
+                AnswerCount++;
                 completed(AnswerFails ? null : "answer:" + offer);
+            }
 
             public void DiscardOffer(string room) => Discarded.Add(room);
         }
@@ -64,6 +68,8 @@ namespace Tests.PlayMode
         {
             public readonly Dictionary<string, FakeLobby> Lobbies = new();
             public int Updates;
+            public int FailingUpdates;
+            public TaskCompletionSource<bool> CreateGate;
         }
 
         private sealed class FakeLobbies : IBrowserLanLobbies
@@ -77,8 +83,10 @@ namespace Tests.PlayMode
                 _playerId = playerId;
             }
 
-            public Task<string> CreateAsync(string name, string networkKey, string roomId)
+            public async Task<string> CreateAsync(string name, string networkKey, string roomId)
             {
+                if (_service.CreateGate != null)
+                    await _service.CreateGate.Task;
                 var lobby = new FakeLobby
                 {
                     Id = "lobby" + _service.Lobbies.Count, Name = name, NetworkKey = networkKey, RoomId = roomId,
@@ -86,7 +94,7 @@ namespace Tests.PlayMode
                 };
                 lobby.Offers[_playerId] = null;
                 _service.Lobbies[lobby.Id] = lobby;
-                return Task.FromResult(lobby.Id);
+                return lobby.Id;
             }
 
             public Task<IReadOnlyList<BrowserLanRoom>> QueryAsync(string networkKey) =>
@@ -121,6 +129,12 @@ namespace Tests.PlayMode
                 IReadOnlyCollection<string> staleAnswerKeys)
             {
                 _service.Updates++;
+                if (_service.FailingUpdates > 0)
+                {
+                    _service.FailingUpdates--;
+                    return Task.FromException(new InvalidOperationException("Rate limited"));
+                }
+
                 var lobby = _service.Lobbies[lobbyId];
                 foreach (var (playerId, answer) in answers)
                     lobby.Answers[playerId] = answer;
@@ -266,6 +280,74 @@ namespace Tests.PlayMode
                 result => joined = result), () => joined.HasValue);
             Assert.IsFalse(joined.Value);
             Assert.AreEqual(new[] { Room }, signals.Discarded);
+        }
+
+        [UnityTest]
+        public IEnumerator AnswersThatFailToPublishAreRetried()
+        {
+            var service = new FakeLobbyService { FailingUpdates = 2 };
+            var hostSignals = new FakeSignals("host");
+            var host = Lan(hostSignals, new FakeLobbies(service, "host-player"));
+            var client = Lan(new FakeSignals("client"), new FakeLobbies(service, "client-player"));
+            var hosting = true;
+            var runner = new GameObject("Host").AddComponent<Runner>();
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("Rate limited"));
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("Rate limited"));
+            runner.StartCoroutine(host.Advertise(Room, "Cards", () => hosting));
+            yield return new WaitUntil(() => service.Lobbies.Count == 1);
+            var lobby = service.Lobbies.Values.Single();
+
+            bool? joined = null;
+            yield return Run(client.Join(new BrowserLanRoom { LobbyId = lobby.Id, RoomId = Room },
+                result => joined = result), () => joined.HasValue);
+            Assert.IsTrue(joined.Value);
+            Assert.AreEqual(1, hostSignals.AnswerCount, "The same answer, and its connection, is published again.");
+            hosting = false;
+            UnityEngine.Object.Destroy(runner.gameObject);
+        }
+
+        [UnityTest]
+        public IEnumerator StoppingAdvertisingDeletesTheLobbyEvenWhenItsCoroutineStops()
+        {
+            var service = new FakeLobbyService();
+            var lan = Lan(new FakeSignals("host"), new FakeLobbies(service, "host-player"));
+            var runner = new GameObject("Host").AddComponent<Runner>();
+            runner.StartCoroutine(lan.Advertise(Room, "Cards", () => true));
+            yield return new WaitUntil(() => service.Lobbies.Count == 1);
+            runner.StopAllCoroutines();
+            lan.StopAdvertising();
+            yield return new WaitUntil(() => service.Lobbies.Count == 0);
+
+            // A lobby whose creation finishes after stopping is deleted once it exists.
+            service.CreateGate = new TaskCompletionSource<bool>();
+            runner.StartCoroutine(lan.Advertise(Room, "Cards", () => true));
+            yield return null;
+            runner.StopAllCoroutines();
+            lan.StopAdvertising();
+            service.CreateGate.SetResult(true);
+            var started = Time.realtimeSinceStartup;
+            while (service.Lobbies.Count > 0 && Time.realtimeSinceStartup - started < 5)
+                yield return null;
+            Assert.IsEmpty(service.Lobbies);
+            UnityEngine.Object.Destroy(runner.gameObject);
+        }
+
+        [UnityTest]
+        public IEnumerator EachSearchUsesTheCurrentNetwork()
+        {
+            var service = new FakeLobbyService();
+            service.Lobbies["lobby0"] = new FakeLobby
+                { Id = "lobby0", Name = "Cards", NetworkKey = Network, RoomId = Room, HostId = "host-player" };
+            var signals = new FakeSignals("client");
+            var lan = Lan(signals, new FakeLobbies(service, "client-player"));
+            IReadOnlyList<BrowserLanRoom> rooms = null;
+            yield return Run(lan.FindRooms(found => rooms = found), () => rooms != null);
+            Assert.AreEqual(1, rooms.Count);
+
+            signals.NetworkKey = "another network";
+            rooms = null;
+            yield return Run(lan.FindRooms(found => rooms = found), () => rooms != null);
+            Assert.IsEmpty(rooms, "A browser that moved networks no longer sees the old network's rooms.");
         }
 
         [Test]

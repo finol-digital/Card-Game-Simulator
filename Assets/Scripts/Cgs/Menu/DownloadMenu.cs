@@ -26,6 +26,8 @@ namespace Cgs.Menu
 
         private DownloadCoroutineDelegate _downloadCoroutine;
 
+        private int _pasteRequest;
+
         public override bool IsBlocked => base.IsBlocked || urlInputField.isFocused;
 
         protected void OnEnable()
@@ -98,9 +100,13 @@ namespace Cgs.Menu
             if (!urlInputField.interactable)
                 return;
 
+            // Browsers read the clipboard asynchronously; drop the result if the URL changed meanwhile.
+            var request = ++_pasteRequest;
+            var textBefore = urlInputField.text;
             TextSharing.Paste(text =>
             {
-                if (this == null || !isActiveAndEnabled || !urlInputField.interactable)
+                if (this == null || !isActiveAndEnabled || !urlInputField.interactable ||
+                    request != _pasteRequest || urlInputField.text != textBefore)
                     return;
                 urlInputField.text = text;
             }, error =>

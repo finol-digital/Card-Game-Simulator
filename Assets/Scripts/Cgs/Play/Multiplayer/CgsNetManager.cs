@@ -738,6 +738,8 @@ namespace Cgs.Play.Multiplayer
             CurrentLobby = null;
             // Stopping ends a hosting attempt before it can clear this itself
             IsStartingHost = false;
+            // Stopping coroutines also stops browser LAN advertising before it can remove its lobby
+            _browserNetworkLan?.StopAdvertising();
             StopAllCoroutines();
         }
 

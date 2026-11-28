@@ -282,6 +282,9 @@ namespace Cgs.Cards
             CardImageUri = new Uri(await UnityFileMethods.CacheFileAsync(uri));
 #elif UNITY_STANDALONE || UNITY_WEBGL
             CardImageUri = new Uri(UnityFileMethods.CacheFile(uri));
+#elif UNITY_ANDROID || UNITY_IOS
+            // Images from the Files app can be HEIC, which Unity can't decode, so cache a PNG copy.
+            CardImageUri = new Uri(UnityFileMethods.CacheFile(uri, Guid.NewGuid().ToString("N") + ".png"));
 #else
             CardImageUri = new Uri(uri);
 #endif

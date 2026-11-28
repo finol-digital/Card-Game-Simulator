@@ -69,6 +69,8 @@ namespace Cgs.Decks
 
         private string _selectedFilePath;
 
+        private int _pasteRequest;
+
         private readonly SortedList<string, string> _deckFiles = new();
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
@@ -429,9 +431,13 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void PasteClipboardIntoText()
         {
+            // Browsers read the clipboard asynchronously; drop the result if the deck text changed meanwhile.
+            var request = ++_pasteRequest;
+            var textBefore = textInputField.text;
             TextSharing.Paste(text =>
             {
-                if (this == null || !isActiveAndEnabled)
+                if (this == null || !isActiveAndEnabled || request != _pasteRequest ||
+                    textInputField.text != textBefore)
                     return;
                 textInputField.text = text;
             }, error =>

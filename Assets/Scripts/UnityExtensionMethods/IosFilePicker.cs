@@ -4,6 +4,7 @@
 
 #if UNITY_IOS
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using AOT;
@@ -33,8 +34,10 @@ namespace UnityExtensionMethods
 
         private static Action<string, string> _folderPicked;
         private static Action<PickedImageSource> _imageSourceChosen;
-        private static string _lastFolderCopy;
+        // Each menu keeps its own copy, so one menu's pick never deletes a folder another menu still shows.
+        private static readonly Dictionary<string, string> FolderCopies = new();
         private static string _pendingFolderCopy;
+        private static string _pendingOwner;
 
         [DllImport("__Internal")]
         private static extern int CgsPickFolder(string destination, FolderPickedCallback callback);
@@ -45,10 +48,13 @@ namespace UnityExtensionMethods
 
         /// <summary>
         /// Copies a folder chosen in the Files app into the cache. <paramref name="picked"/> receives the copy's
-        /// path, or a null path and an error message; both are null when the player cancels.
+        /// path, or a null path and an error message; both are null when the player cancels. A new copy replaces
+        /// only the previous copy made for the same <paramref name="owner"/>.
         /// </summary>
-        public static void PickFolder(Action<string, string> picked)
+        public static void PickFolder(string owner, Action<string, string> picked)
         {
+            if (owner == null)
+                throw new ArgumentNullException(nameof(owner));
             if (picked == null)
                 throw new ArgumentNullException(nameof(picked));
             if (_folderPicked != null)
@@ -56,11 +62,14 @@ namespace UnityExtensionMethods
 
             _pendingFolderCopy = Path.Combine(Application.temporaryCachePath,
                 "CgsImport-" + Guid.NewGuid().ToString("N"));
+            _pendingOwner = owner;
             _folderPicked = picked;
             if (CgsPickFolder(_pendingFolderCopy, OnFolderPicked) != 0)
                 return;
 
             _folderPicked = null;
+            _pendingFolderCopy = null;
+            _pendingOwner = null;
             picked(null, null);
         }
 
@@ -77,15 +86,17 @@ namespace UnityExtensionMethods
             var picked = _folderPicked;
             _folderPicked = null;
             var text = value == IntPtr.Zero ? null : Marshal.PtrToStringUTF8(value);
-            // Keep the previous copy until a new one replaces it; the menu may still show it.
+            // Keep the owner's previous copy until a new one replaces it; the menu may still show it.
             if (status == PickSucceeded)
             {
-                DeleteFolderCopy(_lastFolderCopy);
-                _lastFolderCopy = _pendingFolderCopy;
+                if (FolderCopies.TryGetValue(_pendingOwner, out var previousCopy))
+                    DeleteFolderCopy(previousCopy);
+                FolderCopies[_pendingOwner] = _pendingFolderCopy;
             }
             else
                 DeleteFolderCopy(_pendingFolderCopy);
             _pendingFolderCopy = null;
+            _pendingOwner = null;
 
             if (status == PickSucceeded)
                 picked?.Invoke(text, null);

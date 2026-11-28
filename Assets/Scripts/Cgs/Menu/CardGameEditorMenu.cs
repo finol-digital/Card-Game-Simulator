@@ -644,12 +644,13 @@ namespace Cgs.Menu
                 BacksFolderPath = path;
             });
 #else
-            FolderPicker.Pick(new UiMessage("files.select.folder", SelectFolderPrompt), path =>
-            {
-                if (this == null || !isActiveAndEnabled)
-                    return;
-                BacksFolderPath = path;
-            });
+            FolderPicker.Pick(nameof(CardGameEditorMenu), new UiMessage("files.select.folder", SelectFolderPrompt),
+                path =>
+                {
+                    if (this == null || !isActiveAndEnabled)
+                        return;
+                    BacksFolderPath = path;
+                });
 #endif
         }
 

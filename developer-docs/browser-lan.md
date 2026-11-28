@@ -16,14 +16,18 @@ have no WebRTC); use Internet multiplayer between Web and native players.
 
 1. Each browser asks public STUN servers (`stun.l.google.com`, `stun.cloudflare.com`) for its network's public
    address and hashes it (SHA-256 with a fixed salt, first 128 bits). IPv6 uses the /64 prefix, because each
-   IPv6 device has its own address. Browsers behind the same router therefore share a *network key*.
+   IPv6 device has its own address. Browsers behind the same router therefore share a *network key*. Each search
+   and hosting session looks the key up again (reusing one for at most a minute), in case the device moved.
 2. The host creates a public Lobby named `<game> (Web LAN)` with the network key in indexed field `S1`
    (`WebLanNetwork`) and its room ID (`WebLanRoom`). Joining browsers query lobbies by their own key.
 3. A joining browser creates a WebRTC offer (about 1 KB, with all ICE candidates) and joins the lobby with it as
    member-only player data. The host polls the lobby every 1.5 seconds, answers each offer in member-only
-   lobby data (`Answer<player ID prefix>`), and heartbeats the lobby every 15 seconds.
+   lobby data (`Answer<player ID prefix>`), and heartbeats the lobby every 15 seconds. Lobby stores each value
+   in at most 2 KB, so a longer offer or answer keeps only its host candidates, and the join fails if it is
+   still too long. An answer that fails to publish is retried with the same peer connection.
 4. The client applies the answer, leaves the lobby, and starts Netcode over the new data channel. The host
-   removes answers of players who left. When hosting stops, the host deletes the lobby.
+   removes answers of players who left, and closes their peer connections when their data channels close.
+   When hosting stops, the host deletes the lobby, even if stopping cancels the advertising coroutine.
 
 Large Netcode packets are split into ordered 16 KB chunks, and sending waits while a channel buffers more than
 4 MB. Each data channel speaks only for the player that joined through it.

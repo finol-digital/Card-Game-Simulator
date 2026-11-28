@@ -35,6 +35,8 @@ namespace Cgs.Play.Multiplayer
         public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
 
+        private const int MaxInternetLobbies = 15;
+        private const int MaxLobbyQueryCount = 100;
         private const string ConnectionStartErrorMessage = "Unable to start the multiplayer connection.";
         private const string BrowserConnectionStartErrorMessage =
             "Unable to connect. For browser LAN, open this site in another tab of the same browser, host there, " +
@@ -290,7 +292,8 @@ namespace Cgs.Play.Multiplayer
         {
             var queryLobbiesOptions = new QueryLobbiesOptions
             {
-                Count = 15,
+                // Browser LAN rooms are also lobbies, so fetch extra and list at most MaxInternetLobbies of the rest
+                Count = MaxLobbyQueryCount,
                 // Filter for open lobbies only
                 Filters = new List<QueryFilter>
                 {
@@ -311,11 +314,10 @@ namespace Cgs.Play.Multiplayer
             var response = await LobbyService.Instance.QueryLobbiesAsync(queryLobbiesOptions);
 
             Lobbies.Clear();
-            foreach (var lobby in response.Results)
+            // Browser LAN rooms are listed under LAN by browsers on the same network.
+            foreach (var lobby in response.Results.Where(lobby => !UnityBrowserLanLobbies.IsBrowserLanLobby(lobby))
+                         .Take(MaxInternetLobbies))
             {
-                // Browser LAN rooms are listed under LAN by browsers on the same network.
-                if (UnityBrowserLanLobbies.IsBrowserLanLobby(lobby))
-                    continue;
                 var lobbyData = new LobbyData
                 {
                     Id = lobby.Id,
@@ -562,6 +564,8 @@ namespace Cgs.Play.Multiplayer
         {
             // Deactivation stops the sign-in coroutine; a shared attempt still in progress is reused on return
             _isSigningIn = false;
+            // It also stops the browser LAN room search, so let the next refresh start a new one
+            _isFindingNetworkRooms = false;
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;

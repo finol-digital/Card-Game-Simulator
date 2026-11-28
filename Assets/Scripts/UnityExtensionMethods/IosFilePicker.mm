@@ -5,7 +5,7 @@
 #import <UIKit/UIKit.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
-extern UIViewController *UnityGetGLViewController(void);
+extern "C" UIViewController *UnityGetGLViewController(void);
 
 typedef void (*CgsFolderPickedCallback)(int status, const char *value);
 typedef void (*CgsImageSourceCallback)(int choice);

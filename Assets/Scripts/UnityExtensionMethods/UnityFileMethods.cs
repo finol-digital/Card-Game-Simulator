@@ -139,8 +139,9 @@ namespace UnityExtensionMethods
 #if ENABLE_WINMD_SUPPORT
         public static async System.Threading.Tasks.Task<string> CacheFileAsync(string sourceFilePath)
         {
-            string fileName = Path.GetFileName(sourceFilePath);
             Windows.Storage.StorageFile sourceStorageFile = UwpFileBrowser.LastOpenFile;
+            // Picked files need not have a filesystem path, so prefer the picked file's own name.
+            string fileName = sourceStorageFile?.Name ?? Path.GetFileName(sourceFilePath);
             Windows.Storage.StorageFolder cacheStorageFolder = Windows.Storage.ApplicationData.Current.LocalCacheFolder;
             var cacheStorageFile = await sourceStorageFile.CopyAsync(
                 cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
