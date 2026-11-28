@@ -1,0 +1,314 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Cgs.Play.Multiplayer;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+
+namespace Tests.PlayMode
+{
+    public class BrowserNetworkLanTests
+    {
+        private const string Room = "0123456789abcdef0123456789abcdef";
+        private const string Network = "feedfacefeedfacefeedfacefeedface";
+
+        private sealed class FakeSignals : IBrowserLanSignals
+        {
+            public string NetworkKey = Network;
+            public bool AnswerFails;
+            public readonly List<string> Offers = new();
+            public readonly List<string> Accepted = new();
+            public readonly List<string> Discarded = new();
+            private readonly string _name;
+
+            public FakeSignals(string name) => _name = name;
+
+            public void RequestNetworkKey(Action<string> completed) => completed(NetworkKey);
+
+            public void CreateOffer(string room, Action<string> completed)
+            {
+                var offer = $"offer:{_name}:{room}";
+                Offers.Add(offer);
+                completed(offer);
+            }
+
+            public void AcceptAnswer(string room, string answer, Action<bool> completed)
+            {
+                Accepted.Add(answer);
+                completed(answer.StartsWith("answer:", StringComparison.Ordinal));
+            }
+
+            public void AnswerOffer(string offer, Action<string> completed) =>
+                completed(AnswerFails ? null : "answer:" + offer);
+
+            public void DiscardOffer(string room) => Discarded.Add(room);
+        }
+
+        private sealed class FakeLobby
+        {
+            public string Id, Name, NetworkKey, RoomId, HostId;
+            public int Heartbeats;
+            public readonly Dictionary<string, string> Offers = new();
+            public readonly Dictionary<string, string> Answers = new();
+        }
+
+        // One in-memory Lobby service, seen by each player through its own view.
+        private sealed class FakeLobbyService
+        {
+            public readonly Dictionary<string, FakeLobby> Lobbies = new();
+            public int Updates;
+        }
+
+        private sealed class FakeLobbies : IBrowserLanLobbies
+        {
+            private readonly FakeLobbyService _service;
+            private readonly string _playerId;
+
+            public FakeLobbies(FakeLobbyService service, string playerId)
+            {
+                _service = service;
+                _playerId = playerId;
+            }
+
+            public Task<string> CreateAsync(string name, string networkKey, string roomId)
+            {
+                var lobby = new FakeLobby
+                {
+                    Id = "lobby" + _service.Lobbies.Count, Name = name, NetworkKey = networkKey, RoomId = roomId,
+                    HostId = _playerId
+                };
+                lobby.Offers[_playerId] = null;
+                _service.Lobbies[lobby.Id] = lobby;
+                return Task.FromResult(lobby.Id);
+            }
+
+            public Task<IReadOnlyList<BrowserLanRoom>> QueryAsync(string networkKey) =>
+                Task.FromResult<IReadOnlyList<BrowserLanRoom>>(_service.Lobbies.Values
+                    .Where(lobby => lobby.NetworkKey == networkKey)
+                    .Select(lobby => new BrowserLanRoom
+                    {
+                        LobbyId = lobby.Id, RoomId = lobby.RoomId, Name = BrowserNetworkLan.DisplayName(lobby.Name)
+                    }).ToList());
+
+            public Task<BrowserLanLobbySnapshot> GetAsync(string lobbyId)
+            {
+                if (!_service.Lobbies.TryGetValue(lobbyId, out var lobby))
+                    return Task.FromException<BrowserLanLobbySnapshot>(new InvalidOperationException("No lobby"));
+                var snapshot = new BrowserLanLobbySnapshot { HostId = lobby.HostId };
+                foreach (var (playerId, offer) in lobby.Offers)
+                {
+                    snapshot.PlayerIds.Add(playerId);
+                    if (offer != null)
+                        snapshot.Offers[playerId] = offer;
+                }
+
+                foreach (var (playerId, answer) in lobby.Answers)
+                    if (lobby.Offers.ContainsKey(playerId))
+                        snapshot.Answers[playerId] = answer;
+                    else
+                        snapshot.StaleAnswerKeys.Add(playerId);
+                return Task.FromResult(snapshot);
+            }
+
+            public Task UpdateAnswersAsync(string lobbyId, IReadOnlyDictionary<string, string> answers,
+                IReadOnlyCollection<string> staleAnswerKeys)
+            {
+                _service.Updates++;
+                var lobby = _service.Lobbies[lobbyId];
+                foreach (var (playerId, answer) in answers)
+                    lobby.Answers[playerId] = answer;
+                foreach (var key in staleAnswerKeys)
+                    lobby.Answers.Remove(key);
+                return Task.CompletedTask;
+            }
+
+            public Task HeartbeatAsync(string lobbyId)
+            {
+                _service.Lobbies[lobbyId].Heartbeats++;
+                return Task.CompletedTask;
+            }
+
+            public Task DeleteAsync(string lobbyId)
+            {
+                _service.Lobbies.Remove(lobbyId);
+                return Task.CompletedTask;
+            }
+
+            public Task<string> JoinAsync(string lobbyId, string offer)
+            {
+                if (!_service.Lobbies.TryGetValue(lobbyId, out var lobby))
+                    return Task.FromException<string>(new InvalidOperationException("No lobby"));
+                lobby.Offers[_playerId] = offer;
+                return Task.FromResult(_playerId);
+            }
+
+            public Task LeaveAsync(string lobbyId, string playerId)
+            {
+                if (_service.Lobbies.TryGetValue(lobbyId, out var lobby))
+                    lobby.Offers.Remove(playerId);
+                return Task.CompletedTask;
+            }
+        }
+
+        private static BrowserNetworkLan Lan(IBrowserLanSignals signals, IBrowserLanLobbies lobbies) =>
+            new(signals, lobbies) { PollSeconds = 0.05f, HeartbeatSeconds = 0.2f, JoinTimeoutSeconds = 0.5f };
+
+        private static IEnumerator Run(IEnumerator routine, Func<bool> done, float seconds = 5)
+        {
+            var runner = new GameObject("BrowserNetworkLanTests").AddComponent<Runner>();
+            runner.StartCoroutine(routine);
+            var started = Time.realtimeSinceStartup;
+            while (!done() && Time.realtimeSinceStartup - started < seconds)
+                yield return null;
+            UnityEngine.Object.Destroy(runner.gameObject);
+            Assert.IsTrue(done(), "Timed out");
+        }
+
+        private sealed class Runner : MonoBehaviour
+        {
+        }
+
+        [UnityTest]
+        public IEnumerator HostedRoomIsFoundAndJoinedThroughLobbySignaling()
+        {
+            var service = new FakeLobbyService();
+            var hostSignals = new FakeSignals("host");
+            var clientSignals = new FakeSignals("client");
+            var host = Lan(hostSignals, new FakeLobbies(service, "host-player"));
+            var client = Lan(clientSignals, new FakeLobbies(service, "client-player"));
+            var hosting = true;
+            var runner = new GameObject("Host").AddComponent<Runner>();
+            runner.StartCoroutine(host.Advertise(Room, "Cards", () => hosting));
+            yield return new WaitUntil(() => service.Lobbies.Count == 1);
+
+            var lobby = service.Lobbies.Values.Single();
+            Assert.AreEqual("Cards" + BrowserNetworkLan.LobbyNameSuffix, lobby.Name);
+            Assert.AreEqual(Network, lobby.NetworkKey);
+            Assert.AreEqual(Room, lobby.RoomId);
+
+            IReadOnlyList<BrowserLanRoom> rooms = null;
+            yield return Run(client.FindRooms(found => rooms = found), () => rooms != null);
+            Assert.AreEqual(1, rooms.Count);
+            Assert.AreEqual("Cards", rooms[0].Name);
+            Assert.AreEqual(Room, rooms[0].RoomId);
+
+            bool? joined = null;
+            yield return Run(client.Join(rooms[0], result => joined = result), () => joined.HasValue);
+            Assert.IsTrue(joined.Value);
+            Assert.AreEqual(new[] { "answer:offer:client:" + Room }, clientSignals.Accepted);
+            Assert.IsEmpty(clientSignals.Discarded);
+            Assert.IsFalse(lobby.Offers.ContainsKey("client-player"), "Joined players leave the lobby.");
+
+            // The host removes the departed player's answer, keeps the lobby alive, and deletes it when done.
+            yield return new WaitUntil(() => lobby.Answers.Count == 0);
+            yield return new WaitUntil(() => lobby.Heartbeats > 0);
+            hosting = false;
+            yield return new WaitUntil(() => service.Lobbies.Count == 0);
+            UnityEngine.Object.Destroy(runner.gameObject);
+        }
+
+        [UnityTest]
+        public IEnumerator WithoutANetworkAddressOnlySameBrowserLanRemains()
+        {
+            var service = new FakeLobbyService();
+            var signals = new FakeSignals("host") { NetworkKey = null };
+            var lan = Lan(signals, new FakeLobbies(service, "host-player"));
+            var finished = false;
+            yield return Run(Wrap(lan.Advertise(Room, "Cards", () => true), () => finished = true), () => finished);
+            Assert.IsEmpty(service.Lobbies);
+
+            IReadOnlyList<BrowserLanRoom> rooms = null;
+            yield return Run(lan.FindRooms(found => rooms = found), () => rooms != null);
+            Assert.IsEmpty(rooms);
+        }
+
+        [UnityTest]
+        public IEnumerator JoinGivesUpWhenTheHostDoesNotAnswer()
+        {
+            var service = new FakeLobbyService();
+            var hostSignals = new FakeSignals("host") { AnswerFails = true };
+            var clientSignals = new FakeSignals("client");
+            var host = Lan(hostSignals, new FakeLobbies(service, "host-player"));
+            var client = Lan(clientSignals, new FakeLobbies(service, "client-player"));
+            var hosting = true;
+            var runner = new GameObject("Host").AddComponent<Runner>();
+            runner.StartCoroutine(host.Advertise(Room, "Cards", () => hosting));
+            yield return new WaitUntil(() => service.Lobbies.Count == 1);
+            var lobby = service.Lobbies.Values.Single();
+
+            bool? joined = null;
+            yield return Run(client.Join(new BrowserLanRoom { LobbyId = lobby.Id, RoomId = Room },
+                result => joined = result), () => joined.HasValue);
+            Assert.IsFalse(joined.Value);
+            Assert.IsEmpty(clientSignals.Accepted);
+            Assert.AreEqual(new[] { Room }, clientSignals.Discarded);
+            Assert.IsFalse(lobby.Offers.ContainsKey("client-player"));
+            hosting = false;
+            UnityEngine.Object.Destroy(runner.gameObject);
+        }
+
+        [UnityTest]
+        public IEnumerator JoiningAMissingLobbyFailsAndDiscardsTheOffer()
+        {
+            var signals = new FakeSignals("client");
+            var client = Lan(signals, new FakeLobbies(new FakeLobbyService(), "client-player"));
+            bool? joined = null;
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("Browser LAN"));
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("Browser LAN join failed"));
+            yield return Run(client.Join(new BrowserLanRoom { LobbyId = "gone", RoomId = Room },
+                result => joined = result), () => joined.HasValue);
+            Assert.IsFalse(joined.Value);
+            Assert.AreEqual(new[] { Room }, signals.Discarded);
+        }
+
+        [Test]
+        public void DisplayNameRemovesTheWebLanMarker()
+        {
+            Assert.AreEqual("Cards", BrowserNetworkLan.DisplayName("Cards" + BrowserNetworkLan.LobbyNameSuffix));
+            Assert.AreEqual("Cards", BrowserNetworkLan.DisplayName("Cards"));
+        }
+
+        [Test]
+        public void AnswerKeysUseAShortPlayerIdPrefix()
+        {
+            Assert.AreEqual("Answer" + new string('x', 18), UnityBrowserLanLobbies.AnswerKey(new string('x', 28)));
+            Assert.AreEqual("Answerabc", UnityBrowserLanLobbies.AnswerKey("abc"));
+        }
+
+        [Test]
+        public void SignalsCompleteWithNullOutsideTheBrowser()
+        {
+            var transport = new GameObject("Transport").AddComponent<BrowserLanTransport>();
+            try
+            {
+                string key = "unset", offer = "unset", answer = "unset";
+                bool? accepted = null;
+                transport.RequestNetworkKey(value => key = value);
+                transport.CreateOffer(Room, value => offer = value);
+                transport.AnswerOffer("offer", value => answer = value);
+                transport.AcceptAnswer(Room, "answer", value => accepted = value);
+                Assert.IsNull(key);
+                Assert.IsNull(offer);
+                Assert.IsNull(answer);
+                Assert.AreEqual(false, accepted);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(transport.gameObject);
+            }
+        }
+
+        private static IEnumerator Wrap(IEnumerator routine, Action finished)
+        {
+            yield return routine;
+            finished();
+        }
+    }
+}

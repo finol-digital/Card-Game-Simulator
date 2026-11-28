@@ -251,7 +251,7 @@ namespace Cgs.Cards
             BrowserFileBrowser.OpenImage(new UiMessage("files.select.card", SelectCardImageFilePrompt),
                 path => { if (this != null && isActiveAndEnabled) ImportCardImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportCardImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
+            MobileImagePicker.Pick(new UiMessage("images.import", ImportImage), ImportCardImageFromFile);
 #elif ENABLE_WINMD_SUPPORT
             ImportCardImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX

@@ -129,10 +129,12 @@ mergeInto(LibraryManager.library, {
         var link;
         try {
             var bytes = FS.readFile(UTF8ToString(pathPointer));
-            url = URL.createObjectURL(new Blob([bytes], { type: 'application/zip' }));
+            var name = UTF8ToString(namePointer);
+            var type = /\.pdf$/i.test(name) ? 'application/pdf' : 'application/zip';
+            url = URL.createObjectURL(new Blob([bytes], { type: type }));
             link = document.createElement('a');
             link.href = url;
-            link.download = UTF8ToString(namePointer);
+            link.download = name;
             link.style.display = 'none';
             document.body.appendChild(link);
             link.click();

@@ -2011,6 +2011,26 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277773
       - rid: 451339117355073541
+  - m_Id: 18826791509549056
+    m_Localized: File
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635535
+  - m_Id: 18826791522131968
+    m_Localized: Foto
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635536
+  - m_Id: 18826791526326272
+    m_Localized: "Il browser non ha potuto leggere gli appunti. Consenti l\u2019accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac)."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635537
+  - m_Id: 18977071849005056
+    m_Localized: Impossibile connettersi a quella partita tramite la rete locale. Assicurati che entrambi i dispositivi siano sulla stessa rete e che la partita sia ancora ospitata, oppure usa il multigiocatore via Internet.
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635678
   references:
     version: 2
     RefIds:
@@ -2022,6 +2042,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Il mazzo \xAB{deckName}\xBB \xE8 incompleto. Carte caricate: {loadedCount}. Carte mancanti: {missingCount}.\\n\\nQuesti nomi o identificativi di carte non sono stati trovati in questo gioco:\\n{cards}\\n\\nControlla la lista del mazzo o aggiorna i dati del gioco prima di giocare.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 4921527907078635535
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"File","status":"machine","sourceHash":"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527907078635536
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Foto","status":"machine","sourceHash":"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527907078635537
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Il browser non ha potuto leggere gli appunti. Consenti l\u2019accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac).\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 4921527907078635678
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Impossibile connettersi a quella partita tramite la rete locale. Assicurati che entrambi i dispositivi siano sulla stessa rete e che la partita sia ancora ospitata, oppure usa il multigiocatore via Internet.","status":"machine","sourceHash":"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-27"}}'
     - rid: 7133309420632277773
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

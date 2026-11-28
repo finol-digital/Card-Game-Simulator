@@ -422,7 +422,15 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void PasteClipboardIntoText()
         {
-            textInputField.text = UniClipboard.GetText();
+            TextSharing.Paste((text, error) =>
+            {
+                if (this == null || !isActiveAndEnabled)
+                    return;
+                if (error != null)
+                    CardGameManager.Instance.Messenger.ShowSharingStatus(error);
+                else
+                    textInputField.text = text;
+            });
         }
 
         [UsedImplicitly]

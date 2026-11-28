@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Menu
 {
@@ -94,8 +95,18 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void Paste()
         {
-            if (urlInputField.interactable)
-                urlInputField.text = UniClipboard.GetText();
+            if (!urlInputField.interactable)
+                return;
+
+            TextSharing.Paste((text, error) =>
+            {
+                if (this == null || !isActiveAndEnabled || !urlInputField.interactable)
+                    return;
+                if (error != null)
+                    CardGameManager.Instance.Messenger.ShowSharingStatus(error);
+                else
+                    urlInputField.text = text;
+            });
         }
 
         [UsedImplicitly]

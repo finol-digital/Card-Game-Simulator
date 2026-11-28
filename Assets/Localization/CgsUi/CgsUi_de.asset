@@ -2009,6 +2009,26 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277086
       - rid: 451339117355073536
+  - m_Id: 18826791509549056
+    m_Localized: Dateien
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635520
+  - m_Id: 18826791522131968
+    m_Localized: Fotos
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635521
+  - m_Id: 18826791526326272
+    m_Localized: "Der Browser konnte die Zwischenablage nicht lesen. Erlaube den Zugriff auf die Zwischenablage oder klicke in das Textfeld und f\xFCge mit Strg+V (Befehlstaste+V auf einem Mac) ein."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635522
+  - m_Id: 18977071849005056
+    m_Localized: "Verbindung zu diesem Spiel \xFCber das lokale Netzwerk nicht m\xF6glich. Stelle sicher, dass beide Ger\xE4te im selben Netzwerk sind und das Spiel noch gehostet wird, oder nutze den Internet-Mehrspielermodus."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635673
   references:
     version: 2
     RefIds:
@@ -2020,6 +2040,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Das Deck \u201E{deckName}\u201C ist unvollst\xE4ndig. Geladene Karten: {loadedCount}. Fehlende Karten: {missingCount}.\\n\\nDiese Kartennamen oder IDs wurden in diesem Spiel nicht gefunden:\\n{cards}\\n\\nPr\xFCfe die Deckliste oder aktualisiere die Spieldaten, bevor du spielst.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 4921527907078635520
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Dateien","status":"machine","sourceHash":"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527907078635521
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Fotos","status":"machine","sourceHash":"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527907078635522
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Der Browser konnte die Zwischenablage nicht lesen. Erlaube den Zugriff auf die Zwischenablage oder klicke in das Textfeld und f\xFCge mit Strg+V (Befehlstaste+V auf einem Mac) ein.\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 4921527907078635673
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Verbindung zu diesem Spiel \xFCber das lokale Netzwerk nicht m\xF6glich. Stelle sicher, dass beide Ger\xE4te im selben Netzwerk sind und das Spiel noch gehostet wird, oder nutze den Internet-Mehrspielermodus.\",\"status\":\"machine\",\"sourceHash\":\"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-27\"}}"
     - rid: 7133309420632277086
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

@@ -9,8 +9,10 @@ const { resolve } = require('node:path');
 const { test } = require('node:test');
 const vm = require('node:vm');
 const { webcrypto } = require('node:crypto');
+// Emscripten expands makeDynCall when building the Web player; tests call the function directly.
 const source = readFileSync(resolve(__dirname,
-    '../Assets/Scripts/Cgs/Play/Multiplayer/BrowserLan.jslib'), 'utf8');
+    '../Assets/Scripts/Cgs/Play/Multiplayer/BrowserLan.jslib'), 'utf8')
+    .replace(/\{\{\{ makeDynCall\('vii', 'callback'\) \}\}\}/g, 'callback');
 const room = 'a'.repeat(32);
 
 function tab(t, options = {}) {
@@ -233,4 +235,201 @@ test('discovery sees a host started later and does not close its active network 
     host.send(1, 'AQ==');
     await until(() => browser.events.length);
     assert.equal(browser.events.shift().Data, 'AQ==');
+});
+
+// WebRTC links between devices. Each device gets its own BroadcastChannel stub that reaches no one, so every
+// message must travel through the (fake) data channels created by signaling.
+class IsolatedChannel { postMessage() {} close() {} }
+
+function fakeRtc() {
+    const offers = new Map();
+    let nextId = 1;
+    class FakeChannel {
+        constructor(label) { this.label = label; this.readyState = 'connecting'; this.bufferedAmount = 0; this.sent = []; }
+        send(data) {
+            if (this.readyState !== 'open') throw new Error('InvalidStateError');
+            this.sent.push(data);
+            const peer = this.peer;
+            setTimeout(() => { if (peer.readyState === 'open' && peer.onmessage) peer.onmessage({ data }); }, 0);
+        }
+        close() {
+            for (const channel of [this, this.peer]) {
+                if (!channel || channel.readyState === 'closed') continue;
+                channel.readyState = 'closed';
+                if (channel.onclose) setTimeout(() => channel.onclose(), 0);
+            }
+        }
+    }
+    class FakePeerConnection {
+        constructor(config) {
+            this.config = config; this.iceGatheringState = 'new'; this.localDescription = null;
+            this.listeners = {}; this.closed = false;
+        }
+        addEventListener(name, fn) { this.listeners[name] = fn; }
+        createDataChannel(label) { this.channel = new FakeChannel(label); return this.channel; }
+        async createOffer() { const sdp = 'offer-' + nextId++; offers.set(sdp, this); return { type: 'offer', sdp }; }
+        async createAnswer() { return { type: 'answer', sdp: 'answer-' + nextId++ }; }
+        async setLocalDescription(description) {
+            this.localDescription = description;
+            this.iceGatheringState = 'complete';
+        }
+        async setRemoteDescription(description) {
+            if (description.type === 'offer') {
+                const client = offers.get(description.sdp);
+                if (!client) throw new Error('unknown offer');
+                this.client = client;
+                client.host = this;
+            } else if (description.type === 'answer') {
+                const host = this.host;
+                if (!host || !host.localDescription || host.localDescription.sdp !== description.sdp)
+                    throw new Error('mismatched answer');
+                const remote = new FakeChannel(this.channel.label);
+                this.channel.peer = remote;
+                remote.peer = this.channel;
+                setTimeout(() => {
+                    host.ondatachannel({ channel: remote });
+                    for (const channel of [this.channel, remote]) {
+                        channel.readyState = 'open';
+                        if (channel.onopen) channel.onopen();
+                    }
+                }, 0);
+            }
+        }
+        close() {
+            this.closed = true;
+            if (this.channel) this.channel.close();
+        }
+    }
+    return FakePeerConnection;
+}
+
+function device(t, RTCPeerConnection) {
+    const library = {};
+    const context = {
+        LibraryManager: { library }, mergeInto: Object.assign, BroadcastChannel: IsolatedChannel,
+        RTCPeerConnection, crypto: webcrypto, TextEncoder, Date, setTimeout, clearTimeout,
+        setInterval: () => 1, clearInterval() {},
+        window: { addEventListener() {}, removeEventListener() {} },
+        UTF8ToString: value => value, lengthBytesUTF8: value => Buffer.byteLength(value),
+        _malloc: () => 123, _free() {}, stringToUTF8: value => { context.result = value; }
+    };
+    vm.runInNewContext(source, context);
+    const bridge = library.$CgsBrowserLan;
+    context.CgsBrowserLan = bridge;
+    t.after(() => bridge.shutdown());
+    return { bridge, library, context };
+}
+
+async function signaledPair(t) {
+    const Rtc = fakeRtc();
+    const host = device(t, Rtc);
+    const client = device(t, Rtc);
+    assert.equal(host.bridge.start(room, 'Cards', true), true);
+    const offer = await client.bridge.offer(room);
+    assert.match(offer, /^offer-/);
+    const answer = await host.bridge.answer(offer);
+    assert.match(answer, /^answer-/);
+    assert.equal(await client.bridge.accept(room, answer), true);
+    assert.equal(client.bridge.start(room, '', false), true);
+    await until(() => client.bridge.events.length && host.bridge.events.length);
+    assert.deepEqual(JSON.parse(JSON.stringify(client.bridge.events.shift())), { Type: 1, ClientId: 0 });
+    assert.deepEqual(JSON.parse(JSON.stringify(host.bridge.events.shift())), { Type: 1, ClientId: 1 });
+    return { host, client };
+}
+
+test('a signaled WebRTC link connects devices that share no BroadcastChannel', async t => {
+    await signaledPair(t);
+});
+
+test('WebRTC links carry large packets intact and in order in both directions', async t => {
+    const { host, client } = await signaledPair(t);
+    const large = Buffer.alloc(300 * 1024, 7).toString('base64');
+    client.bridge.send(0, 'AQ==');
+    client.bridge.send(0, large);
+    client.bridge.send(0, 'Ag==');
+    await until(() => host.bridge.events.length === 3);
+    assert.deepEqual(Array.from(host.bridge.events, e => e.Data), ['AQ==', large, 'Ag==']);
+    host.bridge.send(1, large);
+    await until(() => client.bridge.events.length === 1);
+    assert.equal(client.bridge.events[0].Data, large);
+    const link = host.bridge.connection.links.values().next().value;
+    assert.ok(link.channel.sent.length > 20, 'large packets are split into chunks');
+    assert.ok(link.channel.sent.every(chunk => chunk.length <= 16001), 'chunks stay within data channel limits');
+});
+
+test('sending waits while a data channel buffer is full', async t => {
+    const { host, client } = await signaledPair(t);
+    const link = client.bridge.connection.links.get('host');
+    link.channel.bufferedAmount = 5 * 1024 * 1024;
+    client.bridge.send(0, 'AQ==');
+    assert.equal(link.queue.length, 1);
+    link.channel.bufferedAmount = 0;
+    link.channel.onbufferedamountlow();
+    await until(() => host.bridge.events.length === 1);
+    assert.equal(link.queue.length, 0);
+});
+
+test('a data channel cannot speak for a different player', async t => {
+    const { host, client } = await signaledPair(t);
+    const link = host.bridge.connection.links.values().next().value;
+    host.bridge.receive({ type: 'data', from: 'someone-else', to: 'host', data: 'AQ==' }, link);
+    host.bridge.receive({ type: 'join', from: 'another-player', to: 'host' }, link);
+    assert.equal(host.bridge.events.length, 0);
+    assert.equal(host.bridge.connection.peers.size, 1);
+    assert.ok(client);
+});
+
+test('disconnects travel over WebRTC, and a closed data channel removes its player', async t => {
+    const first = await signaledPair(t);
+    first.host.bridge.disconnect(1);
+    await until(() => first.client.bridge.events.length);
+    assert.equal(first.client.bridge.events.shift().Type, 2);
+
+    const second = await signaledPair(t);
+    second.client.bridge.connection.links.get('host').channel.close();
+    await until(() => second.host.bridge.events.length);
+    assert.deepEqual(JSON.parse(JSON.stringify(second.host.bridge.events.shift())), { Type: 2, ClientId: 1 });
+});
+
+test('signaling fails cleanly without WebRTC or with a wrong answer', async t => {
+    const plain = device(t, undefined);
+    assert.equal(await plain.bridge.offer(room), null);
+    assert.equal(await plain.bridge.networkKey(), null);
+    const Rtc = fakeRtc();
+    const client = device(t, Rtc);
+    await client.bridge.offer(room);
+    assert.equal(await client.bridge.accept(room, 'answer-999'), false);
+    assert.equal(client.bridge.pendingLinks[room], undefined);
+    assert.equal(await client.bridge.accept(room, 'anything'), false);
+});
+
+test('network keys hash the public IPv4 address, or the IPv6 /64 prefix', async t => {
+    const { bridge } = device(t, undefined);
+    assert.equal(bridge.networkPrefix('203.0.113.7'), '203.0.113.7');
+    assert.equal(bridge.networkPrefix('2001:DB8:0:1::5'), '2001:db8:0:1');
+    assert.equal(bridge.networkPrefix('2001:db8::1'), '2001:db8:0:0');
+    assert.equal(bridge.networkPrefix('2001:0db8:0000:0001:aaaa:bbbb:cccc:dddd'), '2001:db8:0:1');
+
+    function stun(candidates) {
+        return class {
+            createDataChannel() {}
+            async createOffer() { return {}; }
+            async setLocalDescription() {
+                for (const candidate of candidates) this.onicecandidate({ candidate: { candidate } });
+                this.onicecandidate({ candidate: null });
+            }
+            close() {}
+        };
+    }
+    const host = 'candidate:1 1 udp 2122260223 abc.local 50000 typ host generation 0';
+    const v4 = 'candidate:2 1 udp 1686052607 203.0.113.7 50001 typ srflx raddr 0.0.0.0 rport 0 generation 0';
+    const v6 = 'candidate:3 1 udp 1686052863 2001:db8:0:1::5 50002 typ srflx raddr :: rport 0 generation 0';
+    const v6Other = 'candidate:3 1 udp 1686052863 2001:db8:0:1::9 50002 typ srflx raddr :: rport 0 generation 0';
+    const key = async candidates => device(t, stun(candidates)).bridge.networkKey();
+    const both = await key([host, v6, v4]);
+    assert.match(both, /^[a-f0-9]{32}$/);
+    assert.equal(await key([v4]), both, 'IPv4 is preferred when both are available');
+    assert.equal(await key([v6]), await key([v6Other]), 'devices on one IPv6 network share a key');
+    assert.notEqual(await key([v6]), both);
+    assert.equal(await key([host]), null, 'no public address means no network discovery');
 });

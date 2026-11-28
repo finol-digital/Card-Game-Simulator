@@ -28,10 +28,6 @@ namespace Cgs.Menu
 #if UNITY_WEBGL && !UNITY_EDITOR
         private Action _releaseBrowserBacksFolder;
 #endif
-#if ENABLE_WINMD_SUPPORT
-        public const string UwpWarningMessage =
- "The CGS Windows Store client cannot access folders; please use the Steam client or other native app";
-#endif
 
         public const string DownloadBannerImage = "Download Banner Image";
         public const string DownloadBannerImagePrompt = "Enter banner image url...";
@@ -331,7 +327,7 @@ namespace Cgs.Menu
             BrowserFileBrowser.OpenImage(new UiMessage("files.select.banner", SelectBannerImageFilePrompt),
                 path => { if (this != null && isActiveAndEnabled) ImportBannerImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
+            MobileImagePicker.Pick(new UiMessage("images.import", ImportImage), ImportBannerImageFromFile);
 #elif ENABLE_WINMD_SUPPORT
             ImportBannerImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
@@ -404,7 +400,7 @@ namespace Cgs.Menu
             BrowserFileBrowser.OpenImage(new UiMessage("files.select.back", SelectCardBackImageFilePrompt),
                 path => { if (this != null && isActiveAndEnabled) ImportCardBackImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
+            MobileImagePicker.Pick(new UiMessage("images.import", ImportImage), ImportCardBackImageFromFile);
 #elif ENABLE_WINMD_SUPPORT
             ImportCardBackImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
@@ -477,7 +473,7 @@ namespace Cgs.Menu
             BrowserFileBrowser.OpenImage(new UiMessage("files.select.playmat", SelectPlayMatImageFilePrompt),
                 path => { if (this != null && isActiveAndEnabled) ImportPlayMatImageFromFile(path); });
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, CgsLocalization.Text(new UiMessage("images.import", ImportImage)));
+            MobileImagePicker.Pick(new UiMessage("images.import", ImportImage), ImportPlayMatImageFromFile);
 #elif ENABLE_WINMD_SUPPORT
             ImportPlayMatImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
@@ -647,12 +643,12 @@ namespace Cgs.Menu
                 _releaseBrowserBacksFolder = release;
                 BacksFolderPath = path;
             });
-#elif ENABLE_WINMD_SUPPORT
-            Debug.LogWarning(UwpWarningMessage);
-            CardGameManager.Instance.Messenger.Show(new UiMessage("files.uwp.unavailable", UwpWarningMessage));
 #else
-            FileBrowser.ShowLoadDialog((paths) => { BacksFolderPath = paths[0]; }, () => { },
-                FileBrowser.PickMode.Folders, false, null, null, CgsLocalization.Text(new UiMessage("files.select.folder", SelectFolderPrompt)));
+            FolderPicker.Pick(new UiMessage("files.select.folder", SelectFolderPrompt), path =>
+            {
+                if (this != null && isActiveAndEnabled)
+                    BacksFolderPath = path;
+            });
 #endif
         }
 

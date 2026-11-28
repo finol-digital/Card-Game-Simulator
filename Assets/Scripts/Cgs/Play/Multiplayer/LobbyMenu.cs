@@ -78,6 +78,13 @@ namespace Cgs.Play.Multiplayer
 
         private Dictionary<string, DiscoveryResponseData> DiscoveredServers { get; } = new();
 
+        // Browser LAN lists rooms in this browser (by room ID) and on this network (by lobby ID).
+        private Dictionary<string, DiscoveryResponseData> BrowserRooms { get; } = new();
+
+        private Dictionary<string, BrowserLanRoom> NetworkRooms { get; } = new();
+
+        private bool _isFindingNetworkRooms;
+
         private Dictionary<string, LobbyData> Lobbies { get; } = new();
 
         private string _selectedServer = string.Empty;
@@ -146,10 +153,10 @@ namespace Cgs.Play.Multiplayer
             if (IsLanConnectionSource && BrowserLanTransport.IsBrowser &&
                 CgsNetManager.Instance.BrowserTransport.TryReadDiscoveredRooms(out var rooms))
             {
-                DiscoveredServers.Clear();
+                BrowserRooms.Clear();
                 foreach (var room in rooms)
-                    DiscoveredServers[room.Key] = room.Value;
-                _shouldRedisplay = true;
+                    BrowserRooms[room.Key] = room.Value;
+                RebuildBrowserServers();
             }
 
             _secondsSinceRefresh += Time.deltaTime;
@@ -199,6 +206,8 @@ namespace Cgs.Play.Multiplayer
 
             _selectedServer = string.Empty;
             DiscoveredServers.Clear();
+            BrowserRooms.Clear();
+            NetworkRooms.Clear();
             if (BrowserLanTransport.IsBrowser)
                 CgsNetManager.Instance.StartBrowserLanDiscovery();
             else
@@ -219,12 +228,41 @@ namespace Cgs.Play.Multiplayer
             else if (IsLanConnectionSource)
             {
                 CgsNetManager.Instance.RefreshLanDiscovery();
+                if (BrowserLanTransport.IsBrowser && !_isFindingNetworkRooms)
+                    StartCoroutine(FindNetworkRooms());
                 Debug.Log("LobbyMenu Refreshed Discovery");
             }
             else
                 Debug.Log("LobbyMenu Refreshed None");
 
             _secondsSinceRefresh = 0;
+        }
+
+        private IEnumerator FindNetworkRooms()
+        {
+            _isFindingNetworkRooms = true;
+            IReadOnlyList<BrowserLanRoom> found = null;
+            yield return CgsNetManager.Instance.BrowserNetworkLan.FindRooms(rooms => found = rooms);
+            _isFindingNetworkRooms = false;
+            if (!IsLanConnectionSource)
+                yield break;
+
+            NetworkRooms.Clear();
+            foreach (var room in found)
+                NetworkRooms[room.LobbyId] = room;
+            RebuildBrowserServers();
+        }
+
+        private void RebuildBrowserServers()
+        {
+            DiscoveredServers.Clear();
+            foreach (var room in BrowserRooms)
+                DiscoveredServers[room.Key] = room.Value;
+            // A room hosted in this browser appears once, through its faster same-browser connection.
+            foreach (var room in NetworkRooms.Values)
+                if (!BrowserRooms.ContainsKey(room.RoomId))
+                    DiscoveredServers[room.LobbyId] = new DiscoveryResponseData { ServerName = room.Name };
+            _shouldRedisplay = true;
         }
 
         private async Task RefreshLobbies()
@@ -254,6 +292,9 @@ namespace Cgs.Play.Multiplayer
             Lobbies.Clear();
             foreach (var lobby in response.Results)
             {
+                // Browser LAN rooms are listed under LAN by browsers on the same network.
+                if (UnityBrowserLanLobbies.IsBrowserLanLobby(lobby))
+                    continue;
                 var lobbyData = new LobbyData
                 {
                     Id = lobby.Id,
@@ -433,6 +474,11 @@ namespace Cgs.Play.Multiplayer
                     else
                         CgsNetManager.Instance.StartJoinLobbyCode(_selectedServer, _password);
                 }
+            }
+            else if (BrowserLanTransport.IsBrowser && NetworkRooms.TryGetValue(_selectedServer, out var networkRoom)
+                                                   && !BrowserRooms.ContainsKey(networkRoom.RoomId))
+            {
+                CgsNetManager.Instance.StartJoinBrowserNetworkRoom(networkRoom);
             }
             else
             {

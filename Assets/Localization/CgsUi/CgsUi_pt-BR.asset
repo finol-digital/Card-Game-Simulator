@@ -1997,6 +1997,26 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648379
       - rid: 451339117355073545
+  - m_Id: 18826791509549056
+    m_Localized: Arquivos
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635547
+  - m_Id: 18826791522131968
+    m_Localized: Fotos
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635548
+  - m_Id: 18826791526326272
+    m_Localized: "O navegador n\xE3o conseguiu ler a \xE1rea de transfer\xEAncia. Permita o acesso \xE0 \xE1rea de transfer\xEAncia ou clique no campo de texto e cole com Ctrl+V (Command+V no Mac)."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635549
+  - m_Id: 18977071849005056
+    m_Localized: "N\xE3o foi poss\xEDvel conectar a esse jogo pela rede local. Verifique se os dois dispositivos est\xE3o na mesma rede e se o jogo ainda est\xE1 hospedado, ou use o multijogador pela Internet."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635682
   references:
     version: 2
     RefIds:
@@ -2008,6 +2028,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"O deck \\\"{deckName}\\\" est\xE1 incompleto. Cartas carregadas: {loadedCount}. Cartas ausentes: {missingCount}.\\n\\nEstes nomes ou IDs de cartas n\xE3o foram encontrados neste jogo:\\n{cards}\\n\\nConfira a lista do deck ou atualize os dados do jogo antes de jogar.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 4921527907078635547
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Arquivos","status":"machine","sourceHash":"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527907078635548
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Fotos","status":"machine","sourceHash":"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 4921527907078635549
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"O navegador n\xE3o conseguiu ler a \xE1rea de transfer\xEAncia. Permita o acesso \xE0 \xE1rea de transfer\xEAncia ou clique no campo de texto e cole com Ctrl+V (Command+V no Mac).\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 4921527907078635682
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"N\xE3o foi poss\xEDvel conectar a esse jogo pela rede local. Verifique se os dois dispositivos est\xE3o na mesma rede e se o jogo ainda est\xE1 hospedado, ou use o multijogador pela Internet.\",\"status\":\"machine\",\"sourceHash\":\"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-27\"}}"
     - rid: 7133309421012648379
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

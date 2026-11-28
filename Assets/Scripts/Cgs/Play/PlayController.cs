@@ -376,9 +376,11 @@ namespace Cgs.Play
             else
             {
                 Lobby.IsLanConnectionSource = true;
-#if !UNITY_WEBGL
-                Lobby.Host();
-#endif
+                // Browsers may lack LAN support; local play then continues offline without an error.
+                if (BrowserLanTransport.IsBrowser)
+                    CgsNetManager.Instance.StartLanHost();
+                else
+                    Lobby.Host();
                 StartDecks();
             }
         }

@@ -11,9 +11,9 @@ using UnityEngine;
 
 namespace Cgs.Play.Multiplayer
 {
-    // BroadcastChannel carries Netcode packets between tabs on the same origin.
-    // It does not provide connections to other browsers or computers.
-    public sealed class BrowserLanTransport : NetworkTransport
+    // BroadcastChannel carries Netcode packets between tabs on the same origin. Players on other devices on the
+    // same network connect through WebRTC data channels after BrowserNetworkLan exchanges offers through Lobby.
+    public sealed class BrowserLanTransport : NetworkTransport, IBrowserLanSignals
     {
         private const string ConnectionFailureMessage = "Unable to start browser LAN {0}: {1}";
         private const string MissingRoomMessage = "a room ID is required.";
@@ -165,6 +165,80 @@ namespace Cgs.Play.Multiplayer
         [DllImport("__Internal")] private static extern void CgsBrowserLanStopDiscovery();
         [DllImport("__Internal")] private static extern void CgsBrowserLanDisconnect(int clientId);
         [DllImport("__Internal")] private static extern void CgsBrowserLanShutdown();
+        [DllImport("__Internal")] private static extern void CgsBrowserLanNetworkKey(int requestId, Action<int, IntPtr> callback);
+        [DllImport("__Internal")] private static extern void CgsBrowserLanOffer(int requestId, string room, Action<int, IntPtr> callback);
+        [DllImport("__Internal")] private static extern void CgsBrowserLanAccept(int requestId, string room, string answer, Action<int, IntPtr> callback);
+        [DllImport("__Internal")] private static extern void CgsBrowserLanAnswer(int requestId, string offer, Action<int, IntPtr> callback);
+        [DllImport("__Internal")] private static extern void CgsBrowserLanDiscardOffer(string room);
 #endif
+
+        private static readonly Dictionary<int, Action<string>> PendingSignals = new();
+        private static int _nextSignal;
+
+        public void RequestNetworkKey(Action<string> completed) => Signal(completed,
+#if UNITY_WEBGL && !UNITY_EDITOR
+            id => CgsBrowserLanNetworkKey(id, CompleteSignal));
+#else
+            null);
+#endif
+
+        public void CreateOffer(string room, Action<string> completed) => Signal(completed,
+#if UNITY_WEBGL && !UNITY_EDITOR
+            id => CgsBrowserLanOffer(id, room ?? string.Empty, CompleteSignal));
+#else
+            null);
+#endif
+
+        public void AcceptAnswer(string room, string answer, Action<bool> completed) => Signal(
+            result => completed?.Invoke(result != null),
+#if UNITY_WEBGL && !UNITY_EDITOR
+            id => CgsBrowserLanAccept(id, room ?? string.Empty, answer ?? string.Empty, CompleteSignal));
+#else
+            null);
+#endif
+
+        public void AnswerOffer(string offer, Action<string> completed) => Signal(completed,
+#if UNITY_WEBGL && !UNITY_EDITOR
+            id => CgsBrowserLanAnswer(id, offer ?? string.Empty, CompleteSignal));
+#else
+            null);
+#endif
+
+        public void DiscardOffer(string room)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            CgsBrowserLanDiscardOffer(room ?? string.Empty);
+#endif
+        }
+
+        // WebRTC is available only in Web players; elsewhere each request completes at once with null.
+        private static void Signal(Action<string> completed, Action<int> request)
+        {
+            var requestId = ++_nextSignal;
+            PendingSignals[requestId] = completed;
+            if (request == null)
+            {
+                CompleteSignal(requestId, IntPtr.Zero);
+                return;
+            }
+
+            try
+            {
+                request(requestId);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("[CgsNet] Browser LAN signaling failed: " + exception.Message);
+                CompleteSignal(requestId, IntPtr.Zero);
+            }
+        }
+
+        [AOT.MonoPInvokeCallback(typeof(Action<int, IntPtr>))]
+        private static void CompleteSignal(int requestId, IntPtr value)
+        {
+            if (!PendingSignals.Remove(requestId, out var completed))
+                return;
+            completed?.Invoke(value == IntPtr.Zero ? null : Marshal.PtrToStringUTF8(value));
+        }
     }
 }

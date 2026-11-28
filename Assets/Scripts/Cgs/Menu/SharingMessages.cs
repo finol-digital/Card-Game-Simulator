@@ -19,6 +19,7 @@ namespace Cgs.Menu
                 TextSharing.CopyErrorMessage => "sharing.copy.failed",
                 TextSharing.CopyUnconfirmedMessage => "sharing.copy.unconfirmed",
                 TextSharing.BrowserCopyErrorMessage => "sharing.browser.failed",
+                TextSharing.BrowserPasteErrorMessage => "sharing.browser.paste.failed",
                 TextSharing.EmptyMessage => "sharing.empty",
                 TextSharing.ShareErrorMessage => "sharing.failed",
                 TextSharing.ShareUnavailableMessage => "sharing.unavailable",

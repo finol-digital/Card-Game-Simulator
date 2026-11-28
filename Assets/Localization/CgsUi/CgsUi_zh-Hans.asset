@@ -1979,6 +1979,26 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309421012648150
       - rid: 451339117355073543
+  - m_Id: 18826791509549056
+    m_Localized: "\u6587\u4EF6"
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635541
+  - m_Id: 18826791522131968
+    m_Localized: "\u7167\u7247"
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635542
+  - m_Id: 18826791526326272
+    m_Localized: "\u6D4F\u89C8\u5668\u65E0\u6CD5\u8BFB\u53D6\u526A\u8D34\u677F\u3002\u8BF7\u5141\u8BB8\u8BBF\u95EE\u526A\u8D34\u677F\uFF0C\u6216\u70B9\u51FB\u6587\u672C\u6846\u540E\u6309 Ctrl+V\uFF08Mac \u4E0A\u6309 Command+V\uFF09\u7C98\u8D34\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635543
+  - m_Id: 18977071849005056
+    m_Localized: "\u65E0\u6CD5\u901A\u8FC7\u5C40\u57DF\u7F51\u8FDE\u63A5\u5230\u8BE5\u6E38\u620F\u3002\u8BF7\u786E\u8BA4\u4E24\u53F0\u8BBE\u5907\u5728\u540C\u4E00\u7F51\u7EDC\u4E2D\u4E14\u6E38\u620F\u4ECD\u5728\u4E3B\u6301\uFF0C\u6216\u4F7F\u7528\u4E92\u8054\u7F51\u591A\u4EBA\u6E38\u620F\u3002"
+    m_Metadata:
+      m_Items:
+      - rid: 4921527907078635680
   references:
     version: 2
     RefIds:
@@ -1990,6 +2010,22 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"\u724C\u7EC4\u201C{deckName}\u201D\u4E0D\u5B8C\u6574\u3002\u5DF2\u52A0\u8F7D\u5361\u724C\uFF1A{loadedCount}\u3002\u7F3A\u5931\u5361\u724C\uFF1A{missingCount}\u3002\\n\\n\u5728\u6B64\u6E38\u620F\u4E2D\u627E\u4E0D\u5230\u4EE5\u4E0B\u5361\u724C\u540D\u79F0\u6216 ID\uFF1A\\n{cards}\\n\\n\u5F00\u59CB\u6E38\u620F\u524D\uFF0C\u8BF7\u68C0\u67E5\u724C\u7EC4\u5217\u8868\u6216\u66F4\u65B0\u6E38\u620F\u6570\u636E\u3002\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
+    - rid: 4921527907078635541
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u6587\u4EF6\",\"status\":\"machine\",\"sourceHash\":\"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 4921527907078635542
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u7167\u7247\",\"status\":\"machine\",\"sourceHash\":\"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 4921527907078635543
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u6D4F\u89C8\u5668\u65E0\u6CD5\u8BFB\u53D6\u526A\u8D34\u677F\u3002\u8BF7\u5141\u8BB8\u8BBF\u95EE\u526A\u8D34\u677F\uFF0C\u6216\u70B9\u51FB\u6587\u672C\u6846\u540E\u6309 Ctrl+V\uFF08Mac \u4E0A\u6309 Command+V\uFF09\u7C98\u8D34\u3002\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 4921527907078635680
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"\u65E0\u6CD5\u901A\u8FC7\u5C40\u57DF\u7F51\u8FDE\u63A5\u5230\u8BE5\u6E38\u620F\u3002\u8BF7\u786E\u8BA4\u4E24\u53F0\u8BBE\u5907\u5728\u540C\u4E00\u7F51\u7EDC\u4E2D\u4E14\u6E38\u620F\u4ECD\u5728\u4E3B\u6301\uFF0C\u6216\u4F7F\u7528\u4E92\u8054\u7F51\u591A\u4EBA\u6E38\u620F\u3002\",\"status\":\"machine\",\"sourceHash\":\"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-27\"}}"
     - rid: 7133309421012648150
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

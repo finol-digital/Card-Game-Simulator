@@ -28,5 +28,41 @@ mergeInto(LibraryManager.library, {
         } catch (error) {
             complete(0);
         }
+    },
+
+    CgsReadClipboard: function (requestId, callback) {
+        var finished = false;
+        function complete(text) {
+            if (finished) return;
+            finished = true;
+            var pointer = 0;
+            try {
+                if (typeof text === 'string') {
+                    var size = lengthBytesUTF8(text) + 1;
+                    pointer = _malloc(size);
+                    stringToUTF8(text, pointer, size);
+                }
+                {{{ makeDynCall('vii', 'callback') }}}(requestId, pointer);
+            } finally {
+                if (pointer) _free(pointer);
+            }
+        }
+
+        // Unity's systemCopyBuffer reads only text copied inside CGS, never the
+        // browser clipboard. The browser may ask the player to allow reading it.
+        if (!window.isSecureContext || !navigator.clipboard || !navigator.clipboard.readText) {
+            complete(null);
+            return;
+        }
+
+        try {
+            navigator.clipboard.readText().then(function (text) {
+                complete(text);
+            }, function () {
+                complete(null);
+            });
+        } catch (error) {
+            complete(null);
+        }
     }
 });
