@@ -647,7 +647,7 @@ namespace Cgs.Menu
             FolderPicker.Pick(nameof(CardGameEditorMenu), new UiMessage("files.select.folder", SelectFolderPrompt),
                 path =>
                 {
-                    if (this == null || !isActiveAndEnabled)
+                    if (!this || !isActiveAndEnabled)
                         return;
                     BacksFolderPath = path;
                 });

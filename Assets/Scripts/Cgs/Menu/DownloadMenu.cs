@@ -107,12 +107,12 @@ namespace Cgs.Menu
             var request = ++_pasteRequest;
             TextSharing.Paste(text =>
             {
-                if (this == null || !isActiveAndEnabled || !urlInputField.interactable || request != _pasteRequest)
+                if (!this || !isActiveAndEnabled || !urlInputField.interactable || request != _pasteRequest)
                     return;
                 urlInputField.text = text;
             }, error =>
             {
-                if (this == null || !isActiveAndEnabled)
+                if (!this || !isActiveAndEnabled)
                     return;
                 CardGameManager.Instance.Messenger.ShowSharingStatus(error);
             });

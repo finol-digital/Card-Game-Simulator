@@ -442,12 +442,12 @@ namespace Cgs.Decks
             var request = ++_pasteRequest;
             TextSharing.Paste(text =>
             {
-                if (this == null || !isActiveAndEnabled || request != _pasteRequest)
+                if (!this || !isActiveAndEnabled || request != _pasteRequest)
                     return;
                 textInputField.text = text;
             }, error =>
             {
-                if (this == null || !isActiveAndEnabled)
+                if (!this || !isActiveAndEnabled)
                     return;
                 CardGameManager.Instance.Messenger.ShowSharingStatus(error);
             });

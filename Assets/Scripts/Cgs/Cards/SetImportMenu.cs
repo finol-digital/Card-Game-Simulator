@@ -136,7 +136,7 @@ namespace Cgs.Cards
             FolderPicker.Pick(nameof(SetImportMenu), new UiMessage("files.select.folder", SelectFolderPrompt),
                 path =>
                 {
-                    if (this == null || !isActiveAndEnabled)
+                    if (!this || !isActiveAndEnabled)
                         return;
                     SetFolderPath = path;
                 });
