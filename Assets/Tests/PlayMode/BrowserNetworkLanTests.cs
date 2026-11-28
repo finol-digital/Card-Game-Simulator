@@ -32,11 +32,16 @@ namespace Tests.PlayMode
             public FakeSignals(string name) => _name = name;
 
             public readonly List<bool> KeyRequests = new();
+            public bool DeferKeys;
+            public readonly List<Action<string>> PendingKeys = new();
 
             public void RequestNetworkKey(bool fresh, Action<string> completed)
             {
                 KeyRequests.Add(fresh);
-                completed(NetworkKey);
+                if (DeferKeys)
+                    PendingKeys.Add(completed);
+                else
+                    completed(NetworkKey);
             }
 
             public void CreateOffer(string room, Action<string> completed)
@@ -390,6 +395,28 @@ namespace Tests.PlayMode
             Assert.AreEqual("another network", lobby.NetworkKey, "The room moves to the host's new network.");
             hosting = false;
             yield return new WaitUntil(() => service.Lobbies.Count == 0);
+            UnityEngine.Object.Destroy(runner.gameObject);
+        }
+
+        [UnityTest]
+        public IEnumerator AnOlderKeyLookupFinishingLastDoesNotReplaceTheHostsFreshKey()
+        {
+            var service = new FakeLobbyService();
+            var signals = new FakeSignals("host") { DeferKeys = true, NetworkKey = "network B" };
+            var lan = Lan(signals, new FakeLobbies(service, "host-player"));
+            var hosting = true;
+            var runner = new GameObject("Host").AddComponent<Runner>();
+            runner.StartCoroutine(lan.FindRooms(_ => { }));
+            runner.StartCoroutine(lan.Advertise(Room, "Cards", () => hosting));
+            yield return new WaitUntil(() => signals.PendingKeys.Count == 2);
+
+            // The fresh hosting lookup finishes first, then the search's lookup from the old network.
+            signals.DeferKeys = false;
+            signals.PendingKeys[1]("network B");
+            signals.PendingKeys[0]("network A");
+            yield return new WaitUntil(() => service.Lobbies.Count == 1);
+            Assert.AreEqual("network B", service.Lobbies.Values.Single().NetworkKey);
+            hosting = false;
             UnityEngine.Object.Destroy(runner.gameObject);
         }
 

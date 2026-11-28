@@ -94,7 +94,6 @@ namespace Cgs.Play.Multiplayer
 
         private readonly IBrowserLanSignals _signals;
         private readonly IBrowserLanLobbies _lobbies;
-        private string _networkKey;
 
         // The advertised lobby, or the request creating it, so that StopAdvertising can remove it even after the
         // advertising coroutine is stopped.
@@ -112,15 +111,20 @@ namespace Cgs.Play.Multiplayer
                 ? lobbyName[..^LobbyNameSuffix.Length]
                 : lobbyName;
 
-        // Leaves the key in _networkKey, which stays null if the browser can't find one. Each search and hosting
-        // session asks again, since the browser may have moved to another network.
-        private IEnumerator RequestNetworkKey(bool fresh)
+        // Each request keeps its own result, so that a slower, older lookup can't replace a newer one.
+        private sealed class NetworkKeyRequest
         {
-            _networkKey = null;
+            public string Key;
+        }
+
+        // The key stays null if the browser can't find one. Each search and hosting session asks again, since the
+        // browser may have moved to another network.
+        private IEnumerator RequestNetworkKey(bool fresh, NetworkKeyRequest request)
+        {
             var done = false;
             _signals.RequestNetworkKey(fresh, key =>
             {
-                _networkKey = key;
+                request.Key = key;
                 done = true;
             });
             while (!done)
@@ -130,8 +134,9 @@ namespace Cgs.Play.Multiplayer
         /// <summary>Finds rooms hosted by browsers on this network; reports an empty list if there are none.</summary>
         public IEnumerator FindRooms(Action<IReadOnlyList<BrowserLanRoom>> found)
         {
-            yield return RequestNetworkKey(false);
-            var networkKey = _networkKey;
+            var keyRequest = new NetworkKeyRequest();
+            yield return RequestNetworkKey(false, keyRequest);
+            var networkKey = keyRequest.Key;
             if (string.IsNullOrEmpty(networkKey))
             {
                 found(Array.Empty<BrowserLanRoom>());
@@ -150,8 +155,9 @@ namespace Cgs.Play.Multiplayer
         public IEnumerator Advertise(string roomId, string gameName, Func<bool> isHosting)
         {
             // A host lists its room under the network it is on now, not one found earlier.
-            yield return RequestNetworkKey(true);
-            var networkKey = _networkKey;
+            var keyRequest = new NetworkKeyRequest();
+            yield return RequestNetworkKey(true, keyRequest);
+            var networkKey = keyRequest.Key;
             if (string.IsNullOrEmpty(networkKey) || !isHosting())
                 yield break;
 
@@ -190,8 +196,9 @@ namespace Cgs.Play.Multiplayer
                 yield return Wait(_lobbies.HeartbeatAsync(lobbyId));
 
                 // If the host moved to another network, list the room there instead.
-                yield return RequestNetworkKey(false);
-                var currentKey = _networkKey;
+                var currentKeyRequest = new NetworkKeyRequest();
+                yield return RequestNetworkKey(false, currentKeyRequest);
+                var currentKey = currentKeyRequest.Key;
                 if (string.IsNullOrEmpty(currentKey) || currentKey == networkKey || _advertisedLobbyId != lobbyId)
                     continue;
                 var move = _lobbies.UpdateNetworkAsync(lobbyId, currentKey);
