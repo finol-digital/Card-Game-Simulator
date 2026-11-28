@@ -71,6 +71,8 @@ namespace Cgs.Decks
 
         private int _pasteRequest;
 
+        private void InvalidatePaste(string _) => _pasteRequest++;
+
         private readonly SortedList<string, string> _deckFiles = new();
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
@@ -94,6 +96,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            textInputField.onValueChanged.AddListener(InvalidatePaste);
         }
 
         protected void Start()
@@ -141,6 +144,7 @@ namespace Cgs.Decks
 
             nameInputField.text = originalName ?? Deck.DefaultName;
             textInputField.text = originalText ?? string.Empty;
+            _pasteRequest++;
             switch (CardGameManager.Current.DeckFileType)
             {
                 case DeckFileType.Dec:
@@ -382,6 +386,7 @@ namespace Cgs.Decks
             newDeckPanel.gameObject.SetActive(true);
             nameInputField.text = Untitled;
             textInputField.text = string.Empty;
+            _pasteRequest++;
         }
 
         private void InputFocusName(InputAction.CallbackContext callbackContext)
@@ -417,6 +422,7 @@ namespace Cgs.Decks
         private void Clear()
         {
             textInputField.text = string.Empty;
+            _pasteRequest++;
         }
 
         private void InputPaste(InputAction.CallbackContext callbackContext)
@@ -431,13 +437,11 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void PasteClipboardIntoText()
         {
-            // Browsers read the clipboard asynchronously; drop the result if the deck text changed meanwhile.
+            // Browsers read the clipboard asynchronously; any edit, clear, or new deck meanwhile cancels this paste.
             var request = ++_pasteRequest;
-            var textBefore = textInputField.text;
             TextSharing.Paste(text =>
             {
-                if (this == null || !isActiveAndEnabled || request != _pasteRequest ||
-                    textInputField.text != textBefore)
+                if (this == null || !isActiveAndEnabled || request != _pasteRequest)
                     return;
                 textInputField.text = text;
             }, error =>
@@ -546,6 +550,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            textInputField.onValueChanged.RemoveListener(InvalidatePaste);
         }
     }
 }

@@ -419,9 +419,10 @@ mergeInto(LibraryManager.library, {
             return groups.slice(0, 4).map(function (group) { return parseInt(group, 16).toString(16); }).join(':');
         },
 
-        networkKey: function () {
-            if (this.networkKeyPromise &&
-                (!this.networkKeyFound || Date.now() - this.networkKeyFound < this.networkKeyMilliseconds))
+        networkKey: function (fresh) {
+            // A lookup in progress is always current; a found key is reused only briefly, and not when fresh.
+            if (this.networkKeyPromise && (!this.networkKeyFound ||
+                (!fresh && Date.now() - this.networkKeyFound < this.networkKeyMilliseconds)))
                 return this.networkKeyPromise;
             var self = this;
             var promise = new Promise(function (resolve) {
@@ -518,8 +519,8 @@ mergeInto(LibraryManager.library, {
 
     // Asynchronous WebRTC signaling helpers report a string (or null) to callback(requestId, value).
     CgsBrowserLanNetworkKey__deps: ['$CgsBrowserLan'],
-    CgsBrowserLanNetworkKey: function (requestId, callback) {
-        CgsBrowserLan.networkKey().then(function (key) {
+    CgsBrowserLanNetworkKey: function (requestId, fresh, callback) {
+        CgsBrowserLan.networkKey(!!fresh).then(function (key) {
             CgsBrowserLan.complete(key, function (pointer) { {{{ makeDynCall('vii', 'callback') }}}(requestId, pointer); });
         });
     },

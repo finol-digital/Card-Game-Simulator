@@ -28,6 +28,8 @@ namespace Cgs.Menu
 
         private int _pasteRequest;
 
+        private void InvalidatePaste(string _) => _pasteRequest++;
+
         public override bool IsBlocked => base.IsBlocked || urlInputField.isFocused;
 
         protected void OnEnable()
@@ -38,6 +40,7 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            urlInputField.onValueChanged.AddListener(InvalidatePaste);
         }
 
         public void Show(string label, string prompt, DownloadCoroutineDelegate downloadCoroutine,
@@ -100,13 +103,11 @@ namespace Cgs.Menu
             if (!urlInputField.interactable)
                 return;
 
-            // Browsers read the clipboard asynchronously; drop the result if the URL changed meanwhile.
+            // Browsers read the clipboard asynchronously; any edit or clear meanwhile cancels this paste.
             var request = ++_pasteRequest;
-            var textBefore = urlInputField.text;
             TextSharing.Paste(text =>
             {
-                if (this == null || !isActiveAndEnabled || !urlInputField.interactable ||
-                    request != _pasteRequest || urlInputField.text != textBefore)
+                if (this == null || !isActiveAndEnabled || !urlInputField.interactable || request != _pasteRequest)
                     return;
                 urlInputField.text = text;
             }, error =>
@@ -141,6 +142,7 @@ namespace Cgs.Menu
         private void Clear()
         {
             urlInputField.text = string.Empty;
+            _pasteRequest++;
         }
 
         private void InputSubmit(InputAction.CallbackContext callbackContext)
@@ -189,6 +191,7 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            urlInputField.onValueChanged.RemoveListener(InvalidatePaste);
         }
     }
 }

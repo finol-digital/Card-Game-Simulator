@@ -165,7 +165,7 @@ namespace Cgs.Play.Multiplayer
         [DllImport("__Internal")] private static extern void CgsBrowserLanStopDiscovery();
         [DllImport("__Internal")] private static extern void CgsBrowserLanDisconnect(int clientId);
         [DllImport("__Internal")] private static extern void CgsBrowserLanShutdown();
-        [DllImport("__Internal")] private static extern void CgsBrowserLanNetworkKey(int requestId, Action<int, IntPtr> callback);
+        [DllImport("__Internal")] private static extern void CgsBrowserLanNetworkKey(int requestId, int fresh, Action<int, IntPtr> callback);
         [DllImport("__Internal")] private static extern void CgsBrowserLanOffer(int requestId, string room, Action<int, IntPtr> callback);
         [DllImport("__Internal")] private static extern void CgsBrowserLanAccept(int requestId, string room, string answer, Action<int, IntPtr> callback);
         [DllImport("__Internal")] private static extern void CgsBrowserLanAnswer(int requestId, string offer, Action<int, IntPtr> callback);
@@ -175,9 +175,9 @@ namespace Cgs.Play.Multiplayer
         private static readonly Dictionary<int, Action<string>> PendingSignals = new();
         private static int _nextSignal;
 
-        public void RequestNetworkKey(Action<string> completed) => Signal(completed,
+        public void RequestNetworkKey(bool fresh, Action<string> completed) => Signal(completed,
 #if UNITY_WEBGL && !UNITY_EDITOR
-            id => CgsBrowserLanNetworkKey(id, CompleteSignal));
+            id => CgsBrowserLanNetworkKey(id, fresh ? 1 : 0, CompleteSignal));
 #else
             null);
 #endif

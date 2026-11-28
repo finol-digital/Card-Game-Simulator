@@ -16,8 +16,9 @@ have no WebRTC); use Internet multiplayer between Web and native players.
 
 1. Each browser asks public STUN servers (`stun.l.google.com`, `stun.cloudflare.com`) for its network's public
    address and hashes it (SHA-256 with a fixed salt, first 128 bits). IPv6 uses the /64 prefix, because each
-   IPv6 device has its own address. Browsers behind the same router therefore share a *network key*. Each search
-   and hosting session looks the key up again (reusing one for at most a minute), in case the device moved.
+   IPv6 device has its own address. Browsers behind the same router therefore share a *network key*. Searches
+   reuse a key for at most a minute; hosting looks it up afresh, and the host re-checks it with each heartbeat
+   and moves its lobby to the new key if the device changed networks.
 2. The host creates a public Lobby named `<game> (Web LAN)` with the network key in indexed field `S1`
    (`WebLanNetwork`) and its room ID (`WebLanRoom`). Joining browsers query lobbies by their own key.
 3. A joining browser creates a WebRTC offer (about 1 KB, with all ICE candidates) and joins the lobby with it as

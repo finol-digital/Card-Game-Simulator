@@ -483,3 +483,25 @@ test('network keys retry after a WebRTC setup error and expire after a while', a
     bridge.networkKeyFound -= bridge.networkKeyMilliseconds;
     assert.notEqual(bridge.networkKey(), first, 'an old key is looked up again');
 });
+
+test('a fresh network key request looks the key up again', async t => {
+    let lookups = 0;
+    class Stun {
+        constructor() { lookups++; }
+        createDataChannel() {}
+        async createOffer() { return {}; }
+        async setLocalDescription() {
+            this.onicecandidate({ candidate: { candidate:
+                'candidate:2 1 udp 1686052607 203.0.113.7 50001 typ srflx raddr 0.0.0.0 rport 0' } });
+            this.onicecandidate({ candidate: null });
+        }
+        close() {}
+    }
+    const { bridge } = device(t, Stun);
+    const first = bridge.networkKey();
+    assert.equal(bridge.networkKey(true), first, 'a lookup in progress is shared');
+    await first;
+    assert.equal(bridge.networkKey(), first);
+    assert.notEqual(bridge.networkKey(true), first);
+    assert.equal(lookups, 2);
+});

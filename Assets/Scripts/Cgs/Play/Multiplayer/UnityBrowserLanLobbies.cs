@@ -117,6 +117,15 @@ namespace Cgs.Play.Multiplayer
 
         public Task HeartbeatAsync(string lobbyId) => LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
 
+        public Task UpdateNetworkAsync(string lobbyId, string networkKey) =>
+            LobbyService.Instance.UpdateLobbyAsync(lobbyId, new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+                {
+                    [KeyNetwork] = new(DataObject.VisibilityOptions.Public, networkKey, DataObject.IndexOptions.S1)
+                }
+            });
+
         public Task DeleteAsync(string lobbyId) => LobbyService.Instance.DeleteLobbyAsync(lobbyId);
 
         public async Task<string> JoinAsync(string lobbyId, string offer)

@@ -31,7 +31,13 @@ namespace Tests.PlayMode
 
             public FakeSignals(string name) => _name = name;
 
-            public void RequestNetworkKey(Action<string> completed) => completed(NetworkKey);
+            public readonly List<bool> KeyRequests = new();
+
+            public void RequestNetworkKey(bool fresh, Action<string> completed)
+            {
+                KeyRequests.Add(fresh);
+                completed(NetworkKey);
+            }
 
             public void CreateOffer(string room, Action<string> completed)
             {
@@ -70,6 +76,8 @@ namespace Tests.PlayMode
             public int Updates;
             public int FailingUpdates;
             public TaskCompletionSource<bool> CreateGate;
+            public bool CreateStarted;
+            public int Deletes;
         }
 
         private sealed class FakeLobbies : IBrowserLanLobbies
@@ -85,6 +93,7 @@ namespace Tests.PlayMode
 
             public async Task<string> CreateAsync(string name, string networkKey, string roomId)
             {
+                _service.CreateStarted = true;
                 if (_service.CreateGate != null)
                     await _service.CreateGate.Task;
                 var lobby = new FakeLobby
@@ -149,8 +158,15 @@ namespace Tests.PlayMode
                 return Task.CompletedTask;
             }
 
+            public Task UpdateNetworkAsync(string lobbyId, string networkKey)
+            {
+                _service.Lobbies[lobbyId].NetworkKey = networkKey;
+                return Task.CompletedTask;
+            }
+
             public Task DeleteAsync(string lobbyId)
             {
+                _service.Deletes++;
                 _service.Lobbies.Remove(lobbyId);
                 return Task.CompletedTask;
             }
@@ -320,14 +336,18 @@ namespace Tests.PlayMode
 
             // A lobby whose creation finishes after stopping is deleted once it exists.
             service.CreateGate = new TaskCompletionSource<bool>();
+            service.CreateStarted = false;
+            var deletes = service.Deletes;
             runner.StartCoroutine(lan.Advertise(Room, "Cards", () => true));
-            yield return null;
+            yield return new WaitUntil(() => service.CreateStarted);
             runner.StopAllCoroutines();
             lan.StopAdvertising();
+            Assert.IsEmpty(service.Lobbies);
             service.CreateGate.SetResult(true);
             var started = Time.realtimeSinceStartup;
-            while (service.Lobbies.Count > 0 && Time.realtimeSinceStartup - started < 5)
+            while (service.Deletes == deletes && Time.realtimeSinceStartup - started < 5)
                 yield return null;
+            Assert.AreEqual(deletes + 1, service.Deletes, "The late lobby is deleted.");
             Assert.IsEmpty(service.Lobbies);
             UnityEngine.Object.Destroy(runner.gameObject);
         }
@@ -348,6 +368,29 @@ namespace Tests.PlayMode
             rooms = null;
             yield return Run(lan.FindRooms(found => rooms = found), () => rooms != null);
             Assert.IsEmpty(rooms, "A browser that moved networks no longer sees the old network's rooms.");
+        }
+
+        [UnityTest]
+        public IEnumerator HostingUsesAFreshKeyAndFollowsANetworkChange()
+        {
+            var service = new FakeLobbyService();
+            var signals = new FakeSignals("host");
+            var lan = Lan(signals, new FakeLobbies(service, "host-player"));
+            var hosting = true;
+            var runner = new GameObject("Host").AddComponent<Runner>();
+            runner.StartCoroutine(lan.Advertise(Room, "Cards", () => hosting));
+            yield return new WaitUntil(() => service.Lobbies.Count == 1);
+            Assert.IsTrue(signals.KeyRequests[0], "Hosting does not reuse an earlier key.");
+
+            var lobby = service.Lobbies.Values.Single();
+            signals.NetworkKey = "another network";
+            var started = Time.realtimeSinceStartup;
+            while (lobby.NetworkKey != "another network" && Time.realtimeSinceStartup - started < 5)
+                yield return null;
+            Assert.AreEqual("another network", lobby.NetworkKey, "The room moves to the host's new network.");
+            hosting = false;
+            yield return new WaitUntil(() => service.Lobbies.Count == 0);
+            UnityEngine.Object.Destroy(runner.gameObject);
         }
 
         [Test]
@@ -372,7 +415,7 @@ namespace Tests.PlayMode
             {
                 string key = "unset", offer = "unset", answer = "unset";
                 bool? accepted = null;
-                transport.RequestNetworkKey(value => key = value);
+                transport.RequestNetworkKey(true, value => key = value);
                 transport.CreateOffer(Room, value => offer = value);
                 transport.AnswerOffer("offer", value => answer = value);
                 transport.AcceptAnswer(Room, "answer", value => accepted = value);
