@@ -30,7 +30,7 @@ namespace Cgs.Menu
                 throw new ArgumentNullException(nameof(picked));
 
 #if ENABLE_WINMD_SUPPORT
-            PickWithWindowsPicker(picked);
+            PickWithWindowsPicker(owner, picked);
 #elif UNITY_STANDALONE_OSX && !UNITY_EDITOR
             // The sandboxed Mac app can read only folders chosen in the system dialog.
             StandaloneFileBrowser.OpenFolderPanelAsync(CgsLocalization.Text(title), string.Empty, false, paths =>
@@ -55,17 +55,56 @@ namespace Cgs.Menu
         }
 
 #if ENABLE_WINMD_SUPPORT
-        private static async void PickWithWindowsPicker(Func<string, bool> picked)
+        // The Store app reads a copy of each picked folder from its cache, which persists across sessions; keep only
+        // the copy each owner accepted.
+        private static readonly System.Collections.Generic.Dictionary<string, string> WindowsFolderCopies = new();
+        private static bool _isWindowsCacheCleared;
+
+        private static async void PickWithWindowsPicker(string owner, Func<string, bool> picked)
         {
             try
             {
+                // Menus forget their folders when the app closes, so copies from earlier sessions are unused.
+                if (!_isWindowsCacheCleared)
+                {
+                    _isWindowsCacheCleared = true;
+                    var cache = Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path;
+                    foreach (var oldCopy in System.IO.Directory.GetDirectories(cache, "CgsImport-*"))
+                        DeleteWindowsFolderCopy(oldCopy);
+                }
+
                 var path = await UnityExtensionMethods.UwpFileBrowser.OpenFolderAsync();
-                if (!string.IsNullOrEmpty(path))
-                    picked(path);
+                if (string.IsNullOrEmpty(path))
+                    return;
+
+                // Each copy sits in its own CgsImport folder.
+                var copy = System.IO.Path.GetDirectoryName(path);
+                if (!picked(path))
+                {
+                    DeleteWindowsFolderCopy(copy);
+                    return;
+                }
+
+                if (WindowsFolderCopies.TryGetValue(owner, out var previousCopy))
+                    DeleteWindowsFolderCopy(previousCopy);
+                WindowsFolderCopies[owner] = copy;
             }
             catch (Exception exception)
             {
                 ReportError(exception.Message);
+            }
+        }
+
+        private static void DeleteWindowsFolderCopy(string copy)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(copy) && System.IO.Directory.Exists(copy))
+                    System.IO.Directory.Delete(copy, true);
+            }
+            catch (Exception exception)
+            {
+                UnityEngine.Debug.LogWarning("FolderPicker::DeleteFailed: " + exception.Message);
             }
         }
 #endif
