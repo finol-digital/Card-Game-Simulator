@@ -188,6 +188,36 @@ namespace Tests.PlayMode
             Assert.AreSame(_secondCard.ImageSprite, first.GetComponent<Image>().sprite);
         }
 
+        [Test]
+        public void RemovingTheTopOfAFaceupStackShowsTheNewTopCard()
+        {
+            _firstCard.ImageSprite = Sprite.Create(new Texture2D(2, 3), new Rect(0, 0, 2, 3), Vector2.one * 0.5f);
+            _secondCard.ImageSprite = Sprite.Create(new Texture2D(2, 3), new Rect(0, 0, 2, 3), Vector2.one * 0.5f);
+            var stack = Load(_firstCard, Vector2.zero);
+            Load(_secondCard, Vector2.zero);
+            stack.IsTopFaceup = true;
+
+            Assert.AreEqual(_secondCard.Id, stack.OwnerPopCard());
+
+            Assert.AreSame(_firstCard, stack.FaceupTopCard);
+            Assert.AreSame(_firstCard.ImageSprite, stack.TopCardImage.sprite);
+        }
+
+        [Test]
+        public void RemovingBelowTheTopOfAFaceupStackKeepsTheTopCard()
+        {
+            _firstCard.ImageSprite = Sprite.Create(new Texture2D(2, 3), new Rect(0, 0, 2, 3), Vector2.one * 0.5f);
+            _secondCard.ImageSprite = Sprite.Create(new Texture2D(2, 3), new Rect(0, 0, 2, 3), Vector2.one * 0.5f);
+            var stack = Load(_firstCard, Vector2.zero);
+            Load(_secondCard, Vector2.zero);
+            stack.IsTopFaceup = true;
+
+            Assert.AreEqual(_firstCard.Id, stack.OwnerRemoveAt(0));
+
+            Assert.AreSame(_secondCard, stack.FaceupTopCard);
+            Assert.AreSame(_secondCard.ImageSprite, stack.TopCardImage.sprite);
+        }
+
         private CardStack Load(UnityCard card, Vector2 position, float rotation = 0)
         {
             return _controller.CreateCardStack("Deck", new[] { card }, position,

@@ -6296,6 +6296,24 @@
       "key": "common.ok"
     },
     {
+      "asset": "Assets/Prefabs/Menus/Dialog.prefab",
+      "path": "Dialog/Frame/Response ButtonGroup/Always Button/Labeled Button",
+      "type": "Cgs.UI.ToolTip",
+      "property": "tooltip",
+      "text": "Yes, and do not ask again",
+      "id": "GlobalObjectId_V1-1-c99b406c42e378f45b33a243427bd060-7027718908726604394-0",
+      "key": "help.always"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Dialog.prefab",
+      "path": "Dialog/Frame/Response ButtonGroup/Always Button/Labeled Button/Label",
+      "type": "UnityEngine.UI.Text",
+      "property": "text",
+      "text": "Always",
+      "id": "GlobalObjectId_V1-1-c99b406c42e378f45b33a243427bd060-7887525852393896445-0",
+      "key": "common.always"
+    },
+    {
       "asset": "Assets/Prefabs/Menus/Download Menu.prefab",
       "path": "Download Menu/Frame/Label",
       "type": "UnityEngine.UI.Text",
@@ -7161,6 +7179,24 @@
     },
     {
       "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle",
+      "type": "Cgs.UI.ToolTip",
+      "property": "tooltip",
+      "text": "Shake your device to roll all dice on the table.",
+      "id": "GlobalObjectId_V1-1-ddf938ce2c5b322429c63267cd84d076-6369880611510531069-0",
+      "key": "help.die.shake"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle/Label",
+      "type": "UnityEngine.UI.Text",
+      "property": "text",
+      "text": "Shake to Roll Dice",
+      "id": "GlobalObjectId_V1-1-ddf938ce2c5b322429c63267cd84d076-3101775383845613707-0",
+      "key": "common.shake.to.roll.dice"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
       "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/DieFaceCount InputField/Label",
       "type": "UnityEngine.UI.Text",
       "property": "text",
@@ -7829,6 +7865,24 @@
       "property": "text",
       "text": "Auto",
       "exclusion": "Dropdown-owned caption/item label. LocalizedDropdown supplies options."
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AlwaysLoadStartDecks Toggle",
+      "type": "Cgs.UI.ToolTip",
+      "property": "tooltip",
+      "text": "Load this game's start decks without asking when it starts.",
+      "id": "GlobalObjectId_V1-1-ddf938ce2c5b322429c63267cd84d076-1657941042143449070-0",
+      "key": "help.always.load.start.decks"
+    },
+    {
+      "asset": "Assets/Prefabs/Menus/Play Settings Menu.prefab",
+      "path": "Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AlwaysLoadStartDecks Toggle/Label",
+      "type": "UnityEngine.UI.Text",
+      "property": "text",
+      "text": "Always Load Start Decks",
+      "id": "GlobalObjectId_V1-1-ddf938ce2c5b322429c63267cd84d076-8618342359876317504-0",
+      "key": "common.always.load.start.decks"
     }
   ]
 }

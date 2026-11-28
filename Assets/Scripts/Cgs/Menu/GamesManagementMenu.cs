@@ -78,6 +78,8 @@ namespace Cgs.Menu
         protected void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(BuildGameSelectionOptions);
+            _gamesSource = CardGameManager.Instance;
+            _gamesSource.GamesAdded += BuildGameSelectionOptions;
 
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
@@ -347,8 +349,15 @@ namespace Cgs.Menu
             Menu.Hide();
         }
 
+        // The manager this menu listens to for newly installed games
+        private CardGameManager _gamesSource;
+
         protected void OnDisable()
         {
+            if (_gamesSource != null)
+                _gamesSource.GamesAdded -= BuildGameSelectionOptions;
+            _gamesSource = null;
+
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
             InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed -= InputCopyShare;

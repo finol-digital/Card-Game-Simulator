@@ -17,6 +17,11 @@ from typing import Iterable, Optional
 LAUNCH_TO_MENU_BUDGET_MS = 500.0
 LAUNCH_TO_ACTION_BUDGET_MS = 1000.0
 START_TO_ACTION_BUDGET_MS = 500.0
+LONGEST_FRAME_BUDGET_MS = 100.0
+BUDGETS = {"launchToMenuMs": LAUNCH_TO_MENU_BUDGET_MS,
+           "launchToActionMs": LAUNCH_TO_ACTION_BUDGET_MS,
+           "startToActionMs": START_TO_ACTION_BUDGET_MS,
+           "longestFrameMs": LONGEST_FRAME_BUDGET_MS}
 MIN_BUDGET_RUNS = 30
 
 
@@ -58,6 +63,13 @@ def milestone(summary: Optional[dict], name: str) -> Optional[float]:
     if not summary:
         return None
     return (summary.get("milestonesMs") or {}).get(name)
+
+
+def longest_frame(summary: Optional[dict]) -> Optional[float]:
+    """The longest frame from Start Game to the first card action, from the play summary; None in older builds."""
+    if not summary:
+        return None
+    return (summary.get("frames") or {}).get("longestMs")
 
 
 def parse_result(text: str) -> dict:

@@ -42,6 +42,8 @@ namespace Cgs.Decks
 
         public const string LorInstructions = "#Paste the deck string/code here";
 
+        public const string SvdInstructions = "#Paste the deck string/code here";
+
         public const string TxtInstructions =
             "### Instructions\n#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
 
@@ -148,6 +150,9 @@ namespace Cgs.Decks
                 case DeckFileType.Lor:
                     LocalizedUiText.Set(instructionsText, new UiMessage("decks.instructions.code", LorInstructions));
                     break;
+                case DeckFileType.Svd:
+                    LocalizedUiText.Set(instructionsText, new UiMessage("decks.instructions.code", SvdInstructions));
+                    break;
                 case DeckFileType.Ydk:
                     LocalizedUiText.Set(instructionsText, new UiMessage("decks.instructions.ydk", YdkInstructions));
                     break;
@@ -230,6 +235,8 @@ namespace Cgs.Decks
                 deckFileType = DeckFileType.Lor;
             else if (extension.ToLower().Equals(DeckFileType.Ydk.ToString().ToLower()))
                 deckFileType = DeckFileType.Ydk;
+            else if (extension.ToLower().Equals(DeckFileType.Svd.ToString().ToLower()))
+                deckFileType = DeckFileType.Svd;
             return deckFileType;
         }
 

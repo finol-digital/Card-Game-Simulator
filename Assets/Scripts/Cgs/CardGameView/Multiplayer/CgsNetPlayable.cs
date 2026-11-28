@@ -83,6 +83,26 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkObject _networkObject;
 
+        // Set while the host spawns an object that was created before hosting started
+        private bool _isSpawningWithLocalState;
+
+        /// <summary>
+        /// Spawns this playable, which was created before hosting started, keeping its local state, so that players
+        /// who join see it as it is. Only the host calls this.
+        /// </summary>
+        public void SpawnWithLocalState()
+        {
+            _isSpawningWithLocalState = true;
+            try
+            {
+                MyNetworkObject.Spawn();
+            }
+            finally
+            {
+                _isSpawningWithLocalState = false;
+            }
+        }
+
         protected virtual bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 ||
                                                                   CurrentPointerEventData is
                                                                   {
@@ -293,6 +313,13 @@ namespace Cgs.CardGameView.Multiplayer
             if (transform.parent == null)
                 ParentTo(Container == null ? PlayController.Instance.PlayAreaCardZone.transform : Container.transform);
 
+            if (IsServer && _isSpawningWithLocalState)
+            {
+                SeedLocalState();
+                OnNetworkSpawnPlayable();
+                return;
+            }
+
             if (IsServer && !Vector2.zero.Equals(transform.localPosition))
             {
                 _position = transform.localPosition;
@@ -325,6 +352,56 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             OnNetworkSpawnPlayable();
+        }
+
+        /// <summary>
+        /// Whether the transform holds this playable's position and size, as it does for playables that layouts and
+        /// drags move. Otherwise the <see cref="Position"/> and <see cref="Size"/> values do.
+        /// </summary>
+        protected virtual bool IsPoseInTransform => true;
+
+        // The host keeps showing the playable exactly as it is, so the network state is seeded without the change
+        // callbacks, which would otherwise move it
+        private void SeedLocalState()
+        {
+            if (IsPoseInTransform)
+            {
+                _position = transform.localPosition;
+                _size = ((RectTransform)transform).sizeDelta;
+            }
+
+            _positionNetworkVariable.OnValueChanged -= OnChangePosition;
+            _positionNetworkVariable.Value = _position;
+            _positionNetworkVariable.OnValueChanged += OnChangePosition;
+
+            _rotationNetworkVariable.OnValueChanged -= OnChangeRotation;
+            _rotationNetworkVariable.Value = _rotation;
+            _rotationNetworkVariable.OnValueChanged += OnChangeRotation;
+
+            _sizeNetworkVariable.OnValueChanged -= OnChangeSize;
+            _sizeNetworkVariable.Value = _size;
+            _sizeNetworkVariable.OnValueChanged += OnChangeSize;
+
+            _containerNetworkVariable.OnValueChanged -= OnChangeContainer;
+            if (_container != null && (_container.GetComponent<NetworkObject>()?.IsSpawned ?? false))
+                _containerNetworkVariable.Value = _container;
+            _containerNetworkVariable.OnValueChanged += OnChangeContainer;
+
+            _siblingIndexNetworkVariable.OnValueChanged -= OnChangeSiblingIndex;
+            if (ParentCardZone != null && ParentCardZone.Type is CardZoneType.Vertical or CardZoneType.Horizontal)
+                _siblingIndexNetworkVariable.Value = transform.GetSiblingIndex();
+            _siblingIndexNetworkVariable.OnValueChanged += OnChangeSiblingIndex;
+
+            SeedNetworkStateFromLocal();
+        }
+
+        /// <summary>
+        /// Copies this playable's local state into its network variables when the host spawns a playable that was
+        /// created before hosting started. Runs on the host, before <see cref="OnNetworkSpawnPlayable"/>.
+        /// </summary>
+        protected virtual void SeedNetworkStateFromLocal()
+        {
+            // Child classes may override
         }
 
         [PublicAPI]

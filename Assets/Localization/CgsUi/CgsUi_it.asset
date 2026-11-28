@@ -2011,26 +2011,56 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277773
       - rid: 451339117355073541
-  - m_Id: 18826791509549056
+  - m_Id: 17272803462995968
+    m_Localized: Scuoti per tirare i dadi
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195945
+  - m_Id: 17272803634962432
+    m_Localized: Scuoti il dispositivo per tirare tutti i dadi sul tavolo.
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195946
+  - m_Id: 18564103522996224
+    m_Localized: Sempre
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323156
+  - m_Id: 18564103636242432
+    m_Localized: Carica sempre i mazzi iniziali
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323157
+  - m_Id: 18564103665602560
+    m_Localized: "S\xEC, e non chiedere pi\xF9"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323158
+  - m_Id: 18564103665602561
+    m_Localized: Carica i mazzi iniziali di questo gioco all'avvio, senza chiedere.
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323159
+  - m_Id: 19303456526295040
     m_Localized: File
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635535
-  - m_Id: 18826791522131968
+      - rid: 4921527936870252564
+  - m_Id: 19303456593403904
     m_Localized: Foto
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635536
-  - m_Id: 18826791526326272
-    m_Localized: "Il browser non ha potuto leggere gli appunti. Consenti l\u2019accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac)."
-    m_Metadata:
-      m_Items:
-      - rid: 4921527907078635537
-  - m_Id: 18977071849005056
+      - rid: 4921527936870252565
+  - m_Id: 19303456593403905
     m_Localized: Impossibile connettersi a quella partita tramite la rete locale. Assicurati che entrambi i dispositivi siano sulla stessa rete e che la partita sia ancora ospitata, oppure usa il multigiocatore via Internet.
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635678
+      - rid: 4921527936870252566
+  - m_Id: 19303456605986816
+    m_Localized: "Il browser non ha potuto leggere gli appunti. Consenti l\u2019accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac)."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252567
   references:
     version: 2
     RefIds:
@@ -2042,22 +2072,46 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Il mazzo \xAB{deckName}\xBB \xE8 incompleto. Carte caricate: {loadedCount}. Carte mancanti: {missingCount}.\\n\\nQuesti nomi o identificativi di carte non sono stati trovati in questo gioco:\\n{cards}\\n\\nControlla la lista del mazzo o aggiorna i dati del gioco prima di giocare.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
-    - rid: 4921527907078635535
+    - rid: 1812176077519323156
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Sempre","status":"machine","sourceHash":"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323157
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Carica sempre i mazzi iniziali","status":"machine","sourceHash":"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323158
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"S\xEC, e non chiedere pi\xF9\",\"status\":\"machine\",\"sourceHash\":\"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323159
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Carica i mazzi iniziali di questo gioco all''avvio, senza chiedere.","status":"machine","sourceHash":"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 3103366582956195945
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Scuoti per tirare i dadi","status":"machine","sourceHash":"340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057","provenance":{"method":"Contextual machine draft; English context and CGS glossary","date":"2026-11-22"}}'
+    - rid: 3103366582956195946
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Scuoti il dispositivo per tirare tutti i dadi sul tavolo.","status":"machine","sourceHash":"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de","provenance":{"method":"Contextual machine draft; English context and CGS glossary","date":"2026-11-22"}}'
+    - rid: 4921527936870252564
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"File","status":"machine","sourceHash":"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
-    - rid: 4921527907078635536
+    - rid: 4921527936870252565
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Foto","status":"machine","sourceHash":"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
-    - rid: 4921527907078635537
-      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_CommentText: "{\"text\":\"Il browser non ha potuto leggere gli appunti. Consenti l\u2019accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac).\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
-    - rid: 4921527907078635678
+    - rid: 4921527936870252566
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Impossibile connettersi a quella partita tramite la rete locale. Assicurati che entrambi i dispositivi siano sulla stessa rete e che la partita sia ancora ospitata, oppure usa il multigiocatore via Internet.","status":"machine","sourceHash":"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-27"}}'
+    - rid: 4921527936870252567
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Il browser non ha potuto leggere gli appunti. Consenti l\u2019accesso agli appunti, oppure fai clic nel campo di testo e incolla con Ctrl+V (Comando+V su un Mac).\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 7133309420632277773
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

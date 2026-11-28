@@ -44,7 +44,7 @@ namespace Cgs.Play
 
         private void InputPlaySettings(InputAction.CallbackContext callbackContext)
         {
-            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+            if (!panels.activeSelf || CardViewer.IsShown || CardViewer.IsZoomed
                 || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
@@ -60,7 +60,7 @@ namespace Cgs.Play
 
         private void InputCardsFilter(InputAction.CallbackContext callbackContext)
         {
-            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+            if (!panels.activeSelf || CardViewer.IsShown || CardViewer.IsZoomed
                 || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
@@ -76,7 +76,7 @@ namespace Cgs.Play
 
         private void InputDecksLoad(InputAction.CallbackContext callbackContext)
         {
-            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+            if (!panels.activeSelf || CardViewer.IsShown || CardViewer.IsZoomed
                 || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
@@ -92,7 +92,7 @@ namespace Cgs.Play
 
         private void InputDie(InputAction.CallbackContext callbackContext)
         {
-            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+            if (!panels.activeSelf || CardViewer.IsShown || CardViewer.IsZoomed
                 || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 
@@ -108,7 +108,7 @@ namespace Cgs.Play
 
         private void InputCounter(InputAction.CallbackContext callbackContext)
         {
-            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+            if (!panels.activeSelf || CardViewer.IsShown || CardViewer.IsZoomed
                 || CardGameManager.Instance.ModalCanvas != null || controller.Scoreboard.NameInputField.isFocused)
                 return;
 

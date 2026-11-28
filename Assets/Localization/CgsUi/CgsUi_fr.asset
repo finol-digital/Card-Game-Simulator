@@ -1987,26 +1987,56 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277544
       - rid: 451339117355073540
-  - m_Id: 18826791509549056
+  - m_Id: 17272803462995968
+    m_Localized: "Secouer pour lancer les d\xE9s"
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195943
+  - m_Id: 17272803634962432
+    m_Localized: "Secouez l'appareil pour lancer tous les d\xE9s sur la table."
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195944
+  - m_Id: 18564103522996224
+    m_Localized: Toujours
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323152
+  - m_Id: 18564103636242432
+    m_Localized: "Toujours charger les decks de d\xE9part"
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323153
+  - m_Id: 18564103665602560
+    m_Localized: Oui, et ne plus demander
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323154
+  - m_Id: 18564103665602561
+    m_Localized: "Charger les decks de d\xE9part de ce jeu au lancement, sans demander."
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323155
+  - m_Id: 19303456526295040
     m_Localized: Fichiers
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635532
-  - m_Id: 18826791522131968
+      - rid: 4921527936870252560
+  - m_Id: 19303456593403904
     m_Localized: Photos
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635533
-  - m_Id: 18826791526326272
-    m_Localized: "Le navigateur n\u2019a pas pu lire le presse-papiers. Autorisez l\u2019acc\xE8s au presse-papiers, ou cliquez dans le champ de texte et collez avec Ctrl+V (Commande+V sur un Mac)."
-    m_Metadata:
-      m_Items:
-      - rid: 4921527907078635534
-  - m_Id: 18977071849005056
+      - rid: 4921527936870252561
+  - m_Id: 19303456593403905
     m_Localized: "Impossible de se connecter \xE0 cette partie via le r\xE9seau local. V\xE9rifiez que les deux appareils sont sur le m\xEAme r\xE9seau et que la partie est toujours h\xE9berg\xE9e, ou utilisez le multijoueur par Internet."
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635677
+      - rid: 4921527936870252562
+  - m_Id: 19303456605986816
+    m_Localized: "Le navigateur n\u2019a pas pu lire le presse-papiers. Autorisez l\u2019acc\xE8s au presse-papiers, ou cliquez dans le champ de texte et collez avec Ctrl+V (Commande+V sur un Mac)."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252563
   references:
     version: 2
     RefIds:
@@ -2018,22 +2048,46 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Le deck \xAB {deckName} \xBB est incomplet. Cartes charg\xE9es : {loadedCount}. Cartes manquantes : {missingCount}.\\n\\nCes noms ou identifiants de cartes sont introuvables dans ce jeu :\\n{cards}\\n\\nV\xE9rifiez la liste du deck ou mettez \xE0 jour les donn\xE9es du jeu avant de jouer.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
-    - rid: 4921527907078635532
+    - rid: 1812176077519323152
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Toujours","status":"machine","sourceHash":"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323153
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Toujours charger les decks de d\xE9part\",\"status\":\"machine\",\"sourceHash\":\"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 1812176077519323154
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Oui, et ne plus demander","status":"machine","sourceHash":"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323155
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Charger les decks de d\xE9part de ce jeu au lancement, sans demander.\",\"status\":\"machine\",\"sourceHash\":\"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
+    - rid: 3103366582956195943
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Secouer pour lancer les d\xE9s\",\"status\":\"machine\",\"sourceHash\":\"340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
+    - rid: 3103366582956195944
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Secouez l'appareil pour lancer tous les d\xE9s sur la table.\",\"status\":\"machine\",\"sourceHash\":\"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
+    - rid: 4921527936870252560
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Fichiers","status":"machine","sourceHash":"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
-    - rid: 4921527907078635533
+    - rid: 4921527936870252561
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Photos","status":"machine","sourceHash":"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
-    - rid: 4921527907078635534
-      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_CommentText: "{\"text\":\"Le navigateur n\u2019a pas pu lire le presse-papiers. Autorisez l\u2019acc\xE8s au presse-papiers, ou cliquez dans le champ de texte et collez avec Ctrl+V (Commande+V sur un Mac).\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
-    - rid: 4921527907078635677
+    - rid: 4921527936870252562
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Impossible de se connecter \xE0 cette partie via le r\xE9seau local. V\xE9rifiez que les deux appareils sont sur le m\xEAme r\xE9seau et que la partie est toujours h\xE9berg\xE9e, ou utilisez le multijoueur par Internet.\",\"status\":\"machine\",\"sourceHash\":\"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-27\"}}"
+    - rid: 4921527936870252563
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Le navigateur n\u2019a pas pu lire le presse-papiers. Autorisez l\u2019acc\xE8s au presse-papiers, ou cliquez dans le champ de texte et collez avec Ctrl+V (Commande+V sur un Mac).\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 7133309420632277544
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

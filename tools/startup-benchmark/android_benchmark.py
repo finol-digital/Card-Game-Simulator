@@ -126,6 +126,7 @@ def run_once(args, run_index: int) -> stats.RunRecord:
         "launchToActionMs": None if fully_drawn_ms is None or menu is None or action is None
         else fully_drawn_ms + (action - menu),
         "startToActionMs": None if start_game is None or action is None else action - start_game,
+        "longestFrameMs": stats.longest_frame(play),
         "processStartToMenuMs": None if launch is None or launch.get("processStartOffsetMs") is None
         or menu is None else launch["processStartOffsetMs"] + menu,
     }
@@ -156,9 +157,7 @@ def main() -> int:
         print(f"run {record.run_id}: {'ok' if record.ok else record.failure} {record.intervals_ms} {record.flags}",
               file=sys.stderr)
 
-    report = stats.summarize(records, {"launchToMenuMs": stats.LAUNCH_TO_MENU_BUDGET_MS,
-                                       "launchToActionMs": stats.LAUNCH_TO_ACTION_BUDGET_MS,
-                                       "startToActionMs": stats.START_TO_ACTION_BUDGET_MS})
+    report = stats.summarize(records, stats.BUDGETS)
     report["condition"] = "android-first-install" if args.clear_data else "android-terminated-process"
     stats.write_reports(records, report, args.csv)
     return 0 if report["failures"] == 0 else 1

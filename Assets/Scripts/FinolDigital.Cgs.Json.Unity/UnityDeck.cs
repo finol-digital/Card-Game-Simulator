@@ -95,6 +95,9 @@ namespace FinolDigital.Cgs.Json.Unity
                     case DeckFileType.Lor:
                         deck.LoadLor(line);
                         break;
+                    case DeckFileType.Svd:
+                        deck.LoadSvd(line);
+                        break;
                     case DeckFileType.Txt:
                     default:
                         if (line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:") ||
@@ -226,6 +229,28 @@ namespace FinolDigital.Cgs.Json.Unity
                 for (var i = 0; i < cardCodeAndCount.Count; i++)
                     _cards.Add(card);
             }
+        }
+
+        // Accepts the SVD3 code that Starvoxel shares, a link containing it, or the one id per line saved for unfinished decks.
+        private void LoadSvd(string line)
+        {
+            if (string.IsNullOrEmpty(line) || line.StartsWith("#"))
+                return;
+
+            if (StarvoxelDeckEncoder.TryDecode(line, out var cardIds))
+            {
+                foreach (var cardId in cardIds)
+                    AddCardsByPropertyInt(SourceGame.DeckFileAltId, cardId, 1);
+                return;
+            }
+
+            if (int.TryParse(line, System.Globalization.NumberStyles.None,
+                    System.Globalization.CultureInfo.InvariantCulture, out var altId))
+                AddCardsByPropertyInt(SourceGame.DeckFileAltId, altId, 1);
+            else if (((UnityCardGame) SourceGame).Cards.TryGetValue(line, out var card))
+                _cards.Add(card);
+            else
+                RecordMissingCard(line, 1);
         }
 
         private void LoadYdk(string line)

@@ -2055,26 +2055,56 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277315
       - rid: 451339117355073537
-  - m_Id: 18826791509549056
+  - m_Id: 17272803462995968
+    m_Localized: Shake to Roll Dice
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195937
+  - m_Id: 17272803634962432
+    m_Localized: Shake your device to roll all dice on the table.
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195938
+  - m_Id: 18564103522996224
+    m_Localized: Always
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323140
+  - m_Id: 18564103636242432
+    m_Localized: Always Load Start Decks
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323141
+  - m_Id: 18564103665602560
+    m_Localized: Yes, and do not ask again
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323142
+  - m_Id: 18564103665602561
+    m_Localized: Load this game's start decks without asking when it starts.
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323143
+  - m_Id: 19303456526295040
     m_Localized: Files
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635523
-  - m_Id: 18826791522131968
+      - rid: 4921527936870252548
+  - m_Id: 19303456593403904
     m_Localized: Photos
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635524
-  - m_Id: 18826791526326272
-    m_Localized: The browser couldn't read the clipboard. Allow clipboard access, or click the text field and paste with Ctrl+V (Command+V on a Mac).
-    m_Metadata:
-      m_Items:
-      - rid: 4921527907078635525
-  - m_Id: 18977071849005056
+      - rid: 4921527936870252549
+  - m_Id: 19303456593403905
     m_Localized: Couldn't connect to that game over the local network. Make sure both devices are on the same network and the game is still hosted, or use Internet multiplayer.
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635674
+      - rid: 4921527936870252550
+  - m_Id: 19303456605986816
+    m_Localized: The browser couldn't read the clipboard. Allow clipboard access, or click the text field and paste with Ctrl+V (Command+V on a Mac).
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252551
   references:
     version: 2
     RefIds:
@@ -2086,22 +2116,46 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Deck \"{deckName}\" is incomplete. Loaded cards: {loadedCount}. Missing cards: {missingCount}.\n\nThese card names or IDs could not be found in this game:\n{cards}\n\nCheck the deck list or update the game data before playing.","context":"Warning after a partial deck load. Card names, IDs and deck name are supplied data; preserve them. Counts include duplicate copies.","arguments":{"deckName":"Name of the loaded deck.","loadedCount":"Number of card copies successfully loaded.","missingCount":"Number of card copies not found.","cards":"Newline-separated quantities and missing card names or IDs."},"smart":true}'
-    - rid: 4921527907078635523
+    - rid: 1812176077519323140
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Always","context":"Button label in a yes/no dialog at Dialog/Frame/Response ButtonGroup/Always Button/Labeled Button/Label in Assets/Prefabs/Menus/Dialog.prefab. It answers yes and remembers that answer so the question is not asked again, as when loading a game''s start decks. The button is narrow and also shows an icon; keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 1812176077519323141
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Always Load Start Decks","context":"Interface label at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AlwaysLoadStartDecks Toggle/Label in Assets/Prefabs/Menus/Play Settings Menu.prefab. When on, starting the current game loads its start decks without asking. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 1812176077519323142
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Yes, and do not ask again","context":"Tooltip explaining a control at Dialog/Frame/Response ButtonGroup/Always Button/Labeled Button in Assets/Prefabs/Menus/Dialog.prefab. The button answers yes and stops asking this question, for example whether to load a game''s start decks. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 1812176077519323143
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Load this game''s start decks without asking when it starts.","context":"Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AlwaysLoadStartDecks Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. The setting applies only to the game being played. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 3103366582956195937
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Shake to Roll Dice","context":"Interface label or button at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle/Label in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 3103366582956195938
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Shake your device to roll all dice on the table.","context":"Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.","arguments":{},"smart":false}'
+    - rid: 4921527936870252548
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Files","context":"Choice in the iOS Import Image menu that opens Apple''s Files app to pick an image file. Use the Files app''s localized name; keep it short.","arguments":{},"smart":false}'
-    - rid: 4921527907078635524
+    - rid: 4921527936870252549
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Photos","context":"Choice in the iOS Import Image menu that opens the photo library to pick an image. Keep it short; it is a menu button.","arguments":{},"smart":false}'
-    - rid: 4921527907078635525
-      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_CommentText: '{"text":"The browser couldn''t read the clipboard. Allow clipboard access, or click the text field and paste with Ctrl+V (Command+V on a Mac).","context":"Message in the Web version after a Paste button could not read the browser clipboard; it explains the keyboard alternative. Keep key names Ctrl+V and Command+V recognizable.","arguments":{},"smart":false}'
-    - rid: 4921527907078635674
+    - rid: 4921527936870252550
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Couldn''t connect to that game over the local network. Make sure both devices are on the same network and the game is still hosted, or use Internet multiplayer.","context":"Message in the Web version when joining a LAN game hosted by a browser on another device fails; LAN means local network, and Internet multiplayer is the other connection option.","arguments":{},"smart":false}'
+    - rid: 4921527936870252551
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"The browser couldn''t read the clipboard. Allow clipboard access, or click the text field and paste with Ctrl+V (Command+V on a Mac).","context":"Message in the Web version after a Paste button could not read the browser clipboard; it explains the keyboard alternative. Keep key names Ctrl+V and Command+V recognizable.","arguments":{},"smart":false}'
     - rid: 7133309420632277315
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

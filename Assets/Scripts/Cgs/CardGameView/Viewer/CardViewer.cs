@@ -33,7 +33,23 @@ namespace Cgs.CardGameView.Viewer
         private const string Delimiter = ": ";
         private const float PageAxisPressDeadZone = 0.5f;
 
+        /// <summary>The viewer, created on first use on a screen that does not include one.</summary>
         public static CardViewer Instance
+        {
+            get
+            {
+                var existing = Existing;
+                if (existing != null || Create == null)
+                    return existing;
+
+                _instance = Create();
+                Created?.Invoke(_instance);
+                return _instance;
+            }
+        }
+
+        /// <summary>The viewer if it exists, without creating it.</summary>
+        public static CardViewer Existing
         {
             get
             {
@@ -41,11 +57,25 @@ namespace Cgs.CardGameView.Viewer
                     return _instance;
 
                 var cardViewerGameObject = GameObject.FindWithTag(Tags.CardViewer);
-                if (cardViewerGameObject != null)
-                    _instance = cardViewerGameObject.GetOrAddComponent<CardViewer>();
+                _instance = cardViewerGameObject != null ? cardViewerGameObject.GetOrAddComponent<CardViewer>() : null;
                 return _instance;
             }
         }
+
+        /// <summary>Whether the viewer is shown, without creating it.</summary>
+        public static bool IsShown => Existing != null && Existing.IsVisible;
+
+        /// <summary>Whether the viewer was shown as of its last update, without creating it.</summary>
+        public static bool WasShown => Existing != null && Existing.WasVisible;
+
+        /// <summary>Whether the viewer is zoomed in, without creating it.</summary>
+        public static bool IsZoomed => Existing != null && Existing.Zoom;
+
+        /// <summary>Creates the viewer the first time it is needed, on a screen that does not include one.</summary>
+        internal static System.Func<CardViewer> Create { get; set; }
+
+        /// <summary>Sets up a viewer that <see cref="Create"/> made, once it is the instance.</summary>
+        internal static System.Action<CardViewer> Created { get; set; }
 
         private static CardViewer _instance;
 
@@ -53,6 +83,8 @@ namespace Cgs.CardGameView.Viewer
         private static void ResetStaticState()
         {
             _instance = null;
+            Create = null;
+            Created = null;
         }
 
         public CardViewerMode Mode
@@ -166,29 +198,70 @@ namespace Cgs.CardGameView.Viewer
             get => _previewCardModel;
             set
             {
-                _previewCard?.UnregisterDisplay(this);
-                _previewCard = null;
-
+                ClearPreviewSource();
                 _previewCardModel = value;
                 _previewImage = value != null ? value.GetComponent<Image>() : null;
-                HidePreviewPresentation();
+                ShowPreview(value != null ? value.Value : null);
+            }
+        }
 
-                if (_previewCardModel == null)
-                    return;
+        public CardStack PreviewCardStack
+        {
+            get => _previewCardStack;
+            set
+            {
+                ClearPreviewSource();
+                var card = value != null ? value.FaceupTopCard : null;
+                if (card != null)
+                {
+                    _previewCardStack = value;
+                    _previewImage = value.TopCardImage;
+                }
+                ShowPreview(card);
+            }
+        }
 
-                UpdateHoverOverlay();
-                var card = _previewCardModel.Value;
-                _previewCard = card;
-                card.RegisterDisplay(this);
-                preview.alpha = 1;
-                foreach (var previewName in previewNameText)
-                    GameContentText.Set(previewName, card.Game, display => display.CardName(card));
-                foreach (var previewId in previewIdText)
-                    Cgs.Localization.LocalizedUiText.SetLiteral(previewId, card.Id);
+        private void ClearPreviewSource()
+        {
+            _previewCard?.UnregisterDisplay(this);
+            _previewCard = null;
+            _previewCardModel = null;
+            _previewCardStack = null;
+            _previewImage = null;
+        }
+
+        private void ShowPreview(UnityCard card)
+        {
+            HidePreviewPresentation();
+
+            if (card == null)
+                return;
+
+            UpdateHoverOverlay();
+            _previewCard = card;
+            card.RegisterDisplay(this);
+            preview.alpha = 1;
+            foreach (var previewName in previewNameText)
+                GameContentText.Set(previewName, card.Game, display => display.CardName(card));
+            foreach (var previewId in previewIdText)
+                Cgs.Localization.LocalizedUiText.SetLiteral(previewId, card.Id);
+        }
+
+        private bool HasPreviewSource => _previewCardModel != null || _previewCardStack != null;
+
+        private bool IsPreviewSourceShowable
+        {
+            get
+            {
+                if (_previewCardModel != null)
+                    return _previewCardModel.isActiveAndEnabled && !_previewCardModel.IsFacedown;
+                return _previewCardStack != null && _previewCardStack.isActiveAndEnabled
+                                                 && _previewCardStack.FaceupTopCard != null;
             }
         }
 
         private CardModel _previewCardModel;
+        private CardStack _previewCardStack;
         private UnityCard _previewCard;
         private Image _previewImage;
         private CardHoverPreview _hoverPreview;
@@ -698,13 +771,15 @@ namespace Cgs.CardGameView.Viewer
 
         protected void LateUpdate()
         {
-            if (_previewCardModel == null || !_previewCardModel.isActiveAndEnabled || _previewCardModel.IsFacedown
-                || IsVisible || Zoom || CgsNetPlayable.IsAnyDragging)
+            if (!IsPreviewSourceShowable || IsVisible || Zoom || CgsNetPlayable.IsAnyDragging)
             {
-                if (_previewCardModel != null || _previewCard != null || preview.alpha > 0)
+                if (HasPreviewSource || _previewCard != null || preview.alpha > 0)
                     HidePreview();
                 return;
             }
+
+            if (_previewCardStack != null && _previewCardStack.FaceupTopCard != _previewCard)
+                PreviewCardStack = _previewCardStack;
 
             if (!CanPreviewOnHover
                 || (PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)

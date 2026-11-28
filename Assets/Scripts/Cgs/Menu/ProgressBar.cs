@@ -89,6 +89,10 @@ namespace Cgs.Menu
             _game = null;
         }
 
+        /// <summary>Whether the bar is open and showing <paramref name="progressible"/>, not a download or other work.</summary>
+        public bool IsShowing(IProgressible progressible) =>
+            gameObject.activeSelf && progressible != null && _progressible == progressible;
+
         public override void Hide()
         {
             _game = null;

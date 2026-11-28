@@ -23,10 +23,17 @@ namespace Cgs.Performance
         public const string OutcomeFailed = "failed";
         public const string OutcomeTimeout = "timeout";
 
+        public const string LocalizationPending = "pending";
+        public const string LocalizationReady = "ready";
+        public const string LocalizationFailed = "failed";
+
+        /// <summary>A frame longer than this between Start Game and the first card action misses the frame budget.</summary>
+        public const double LongFrameMs = 100;
+
         private static readonly StartupMilestone[] LaunchMilestones =
         {
             StartupMilestone.EngineReady, StartupMilestone.FirstSceneLoaded, StartupMilestone.FirstFrameDrawn,
-            StartupMilestone.MainMenuInteractive
+            StartupMilestone.LocalizationReady, StartupMilestone.MainMenuInteractive
         };
 
         private static readonly StartupMilestone[] PlayMilestones =
@@ -41,6 +48,12 @@ namespace Cgs.Performance
         private readonly double _playTimeoutMs;
         private readonly Dictionary<StartupMilestone, double> _marks = new();
 
+        // Frame times from Start Game to the first card action, measured between ticks
+        private double? _lastTickMs;
+        private int _playFrameCount;
+        private double _longestPlayFrameMs;
+        private int _longPlayFrameCount;
+
         public event Action<StartupSummaryKind, string> SummaryWritten;
 
         public bool IsLaunchSummaryWritten { get; private set; }
@@ -48,6 +61,12 @@ namespace Cgs.Performance
         public string PlayOutcome { get; private set; }
         public string FailedMilestone { get; private set; }
         public string FailureReason { get; private set; }
+
+        /// <summary>The longest frame from Start Game to the end of the play summary, in ms.</summary>
+        public double LongestPlayFrameMs => _longestPlayFrameMs;
+
+        /// <summary>The frames from Start Game to the end of the play summary longer than <see cref="LongFrameMs"/>.</summary>
+        public int LongPlayFrameCount => _longPlayFrameCount;
 
         /// <summary>Monotonic timestamp (ns) of elapsed time zero; lets harnesses convert milestones.</summary>
         public long? ZeroMonotonicNs { get; set; }
@@ -59,6 +78,9 @@ namespace Cgs.Performance
         public double? LaunchRequestOffsetMs { get; set; }
 
         public string ProcessClock { get; set; } = "unavailable";
+
+        /// <summary>Whether the startup language was ready, had failed, or was still loading.</summary>
+        public string LocalizationOutcome { get; set; } = LocalizationPending;
 
         public StartupTimelineSession(Func<double> elapsedMs, Action<string> log,
             double launchTimeoutMs = DefaultLaunchTimeoutMs, double playTimeoutMs = DefaultPlayTimeoutMs)
@@ -101,10 +123,13 @@ namespace Cgs.Performance
             WritePlaySummary(OutcomeFailed, nameof(StartupMilestone.FirstCardAction), reason);
         }
 
-        /// <summary>Writes summaries whose timeouts have expired. Call once per frame.</summary>
+        /// <summary>Records the frame that just ended and writes summaries whose timeouts have expired. Call once per
+        /// frame.</summary>
         public void Tick()
         {
             var now = _elapsedMs();
+            RecordPlayFrame(now);
+            _lastTickMs = now;
             if (!IsLaunchSummaryWritten && now >= _launchTimeoutMs)
                 WriteLaunchSummary();
 
@@ -116,12 +141,28 @@ namespace Cgs.Performance
             WritePlaySummary(OutcomeTimeout, missing.ToString(), "timeout");
         }
 
+        // Times the frame (or, when the play summary ends mid-frame, the part of it) since the previous tick, counting
+        // only time after Start Game
+        private void RecordPlayFrame(double now)
+        {
+            if (IsPlaySummaryWritten || !_marks.TryGetValue(StartupMilestone.StartGameChosen, out var startGame))
+                return;
+            var frameMs = now - Math.Max(_lastTickMs ?? startGame, startGame);
+            if (frameMs <= 0)
+                return;
+            _playFrameCount++;
+            _longestPlayFrameMs = Math.Max(_longestPlayFrameMs, frameMs);
+            if (frameMs > LongFrameMs)
+                _longPlayFrameCount++;
+        }
+
         private void WriteLaunchSummary()
         {
             IsLaunchSummaryWritten = true;
             var outcome = HasMark(StartupMilestone.MainMenuInteractive) ? OutcomeOk : OutcomeTimeout;
             var json = new StringBuilder();
             BeginSummary(json, "launch", outcome);
+            json.Append(",\"localization\":\"").Append(Escape(LocalizationOutcome)).Append('"');
             AppendMilestones(json, LaunchMilestones, true);
             EndSummary(json, outcome == OutcomeOk ? null : nameof(StartupMilestone.MainMenuInteractive),
                 outcome == OutcomeOk ? null : "timeout", null);
@@ -130,6 +171,7 @@ namespace Cgs.Performance
 
         private void WritePlaySummary(string outcome, string failedMilestone, string reason)
         {
+            RecordPlayFrame(_elapsedMs());
             IsPlaySummaryWritten = true;
             PlayOutcome = outcome;
             FailedMilestone = failedMilestone;
@@ -139,6 +181,9 @@ namespace Cgs.Performance
             BeginSummary(json, "play", outcome);
             // Table-playable time is only a result when the first card action succeeded
             AppendMilestones(json, PlayMilestones, outcome == OutcomeOk);
+            json.Append(",\"frames\":{\"count\":").Append(_playFrameCount)
+                .Append(",\"longestMs\":").Append(Number(_longestPlayFrameMs))
+                .Append(",\"over100Ms\":").Append(_longPlayFrameCount).Append('}');
             EndSummary(json, failedMilestone, reason,
                 outcome == OutcomeOk ? null : GetMark(StartupMilestone.TablePlayable));
             Emit(StartupSummaryKind.Play, json.ToString());

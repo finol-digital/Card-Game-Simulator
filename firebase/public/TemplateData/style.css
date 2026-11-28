@@ -1,6 +1,6 @@
-body { padding: 0; margin: 0 }
+body { padding: 0; margin: 0; background: #291409 }
 #unity-container { position: fixed; width: 100%; height: 100%; }
-#unity-canvas { width: 100%; height: 100%; background: #FFFFFF }
+#unity-canvas { width: 100%; height: 100%; background: #291409 }
 #unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none }
 #cgs-logo { width: 154px; height: 154px; background: url('cgs-logo.png') no-repeat center }
 #unity-progress-bar-empty { margin-left: auto; margin-right: auto; width: 141px; height: 18px; margin-top: 10px; background: url('progress-bar-empty-dark.png') no-repeat center }

@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using Cgs.Localization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
@@ -57,6 +58,10 @@ namespace Cgs.Performance
             SceneManager.sceneLoaded -= OnFirstSceneLoaded;
             SceneManager.sceneLoaded += OnFirstSceneLoaded;
 
+            CgsLocalization.Changed -= OnLocalizationChanged;
+            CgsLocalization.Changed += OnLocalizationChanged;
+            OnLocalizationChanged();
+
             if (Application.isPlaying)
             {
                 var host = new GameObject(nameof(StartupTimelineRunner));
@@ -89,6 +94,23 @@ namespace Cgs.Performance
         {
             SceneManager.sceneLoaded -= OnFirstSceneLoaded;
             Mark(StartupMilestone.FirstSceneLoaded);
+        }
+
+        private static void OnLocalizationChanged()
+        {
+            if (Session == null || !CgsLocalization.IsInitializationComplete)
+                return;
+
+            CgsLocalization.Changed -= OnLocalizationChanged;
+            Session.LocalizationOutcome = CgsLocalization.IsReady
+                ? StartupTimelineSession.LocalizationReady
+                : StartupTimelineSession.LocalizationFailed;
+            if (CgsLocalization.IsReady)
+                Mark(StartupMilestone.LocalizationReady);
+            // The launch summary can be written before this, so the outcome is also logged on its own
+            Debug.Log(StartupTimelineSession.LogPrefix + "{\"summary\":\"localization\",\"outcome\":\"" +
+                      Session.LocalizationOutcome + "\",\"elapsedMs\":" +
+                      StartupTimelineSession.Number(ElapsedMs) + "}");
         }
 
         public static void Mark(StartupMilestone milestone)

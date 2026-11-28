@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -136,6 +137,10 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public bool HasDownloaded { get; private set; }
         public bool IsLoading { get; private set; }
+
+        /// <summary>How much of the running load has finished, from 0 to 1, as shown in loading progress.</summary>
+        public float ContentLoadProgress { get; private set; }
+
         public bool HasLoaded { get; private set; }
         public string Error { get; private set; }
 
@@ -149,12 +154,8 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public Sprite BannerImageSprite
         {
-            get
-            {
-                if (_bannerImageSprite == null)
-                    _bannerImageSprite = Resources.Load<Sprite>("Banner");
-                return _bannerImageSprite;
-            }
+            // The built-in default is shared and must never be destroyed, so it is not kept in _bannerImageSprite
+            get => _bannerImageSprite != null ? _bannerImageSprite : DefaultBannerImageSprite;
             private set
             {
                 if (_bannerImageSprite != null)
@@ -169,14 +170,17 @@ namespace FinolDigital.Cgs.Json.Unity
 
         private Sprite _bannerImageSprite;
 
+        private static Sprite DefaultBannerImageSprite =>
+            _defaultBannerImageSprite != null
+                ? _defaultBannerImageSprite
+                : _defaultBannerImageSprite = Resources.Load<Sprite>("Banner");
+
+        private static Sprite _defaultBannerImageSprite;
+
         public Sprite CardBackImageSprite
         {
-            get
-            {
-                if (_cardBackImageSprite == null)
-                    _cardBackImageSprite = Resources.Load<Sprite>("CardBack");
-                return _cardBackImageSprite;
-            }
+            // The built-in default is shared and must never be destroyed, so it is not kept in _cardBackImageSprite
+            get => _cardBackImageSprite != null ? _cardBackImageSprite : DefaultCardBackImageSprite;
             private set
             {
                 if (_cardBackImageSprite != null)
@@ -192,6 +196,13 @@ namespace FinolDigital.Cgs.Json.Unity
         public Dictionary<string, Sprite> CardBackFaceImageSprites { get; } = new();
 
         private Sprite _cardBackImageSprite;
+
+        private static Sprite DefaultCardBackImageSprite =>
+            _defaultCardBackImageSprite != null
+                ? _defaultCardBackImageSprite
+                : _defaultCardBackImageSprite = Resources.Load<Sprite>("CardBack");
+
+        private static Sprite _defaultCardBackImageSprite;
 
         public Sprite PlayMatImageSprite
         {
@@ -784,6 +795,7 @@ namespace FinolDigital.Cgs.Json.Unity
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
             IsLoading = true;
+            ContentLoadProgress = 0;
             try
             {
                 // We should have already read the cgs.json, but we need to be sure
@@ -908,11 +920,58 @@ namespace FinolDigital.Cgs.Json.Unity
                 LoadCards(cardsFilePath, SetCodeDefault);
             else
                 Debug.Log("LoadCards::NOAllCards.json");
+
+            // Card pages are most of a load's work, so they make up its progress
+            if (AllCardsUrlPageCount > 0)
+                ContentLoadProgress =
+                    Mathf.Clamp01((page - AllCardsUrlPageCountStartIndex + 1f) / AllCardsUrlPageCount);
         }
 
         public void LoadCards(string cardsFilePath, string defaultSetCode)
         {
             LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier, defaultSetCode);
+            NotifyContentChanged();
+        }
+
+        /// <summary>
+        /// The most time a frame spends creating cards from a card file. A large card file then loads over several
+        /// frames instead of stalling one.
+        /// </summary>
+        public const double CardCreationBudgetMs = 8;
+
+        /// <summary>
+        /// Loads one page of cards like <see cref="LoadCards(int)"/>, but over several frames: the file is read and
+        /// parsed on a worker thread where there are threads, and its cards are created within
+        /// <see cref="CardCreationBudgetMs"/> each frame.
+        /// </summary>
+        public IEnumerator LoadCardsRoutine(int page)
+        {
+            var cardsFilePath =
+                CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
+            var pageIndex = page - AllCardsUrlPageCountStartIndex;
+
+            if (File.Exists(cardsFilePath))
+            {
+                yield return LoadJsonFromFileRoutine(cardsFilePath, LoadCardFromJToken, CardDataIdentifier,
+                    SetCodeDefault, fraction =>
+                    {
+                        if (AllCardsUrlPageCount > 0)
+                            ContentLoadProgress = Mathf.Clamp01((pageIndex + fraction) / AllCardsUrlPageCount);
+                    });
+                NotifyContentChanged();
+            }
+            else
+                Debug.Log("LoadCards::NOAllCards.json");
+
+            if (AllCardsUrlPageCount > 0)
+                ContentLoadProgress = Mathf.Clamp01((pageIndex + 1f) / AllCardsUrlPageCount);
+        }
+
+        /// <summary>Loads a card file like <see cref="LoadCards(string, string)"/>, but over several frames.</summary>
+        public IEnumerator LoadCardsRoutine(string cardsFilePath, string defaultSetCode)
+        {
+            yield return LoadJsonFromFileRoutine(cardsFilePath, LoadCardFromJToken, CardDataIdentifier,
+                defaultSetCode, null);
             NotifyContentChanged();
         }
 
@@ -938,68 +997,166 @@ namespace FinolDigital.Cgs.Json.Unity
 
             try
             {
-                var root = JToken.Parse(File.ReadAllText(file));
-
-                IJEnumerable<JToken> dataContainer;
-                if (!string.IsNullOrEmpty(dataId))
-                {
-                    var childProcessor = root;
-                    foreach (var childName in dataId.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
-                        (childProcessor as JObject)?.TryGetValue(childName, out childProcessor);
-                    dataContainer = childProcessor;
-                }
-                else
-                    dataContainer = root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues();
-
+                var root = ReadJsonFile(file);
+                var dataContainer = DataContainer(root, dataId);
                 if (dataContainer != null)
                     foreach (var jToken in dataContainer)
                         load(jToken, defaultSetCode ?? SetCodeDefault);
                 else
                     Debug.LogWarning("LoadJsonFromFile::EmptyFile");
 
-                if (string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier))
-                    return;
-
-                // Determine AllCardsUrlPageCount
-                var allCardsUrlPageCountIdentifier = AllCardsUrlPageCountIdentifier;
-                var currentJToken = root;
-
-                for (var delimiterIndex =
-                         allCardsUrlPageCountIdentifier.IndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal);
-                     delimiterIndex != -1;
-                     delimiterIndex =
-                         allCardsUrlPageCountIdentifier.IndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal))
-                {
-                    var currentObjectIdentifier = allCardsUrlPageCountIdentifier[..delimiterIndex];
-                    currentJToken = currentJToken[currentObjectIdentifier];
-                    if (currentJToken == null)
-                    {
-                        Debug.LogWarning("LoadJsonFromFile::allCardsUrlPageCountIdentifier:EmptyObject");
-                        return;
-                    }
-
-                    allCardsUrlPageCountIdentifier = allCardsUrlPageCountIdentifier[(delimiterIndex + 1)..];
-                }
-
-                var hasAllCardsUrlPageCount =
-                    (currentJToken as JObject)?.ContainsKey(allCardsUrlPageCountIdentifier) ?? false;
-                if (!hasAllCardsUrlPageCount)
-                    return;
-
-                var allCardsUrlPageCount = currentJToken.Value<int>(allCardsUrlPageCountIdentifier);
-                if (allCardsUrlPageCount < 1 || AllCardsUrlPageCount > 1)
-                    return;
-
-                AllCardsUrlPageCount = allCardsUrlPageCount;
-                if (AllCardsUrlPageCountDivisor > 0)
-                    AllCardsUrlPageCount =
-                        Mathf.CeilToInt(AllCardsUrlPageCount / (float)AllCardsUrlPageCountDivisor);
+                ReadAllCardsUrlPageCount(root);
             }
             catch (Exception e)
             {
-                Error += e.Message + e.StackTrace + Environment.NewLine;
-                HasLoaded = false;
+                RecordLoadError(e);
             }
+        }
+
+        private IEnumerator LoadJsonFromFileRoutine(string file, LoadJTokenDelegate load, string dataId,
+            string defaultSetCode, Action<float> progress)
+        {
+            if (!File.Exists(file))
+            {
+                Debug.LogError("LoadJsonFromFile::NoFile");
+                yield break;
+            }
+
+            JToken root;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // The web has no worker threads
+            try
+            {
+                root = ReadJsonFile(file);
+            }
+            catch (Exception e)
+            {
+                RecordLoadError(e);
+                yield break;
+            }
+#else
+            var parse = Task.Run(() => ReadJsonFile(file));
+            while (!parse.IsCompleted)
+                yield return null;
+            if (parse.IsFaulted || parse.IsCanceled)
+            {
+                RecordLoadError(parse.Exception?.GetBaseException() ?? new OperationCanceledException(file));
+                yield break;
+            }
+
+            root = parse.Result;
+#endif
+
+            List<JToken> tokens;
+            try
+            {
+                tokens = DataContainer(root, dataId)?.ToList();
+            }
+            catch (Exception e)
+            {
+                RecordLoadError(e);
+                yield break;
+            }
+
+            if (tokens != null)
+            {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                for (var index = 0; index < tokens.Count; index++)
+                {
+                    Exception error = null;
+                    try
+                    {
+                        load(tokens[index], defaultSetCode ?? SetCodeDefault);
+                    }
+                    catch (Exception e)
+                    {
+                        error = e;
+                    }
+
+                    if (error != null)
+                    {
+                        RecordLoadError(error);
+                        yield break;
+                    }
+
+                    if (watch.Elapsed.TotalMilliseconds < CardCreationBudgetMs || index == tokens.Count - 1)
+                        continue;
+                    progress?.Invoke((index + 1f) / tokens.Count);
+                    yield return null;
+                    watch.Restart();
+                }
+            }
+            else
+                Debug.LogWarning("LoadJsonFromFile::EmptyFile");
+
+            try
+            {
+                ReadAllCardsUrlPageCount(root);
+            }
+            catch (Exception e)
+            {
+                RecordLoadError(e);
+            }
+        }
+
+        private static JToken ReadJsonFile(string file) => JToken.Parse(File.ReadAllText(file));
+
+        private static IJEnumerable<JToken> DataContainer(JToken root, string dataId)
+        {
+            if (string.IsNullOrEmpty(dataId))
+                return root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues();
+
+            var childProcessor = root;
+            foreach (var childName in dataId.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
+                (childProcessor as JObject)?.TryGetValue(childName, out childProcessor);
+            return childProcessor;
+        }
+
+        private void RecordLoadError(Exception e)
+        {
+            Error += e.Message + e.StackTrace + Environment.NewLine;
+            HasLoaded = false;
+        }
+
+        // Determines AllCardsUrlPageCount from a card file, for games that list their page count in it
+        private void ReadAllCardsUrlPageCount(JToken root)
+        {
+            if (string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier))
+                return;
+
+            var allCardsUrlPageCountIdentifier = AllCardsUrlPageCountIdentifier;
+            var currentJToken = root;
+
+            for (var delimiterIndex =
+                     allCardsUrlPageCountIdentifier.IndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal);
+                 delimiterIndex != -1;
+                 delimiterIndex =
+                     allCardsUrlPageCountIdentifier.IndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal))
+            {
+                var currentObjectIdentifier = allCardsUrlPageCountIdentifier[..delimiterIndex];
+                currentJToken = currentJToken[currentObjectIdentifier];
+                if (currentJToken == null)
+                {
+                    Debug.LogWarning("LoadJsonFromFile::allCardsUrlPageCountIdentifier:EmptyObject");
+                    return;
+                }
+
+                allCardsUrlPageCountIdentifier = allCardsUrlPageCountIdentifier[(delimiterIndex + 1)..];
+            }
+
+            var hasAllCardsUrlPageCount =
+                (currentJToken as JObject)?.ContainsKey(allCardsUrlPageCountIdentifier) ?? false;
+            if (!hasAllCardsUrlPageCount)
+                return;
+
+            var allCardsUrlPageCount = currentJToken.Value<int>(allCardsUrlPageCountIdentifier);
+            if (allCardsUrlPageCount < 1 || AllCardsUrlPageCount > 1)
+                return;
+
+            AllCardsUrlPageCount = allCardsUrlPageCount;
+            if (AllCardsUrlPageCountDivisor > 0)
+                AllCardsUrlPageCount =
+                    Mathf.CeilToInt(AllCardsUrlPageCount / (float)AllCardsUrlPageCountDivisor);
         }
 
         private void LoadCardFromJToken(JToken cardJToken, string defaultSetCode)

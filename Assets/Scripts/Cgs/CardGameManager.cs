@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Cgs.Menu;
+using Cgs.Play.Multiplayer;
 using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
@@ -224,6 +225,38 @@ namespace Cgs
         // A scene has loaded and its content load will start after the scene's first frame
         internal bool IsContentLoadScheduled { get; private set; }
 
+        /// <summary>
+        /// The open screen shows the current game's cards, so it shows loading progress until they have loaded. Such a
+        /// screen sets this when it starts, and it resets when the screen's scene unloads.
+        /// </summary>
+        internal bool SceneNeedsContent { get; private set; }
+
+        private readonly ContentLoadProgress _contentLoadProgress = new();
+
+        /// <summary>Reports the current game's content load to the progress bar.</summary>
+        private sealed class ContentLoadProgress : IProgressible
+        {
+            private UnityCardGame _game;
+            private UiMessage _message;
+
+            public float ProgressPercentage => Current.ContentLoadProgress;
+            public string ProgressStatus => string.Format(CardsLoadingMessage, Current.Name);
+
+            public UiMessage LocalizedProgressStatus
+            {
+                get
+                {
+                    // The progress bar refreshes its text only when given a different message
+                    if (_game == Current && _message != null)
+                        return _message;
+                    _game = Current;
+                    _message = GameContentMessage.Create(Current, display => UiMessage.With("games.cards.loading",
+                        string.Format(CardsLoadingMessage, display.GameName), ("gameName", display.GameName)));
+                    return _message;
+                }
+            }
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStaticState()
         {
@@ -245,8 +278,6 @@ namespace Cgs
             UnityCardGame.UnityInvalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
 
-            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
-                CreateDefaultCardGames();
             LookupCardGames();
 
             RegisterStaticEventHandlers();
@@ -279,29 +310,42 @@ namespace Cgs
                 RegisterStaticEventHandlers();
         }
 
-#pragma warning disable S2325
-        // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateDefaultCardGames()
-#pragma warning restore S2325
+        /// <summary>The bundled games being installed in the background on a first launch, if any.</summary>
+        internal BundledGameInstaller BundledGames { get; private set; }
+
+        /// <summary>Raised when games are added to <see cref="AllCardGames"/> without the player selecting one, as when
+        /// a bundled game finishes installing.</summary>
+        public event Action GamesAdded;
+
+        /// <summary>Where the bundled games come from; tests substitute their own.</summary>
+        internal static Func<IBundledGames> BundledGamesSource { get; set; } = DefaultBundledGamesSource;
+
+        internal static IBundledGames DefaultBundledGamesSource()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#elif !UNITY_WEBGL
-            UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
-            var aaDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, AddressableAssetsFolderName);
-            if (Directory.Exists(aaDirectory))
-                Directory.Delete(aaDirectory, true);
+            return new AndroidBundledGames();
+#else
+            return new FolderBundledGames(Application.streamingAssetsPath);
 #endif
         }
 
+        internal static string BundledGamesStatePath => Path.Combine(Application.persistentDataPath, "games-install");
+
+        /// <summary>
+        /// Installs the default game if this is a first launch, starts installing the other bundled games in the
+        /// background, and reads the installed games.
+        /// </summary>
         internal void LookupCardGames()
         {
-            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath) ||
-                Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
 #if UNITY_WEBGL
+            // The web build downloads its default games instead
+            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 return;
 #else
-                CreateDefaultCardGames();
+            BundledGames = new BundledGameInstaller(BundledGamesSource(), UnityCardGame.GamesDirectoryPath,
+                BundledGamesStatePath);
+            BundledGames.Prepare();
+            BundledGames.InstallNow(FirstBundledGameToInstall(BundledGames.GetPending()));
 #endif
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
@@ -316,6 +360,57 @@ namespace Cgs
                 else
                     AllCardGames[newCardGame.Id] = newCardGame;
             }
+#if !UNITY_WEBGL
+            BundledGames.StartBackground();
+#endif
+        }
+
+#if !UNITY_WEBGL
+        // The game the Main Menu will show: the player's saved game, else Standard Playing Cards, else any
+        private static string FirstBundledGameToInstall(IReadOnlyList<string> pending)
+        {
+            var preferredGameId = PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            if (pending.Contains(preferredGameId))
+                return preferredGameId;
+            if (pending.Contains(Tags.StandardPlayingCardsDirectoryName))
+                return Tags.StandardPlayingCardsDirectoryName;
+            return pending.FirstOrDefault();
+        }
+#endif
+
+        /// <summary>Adds the bundled games that have finished installing in the background.</summary>
+        private void AddInstalledBundledGames()
+        {
+            if (BundledGames == null)
+                return;
+            var isAdded = false;
+            while (BundledGames.TryTakeInstalled(out var gameId))
+            {
+                if (AllCardGames.ContainsKey(gameId))
+                    continue;
+                var newCardGame = new UnityCardGame(this, gameId);
+                newCardGame.ReadProperties(false);
+                if (!string.IsNullOrEmpty(newCardGame.Error))
+                {
+                    Debug.LogError(newCardGame.Error);
+                    continue;
+                }
+
+                AllCardGames[newCardGame.Id] = newCardGame;
+                isAdded = true;
+            }
+
+            if (!isAdded)
+                return;
+            if (Current == UnityCardGame.UnityInvalid)
+            {
+                ResetCurrentToDefault();
+                ResetGameScene();
+            }
+            else
+                LoadVisiblePreviewImages();
+
+            GamesAdded?.Invoke();
         }
 
         /// <summary>
@@ -465,6 +560,13 @@ namespace Cgs
             // The new scene shows the current game from its properties on its first frame. Its cards, sets, and
             // images load after that frame, and the scene fills in when they finish.
             RunSceneActions();
+            // A scene opened after the content loaded has nothing to fill in, and its actions must not run twice
+            if (!NeedsContentLoad(Current) && !Current.IsLoading)
+            {
+                ++_selectionVersion;
+                return;
+            }
+
             IsContentLoadScheduled = true;
             StartCoroutine(ResetGameSceneAsync(Current, ++_selectionVersion, true));
         }
@@ -472,6 +574,42 @@ namespace Cgs
         private void OnSceneUnloaded(Scene scene)
         {
             OnSceneActions.Clear();
+            SceneNeedsContent = false;
+        }
+
+        /// <summary>
+        /// Called by a screen that shows the current game's cards when it starts. The screen shows loading progress while
+        /// the cards load, which also keeps the player from changing the screen before it fills in.
+        /// </summary>
+        internal void RequireContentForScene()
+        {
+            SceneNeedsContent = true;
+            UpdateContentLoadProgress();
+        }
+
+        /// <summary>
+        /// Waits until the current game's content has loaded, or failed to, and the open screen has filled in with it.
+        /// </summary>
+        internal static IEnumerator WaitForCurrentContent()
+        {
+            while (!IsCurrentContentSettled)
+                yield return null;
+            // The screen fills in on the frame the load finishes, so it is done by the next frame
+            yield return null;
+        }
+
+        private void UpdateContentLoadProgress()
+        {
+            if (progress == null)
+                return;
+
+            // Downloads and updates show their own progress
+            var shouldShow = SceneNeedsContent && !IsCurrentContentSettled && Current != UnityCardGame.UnityInvalid &&
+                             !Current.IsDownloading && string.IsNullOrEmpty(Current.Error);
+            if (shouldShow && !progress.gameObject.activeSelf)
+                progress.Show(_contentLoadProgress);
+            else if (!shouldShow && progress.IsShowing(_contentLoadProgress))
+                progress.Hide();
         }
 
         // Note: Does NOT Reset Game Scene
@@ -638,19 +776,115 @@ namespace Cgs
             var isMissingGame =
  Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Current.HasLoaded;
             if (isMissingGame)
-                yield return StartGetDefaultCardGames();
+                yield return GetDefaultCardGames(DefaultWebGames);
 #endif
 
             HasStartedUp = true;
             StartCoroutine(LoadPreviewImagesInBackground());
         }
 
-        // ReSharper disable once UnusedMember.Local
-        private IEnumerator StartGetDefaultCardGames()
+        // The games the web app downloads when it has none, by ID and definition URL
+        internal static readonly (string Id, string Url)[] DefaultWebGames =
         {
-            yield return GetCardGame(Tags.DominoesUrl);
-            yield return GetCardGame(Tags.MahjongUrl);
-            yield return GetCardGame(Tags.StandardPlayingCardsUrl);
+            (Tags.StandardPlayingCardsDirectoryName, Tags.StandardPlayingCardsUrl),
+            ("Dominoes@www.cardgamesimulator.com", Tags.DominoesUrl),
+            ("Mahjong@www.cardgamesimulator.com", Tags.MahjongUrl)
+        };
+
+        // The new game downloading now, until it has loaded and been added to the games. A new game downloads into a
+        // folder named for it only once its definition has been read, so new games download one at a time.
+        private UnityCardGame _gameDownload;
+
+        private bool IsDownloadingGame => _gameDownload != null;
+
+        private UnityCardGame InstalledGameFrom(string gameUrl)
+        {
+            var url = new Uri(gameUrl);
+            return AllCardGames.Values.FirstOrDefault(game => game?.AutoUpdateUrl != null && game.AutoUpdateUrl.Equals(url));
+        }
+
+        /// <summary>Whether default games are still downloading in the background.</summary>
+        internal bool IsDownloadingDefaultGames { get; private set; }
+
+        /// <summary>
+        /// Downloads <paramref name="games"/> when CGS has none, as on a first web visit. The player's saved game, else
+        /// Standard Playing Cards, downloads first and is selected, so that it can be started; the others then download
+        /// in the background without selecting them, showing progress, or keeping the menu from Start Game.
+        /// </summary>
+        internal IEnumerator GetDefaultCardGames(IReadOnlyList<(string Id, string Url)> games)
+        {
+            if (games.Count == 0)
+                yield break;
+            var preferredId = PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            var first = games.FirstOrDefault(game => game.Id == preferredId);
+            if (first.Url == null)
+                first = games.FirstOrDefault(game => game.Id == Tags.StandardPlayingCardsDirectoryName);
+            if (first.Url == null)
+                first = games[0];
+
+            IsDownloadingDefaultGames = true;
+            yield return GetCardGame(first.Url);
+            StartCoroutine(DownloadGamesInBackground(games.Where(game => game.Url != first.Url)
+                .Select(game => game.Url).ToList()));
+        }
+
+        private IEnumerator DownloadGamesInBackground(IEnumerable<string> gameUrls)
+        {
+            // The selected game's screen draws first
+            yield return null;
+            foreach (var gameUrl in gameUrls)
+            {
+                // Let a download the player started finish first, then check again whether it installed this game
+                while (IsDownloadingGame || Current is { IsDownloading: true })
+                    yield return null;
+                if (InstalledGameFrom(gameUrl) != null)
+                    continue;
+
+                var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
+                _gameDownload = cardGame;
+                yield return cardGame.Download();
+                if (_gameDownload == cardGame)
+                    _gameDownload = null;
+                if (!string.IsNullOrEmpty(cardGame.Error) || !cardGame.HasReadProperties)
+                {
+                    Debug.LogWarning(DownloadErrorMessage + cardGame.Error);
+                    DeleteFailedDownload(cardGame);
+                    continue;
+                }
+
+                // The download read the definition before the banner and card back had arrived, so decode them now, as
+                // a full load would; game selection shows them before the game is ever selected
+                cardGame.LoadPreviewImages();
+
+                // Added in the same frame that its download is released, so no other request downloads it again
+                AllCardGames[cardGame.Id] = cardGame;
+                // If the player's game failed to download, show one that did
+                if (Current == UnityCardGame.UnityInvalid)
+                {
+                    ResetCurrentToDefault();
+                    ResetGameScene();
+                }
+                else
+                    LoadVisiblePreviewImages();
+                GamesAdded?.Invoke();
+            }
+
+            IsDownloadingDefaultGames = false;
+        }
+
+        private static void DeleteFailedDownload(UnityCardGame cardGame)
+        {
+            if (!Directory.Exists(cardGame.GameDirectoryPath))
+                return;
+            try
+            {
+                LocalizationCache.Invalidate(cardGame.GameDirectoryPath);
+                Directory.Delete(cardGame.GameDirectoryPath, true);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(DeleteErrorMessage + ex.Message);
+            }
         }
 
         [PublicAPI]
@@ -705,6 +939,20 @@ namespace Cgs
             var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
 
             Progress.Show(cardGame);
+            while (IsDownloadingGame)
+                yield return null;
+            // A background download may have installed this game while this one waited
+            var installedGame = InstalledGameFrom(gameUrl);
+            if (installedGame != null)
+            {
+                Progress.Hide();
+                Select(installedGame.Id);
+                yield break;
+            }
+
+            // The download keeps its slot until the game has loaded and been added, since a load reads the files that
+            // another download of the same game would write
+            _gameDownload = cardGame;
             yield return cardGame.Download();
             Progress.Hide();
 
@@ -714,25 +962,16 @@ namespace Cgs
             {
                 Debug.LogError(DownloadErrorMessage + cardGame.Error);
                 ShowDownloadError(cardGame.Error);
-
-                if (!Directory.Exists(cardGame.GameDirectoryPath))
-                    yield break;
-
-                try
-                {
-                    LocalizationCache.Invalidate(cardGame.GameDirectoryPath);
-                    Directory.Delete(cardGame.GameDirectoryPath, true);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError(DeleteErrorMessage + ex.Message);
-                }
+                DeleteFailedDownload(cardGame);
             }
             else
             {
                 AllCardGames[cardGame.Id] = cardGame;
                 Select(cardGame.Id);
             }
+
+            if (_gameDownload == cardGame)
+                _gameDownload = null;
 
             Debug.Log("DownloadCardGame: end");
         }
@@ -779,8 +1018,9 @@ namespace Cgs
                  page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount;
                  page++)
             {
-                cardGame.LoadCards(page);
-                if (page == cardGame.AllCardsUrlPageCountStartIndex &&
+                // Card files parse off the main thread and fill in over several frames, so the screen stays responsive
+                yield return cardGame.LoadCardsRoutine(page);
+                if (page == cardGame.AllCardsUrlPageCountStartIndex && cardGame == Current &&
                     cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
                     Messenger.Show(GameContentMessage.Create(cardGame, display => UiMessage.With("games.cards.loading",
                         string.Format(CardsLoadingMessage, display.GameName), ("gameName", display.GameName))));
@@ -789,7 +1029,7 @@ namespace Cgs
 
             if (!string.IsNullOrEmpty(cardGame.Error))
                 Debug.LogError(LoadErrorMessage + cardGame.Error);
-            else if (cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
+            else if (cardGame == Current && cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
                 Messenger.Show(GameContentMessage.Create(cardGame, display => UiMessage.With("games.cards.loaded",
                     string.Format(CardsLoadedMessage, display.GameName), ("gameName", display.GameName))));
         }
@@ -810,7 +1050,7 @@ namespace Cgs
                 if (!File.Exists(setCardsFilePath))
                     yield return UnityFileMethods.SaveUrlToFile(set.CardsUrl, setCardsFilePath);
                 if (File.Exists(setCardsFilePath))
-                    cardGame.LoadCards(setCardsFilePath, set.Code);
+                    yield return cardGame.LoadCardsRoutine(setCardsFilePath, set.Code);
                 else
                 {
                     Debug.LogError(LoadErrorMessage + set.CardsUrl);
@@ -871,7 +1111,8 @@ namespace Cgs
                 {
                     if (IsSuperseded(targetGame, selectionVersion))
                         yield break;
-                    if (!afterFirstFrame && string.IsNullOrEmpty(targetGame.Error))
+                    // A screen that needs the cards shows progress instead and fills in once they have loaded
+                    if (!afterFirstFrame && !SceneNeedsContent && string.IsNullOrEmpty(targetGame.Error))
                         RunSceneActions();
                     yield return null;
                 }
@@ -1090,6 +1331,8 @@ namespace Cgs
                 Settings.DeveloperMode = !Settings.DeveloperMode;
 
             ImageQueueService.Instance.ProcessQueue(this);
+            UpdateContentLoadProgress();
+            AddInstalledBundledGames();
         }
 
         protected void OnDisable()
@@ -1108,8 +1351,12 @@ namespace Cgs
         protected void OnDestroy()
         {
             UnregisterStaticEventHandlers();
-            if (_instance == this)
-                Instance = null;
+            if (_instance != this)
+                return;
+            Instance = null;
+            // The network manager used to be part of this object, so it still goes with it
+            if (!IsQuitting)
+                CgsNetManager.DestroyCreated();
         }
 
 #pragma warning disable S2325

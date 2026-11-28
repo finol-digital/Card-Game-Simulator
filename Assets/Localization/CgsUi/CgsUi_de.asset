@@ -2009,26 +2009,56 @@ MonoBehaviour:
       m_Items:
       - rid: 7133309420632277086
       - rid: 451339117355073536
-  - m_Id: 18826791509549056
+  - m_Id: 17272803462995968
+    m_Localized: "Sch\xFCtteln zum W\xFCrfeln"
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195935
+  - m_Id: 17272803634962432
+    m_Localized: "Ger\xE4t sch\xFCtteln, um alle W\xFCrfel auf dem Tisch zu werfen."
+    m_Metadata:
+      m_Items:
+      - rid: 3103366582956195936
+  - m_Id: 18564103522996224
+    m_Localized: Immer
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323136
+  - m_Id: 18564103636242432
+    m_Localized: Startdecks immer laden
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323137
+  - m_Id: 18564103665602560
+    m_Localized: Ja, und nicht mehr fragen
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323138
+  - m_Id: 18564103665602561
+    m_Localized: Die Startdecks dieses Spiels beim Start ohne Nachfrage laden.
+    m_Metadata:
+      m_Items:
+      - rid: 1812176077519323139
+  - m_Id: 19303456526295040
     m_Localized: Dateien
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635520
-  - m_Id: 18826791522131968
+      - rid: 4921527936870252544
+  - m_Id: 19303456593403904
     m_Localized: Fotos
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635521
-  - m_Id: 18826791526326272
-    m_Localized: "Der Browser konnte die Zwischenablage nicht lesen. Erlaube den Zugriff auf die Zwischenablage oder klicke in das Textfeld und f\xFCge mit Strg+V (Befehlstaste+V auf einem Mac) ein."
-    m_Metadata:
-      m_Items:
-      - rid: 4921527907078635522
-  - m_Id: 18977071849005056
+      - rid: 4921527936870252545
+  - m_Id: 19303456593403905
     m_Localized: "Verbindung zu diesem Spiel \xFCber das lokale Netzwerk nicht m\xF6glich. Stelle sicher, dass beide Ger\xE4te im selben Netzwerk sind und das Spiel noch gehostet wird, oder nutze den Internet-Mehrspielermodus."
     m_Metadata:
       m_Items:
-      - rid: 4921527907078635673
+      - rid: 4921527936870252546
+  - m_Id: 19303456605986816
+    m_Localized: "Der Browser konnte die Zwischenablage nicht lesen. Erlaube den Zugriff auf die Zwischenablage oder klicke in das Textfeld und f\xFCge mit Strg+V (Befehlstaste+V auf einem Mac) ein."
+    m_Metadata:
+      m_Items:
+      - rid: 4921527936870252547
   references:
     version: 2
     RefIds:
@@ -2040,22 +2070,46 @@ MonoBehaviour:
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Das Deck \u201E{deckName}\u201C ist unvollst\xE4ndig. Geladene Karten: {loadedCount}. Fehlende Karten: {missingCount}.\\n\\nDiese Kartennamen oder IDs wurden in diesem Spiel nicht gefunden:\\n{cards}\\n\\nPr\xFCfe die Deckliste oder aktualisiere die Spieldaten, bevor du spielst.\",\"status\":\"machine\",\"sourceHash\":\"b788fe96455e7e5f1b3aed6e7b8f42c336c4652d7b2d8242469fbd42d9e0e142\",\"provenance\":{\"method\":\"Codex contextual machine draft\",\"date\":\"2026-10-25\"}}"
-    - rid: 4921527907078635520
+    - rid: 1812176077519323136
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Immer","status":"machine","sourceHash":"f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323137
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Startdecks immer laden","status":"machine","sourceHash":"0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323138
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Ja, und nicht mehr fragen","status":"machine","sourceHash":"c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 1812176077519323139
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: '{"text":"Die Startdecks dieses Spiels beim Start ohne Nachfrage laden.","status":"machine","sourceHash":"7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
+    - rid: 3103366582956195935
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Sch\xFCtteln zum W\xFCrfeln\",\"status\":\"machine\",\"sourceHash\":\"340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
+    - rid: 3103366582956195936
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Ger\xE4t sch\xFCtteln, um alle W\xFCrfel auf dem Tisch zu werfen.\",\"status\":\"machine\",\"sourceHash\":\"9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de\",\"provenance\":{\"method\":\"Contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-22\"}}"
+    - rid: 4921527936870252544
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Dateien","status":"machine","sourceHash":"8b4bcc0a3ffa3c888a8134b9e787ac6085eed2a1b958dc3f24fe147f97aff592","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
-    - rid: 4921527907078635521
+    - rid: 4921527936870252545
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: '{"text":"Fotos","status":"machine","sourceHash":"3c2143cb6a6efe6059e96f5780aec7e09a0ef5b1bfc5137b9760aa3ba7b75552","provenance":{"method":"Claude contextual machine draft; English context and CGS glossary","date":"2026-11-26"}}'
-    - rid: 4921527907078635522
-      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_CommentText: "{\"text\":\"Der Browser konnte die Zwischenablage nicht lesen. Erlaube den Zugriff auf die Zwischenablage oder klicke in das Textfeld und f\xFCge mit Strg+V (Befehlstaste+V auf einem Mac) ein.\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
-    - rid: 4921527907078635673
+    - rid: 4921527936870252546
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: "{\"text\":\"Verbindung zu diesem Spiel \xFCber das lokale Netzwerk nicht m\xF6glich. Stelle sicher, dass beide Ger\xE4te im selben Netzwerk sind und das Spiel noch gehostet wird, oder nutze den Internet-Mehrspielermodus.\",\"status\":\"machine\",\"sourceHash\":\"462bcb039f117d4c8061d6fe8444601882082ebf8d6eca3498b684ed543b84a1\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-27\"}}"
+    - rid: 4921527936870252547
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: "{\"text\":\"Der Browser konnte die Zwischenablage nicht lesen. Erlaube den Zugriff auf die Zwischenablage oder klicke in das Textfeld und f\xFCge mit Strg+V (Befehlstaste+V auf einem Mac) ein.\",\"status\":\"machine\",\"sourceHash\":\"18950706c771c3844c35e1fdd8b352586967220bce46f40bc8d3217a7c8af744\",\"provenance\":{\"method\":\"Claude contextual machine draft; English context and CGS glossary\",\"date\":\"2026-11-26\"}}"
     - rid: 7133309420632277086
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

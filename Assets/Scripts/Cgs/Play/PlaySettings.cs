@@ -14,11 +14,13 @@ namespace Cgs.Play
         private const string PlayerPrefsAutoStackCards = "AutoStackCards";
         private const string PlayerPrefsDieFaceCount = "DieFaceCount";
         private const string PlayerPrefsDoubleClickToRollDice = "DoubleClickToRollDice";
+        private const string PlayerPrefsShakeToRollDice = "ShakeToRollDice";
         private const string PlayerPrefsDoubleClickToViewStacks = "DoubleClickToViewStacks";
         private const string PlayerPrefsStackViewerOverlap = "StackViewerOverlap";
         private const string PlayerPrefsShowActionsMenu = "ShowActionsMenu";
         private const string PlayerPrefsDefaultZoom = "DefaultZoom";
         private const string PlayerPrefsPieceSize = "DiceAndCounterDisplaySize";
+        private const string PlayerPrefsAlwaysLoadStartDecksPrefix = "AlwaysLoadStartDecks:";
 
         public static event Action PieceSizeChanged;
 
@@ -59,6 +61,12 @@ namespace Cgs.Play
             set => PlayerPrefs.SetInt(PlayerPrefsDoubleClickToRollDice, value ? 1 : 0);
         }
 
+        public static bool ShakeToRollDice
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsShakeToRollDice, 1) == 1;
+            set => PlayerPrefs.SetInt(PlayerPrefsShakeToRollDice, value ? 1 : 0);
+        }
+
         public static bool DoubleClickToViewStacks
         {
             get => PlayerPrefs.GetInt(PlayerPrefsDoubleClickToViewStacks, 1) == 1;
@@ -81,6 +89,20 @@ namespace Cgs.Play
         {
             get => PlayerPrefs.GetFloat(PlayerPrefsDefaultZoom, RotateZoomableScrollRect.DefaultZoom);
             set => PlayerPrefs.SetFloat(PlayerPrefsDefaultZoom, value);
+        }
+
+        /// <summary>Whether starting the game with <paramref name="gameId"/> loads its start decks without asking.</summary>
+        public static bool GetAlwaysLoadStartDecks(string gameId) =>
+            !string.IsNullOrEmpty(gameId) && PlayerPrefs.GetInt(PlayerPrefsAlwaysLoadStartDecksPrefix + gameId, 0) == 1;
+
+        public static void SetAlwaysLoadStartDecks(string gameId, bool alwaysLoad)
+        {
+            if (string.IsNullOrEmpty(gameId))
+                return;
+            if (alwaysLoad)
+                PlayerPrefs.SetInt(PlayerPrefsAlwaysLoadStartDecksPrefix + gameId, 1);
+            else
+                PlayerPrefs.DeleteKey(PlayerPrefsAlwaysLoadStartDecksPrefix + gameId);
         }
     }
 }

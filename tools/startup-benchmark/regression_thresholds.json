@@ -1,0 +1,8 @@
+{
+  "description": "Loose startup regression thresholds for regression_check.py: medians in milliseconds for a standalone Linux player in -batchmode. They catch large regressions on slow or shared machines, not budget misses; the budgets are in developer-docs/startup-performance.md.",
+  "medianMs": {
+    "launchToMenuMs": 3000,
+    "startToActionMs": 1500,
+    "launchToActionMs": 4500
+  }
+}

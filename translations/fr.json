@@ -128,6 +128,24 @@
         "date": "2026-10-05"
       }
     },
+    "common.always": {
+      "text": "Toujours",
+      "status": "machine",
+      "sourceHash": "f04b1ce2369e383c937da45d471e5cbd3fa9f085052fcdf3e8071aedd2e4693c",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
+    "common.always.load.start.decks": {
+      "text": "Toujours charger les decks de départ",
+      "status": "machine",
+      "sourceHash": "0399f543cdc7ddb41d69e62ed740b412730307eb45d1997a6d62ee6ed86a1d3d",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
     "common.auto.stack.cards": {
       "text": "Empiler automatiquement les cartes",
       "status": "machine",
@@ -1532,6 +1550,15 @@
         "date": "2026-10-05"
       }
     },
+    "common.shake.to.roll.dice": {
+      "text": "Secouer pour lancer les dés",
+      "status": "machine",
+      "sourceHash": "340853742e84a2d211471371dc0c6fda922729bf3cd101e64d48abe4a8810057",
+      "provenance": {
+        "method": "Contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-22"
+      }
+    },
     "common.share": {
       "text": "Partager",
       "status": "machine",
@@ -2423,6 +2450,24 @@
         "date": "2026-10-05"
       }
     },
+    "help.always": {
+      "text": "Oui, et ne plus demander",
+      "status": "machine",
+      "sourceHash": "c8f1d21c397a5e8f45eb8255eb79365fbc51c1893b62c9308f711ab34d2e73f6",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
+    "help.always.load.start.decks": {
+      "text": "Charger les decks de départ de ce jeu au lancement, sans demander.",
+      "status": "machine",
+      "sourceHash": "7dca25d9f762227ac26b2d2ff7fef8fdf3d63c98581a33cf744428e5ccd93ca3",
+      "provenance": {
+        "method": "Claude contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-26"
+      }
+    },
     "help.auto.stack": {
       "text": "Empiler automatiquement les cartes qui se chevauchent.",
       "status": "machine",
@@ -2502,6 +2547,15 @@
       "provenance": {
         "method": "Codex contextual machine draft; English context and CGS glossary",
         "date": "2026-10-05"
+      }
+    },
+    "help.die.shake": {
+      "text": "Secouez l'appareil pour lancer tous les dés sur la table.",
+      "status": "machine",
+      "sourceHash": "9b3d47d993b9cbc63f02e09d4c204402b91e7c07137afc84e5d19277d72b46de",
+      "provenance": {
+        "method": "Contextual machine draft; English context and CGS glossary",
+        "date": "2026-11-22"
       }
     },
     "help.draw.one": {

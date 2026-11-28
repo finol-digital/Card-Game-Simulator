@@ -242,11 +242,9 @@ namespace Cgs.Play.Multiplayer
 
             if (IsServer)
             {
-                PlayController.Instance.SpawnUnspawnedZones();
+                AdoptLocalTable();
                 RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs,
                     Scoreboard.DefaultPlayerName));
-                RequestPointsUpdate(CardGameManager.Current.GameStartPointsCount);
-                RequestNewHand(CardDrawer.DefaultHandName);
                 ApplyPlayerTranslationServerRpc();
             }
             else
@@ -256,6 +254,37 @@ namespace Cgs.Play.Multiplayer
             }
 
             Debug.Log("[CgsNet Player] Started local player!");
+        }
+
+        // Hosting can start after the solo player has already used the table, so the host keeps what is on it:
+        // the table objects, the current deck, the hands, and the points
+        private void AdoptLocalTable()
+        {
+            var playController = PlayController.Instance;
+            foreach (var cardStack in playController.SpawnLocalTable())
+                _cardStacks.Add(cardStack.gameObject);
+            var currentDeckStack = playController.CurrentDeckStack;
+            if (currentDeckStack != null && currentDeckStack.IsSpawned)
+                CurrentDeck = currentDeckStack.MyNetworkObject;
+
+            Points = playController.Scoreboard.LocalPoints;
+
+            var hands = playController.Drawer.GetLocalHandCardIds();
+            if (hands.Count == 0)
+            {
+                RequestNewHand(CardDrawer.DefaultHandName);
+                return;
+            }
+
+            for (var i = 0; i < hands.Count; i++)
+            {
+                _handCards.Add(CgsNetStringList.Of(hands[i].Select(cardId => (CgsNetString)cardId)));
+                _handNames.Add(i == 0 ? CardDrawer.DefaultHandName : CardDrawer.DefaultDrawerName);
+            }
+
+            CurrentHand = Mathf.Clamp(playController.Drawer.SelectedHandIndex, 0, hands.Count - 1);
+            // As when a new hand is added, so the drawer syncs later changes to this hand
+            playController.Drawer.SelectTab(CurrentHand);
         }
 
         private void RequestCardGameSelection()
@@ -347,7 +376,8 @@ namespace Cgs.Play.Multiplayer
 
         private IEnumerator WaitToStartGame()
         {
-            while (CardGameManager.Current.IsDownloading)
+            // The start decks need the game's cards, which may still be loading
+            while (CardGameManager.Current.IsDownloading || !CardGameManager.IsCurrentContentSettled)
                 yield return null;
 
             Debug.Log("[CgsNet Player] Game loaded and ready!");
@@ -356,7 +386,7 @@ namespace Cgs.Play.Multiplayer
             switch (CardGameManager.Current.DeckSharePreference)
             {
                 case SharePreference.Individual:
-                    PlayController.Instance.ShowDeckMenu();
+                    PlayController.Instance.StartDecks();
                     break;
                 case SharePreference.Share:
                     RequestSharedDeck();
@@ -364,7 +394,7 @@ namespace Cgs.Play.Multiplayer
                 case SharePreference.Ask:
                 default:
                     CardGameManager.Instance.Messenger.Ask(new UiMessage("network.share.deck", ShareDeckRequest),
-                        PlayController.Instance.ShowDeckMenu, RequestSharedDeck);
+                        PlayController.Instance.StartDecks, RequestSharedDeck);
                     break;
             }
 
@@ -950,7 +980,7 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsServer || CardGameManager.Current.DeckSharePreference == SharePreference.Individual)
             {
-                PlayController.Instance.ShowDeckMenu();
+                PlayController.Instance.StartDecks();
                 Debug.Log("[CgsNet Player] Game restarted!");
                 yield break;
             }
@@ -962,7 +992,7 @@ namespace Cgs.Play.Multiplayer
             switch (CardGameManager.Current.DeckSharePreference)
             {
                 case SharePreference.Individual:
-                    PlayController.Instance.ShowDeckMenu();
+                    PlayController.Instance.StartDecks();
                     break;
                 case SharePreference.Share:
                     RequestSharedDeck();
@@ -970,7 +1000,7 @@ namespace Cgs.Play.Multiplayer
                 case SharePreference.Ask:
                 default:
                     CardGameManager.Instance.Messenger.Ask(new UiMessage("network.share.deck", ShareDeckRequest),
-                        PlayController.Instance.ShowDeckMenu, RequestSharedDeck);
+                        PlayController.Instance.StartDecks, RequestSharedDeck);
                     break;
             }
         }

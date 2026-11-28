@@ -97,6 +97,18 @@
       "arguments": {},
       "smart": false
     },
+    "common.always": {
+      "text": "Always",
+      "context": "Button label in a yes/no dialog at Dialog/Frame/Response ButtonGroup/Always Button/Labeled Button/Label in Assets/Prefabs/Menus/Dialog.prefab. It answers yes and remembers that answer so the question is not asked again, as when loading a game's start decks. The button is narrow and also shows an icon; keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
+    "common.always.load.start.decks": {
+      "text": "Always Load Start Decks",
+      "context": "Interface label at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AlwaysLoadStartDecks Toggle/Label in Assets/Prefabs/Menus/Play Settings Menu.prefab. When on, starting the current game loads its start decks without asking. Keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
     "common.auto.stack.cards": {
       "text": "Auto Stack Cards",
       "context": "Interface label or button at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AutoStackCards Toggle/Label in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.",
@@ -1035,6 +1047,12 @@
       "arguments": {},
       "smart": false
     },
+    "common.shake.to.roll.dice": {
+      "text": "Shake to Roll Dice",
+      "context": "Interface label or button at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle/Label in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
     "common.share": {
       "text": "Share",
       "context": "Tooltip explaining a control at CardGameManager/Dialog/Frame/Share Button in Assets/Resources/CardGameManager.prefab. Keep control labels concise.",
@@ -1697,6 +1715,18 @@
       "arguments": {},
       "smart": false
     },
+    "help.always": {
+      "text": "Yes, and do not ask again",
+      "context": "Tooltip explaining a control at Dialog/Frame/Response ButtonGroup/Always Button/Labeled Button in Assets/Prefabs/Menus/Dialog.prefab. The button answers yes and stops asking this question, for example whether to load a game's start decks. Keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
+    "help.always.load.start.decks": {
+      "text": "Load this game's start decks without asking when it starts.",
+      "context": "Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AlwaysLoadStartDecks Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. The setting applies only to the game being played. Keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
     "help.auto.stack": {
       "text": "Automatically stack cards when they overlap.",
       "context": "Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/AutoStackCards Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.",
@@ -1752,6 +1782,12 @@
     "help.die.roll": {
       "text": "Double-click on a Die to roll it.",
       "context": "Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/DoubleClickToRollDice Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.",
+      "arguments": {},
+      "smart": false
+    },
+    "help.die.shake": {
+      "text": "Shake your device to roll all dice on the table.",
+      "context": "Tooltip explaining a control at Play Settings Menu/Frame/ScrollView Vertical/Viewport/Content/ShakeToRollDice Toggle in Assets/Prefabs/Menus/Play Settings Menu.prefab. Keep control labels concise.",
       "arguments": {},
       "smart": false
     },

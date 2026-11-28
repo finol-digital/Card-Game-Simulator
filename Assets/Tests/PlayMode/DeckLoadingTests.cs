@@ -99,6 +99,85 @@ namespace Tests.PlayMode
             Assert.That(deck.MissingCards["01DE001"], Is.EqualTo(3));
         }
 
+        // The Starvoxel starter deck: Pebble Panda, Sun Gecko, Arc Owl, Ember Fox, Storm Axolotl, Frost Penguin,
+        // Meteor Bear and Shell Turtle, in that order.
+        private const string StarvoxelStarterCode = "SVD3-000107090306020BW";
+        private static readonly int[] StarvoxelStarterIds = { 0, 1, 7, 9, 3, 6, 2, 11 };
+
+        private static UnityCardGame NewStarvoxelGame(params int[] deckIds)
+        {
+            var game = new UnityCardGame(null, "starvoxel_deck_test")
+            {
+                DeckFileAltId = "deckId",
+                DeckFileType = DeckFileType.Svd,
+                CardProperties = new List<PropertyDef> { new("deckId", PropertyType.Integer) }
+            };
+            foreach (var deckId in deckIds)
+            {
+                var properties = new Dictionary<string, PropertyDefValuePair>
+                {
+                    ["deckId"] = new() { Def = game.CardProperties[0], Value = deckId.ToString() }
+                };
+                game.Add(new UnityCard(game, "card" + deckId, "Card " + deckId, Set.DefaultCode, properties, false),
+                    false);
+            }
+
+            return game;
+        }
+
+        private static int[] DeckIds(UnityDeck deck) =>
+            deck.Cards.Select(card => card.GetPropertyValueInt("deckId")).ToArray();
+
+        [TestCase(StarvoxelStarterCode)]
+        [TestCase("svd3-000107090306020bw\n")]
+        [TestCase("https://starvoxel.com/decks?deck=SVD3-000107090306020BW&utm_source=deck_share")]
+        public void Svd_LoadsSharedCodeInItsOrder(string text)
+        {
+            var game = NewStarvoxelGame(Enumerable.Range(0, 12).ToArray());
+            var deck = UnityDeck.Parse(game, "Starter", DeckFileType.Svd, text);
+            Assert.That(DeckIds(deck), Is.EqualTo(StarvoxelStarterIds));
+            Assert.That(deck.MissingCards, Is.Empty);
+        }
+
+        [Test]
+        public void Svd_SavesCompleteDeckAsOnlyTheCodeAndLoadsItBack()
+        {
+            var game = NewStarvoxelGame(Enumerable.Range(0, 12).ToArray());
+            var deck = new UnityDeck(game, "Starter", DeckFileType.Svd,
+                StarvoxelStarterIds.Select(id => game.Cards["card" + id]).ToList());
+            Assert.That(deck.ToString().Trim(), Is.EqualTo(StarvoxelStarterCode));
+            var reloaded = UnityDeck.Parse(game, "Starter", DeckFileType.Svd, deck.ToString());
+            Assert.That(DeckIds(reloaded), Is.EqualTo(StarvoxelStarterIds));
+        }
+
+        [Test]
+        public void Svd_SavesAndReloadsUnfinishedDeck()
+        {
+            var game = NewStarvoxelGame(0, 7, 9);
+            var deck = new UnityDeck(game, "Work in progress", DeckFileType.Svd,
+                new List<UnityCard> { game.Cards["card7"], game.Cards["card0"], game.Cards["card7"] });
+            var text = deck.ToString();
+            StringAssert.StartsWith(Deck.IncompleteSvdComment, text);
+            Assert.That(StarvoxelDeckEncoder.TryDecode(text, out _), Is.False);
+            var reloaded = UnityDeck.Parse(game, "Work in progress", DeckFileType.Svd, text);
+            Assert.That(DeckIds(reloaded), Is.EqualTo(new[] { 7, 0, 7 }));
+            Assert.That(reloaded.MissingCards, Is.Empty);
+        }
+
+        [Test]
+        public void Svd_ReportsUnknownCardsAndUnreadableCodes()
+        {
+            var game = NewStarvoxelGame(0, 1, 2);
+            var deck = UnityDeck.Parse(game, "Encoded", DeckFileType.Svd, StarvoxelStarterCode);
+            Assert.That(DeckIds(deck), Is.EqualTo(new[] { 0, 1, 2 }));
+            Assert.That(deck.MissingCards.Keys, Is.EquivalentTo(new[] { "7", "9", "3", "6", "11" }));
+
+            // A typo changes the check symbol, so the code is reported instead of loading the wrong cards.
+            var typo = UnityDeck.Parse(game, "Typo", DeckFileType.Svd, "SVD3-000107090306020BX");
+            Assert.That(typo.Cards, Is.Empty);
+            Assert.That(typo.MissingCards["SVD3-000107090306020BX"], Is.EqualTo(1));
+        }
+
         [Test]
         public void MissingCardsWarning_PrecedesLoadCallbackPromptAndCompleteDeckStaysQuiet()
         {
